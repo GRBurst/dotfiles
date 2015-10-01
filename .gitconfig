@@ -1,0 +1,17 @@
+[user]
+	email = JuliusE89@gmail.com
+	name = GRBurst
+[core]
+	excludesfile = ~/.gitignore_global
+[push]
+	default = simple
+[branch]
+	autosetuprebase = always
+[alias]
+    co = checkout
+    ci = commit
+    st = status
+    br = branch
+    lg = log --graph --pretty=format:'%Cred%h %C(reset)%C(dim)%ad%Creset %s%C(yellow)%d%C(reset) %C(blue)<%an> %Cgreen(%cr)%Creset' --abbrev-commit --date=short
+[credential]
+	helper = cache

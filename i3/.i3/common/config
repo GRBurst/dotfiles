@@ -1,0 +1,316 @@
+# i3 config file (v4)
+#
+# Please see http://i3wm.org/docs/userguide.html for a complete reference!
+
+# Start common scripts
+exec --no-startup-id sh ~/.i3/common/start.sh
+
+# Start local scripts
+exec --no-startup-id sh ~/.i3/local/start.sh
+
+set $sp ~/.i3/scripts
+
+# neo modifier, Mod4 is the windows key
+set $mod mod4
+set $Alt mod1
+set $AltGr mod3
+set $Strg control
+
+# Neo arrows
+set $Left   mod3+i
+set $Down   mod3+a
+set $Right  mod3+e
+set $Up     mod3+l
+
+# Font for window titles. Will also be used by the bar unless a different font
+# is used in the bar {} block below. ISO 10646 = Unicode
+# font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+# The font above is very space-efficient, that is, it looks good, sharp and
+# clear in small sizes. However, if you need a lot of unicode glyphs or
+# right-to-left text rendering, you should instead use pango for rendering and
+# chose a FreeType font, such as:
+#font pango:Droid Sans Mono 11
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+# start a terminal
+#bindsym $mod+Return exec termite
+bindsym $mod+Return exec --no-startup-id $sp/i3scripts.sh ws_split manual
+bindsym $mod+Shift+Return exec --no-startup-id $sp/i3scripts.sh ws_split auto 
+bindsym $mod+$AltGr+Return exec i3-sensible-terminal
+
+# kill focused window
+bindsym $mod+Shift+q kill
+
+# start dmenu (a program launcher)
+# bindsym $mod+d exec dmenu_run
+#bindsym $mod+o exec --no-startup-id xboomx
+bindsym $mod+o exec --no-startup-id rofi -show run
+bindsym $mod+Shift+o exec --no-startup-id rofi -show combi
+bindsym $mod+s exec --no-startup-id rofi -show ssh
+
+
+# Focus should not follow mouse movements
+focus_follows_mouse no
+
+# change focus
+bindsym $mod+i focus left
+bindsym $mod+a focus down
+bindsym $mod+l focus up
+bindsym $mod+e focus right
+
+# move focused window
+bindsym $mod+n move left
+bindsym $mod+r move down
+bindsym $mod+g move up
+bindsym $mod+t move right
+
+# split in horizontal orientation
+bindsym $mod+h split h; exec --no-startup-id $sp/i3scripts.sh ws_set_split h
+
+# split in vertical orientation
+bindsym $mod+v split v; exec --no-startup-id $sp/i3scripts.sh ws_set_split v
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen
+
+# change container layout (stacked, tabbed, toggle split)
+bindsym $mod+Shift+s layout stacking
+bindsym $mod+Shift+t layout tabbed
+bindsym $mod+Shift+h layout toggle split
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# focus the parent container
+bindsym $mod+p focus parent
+
+# focus the child container
+bindsym $mod+c focus child
+
+# Move the current workspace to the next output
+# (effectively toggles when you only have two outputs)
+#bindsym $mod+Shift+x move workspace to output right
+
+# Put this window on the next output.
+#bindsym $mod+x move container to output right
+
+#for_window [class="(?i)firefox"] border none
+new_window 1pixel
+new_float 1pixel
+
+# Make the currently focused window a scratchpad
+bindsym $mod+Shift+minus move scratchpad
+
+# Show the first scratchpad window
+bindsym $mod+Shift+plus scratchpad show
+
+# Show the sup-mail scratchpad window, if any.
+bindsym $mod+$AltGr+s [title="^Sup ::"] scratchpad show
+
+# Mark as always on top
+bindsym $mod+u mark awot; floating enable;
+bindsym $mod+Shift+u unmark awot; 
+
+# Colors
+set $lblue "#37baff"
+set $ddgray "#101010"
+# Color => for 1px border only backgr. visible
+# class                 border  backgr. text    indicator
+client.focused          #4c7899 #00ccff #ffffff #ff99ff
+client.focused_inactive #333333 #cccccc #ffffff #484e50
+client.unfocused        #333333 #333333 #888888 #292d2e
+client.urgent           #2f343a #ff0000 #ffffff #900000
+client.placeholder      #000000 #33cc33 #ffffff #000000
+
+
+bindsym $mod+x exec setxkbmap de neo
+bindsym $mod+Shift+x exec setxkbmap de
+
+# Toggle to previous window
+workspace_auto_back_and_forth yes
+
+bindsym $mod+minus exec ponymix decrease 10
+bindsym $mod+plus exec ponymix increase 10
+bindsym $mod+numbersign exec ponymix toggle
+
+# Helper scripts
+bindsym $mod+b exec --no-startup-id $sp/rename.sh 0
+bindsym $mod+Shift+b exec --no-startup-id $sp/rename.sh
+bindsym --release Print exec --no-startup-id scrot 'Screenshot-%Y-%m-%d-%H-%M-%S-$wx$h_scrot.png' -e 'mv $f ~/pictures/screenshots/'
+
+#bindsym $mod+Shift+r exec --no-startup-id $sp/update-config.sh
+
+# Program shortcuts
+bindsym $mod+$AltGr+b exec firefox
+#bindsym $mod+$AltGr+c exec termite -e finch
+bindsym $mod+$AltGr+d exec dropbox
+bindsym $mod+$AltGr+f exec nemo
+bindsym $mod+$AltGr+g exec pidgin
+bindsym $mod+$AltGr+k exec kd
+bindsym $mod+$AltGr+Shift+k exec ko
+bindsym $mod+$AltGr+m exec thunderbird
+bindsym $mod+$AltGr+p exec spotify
+bindsym $mod+$AltGr+t exec steam
+bindsym $mod+$AltGr+u exec --no-startup-id termite -e 'yaourt -Syua'
+bindsym $mod+$AltGr+v exec VirtualBox
+#bindsym $mod+$AltGr+y exec sh -e $sp/skype.sh
+bindsym $mod+$AltGr+y exec sskype
+
+bindsym $mod+$AltGr+i exec thunderbird; exec firefox
+bindsym $mod+$AltGr+c exec pidgin; exec sskype
+bindsym $mod+$AltGr+a exec thunderbird; exec firefox; exec pidgin; exec sskype
+
+assign [class="(?i)thunderbird"] "1: mail"
+assign [class="(?i)firefox"] "2: browser"
+assign [class="(?i)steam"] "8: steam"
+assign [class="(?i)pidgin"] "9: communication"
+assign [class="(?i)skype"] "9: communication"
+
+# switch to workspace
+bindsym $mod+1 workspace number 1: mail; [con_mark="awot"] move workspace current;
+bindsym $mod+2 workspace number 2: browser; [con_mark="awot"] move workspace current;
+bindsym $mod+3 workspace number 3; [con_mark="awot"] move workspace current;
+bindsym $mod+4 workspace number 4; [con_mark="awot"] move workspace current;
+bindsym $mod+5 workspace number 5; [con_mark="awot"] move workspace current;
+bindsym $mod+6 workspace number 6; [con_mark="awot"] move workspace current;
+bindsym $mod+7 workspace number 7; [con_mark="awot"] move workspace current;
+bindsym $mod+8 workspace number 8 steam; [con_mark="awot"] move workspace current;
+bindsym $mod+9 workspace number 9: communication; [con_mark="awot"] move workspace current;
+bindsym $mod+0 workspace number 0; [con_mark="awot"] move workspace current;
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace number 1: mail
+bindsym $mod+Shift+2 move container to workspace number 2: browser
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8: steam
+bindsym $mod+Shift+9 move container to workspace number 9: communication
+bindsym $mod+Shift+0 move container to workspace number 0
+
+# Define different modes
+# exit i3 (logs you out of your X session)
+mode "Exit <<< System:(e) logout, (r) reboot, (p) poweroff. i3: ($mod+c) reload, ($mod+r) restart" {
+        bindsym r exec systemctl reboot
+        bindsym p exec systemctl poweroff
+        bindsym e exit
+        # reload the configuration file
+        bindsym $mod+c reload; mode "default"
+        # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+        bindsym $mod+r restart
+
+        # back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+bindsym $mod+Shift+e mode "Exit <<< System:(e) logout, (r) reboot, (p) poweroff. i3: ($mod+c) reload, ($mod+r) restart"
+
+# Turn off or suspend screen 
+mode "Screen / DMMS <<< Screens:(k) kino, (s) standby, (p) suspend, (o) off" {
+        bindsym s exec i3lock && xset dpms force standby; mode "default"
+        bindsym p exec i3lock && xset dpms force suspend; mode "default"
+        bindsym o exec i3lock && xset dpms force off; mode "default"
+        bindsym k exec xset -dpms && xset s off; mode "default"
+
+        # back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+bindsym $mod+Shift+m mode "Screen / DMMS <<< Screens:(k) kino, (s) standby, (p) suspend, (o) off"
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+        # These bindings trigger as soon as you enter the resize mode
+
+        # Pressing left will shrink the window’s width.
+        # Pressing right will grow the window’s width.
+        # Pressing up will shrink the window’s height.
+        # Pressing down will grow the window’s height.
+        bindsym $AltGr+i resize shrink width 5 px or 5 ppt
+        bindsym $AltGr+a resize grow height 5 px or 5 ppt
+        bindsym $AltGr+l resize shrink height 5 px or 5 ppt
+        bindsym $AltGr+e resize grow width 5 px or 5 ppt
+
+        # same bindings, but for the arrow keys
+        bindsym Left resize shrink width 10 px or 10 ppt
+        bindsym Down resize grow height 10 px or 10 ppt
+        bindsym Up resize shrink height 10 px or 10 ppt
+        bindsym Right resize grow width 10 px or 10 ppt
+
+        # back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+bindsym $mod+Shift+r mode "resize"
+
+# resize window (you can also use the mouse for that)
+mode "refocus" {
+        # change focus
+        bindsym $Left focus left
+        bindsym $Down focus down
+        bindsym $Up focus up
+        bindsym $Right focus right
+
+        bindsym p focus parent
+        bindsym c focus child
+
+        # move focused window
+        bindsym Shift+$Left move left
+        bindsym Shift+$Down move down
+        bindsym Shift+$Up move up
+        bindsym Shift+$Right move right
+
+        # back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym q mode "default"
+}
+bindsym $mod+Shift+f mode "refocus"
+
+# redesign
+mode "redesign" {
+
+    # Change border to no border
+    bindsym $mod+n border none
+    bindsym $mod+y border 1px
+    bindsym $mod+b border normal
+
+    # back to normal: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym q mode "default"
+}
+bindsym $mod+Shift+d mode "redesign"
+
+# i3bar
+bar {
+    output DP-1
+    output LVDS
+    status_command i3status
+    #status_command exec ~/.myconfigs/.i3/mystat.sh
+    #tray_output primary
+    strip_workspace_numbers no
+    colors {
+        background #000000
+        statusline #ffffff
+        separator #666666
+
+        focused_workspace  $lblue   #285577 #ffffff
+        active_workspace   #333333  #5f676a #ffffff
+        inactive_workspace #333333  #222222 #888888
+        urgent_workspace   #2f343a  #900000 #ffffff
+    }
+}
+bar {
+    output DVI-I-1
+    strip_workspace_numbers no
+}
+

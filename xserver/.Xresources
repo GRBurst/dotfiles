@@ -1,0 +1,19 @@
+#rofi.X.value
+rofi.location:		2
+rofi.width:		100
+rofi.lines:		5
+rofi.columns:		1
+rofi.fg:		#efefef
+rofi.bg:		#121212
+rofi.bg-active:		#efefef
+rofi.hlbg:		#31baff
+rofi.hlbg-active:	#101010
+rofi.font:		monospace 14
+rofi.fuzzy:		true
+rofi.modi:		run,combi,ssh
+rofi.combi-modi:	window,run
+rofi.sidebar-mode:	true
+
+# Bindings
+rofi.kb-mode-next:                   Alt+Tab
+rofi.kb-mode-previous:               Alt+Shift+Tab

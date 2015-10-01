@@ -1,0 +1,35 @@
+#!/bin/zsh -ie
+
+# Pacman & system related
+echo "upgrading installed packages..."
+yaourt -Syyua --devel --noconfirm
+
+echo "cleaning package cache..."
+sudo pkgcacheclean
+
+echo "updating package search database..."
+sudo pkgfile -u
+
+echo "optimizing pacman database..."
+sudo pacman-optimize
+
+
+# Plugin manager and programs
+echo "updating zgen plugins..."
+zgen update
+
+echo "updating vim plugins..."
+vim +PlugInstall +PlugUpgrade +PlugUpdate +qall
+
+echo "updating global npm packages"
+npm -g update
+
+
+# Filesystem related
+echo "updating mlocate database..."
+sudo updatedb
+
+# sudo btrfs filesystem defragment /
+sync
+
+exit 0

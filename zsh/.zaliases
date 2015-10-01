@@ -1,0 +1,38 @@
+# Package manager aliases yaourt and pacman
+alias y=yaourt
+alias yu="echo yaourt -Syu: Updates database and upgrades packages; yaourt -Syu"
+alias ya="echo yaourt -Syua: Updates database and upgrades packages including AUR; yaourt -Syua"
+alias yd="echo yaourt -Syua --devel: Updates database and upgrades packages including AUR and git; yaourt -Syua --devel"
+#alias yr="echo yaourt -Rns: Removes package, its configurations + dependencies; yaourt -Rns"
+alias yr="aur-remove-vote"
+alias yi="echo yaourt -Qi: Display information about a given package in the local database; yaourt -Qi"
+alias yl="echo yaourt -Qe: List all installed package; yaourt -Qe"
+alias yll="echo yaourt -Ql: List all files installed by a given package; yaourt -Ql"
+alias yo="echo yaourt -Qtdq: Check for orphan packages among Arch Linux; yaourt -Qtdq"
+
+# Git
+alias g="git"
+alias gst="git status"
+alias gup="git up"
+alias gpu="git push"
+alias glg="git lg"
+alias ggr="cd-git-root"
+
+# Colors
+alias ssh='TERM=xterm-color ssh'
+alias l='ls -lF --color=auto'
+alias ls='ls -b -CF --color=auto'
+alias la='ls -la --color=auto'
+alias lh='ls -hAl --color=auto'
+alias ll='ls -l --color=auto'
+
+# Tools
+alias vim="vim --servername vim-$$"
+alias t="tree"
+alias f="find . -name"
+alias fif="find-in-file"
+
+# Misc
+alias i3-update-conf="cat ~/.i3/common/config > ~/.i3/config; cat ~/.i3/local/config* >> ~/.i3/config; i3-msg reload;"
+
+
