@@ -155,6 +155,7 @@ bindsym $mod+$AltGr+g exec pidgin
 bindsym $mod+$AltGr+k exec kd
 bindsym $mod+$AltGr+Shift+k exec ko
 bindsym $mod+$AltGr+m exec thunderbird
+bindsym $mod+$AltGr+n exec nmcli_dmenu
 bindsym $mod+$AltGr+p exec spotify
 bindsym $mod+$AltGr+t exec steam
 bindsym $mod+$AltGr+u exec --no-startup-id termite -e 'yaourt -Syua'
