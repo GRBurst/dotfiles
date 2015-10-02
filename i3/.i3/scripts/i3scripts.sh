@@ -28,27 +28,28 @@ ws_set_split()
 ws_split()
 {
     local -r action="$1"
+    local term="termite -d $(xcwd) -e zsh"
 
     if [[ "$action" == "manual" ]]; then
         if [[ -z "${ws_split[$ws_number]}" ]]; then
-            i3-msg "exec termite;"
+            i3-msg "exec $term;"
             ws_split[$ws_number]=h
         else
-            i3-msg "split ${ws_split[$ws_number]}; exec termite;"
+            i3-msg "split ${ws_split[$ws_number]}; exec $term;"
         fi
     elif [[ "$action" == "auto" ]]; then
         #echo "ws_split[$ws_number]=${ws_split[$ws_number]}"
         if [[ -z "${ws_split[$ws_number]}" ]]; then
-            i3-msg "exec termite;"
+            i3-msg "exec $term;"
             ws_split[$ws_number]=h
         elif [[ ${ws_split[$ws_number]} == "h" ]]; then
-            i3-msg "split h; exec termite;"
+            i3-msg "split h; exec $term;"
             ws_split[$ws_number]=v
         elif [[ ${ws_split[$ws_number]} == "v" ]]; then
-            i3-msg "split v; exec termite;"
+            i3-msg "split v; exec $term;"
             ws_split[$ws_number]=h
         else
-            i3-msg "exec termite;"
+            i3-msg "exec $term;"
         fi
     fi
 

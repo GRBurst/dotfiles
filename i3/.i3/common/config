@@ -39,7 +39,7 @@ floating_modifier $mod
 #bindsym $mod+Return exec termite
 bindsym $mod+Return exec --no-startup-id $sp/i3scripts.sh ws_split manual
 bindsym $mod+Shift+Return exec --no-startup-id $sp/i3scripts.sh ws_split auto 
-bindsym $mod+$AltGr+Return exec i3-sensible-terminal
+bindsym $mod+$AltGr+Return exec termite -e zsh
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -198,20 +198,28 @@ bindsym $mod+Shift+0 move container to workspace number 0
 
 # Define different modes
 # exit i3 (logs you out of your X session)
-mode "Exit <<< System:(e) logout, (r) reboot, (p) poweroff. i3: ($mod+c) reload, ($mod+r) restart" {
-        bindsym r exec systemctl reboot
-        bindsym p exec systemctl poweroff
-        bindsym e exit
+mode "Exit <<< System:(e) logout, (r) reboot, (s) suspend, (h) hibernate, (p) poweroff [+sync]. i3: ($AltGr+c) reload, ($AltGr+r) restart" {
+        bindsym r exec unmount-container-sync && systemctl reboot
+        bindsym s exec unmount-container-sync && systemctl suspend
+        bindsym h exec unmount-container-sync && systemctl hibernate
+        bindsym p exec unmount-container-sync && systemctl poweroff
+        bindsym e exec unmount-container-sync; exit
+
+        bindsym $mod+r exec systemctl reboot
+        bindsym $mod+s exec systemctl suspend
+        bindsym $mod+h exec systemctl hibernate
+        bindsym $mod+p exec systemctl poweroff
+        bindsym $mod+e exit
         # reload the configuration file
-        bindsym $mod+c reload; mode "default"
+        bindsym $AltGr+c reload; mode "default"
         # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-        bindsym $mod+r restart
+        bindsym $AltGr+r restart
 
         # back to normal: Enter or Escape
         bindsym Return mode "default"
         bindsym Escape mode "default"
 }
-bindsym $mod+Shift+e mode "Exit <<< System:(e) logout, (r) reboot, (p) poweroff. i3: ($mod+c) reload, ($mod+r) restart"
+bindsym $mod+Shift+e mode "Exit <<< System:(e) logout, (r) reboot, (s) suspend, (h) hibernate, (p) poweroff [+sync]. i3: ($AltGr+c) reload, ($AltGr+r) restart"
 
 # Turn off or suspend screen 
 mode "Screen / DMMS <<< Screens:(k) kino, (s) standby, (p) suspend, (o) off" {
