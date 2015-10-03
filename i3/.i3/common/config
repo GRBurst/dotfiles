@@ -149,6 +149,7 @@ bindsym --release Print exec --no-startup-id scrot 'Screenshot-%Y-%m-%d-%H-%M-%S
 # Program shortcuts
 bindsym $mod+$AltGr+b exec firefox
 #bindsym $mod+$AltGr+c exec termite -e finch
+bindsym $mod+$AltGr+c exec rofi-choose-container
 bindsym $mod+$AltGr+d exec dropbox
 bindsym $mod+$AltGr+f exec nemo
 bindsym $mod+$AltGr+g exec pidgin
@@ -164,7 +165,7 @@ bindsym $mod+$AltGr+v exec VirtualBox
 bindsym $mod+$AltGr+y exec sskype
 
 bindsym $mod+$AltGr+i exec thunderbird; exec firefox
-bindsym $mod+$AltGr+c exec pidgin; exec sskype
+#bindsym $mod+$AltGr+c exec pidgin; exec sskype
 bindsym $mod+$AltGr+a exec thunderbird; exec firefox; exec pidgin; exec sskype
 
 assign [class="(?i)thunderbird"] "1: mail"
