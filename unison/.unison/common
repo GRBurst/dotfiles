@@ -2,6 +2,8 @@
 ## Common file synchronisation settings
 path = document-container
 path = media-container
+path = picture-container
+path = project-container
 path = studium-container
 path = test-container
 
@@ -15,7 +17,7 @@ confirmbigdel   = true
 #force          = newer
 group           = true
 log             = true
-logfile         = /home/jelias/.unison/unison.log
+logfile         = ~/.unison/unison.log
 maxthreads      = 50
 owner           = true
 perms           = -1
