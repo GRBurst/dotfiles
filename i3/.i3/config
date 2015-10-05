@@ -56,16 +56,16 @@ bindsym $mod+s exec --no-startup-id rofi -show ssh
 focus_follows_mouse no
 
 # change focus
-bindsym $mod+i focus left
-bindsym $mod+a focus down
-bindsym $mod+l focus up
-bindsym $mod+e focus right
+bindsym $mod+i move left
+bindsym $mod+a move down
+bindsym $mod+l move up
+bindsym $mod+e move right
 
 # move focused window
-bindsym $mod+n move left
-bindsym $mod+r move down
-bindsym $mod+g move up
-bindsym $mod+t move right
+bindsym $mod+n focus left
+bindsym $mod+r focus down
+bindsym $mod+g focus up
+bindsym $mod+t focus right
 
 # split in horizontal orientation
 bindsym $mod+h split h; exec --no-startup-id $sp/i3scripts.sh ws_set_split h
