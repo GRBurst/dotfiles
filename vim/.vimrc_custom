@@ -296,3 +296,5 @@ function! s:ETW(what, ...)
         endif
     endfor
 endfunction
+
+au BufRead /tmp/mutt-* set tw=72
