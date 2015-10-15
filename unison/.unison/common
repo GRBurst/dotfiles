@@ -1,6 +1,6 @@
 ### Path Settings
 ## Common file synchronisation settings
-#path = document-container
+path = document-container
 #path = media-container
 #path = picture-container
 #path = project-container
