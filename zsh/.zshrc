@@ -51,6 +51,7 @@ autoload -U zmv
 
 setopt nonomatch # avoid the zsh "no matches found" / allows sbt ~compile
 setopt hash_list_all # rehash command path and completions on completion attempt
+setopt share_history
 
 # Vi-mode for zsh
 # bindkey -v
