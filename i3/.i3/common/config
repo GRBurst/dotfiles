@@ -111,7 +111,7 @@ bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+Shift+plus scratchpad show
 
 # Show the sup-mail scratchpad window, if any.
-bindsym $mod+$AltGr+s [title="^Sup ::"] scratchpad show
+#bindsym $mod+$AltGr+questiondown [title="^Sup ::"] scratchpad show # +s
 
 # Mark as always on top
 bindsym $mod+u mark awot; floating enable;
@@ -147,26 +147,26 @@ bindsym --release Print exec --no-startup-id scrot 'Screenshot-%Y-%m-%d-%H-%M-%S
 #bindsym $mod+Shift+r exec --no-startup-id $sp/update-config.sh
 
 # Program shortcuts
-bindsym $mod+$AltGr+b exec firefox
+bindsym $mod+$AltGr+colon exec firefox # $mod+$AltGr+b
 #bindsym $mod+$AltGr+c exec termite -e finch
-bindsym $mod+$AltGr+c exec rofi-choose-container
-bindsym $mod+$AltGr+d exec dropbox
-bindsym $mod+$AltGr+f exec nemo
-bindsym $mod+$AltGr+g exec pidgin
-bindsym $mod+$AltGr+k exec kd
-bindsym $mod+$AltGr+Shift+k exec ko
-bindsym $mod+$AltGr+m exec thunderbird
-bindsym $mod+$AltGr+n exec nmcli_dmenu
-bindsym $mod+$AltGr+p exec spotify
-bindsym $mod+$AltGr+t exec steam
-bindsym $mod+$AltGr+u exec --no-startup-id termite -e 'yaourt -Syua'
-bindsym $mod+$AltGr+v exec VirtualBox
+bindsym $mod+$AltGr+Delete exec rofi-choose-container # +c
+bindsym $mod+$AltGr+KP_Separator exec dropbox # +d
+bindsym $mod+$AltGr+KP_9 exec nemo # +f
+bindsym $mod+$AltGr+KP_8 exec pidgin # +g
+bindsym $mod+$AltGr+exclamdown exec kd # +k
+bindsym $mod+$AltGr+Shift+exclamdown exec ko # +k
+bindsym $mod+$AltGr+KP_1 exec thunderbird # +m
+bindsym $mod+$AltGr+KP_4 exec nmcli_dmenu # +n
+bindsym $mod+$AltGr+End exec spotify-blockify # +o
+bindsym $mod+$AltGr+KP_6 exec steam # +t
+bindsym $mod+$AltGr+Home exec --no-startup-id termite -e 'upgrade' # +u
+bindsym $mod+$AltGr+BackSpace exec VirtualBox # +v
 #bindsym $mod+$AltGr+y exec sh -e $sp/skype.sh
-bindsym $mod+$AltGr+y exec sskype
+bindsym $mod+$AltGr+period exec sskype # +y
 
-bindsym $mod+$AltGr+i exec thunderbird; exec firefox
+bindsym $mod+$AltGr+Left exec thunderbird; exec firefox # +i
 #bindsym $mod+$AltGr+c exec pidgin; exec sskype
-bindsym $mod+$AltGr+a exec thunderbird; exec firefox; exec pidgin; exec sskype
+bindsym $mod+$AltGr+Down exec thunderbird; exec firefox; exec pidgin # +a
 
 assign [class="(?i)thunderbird"] "1: mail"
 assign [class="(?i)firefox"] "2: browser"
@@ -182,7 +182,7 @@ bindsym $mod+4 workspace number 4; [con_mark="awot"] move workspace current;
 bindsym $mod+5 workspace number 5; [con_mark="awot"] move workspace current;
 bindsym $mod+6 workspace number 6; [con_mark="awot"] move workspace current;
 bindsym $mod+7 workspace number 7; [con_mark="awot"] move workspace current;
-bindsym $mod+8 workspace number 8 steam; [con_mark="awot"] move workspace current;
+bindsym $mod+8 workspace number 8: steam; [con_mark="awot"] move workspace current;
 bindsym $mod+9 workspace number 9: communication; [con_mark="awot"] move workspace current;
 bindsym $mod+0 workspace number 0; [con_mark="awot"] move workspace current;
 
@@ -200,28 +200,26 @@ bindsym $mod+Shift+0 move container to workspace number 0
 
 # Define different modes
 # exit i3 (logs you out of your X session)
-mode "Exit <<< System:(e) logout, (r) reboot, (s) suspend, (h) hibernate, (p) poweroff [+sync]. i3: ($AltGr+c) reload, ($AltGr+r) restart" {
+mode "Exit <<< System:(e) logout, (r) reboot, (s) suspend, (p) poweroff [+sync]. i3: (AltGr+c) reload, (AltGr+r) restart" {
         bindsym r exec unmount-container-sync && systemctl reboot
         bindsym s exec unmount-container-sync && systemctl suspend
-        bindsym h exec unmount-container-sync && systemctl hibernate
         bindsym p exec unmount-container-sync && systemctl poweroff
         bindsym e exec unmount-container-sync; exit
 
         bindsym $mod+r exec systemctl reboot
         bindsym $mod+s exec systemctl suspend
-        bindsym $mod+h exec systemctl hibernate
         bindsym $mod+p exec systemctl poweroff
         bindsym $mod+e exit
         # reload the configuration file
-        bindsym $AltGr+c reload; mode "default"
+        bindsym $AltGr+Delete reload; mode "default" # +c
         # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-        bindsym $AltGr+r restart
+        bindsym $AltGr+KP_5 restart # +r
 
         # back to normal: Enter or Escape
         bindsym Return mode "default"
         bindsym Escape mode "default"
 }
-bindsym $mod+Shift+e mode "Exit <<< System:(e) logout, (r) reboot, (s) suspend, (h) hibernate, (p) poweroff [+sync]. i3: ($AltGr+c) reload, ($AltGr+r) restart"
+bindsym $mod+Shift+e mode "Exit <<< System:(e) logout, (r) reboot, (s) suspend, (p) poweroff [+sync]. i3: (AltGr+c) reload, (AltGr+r) restart"
 
 # Turn off or suspend screen 
 mode "Screen / DMMS <<< Screens:(k) kino, (s) standby, (p) suspend, (o) off" {
@@ -244,10 +242,10 @@ mode "resize" {
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
-        bindsym $AltGr+i resize shrink width 5 px or 5 ppt
-        bindsym $AltGr+a resize grow height 5 px or 5 ppt
-        bindsym $AltGr+l resize shrink height 5 px or 5 ppt
-        bindsym $AltGr+e resize grow width 5 px or 5 ppt
+        bindsym $AltGr+Left resize shrink width 5 px or 5 ppt # +i
+        bindsym $AltGr+Down resize grow height 5 px or 5 ppt # +a
+        bindsym $AltGr+Up resize shrink height 5 px or 5 ppt # +l
+        bindsym $AltGr+Right resize grow width 5 px or 5 ppt # +e
 
         # same bindings, but for the arrow keys
         bindsym Left resize shrink width 10 px or 10 ppt
