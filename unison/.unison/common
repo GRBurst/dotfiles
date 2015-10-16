@@ -3,7 +3,7 @@
 path = document-container
 path = media-container
 path = picture-container
-path = project-container
+path = projects-container
 path = studium-container
 
 ## Ignore subfolders
