@@ -111,7 +111,7 @@ bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+Shift+plus scratchpad show
 
 # Show the sup-mail scratchpad window, if any.
-#bindsym $mod+$AltGr+questiondown [title="^Sup ::"] scratchpad show # +s
+#bindsym $mod+$AltGr+questiondown [title="^Sup ::"] scratchpad show
 
 # Mark as always on top
 bindsym $mod+u mark awot; floating enable;
@@ -147,26 +147,26 @@ bindsym --release Print exec --no-startup-id scrot 'Screenshot-%Y-%m-%d-%H-%M-%S
 #bindsym $mod+Shift+r exec --no-startup-id $sp/update-config.sh
 
 # Program shortcuts
-bindsym $mod+$AltGr+colon exec firefox # $mod+$AltGr+b
+bindsym $mod+$AltGr+colon exec firefox
 #bindsym $mod+$AltGr+c exec termite -e finch
-bindsym $mod+$AltGr+Delete exec rofi-choose-container # +c
-bindsym $mod+$AltGr+KP_Separator exec dropbox # +d
-bindsym $mod+$AltGr+KP_9 exec nemo # +f
-bindsym $mod+$AltGr+KP_8 exec pidgin # +g
-bindsym $mod+$AltGr+exclamdown exec kd # +k
-bindsym $mod+$AltGr+Shift+exclamdown exec ko # +k
-bindsym $mod+$AltGr+KP_1 exec thunderbird # +m
-bindsym $mod+$AltGr+KP_4 exec nmcli_dmenu # +n
-bindsym $mod+$AltGr+End exec spotify-blockify # +o
-bindsym $mod+$AltGr+KP_6 exec steam # +t
-bindsym $mod+$AltGr+Home exec --no-startup-id termite -e 'upgrade' # +u
-bindsym $mod+$AltGr+BackSpace exec VirtualBox # +v
+bindsym $mod+$AltGr+Delete exec rofi-choose-container
+bindsym $mod+$AltGr+KP_Separator exec dropbox
+bindsym $mod+$AltGr+KP_9 exec nemo
+bindsym $mod+$AltGr+KP_8 exec pidgin
+bindsym $mod+$AltGr+exclamdown exec kd
+bindsym $mod+$AltGr+Shift+exclamdown exec ko
+bindsym $mod+$AltGr+KP_1 exec thunderbird
+bindsym $mod+$AltGr+KP_4 exec nmcli_dmenu
+bindsym $mod+$AltGr+End exec spotify-blockify
+bindsym $mod+$AltGr+KP_6 exec steam
+bindsym $mod+$AltGr+Home exec --no-startup-id termite -e 'upgrade'
+bindsym $mod+$AltGr+BackSpace exec VirtualBox
 #bindsym $mod+$AltGr+y exec sh -e $sp/skype.sh
-bindsym $mod+$AltGr+period exec sskype # +y
+bindsym $mod+$AltGr+period exec sskype
 
-bindsym $mod+$AltGr+Left exec thunderbird; exec firefox # +i
+bindsym $mod+$AltGr+Left exec thunderbird; exec firefox
 #bindsym $mod+$AltGr+c exec pidgin; exec sskype
-bindsym $mod+$AltGr+Down exec thunderbird; exec firefox; exec pidgin # +a
+bindsym $mod+$AltGr+Down exec thunderbird; exec firefox; exec pidgin
 
 assign [class="(?i)thunderbird"] "1: mail"
 assign [class="(?i)firefox"] "2: browser"
@@ -211,9 +211,9 @@ mode "Exit <<< System:(e) logout, (r) reboot, (s) suspend, (p) poweroff [+sync].
         bindsym $mod+p exec systemctl poweroff
         bindsym $mod+e exit
         # reload the configuration file
-        bindsym $AltGr+Delete reload; mode "default" # +c
+        bindsym $AltGr+Delete reload; mode "default"
         # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-        bindsym $AltGr+KP_5 restart # +r
+        bindsym $AltGr+KP_5 restart
 
         # back to normal: Enter or Escape
         bindsym Return mode "default"
@@ -242,10 +242,10 @@ mode "resize" {
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
-        bindsym $AltGr+Left resize shrink width 5 px or 5 ppt # +i
-        bindsym $AltGr+Down resize grow height 5 px or 5 ppt # +a
-        bindsym $AltGr+Up resize shrink height 5 px or 5 ppt # +l
-        bindsym $AltGr+Right resize grow width 5 px or 5 ppt # +e
+        bindsym $AltGr+Left resize shrink width 5 px or 5 ppt
+        bindsym $AltGr+Down resize grow height 5 px or 5 ppt
+        bindsym $AltGr+Up resize shrink height 5 px or 5 ppt
+        bindsym $AltGr+Right resize grow width 5 px or 5 ppt
 
         # same bindings, but for the arrow keys
         bindsym Left resize shrink width 10 px or 10 ppt
