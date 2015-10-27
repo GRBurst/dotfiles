@@ -149,7 +149,7 @@ bindsym --release Print exec --no-startup-id scrot 'Screenshot-%Y-%m-%d-%H-%M-%S
 # Program shortcuts
 bindsym $mod+$AltGr+colon exec firefox # $mod+$AltGr+b
 #bindsym $mod+$AltGr+c exec termite -e finch
-bindsym $mod+$AltGr+Delete exec rofi-choose-container # +c
+bindsym $mod+$AltGr+Delete exec termite -e rofi-choose-container # +c
 bindsym $mod+$AltGr+KP_Separator exec dropbox # +d
 bindsym $mod+$AltGr+KP_9 exec nemo # +f
 bindsym $mod+$AltGr+KP_8 exec pidgin # +g
@@ -322,3 +322,50 @@ bar {
     strip_workspace_numbers no
 }
 
+### Example of local section ###
+set OUT DP-1
+
+## define workspaces
+workspace "1: mail" output $OUT
+workspace "2: browser" output $OUT
+workspace 3 output $OUT
+workspace 4 output $OUT
+workspace 5 output $OUT
+workspace 6 output $OUT
+workspace 7 output $OUT
+workspace "8: steam" output $OUT
+workspace "9: communication" output $OUT
+
+#workspace 12 output Y
+#workspace 13 output Y
+#workspace 14 output Y
+#workspace 15 output Y
+#workspace 16 output Y
+#workspace 17 output Y
+#workspace "18: communication" output Y
+#workspace "19: steam" output Y
+
+## switch to workspace
+#bindsym $mod+$AltGr+0 workspace number 0; [con_mark="awot"] move workspace current;
+#bindsym $mod+$AltGr+1 workspace number 11: terminal; [con_mark="awot"] move workspace current;
+#bindsym $mod+$AltGr+2 workspace number 12; [con_mark="awot"] move workspace current;
+#bindsym $mod+$AltGr+3 workspace number 13; [con_mark="awot"] move workspace current;
+#bindsym $mod+$AltGr+4 workspace number 14; [con_mark="awot"] move workspace current;
+#bindsym $mod+$AltGr+5 workspace number 15; [con_mark="awot"] move workspace current;
+#bindsym $mod+$AltGr+6 workspace number 16; [con_mark="awot"] move workspace current;
+#bindsym $mod+$AltGr+7 workspace number 17; [con_mark="awot"] move workspace current;
+#bindsym $mod+$AltGr+8 workspace number 18: communication; [con_mark="awot"] move workspace current;
+#bindsym $mod+$AltGr+9 workspace number 19: steam; [con_mark="awot"] move workspace current;
+
+#move focused container to workspace
+#bindsym $mod+$AltGr+Shift+1 move container to workspace number 11: terminal
+#bindsym $mod+$AltGr+Shift+2 move container to workspace number 12
+#bindsym $mod+$AltGr+Shift+3 move container to workspace number 13
+#bindsym $mod+$AltGr+Shift+4 move container to workspace number 14
+#bindsym $mod+$AltGr+Shift+5 move container to workspace number 15
+#bindsym $mod+$AltGr+Shift+6 move container to workspace number 16
+#bindsym $mod+$AltGr+Shift+7 move container to workspace number 17
+#bindsym $mod+$AltGr+Shift+8 move container to workspace number 18: communication
+#bindsym $mod+$AltGr+Shift+9 move container to workspace number 19: steam
+
+### End of local section ###

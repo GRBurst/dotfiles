@@ -1,15 +1,16 @@
 ### Example of local section ###
+set OUT DP-1
 
 ## define workspaces
-workspace "1: mail" output X
-workspace "2: browser" output X
-workspace 3 output X
-workspace 4 output X
-workspace 5 output X
-workspace 6 output X
-workspace 7 output X
-workspace "8: steam" output X
-workspace "9: communication" output X
+workspace "1: mail" output $OUT
+workspace "2: browser" output $OUT
+workspace 3 output $OUT
+workspace 4 output $OUT
+workspace 5 output $OUT
+workspace 6 output $OUT
+workspace 7 output $OUT
+workspace "8: steam" output $OUT
+workspace "9: communication" output $OUT
 
 #workspace 12 output Y
 #workspace 13 output Y
