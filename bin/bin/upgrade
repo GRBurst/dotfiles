@@ -4,6 +4,10 @@
 echo "upgrading installed packages..."
 yaourt -Syyua --devel --noconfirm
 
+# Upgrade docker-skype
+docker pull sameersbn/skype:latest
+docker run -it --rm --volume /usr/local/bin:/target sameersbn/skype:latest install
+
 echo "cleaning package cache..."
 sudo pkgcacheclean
 
