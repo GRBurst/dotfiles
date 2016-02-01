@@ -14,9 +14,13 @@ alias yo="echo yaourt -Qtdq: Check for orphan packages among Arch Linux; yaourt 
 alias g="git"
 alias gst="git status"
 alias gup="git up"
-alias gpu="git push"
-alias glg="git lg"
+alias gph="git push"
+alias gpl="git pull"
+alias glg="git log"
 alias ggr="cd-git-root"
+alias gad="git add"
+alias gada="git add -A"
+alias gcom="git commit -m"
 
 # Colors
 alias ssh='TERM=xterm-color ssh'

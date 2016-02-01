@@ -1,3 +1,4 @@
+source ~/.zprofile # because I have bash as my login shell
 eval "$(fasd --init auto)"
 
 # load zgen
@@ -44,6 +45,9 @@ fry aur-remove-vote
 # command not found for Arch
 [ -r /etc/profile.d/cnf.sh ] && . /etc/profile.d/cnf.sh
 
+# fzf fuzzy file matcher shell extensions
+. /etc/profile.d/fzf.zsh
+
 source ~/.zaliases
 
 # renaming utils
@@ -51,8 +55,12 @@ autoload -U zmv
 
 setopt nonomatch # avoid the zsh "no matches found" / allows sbt ~compile
 setopt hash_list_all # rehash command path and completions on completion attempt
-setopt share_history
+#setopt share_history
 
+unsetopt flow_control
+stty -ixon
 # Vi-mode for zsh
 # bindkey -v
 # export KEYTIMEOUT=1
+
+
