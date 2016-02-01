@@ -4,7 +4,20 @@
 echo "upgrading installed packages..."
 yaourt -Syyua --devel --noconfirm
 
+# Clone boot disc
+echo "Mounting redundant boot disk /dev/sdb1"
+if sudo /usr/sbin/mount -t vfat /dev/sdb1 /mnt/boot-partition; then
+    echo "Successfully mounted /dev/sdb1 at /mnt/boot-partition"
+    sudo rsync -avxHAX --progress /boot/ /mnt/boot-partition/
+    echo "Successfully backuped boot partition"
+    sudo /usr/bin/umount /mnt/boot-partition
+else
+    echo "Error mounting /dev/sdb1. Skipping..."
+fi
+
+
 # Upgrade docker-skype
+echo "upgrading docker skype image"
 docker pull sameersbn/skype:latest
 docker run -it --rm --volume /usr/local/bin:/target sameersbn/skype:latest install
 
