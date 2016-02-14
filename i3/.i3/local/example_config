@@ -44,4 +44,21 @@ workspace "9: communication" output $OUT
 #bindsym $mod+$AltGr+Shift+8 move container to workspace number 18: communication
 #bindsym $mod+$AltGr+Shift+9 move container to workspace number 19: steam
 
+# i3bar
+bar {
+    output $OUT
+    status_command i3status
+    strip_workspace_numbers no
+    colors {
+        background #000000
+        statusline #ffffff
+        separator #666666
+
+        focused_workspace  $lblue   #285577 #ffffff
+        active_workspace   #333333  #5f676a #ffffff
+        inactive_workspace #333333  #222222 #888888
+        urgent_workspace   #2f343a  #900000 #ffffff
+    }
+}
+
 ### End of local section ###
