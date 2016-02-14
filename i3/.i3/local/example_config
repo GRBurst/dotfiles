@@ -1,5 +1,5 @@
 ### Example of local section ###
-set OUT DP-1
+set $OUT DP-1
 
 ## define workspaces
 workspace "1: mail" output $OUT
