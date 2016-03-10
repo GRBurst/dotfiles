@@ -15,3 +15,10 @@ export PATH="$HOME/.node_modules/bin":$PATH
 export GTK_IM_MODULE=ibus
 export XMODIFIERS=@im=ibus
 export QT_IM_MODULE=ibus
+
+# Rust
+export PATH=$HOME/.multirust/toolchains/nightly/cargo/bin:$PATH
+export RUST_SRC_PATH=$HOME/projects/rust/src
+
+# Android
+export ANDROID_HOME=/opt/android-sdk

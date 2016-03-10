@@ -1,4 +1,6 @@
-#rofi.X.value
+Xft.dpi: 168
+
+! rofi.X.value
 rofi.location:		2
 rofi.width:		100
 rofi.lines:		5
@@ -14,6 +16,6 @@ rofi.modi:		run,combi,ssh
 rofi.combi-modi:	window,run
 rofi.sidebar-mode:	true
 
-# Bindings
+! Bindings
 rofi.kb-mode-next:                   Alt+Tab
 rofi.kb-mode-previous:               Alt+Shift+Tab

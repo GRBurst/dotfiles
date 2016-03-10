@@ -202,15 +202,15 @@ bindsym $mod+Shift+9 move container to workspace number 9
 # Define different modes
 # exit i3 (logs you out of your X session)
 mode "Exit <<< System:(e) logout, (r) reboot, (s) suspend, (p) poweroff [+sync]. i3: (AltGr+c) reload, (AltGr+r) restart" {
-        bindsym r exec unmount-container-sync && systemctl reboot
-        bindsym s exec unmount-container-sync && systemctl suspend
-        bindsym p exec unmount-container-sync && systemctl poweroff
-        bindsym e exec unmount-container-sync; exit
+        bindsym $mod+r exec unmount-container-sync && systemctl reboot
+        bindsym $mod+s exec unmount-container-sync && systemctl suspend
+        bindsym $mod+p exec unmount-container-sync && systemctl poweroff
+        bindsym $mod+e exec unmount-container-sync; exit
 
-        bindsym $mod+r exec systemctl reboot
-        bindsym $mod+s exec systemctl suspend
-        bindsym $mod+p exec systemctl poweroff
-        bindsym $mod+e exit
+        bindsym r exec systemctl reboot
+        bindsym s exec systemctl suspend
+        bindsym p exec systemctl poweroff
+        bindsym e exit
         # reload the configuration file
         bindsym $AltGr+Delete reload; mode "default"
         # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
