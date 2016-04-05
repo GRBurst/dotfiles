@@ -23,3 +23,5 @@ export LESS_TERMCAP_us=$(printf "\33[01;35m")   # begin underline
 export FZF_DEFAULT_COMMAND='ag -l --hidden -g ""'
 export FZF_DEFAULT_OPTS="-x -m --ansi --exit-0 --select-1" # extended match and multiple selections
 
+# Use vimpager
+export PAGER=/usr/bin/vimpager
