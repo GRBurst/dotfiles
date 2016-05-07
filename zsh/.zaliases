@@ -31,7 +31,6 @@ alias lh='ls -hAl --color=auto'
 alias ll='ls -l --color=auto'
 
 # Tools
-alias vim="vim --servername vim-$$"
 alias t="tree"
 alias f="find . -name"
 alias fif="find-in-file"

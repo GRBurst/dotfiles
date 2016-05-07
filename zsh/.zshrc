@@ -16,6 +16,7 @@ if ! zgen saved; then
 
     zgen load mafredri/zsh-async # for pure-prompt
     zgen load sindresorhus/pure # prompt
+    zgen load b4b4r07/zsh-vimode-visual
 
     zgen load dottr/dottr
     zgen save
@@ -25,6 +26,22 @@ fi
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 
+# needed for bind2maps
+typeset -A key
+key=(
+Home     "${terminfo[khome]}"
+End      "${terminfo[kend]}"
+Insert   "${terminfo[kich1]}"
+Delete   "${terminfo[kdch1]}"
+Backspace "^?"
+Up       "${terminfo[kcuu1]}"
+Down     "${terminfo[kcud1]}"
+Left     "${terminfo[kcub1]}"
+Right    "${terminfo[kcuf1]}"
+PageUp   "${terminfo[kpp]}"
+PageDown "${terminfo[knp]}"
+BackTab  "${terminfo[kcbt]}"
+)
 
 fry completion
 fry ncserve
@@ -40,6 +57,7 @@ fry cd-tmp
 fry cd-git-root
 fry mkdir-cd
 fry aur-remove-vote
+fry bind2maps
 
 
 # command not found for Arch
@@ -63,4 +81,6 @@ stty -ixon
 # bindkey -v
 # export KEYTIMEOUT=1
 
-
+# activate vi modes and display mode indicator in prompt
+source ~/.zshrc.vimode
+RPROMPT='${MODE_INDICATOR}'
