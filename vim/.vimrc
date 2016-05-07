@@ -1,4 +1,3 @@
-" TODO: exit insert mode on <Up>/<Down>, move inside wrapped lines
 " TODO: leave insert mode when losing focus?
 " TODO: remove stuff, thats already in vim-sensible
 " http://chibicode.com/vimrc/
@@ -8,12 +7,10 @@
 " Use Vim settings, rather than Vi settings
 set nocompatible
 
-" allow UTF-8 characters in vimrc
-scriptencoding utf-8
-
-" clear all keymappings
-mapclear
-
+" define a group `vimrc` and initialize.
+augroup vimrc
+    autocmd!
+augroup END
 
 source $HOME/.vimrc_plugins
 source $HOME/.vimrc_custom
@@ -77,18 +74,18 @@ set nostartofline                 " keep column position when switching buffers
 
 " behavior
 set hidden                        " switch from unsaved buffers
-set shell=/bin/bash
+set shell=/bin/zsh
 set encoding=utf-8
-set history=1000                  " keep x lines of command line history
+set history=10000                 " keep x lines of command line history
 set showcmd                       " display incomplete commands
 set wildmenu                      " better command line completion
 set wildmode=list:longest,full
 set lazyredraw                    " performance: dont redraw while executing macros
-set ttyfast                       " allow vim to write more characters to screen
+" set ttyfast                       " allow vim to write more characters to screen
 set autoread                      " read file when changed from outside
 set confirm                       " ask to save files when closing vim
-set exrc                          " source .vimrc from directories
-set secure                        " secure local vimrc execution
+" set exrc                          " source .vimrc from directories
+" set secure                        " secure local vimrc execution
 set wildignore=*.o,*.obj,*.class,target/**
 set viewoptions=cursor,folds,slash,unix
 
@@ -112,11 +109,6 @@ if !isdirectory(expand(&directory))
     call mkdir(expand(&directory), "p")
 endif
 
-" define a group `vimrc` and initialize.
-augroup vimrc
-    autocmd!
-augroup END
-
 " change directory to the current buffer when opening files.
 " set autochdir
 autocmd vimrc BufEnter * silent! lcd %:p:h
@@ -124,18 +116,17 @@ autocmd vimrc BufEnter * silent! lcd %:p:h
 " break text automatically
 autocmd vimrc FileType text setlocal textwidth=78
 
+let g:tex_flavor = "latex"
+
+" set spell spelllang=en_us
+
 " filetype aliases
 autocmd vimrc BufNewFile,BufRead *.sbt set filetype=scala
 autocmd vimrc BufNewFile,BufRead *.gdb set filetype=sh
 autocmd vimrc BufNewFile,BufRead *.jad set filetype=java
 
-" on save, delete trailing spaces
-autocmd vimrc FileType vim,html,css,scss,javascript,sh
-            \ autocmd BufWritePre * call StripTrailingSpaces()
-
-" on save, autoformat
-autocmd vimrc FileType vim,html
-            \ autocmd BufWritePre *.vim *.html Autoformat
+" on save, autoformat - also removes trailing spaces
+au BufWritePre * :Autoformat
 
 " return to last edit position when opening a file.
 " except for git commits: Enter insert mode instead.
@@ -150,6 +141,11 @@ autocmd vimrc BufReadPost *
             \ endif
 
 
+if has('nvim')
+    " neovim: automatically close terminal when process exited
+    autocmd TermClose * call feedkeys('<cr>')
+endif
+
 " leave insert mode quickly
 if ! has('gui_running')
     set ttimeoutlen=10
@@ -160,10 +156,3 @@ if ! has('gui_running')
     autocmd FastEscape InsertEnter * set timeoutlen=0
     autocmd FastEscape InsertLeave * set timeoutlen=1000
 endif
-
-" don't move cursor when leaving insert mode, breaks multiple-cursors
-" let CursorColumnI = 0 "the cursor column position in INSERT
-" autocmd InsertEnter * let CursorColumnI = col('.')
-" autocmd CursorMovedI * let CursorColumnI = col('.')
-" autocmd InsertLeave * if col('.') != CursorColumnI | call cursor(0, col('.')+1) | endif
-
