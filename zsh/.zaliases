@@ -48,7 +48,23 @@ alias t="tree"
 alias f="find . -name"
 alias fif="find-in-file"
 
-# vimo
+# Raid
+raid_health() {
+    cat /proc/mdstat
+    sudo mdadm -D /dev/md0
+}
+
+raid_check() {
+    sudo bash -c 'echo 400000 >/proc/sys/dev/raid/speed_limit_min'
+    sudo bash -c 'echo 400000 >/proc/sys/dev/raid/speed_limit_max'
+    sudo bash -c 'echo check > /sys/block/md0/md/sync_action'
+}
+
+raid_watch() {
+    watch -t 'cat /proc/mdstat'
+}
+
+# vim
 alias vimt='vim $(date +"%Y-%m-%d")'
 v() {
     (
