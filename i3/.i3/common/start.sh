@@ -5,6 +5,6 @@ unclutter &
 nm-applet &
 pasystray &
 redshift-gtk &
-owncloud &
+# owncloud &
 #/usr/lib/notification-daemon-1.0/notification-daemon &
 #./.conkyconfig/conky_start &

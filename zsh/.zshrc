@@ -1,18 +1,14 @@
-source ~/.zprofile # because I have bash as my login shell
-eval "$(fasd --init auto)"
+export PURE_GIT_PULL=0 # disable pure-promt git pull when entering git repo
+DISABLE_AUTO_UPDATE="true" # disable oh-my-zsh auto-update
 
-# load zgen
-source "${HOME}/.zsh/zgen/zgen.zsh"
+eval    "$(fasd --init auto)"
+source  "${HOME}/.zsh/zgen/zgen.zsh"
 
 if ! zgen saved; then
     echo "creating zgen save..."
     zgen oh-my-zsh # oh-my-zsh default settings
 
     zgen load zsh-users/zsh-syntax-highlighting
-    zgen load zsh-users/zsh-history-substring-search # needs to be loaded after highlighting
-    zgen load jimhester/per-directory-history
-
-    zgen load tarruda/zsh-autosuggestions
 
     zgen load mafredri/zsh-async # for pure-prompt
     zgen load sindresorhus/pure # prompt
@@ -21,10 +17,6 @@ if ! zgen saved; then
     zgen load dottr/dottr
     zgen save
 fi
-
-# bind UP and DOWN arrow keys
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
 
 # needed for bind2maps
 typeset -A key
@@ -43,11 +35,13 @@ PageDown "${terminfo[knp]}"
 BackTab  "${terminfo[kcbt]}"
 )
 
+
 fry completion
 fry ncserve
 fry pacman-disowned
 fry alias-usage-analysis
 fry print-expanded-alias
+# fry vim-open-files-at-lines
 fry search-select-edit
 fry git-select-commit
 fry git-onstage
@@ -55,32 +49,38 @@ fry github-clone
 fry interactive-mv
 fry cd-tmp
 fry cd-git-root
+fry neo4j-query
+#NEO4J_QUERY_JSON_FORMATTER="underscore print --color --outfmt json"
 fry mkdir-cd
 fry aur-remove-vote
+fry screencapture
+fry transcode-video
 fry bind2maps
 
+
+setopt nonomatch # avoid the zsh "no matches found" / allows sbt ~compile
+setopt hash_list_all # rehash command path and completions on completion attempt
+setopt transient_rprompt # hide earlier rprompts
+unsetopt flow_control # we don't want no flow control, Ctrl-s / Ctrl-q, this allows vim to map <C-s>
+stty -ixon # (belongs to flow control option)
+autoload -U zmv # renaming utils
+
+# activate vi modes and display mode indicator in prompt
+source ~/.zshrc.vimode
+RPROMPT='${MODE_INDICATOR}'
+
+
+# history prefix search
+autoload -U history-search-end
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end history-search-end
+bind2maps emacs viins vicmd -- "Up" up-line-or-search
+bind2maps emacs viins vicmd -- "Down" down-line-or-search
 
 # command not found for Arch
 [ -r /etc/profile.d/cnf.sh ] && . /etc/profile.d/cnf.sh
 
 # fzf fuzzy file matcher shell extensions
-. /etc/profile.d/fzf.zsh
+. /usr/share/fzf/key-bindings.zsh
 
 source ~/.zaliases
-
-# renaming utils
-autoload -U zmv
-
-setopt nonomatch # avoid the zsh "no matches found" / allows sbt ~compile
-setopt hash_list_all # rehash command path and completions on completion attempt
-#setopt share_history
-
-unsetopt flow_control
-stty -ixon
-# Vi-mode for zsh
-# bindkey -v
-# export KEYTIMEOUT=1
-
-# activate vi modes and display mode indicator in prompt
-source ~/.zshrc.vimode
-RPROMPT='${MODE_INDICATOR}'

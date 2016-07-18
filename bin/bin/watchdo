@@ -1,0 +1,46 @@
+#!/bin/zsh -i
+self=$0
+
+function usage {
+	echo "Usage: `basename $self` COMMAND FILEPATTERN [FILEPATTERN] ..."
+	exit 1
+}
+
+function match {
+  s=$1
+  shift
+  matchcount=0
+  for arg in $@; do
+    if test $s == $arg; then
+      let matchcount+=1
+    fi
+  done
+
+  test $matchcount -ge 1
+}
+
+[[ $# -le 1 ]] && usage
+
+command="$1"
+shift
+filepattern="$@"
+
+eval $command
+
+echo "Watching for changes..."
+inotifywait -rmqe close_write . "$self" | while read dir event file; do
+  path=$dir$file
+  echo $path
+  if match $path "$@" || match $file "$@"; then
+    eval $command
+  fi
+
+  if test "$path" == "$self"; then
+    killall inotifywait #TODO kill only the process of this file
+    break
+  fi
+done
+
+# The loop only ends if watchdo has been changed
+echo "WatchDo changed, restarting."
+watchdo $command $filepattern

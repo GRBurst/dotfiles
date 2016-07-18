@@ -1,6 +1,7 @@
 export BROWSER=firefox
 export SUDO_EDITOR=rvim
 export VISUAL="vim"
+export DE=gnome
 
 # color wrappers for common commands
 export PATH="$(cope_path)":$PATH
@@ -22,3 +23,14 @@ export RUST_SRC_PATH=$HOME/projects/rust/src
 
 # Android
 export ANDROID_HOME=/opt/android-sdk
+
+# fix java apps in tiling window managers
+export _JAVA_AWT_WM_NONREPARENTING=1
+
+# fix java apps font rendering
+# javaopts=$javaopts" -Dawt.useSystemAAFontSettings=gasp -Dsun.java2d.xrender=true -Dswing.aatext=true"
+export AWT_TOOLKIT=MToolkit
+export GDK_USE_XFT=1
+
+sbtopts="$sbtopts -Xms64M -Xmx4G -Xss1M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC"
+export SBT_OPTS=$sbtopts

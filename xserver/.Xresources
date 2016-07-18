@@ -1,21 +1,31 @@
 Xft.dpi: 168
 
+! Rofi colors now specified by:
+! State: 'bg', 'fg', 'bgalt', 'hlbg', 'hlfg'
+
+
 ! rofi.X.value
-rofi.location:		2
-rofi.width:		100
-rofi.lines:		5
-rofi.columns:		1
-rofi.fg:		#efefef
-rofi.bg:		#121212
-rofi.bg-active:		#efefef
-rofi.hlbg:		#31baff
-rofi.hlbg-active:	#101010
-rofi.font:		monospace 14
-rofi.fuzzy:		true
-rofi.modi:		run,combi,ssh
-rofi.combi-modi:	window,run
-rofi.sidebar-mode:	true
+rofi.location:      2
+rofi.width:         100
+rofi.lines:         5
+rofi.columns:       1
+rofi.color-normal:  #121212,    #efefef,    #121212,   #31baff,    #101010
+!rofi.color-active:  #121212,    #efefef,    #121212,   #31baff,    #101010
+!rofi.color-urgent:  #121212,    #efefef,    #121212,   #31baff,    #101010
+rofi.dpi:           168
+rofi.font:          monospace 14
+rofi.fuzzy:         true
+rofi.modi:          run,combi,ssh
+rofi.combi-modi:    window,run
+rofi.sidebar-mode:  true
 
 ! Bindings
-rofi.kb-mode-next:                   Alt+Tab
-rofi.kb-mode-previous:               Alt+Shift+Tab
+rofi.kb-mode-next:      Alt+Tab
+rofi.kb-mode-previous:  Alt+Shift+Tab
+
+! commands
+rofi.terminal:          termite
+rofi.run-command:       zsh -i -c "{cmd}"
+rofi.run-shell-command: {terminal} -e "zsh -i -c \"{cmd}\""
+rofi.ssh-command:       {terminal} -e {ssh-client} {host}
+

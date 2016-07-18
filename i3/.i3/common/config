@@ -38,7 +38,7 @@ floating_modifier $mod
 # start a terminal
 #bindsym $mod+Return exec termite
 bindsym $mod+Return exec --no-startup-id $sp/i3scripts.sh ws_split manual
-bindsym $mod+Shift+Return exec --no-startup-id $sp/i3scripts.sh ws_split auto 
+bindsym $mod+Shift+Return exec --no-startup-id $sp/i3scripts.sh ws_split auto
 bindsym $mod+$AltGr+Return exec termite -e zsh
 
 # kill focused window
@@ -115,7 +115,7 @@ bindsym $mod+Shift+plus scratchpad show
 
 # Mark as always on top
 bindsym $mod+u mark awot; floating enable;
-bindsym $mod+Shift+u unmark awot; 
+bindsym $mod+Shift+u unmark awot;
 
 # Colors
 set $lblue "#37baff"
@@ -153,8 +153,8 @@ bindsym $mod+$AltGr+Delete exec rofi-choose-container
 bindsym $mod+$AltGr+KP_Separator exec dropbox
 bindsym $mod+$AltGr+KP_9 exec nemo
 bindsym $mod+$AltGr+KP_8 exec pidgin
-bindsym $mod+$AltGr+exclamdown exec kd
-bindsym $mod+$AltGr+Shift+exclamdown exec ko
+bindsym $mod+$AltGr+exclamdown exec ko
+bindsym $mod+$AltGr+Shift+exclamdown exec kd
 bindsym $mod+$AltGr+KP_1 exec thunderbird
 bindsym $mod+$AltGr+KP_4 exec nmcli_dmenu
 bindsym $mod+$AltGr+End exec spotify-blockify
@@ -222,7 +222,7 @@ mode "Exit <<< System:(e) logout, (r) reboot, (s) suspend, (p) poweroff [+sync].
 }
 bindsym $mod+Shift+e mode "Exit <<< System:(e) logout, (r) reboot, (s) suspend, (p) poweroff [+sync]. i3: (AltGr+c) reload, (AltGr+r) restart"
 
-# Turn off or suspend screen 
+# Turn off or suspend screen
 mode "Screen / DMMS <<< Screens:(k) kino, (s) standby, (p) suspend, (o) off" {
         bindsym s exec i3lock && xset dpms force standby; mode "default"
         bindsym p exec i3lock && xset dpms force suspend; mode "default"

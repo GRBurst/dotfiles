@@ -1,0 +1,59 @@
+#!/bin/zsh -ie
+
+# Pacman & system related
+echo "upgrading installed packages..."
+yaourt -Syyua --devel --noconfirm
+
+# Clone boot disc
+# echo "Mounting redundant boot disk /dev/sdb1"
+# if sudo /usr/sbin/mount -t vfat /dev/sdb1 /mnt/boot-partition; then
+#     echo "Successfully mounted /dev/sdb1 at /mnt/boot-partition"
+#     sudo rsync -avxHAX --progress /boot/ /mnt/boot-partition/
+#     echo "Successfully backuped boot partition"
+#     sudo /usr/bin/umount /mnt/boot-partition
+# else
+#     echo "Error mounting /dev/sdb1. Skipping..."
+# fi
+
+
+# Upgrade docker-skype
+# echo "upgrading docker skype image"
+# docker pull sameersbn/skype:latest
+# docker run -it --rm --volume /usr/local/bin:/target sameersbn/skype:latest install
+
+echo "cleaning package cache..."
+sudo pkgcacheclean
+
+echo "updating package search database..."
+sudo pkgfile -u
+
+echo "optimizing pacman database..."
+sudo pacman-optimize
+
+
+# Plugin manager and programs
+echo "updating zgen plugins..."
+zgen update
+
+echo "updating vim plugins..."
+vim +PlugInstall +PlugUpgrade +PlugUpdate +qall
+
+echo "updating global npm packages"
+npm -g update
+
+# echo "Update LibreSignal"
+# cd ~/projects/LibreSignal-Desktop
+# git stash
+# git pull
+# git stash pop
+# cd -
+
+
+# Filesystem related
+echo "updating mlocate database..."
+sudo updatedb
+
+# sudo btrfs filesystem defragment /
+sync
+
+exit 0

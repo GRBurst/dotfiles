@@ -22,20 +22,89 @@ alias gad="git add"
 alias gada="git add -A"
 alias gcom="git commit -m"
 
+# Dev
+alias m='make'
+alias mc='make clean'
+
 # Colors
-alias ssh='TERM=xterm-color ssh'
+alias ssh='TERM=xterm-256color ssh'
 alias l='ls -lF --color=auto'
 alias ls='ls -b -CF --color=auto'
 alias la='ls -la --color=auto'
 alias lh='ls -hAl --color=auto'
 alias ll='ls -l --color=auto'
+bash -c "slee""p 2"
+
+# cd
+alias cdd='cd ~/downloads'
+alias cdp='cd ~/projects'
+alias cd.='cd ~/projects/dotfiles'
+alias cdt='cd-tmp'
+alias cdg='cd-git-root'
 
 # Tools
+alias cg="cargo"
 alias t="tree"
 alias f="find . -name"
 alias fif="find-in-file"
 
-# Misc
+# vimo
+alias vimt='vim $(date +"%Y-%m-%d")'
+v() {
+    (
+        cd-git-root > /dev/null
+        file="$(fzf --query="$(echo $@ | tr ' ' '\ ' )")"
+        [[ -n $file ]] && vim "$file"
+    );
+}
+# v() { echo $@ | vim -c Rooter -c Files }
+vr() { vim -c "History $*"; }
+vt() { vim -c "Tags $*"; }
+
+# alias vim="vim --servername vim-$$" # always start vim as server (for live colorscheme changing, working differently for neovim)
+nvim_command() {
+    # usage: nvim_command <socket> <command>
+    # requires: https://github.com/jakm/msgpack-cli
+
+    # https://github.com/msgpack-rpc/msgpack-rpc/blob/master/spec.md
+    # msgpack-rpc is an array of [type, msgid, method, params]
+    # encode and send it to nvims unix socket via netcat
+    msgpack-cli encode <(echo "[0,0,\"vim_command\",[\"$2\"]]") | netcat -U $1
+}
+
+x() {
+    $@ &
+    disown
+    exit
+}
+
+nvim_all_command() {
+    # usage: nvim_all_command <command>
+    for nvim in /tmp/nvim*/0; do
+        nvim_command $nvim "$1"
+    done
+}
+
+cgw() {
+    cargo $1
+    cargo watch $1
+}
+
+sbt() { (
+    # TODO, only if there is no build.sbt in current folder
+    cd-git-root
+    env sbt $@
+    )
+}
+
+# i3
 alias i3-update-conf="cat ~/.i3/common/config > ~/.i3/config; cat ~/.i3/local/config* >> ~/.i3/config; i3-msg reload;"
 
 
+# Projects
+mdot() {
+    local n=$(basename "$1")
+    dot -Tsvg $1 -o /tmp/$n.svg; atril -s /tmp/$n.svg
+}
+
+# vim: ft=sh
