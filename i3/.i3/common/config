@@ -163,7 +163,6 @@ bindsym $mod+$AltGr+Home exec --no-startup-id termite -e 'upgrade'
 bindsym $mod+$AltGr+BackSpace exec VirtualBox
 #bindsym $mod+$AltGr+y exec sh -e $sp/skype.sh
 bindsym $mod+$AltGr+period exec skype
-bindsym $mod+$AltGr+questiondown exec chromium --app-id=jbpcblakaphkpohaeimfojaebljgblph
 
 bindsym $mod+$AltGr+Left exec thunderbird; exec firefox
 #bindsym $mod+$AltGr+c exec pidgin; exec sskype
