@@ -2,6 +2,7 @@ export BROWSER=firefox
 export SUDO_EDITOR=rvim
 export VISUAL="vim"
 export DE=gnome
+export PAGER=vimpager
 
 # color wrappers for common commands
 export PATH="$(cope_path)":$PATH
