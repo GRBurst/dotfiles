@@ -171,6 +171,7 @@ feh --bg-scale "$HOME/.i3/background0.jpg" "$HOME/.i3/background1.jpg"
 yaourt -S pulseaudio pulseaudio-alsa
 yaourt -S pasystray
 yaourt -S paman pavucontrol pavumeter paprefs
+# umute with volume control
 
 # Internet / NetworkManager
 yaourt -S networkmanager
@@ -197,15 +198,59 @@ npm start
 # Seahorse
 yaourt -S seahorse
 
+# Gnome Keyring configuration
+sudoedit /etc/pam.d/login
+-> add line: auth optional pam_gnome_keyring.so
+-> add line: sessios optional pam_gnome_keyring.so auto_start
+
+sudoedit /etc/pam.d/passwd
+-> add line: password optional pam_gnome_keyring.so
+
+# Timeout after 3 failed login attempts
+vim /etc/pam.d/system-login
+    #auth required pam_tally.so onerr=succeed file=/var/log/faillog
+    auth required pam_tally.so deny=2 unlock_time=600 onerr=succeed file=/var/log/faillog
+
 # Notification
 yaourt -S notify-osd
 
 # Further stuff
 yaourt -S unclutter
 yaourt -S mlocate
+sudo updatedb
 yaourt -S clamav
+sudo freshclam
 sudo systemctl enable clamd.service
 sudo systemctl enable freshclamd.service
 
+# Font configuration
+# Add infinality repos
+sudo dirmngr < /dev/null
+# Check key first!!
+sudo pacman-key -r 962DDE58
+sudo pacman-key -f 962DDE58
+sudo pacman-key --lsign-key 962DDE58
+sudoedit /etc/pacman.conf
+-> [infinality-bundle]
+-> Server = http://bohoomil.com/repo/$arch
+# -> [infinality-bundle-multilib]
+# -> Server = http://bohoomil.com/repo/multilib/$arch
+-> [infinality-bundle-fonts]
+-> Server = http://bohoomil.com/repo/fonts
 
-# Further configuration
+y -Sy
+y -S infinality-bundle
+
+# Misc
+yaourt -S tree
+yaourt -S xcwd-git
+yaourt -S gksu
+yaourt -S meld
+yaourt -S strace
+
+# SSH configuration / key creation
+yaourt -S openssh
+# ssh-keygen -t rsa -b 4096 -C "$(whoami)@$(hostname)-$(date -I)"
+# scp ~/.ssh/id_rsa.pub username@server:
+# cat ~/id_*.pub >> ~/.ssh/authorized_keys
+# rm ~/id_*.pub
