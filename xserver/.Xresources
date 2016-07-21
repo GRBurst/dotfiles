@@ -1,4 +1,4 @@
-Xft.dpi: 168
+!Xft.dpi: 168
 
 ! Rofi colors now specified by:
 ! State: 'bg', 'fg', 'bgalt', 'hlbg', 'hlfg'
@@ -12,7 +12,7 @@ rofi.columns:       1
 rofi.color-normal:  #121212,    #efefef,    #121212,   #31baff,    #101010
 !rofi.color-active:  #121212,    #efefef,    #121212,   #31baff,    #101010
 !rofi.color-urgent:  #121212,    #efefef,    #121212,   #31baff,    #101010
-rofi.dpi:           168
+!rofi.dpi:           168
 rofi.font:          monospace 14
 rofi.fuzzy:         true
 rofi.modi:          run,combi,ssh
