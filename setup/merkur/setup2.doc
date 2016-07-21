@@ -65,12 +65,14 @@ yaourt -S paman pavucontrol pavumeter paprefs
 yaourt -S gnome-keyring
 yaourt -S seahorse nemo-neahorse
 
+# Create a keyring "Login" with same pw as login
+
 sudoedit /etc/pam.d/login
--> auth optional pam_gnome_keyring.so
--> session optional pam_gnome_keyring.so auto_start
+-> add line: auth optional pam_gnome_keyring.so
+-> add line: session optional pam_gnome_keyring.so auto_start
 
 sudoedit /etc/pam.d/passwd
--> password optional pam_gnome_keyring.so
+-> add line: password optional pam_gnome_keyring.so
 
 vim ~/.xinitrc
 -> eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
@@ -144,7 +146,7 @@ yaourt -S unison
 yaourt -S usb_modeswitch modemmanager
 
 # Fonts
-# Add infinality repos 
+# Add infinality repos
 sudo dirmngr < /dev/null
 # Check key first!!
 sudo pacman-key -r 962DDE58
@@ -173,7 +175,7 @@ y -S jre8-openjdk-infinality
 # Misc
 yaourt -S tree
 yaourt -S downgrade
-yaourt -S xcwd
+yaourt -S xcwd-git
 yaourt -S gksu
 yaourt -S meld
 yaourt -S strace
