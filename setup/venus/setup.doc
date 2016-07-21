@@ -1,0 +1,211 @@
+# Add new user
+useradd -m -g users -G wheel -s /bin/zsh [username]
+passwd [username]
+
+# Install sudo & zsh
+pacman -S sudo
+pacman -S zsh
+
+# Allow user to sudo by uncommenting:
+visudo
+-> %wheel ALL=(ALL) ALL
+
+# logout of system
+# login with new user
+
+# Login as user and setup zsh in dialog
+nvim .zshrc
+-> export SUDO_EDITOR=rvim
+
+yauort -Rns vim
+
+# Disable root
+sudo passwd -l root
+
+# Set max size of journal logfiles
+sudoedit /etc/systemd/journald.conf
+-> SystemMaxUse=100M
+
+# Edit locales
+sudoedit /etc/locale.conf
+-> LANG=en_US.UTF-8
+-> LC_MONERATY=de_DE.UTF-8
+
+# Uncomment in pacman conf and install yaourt
+sudoedit /etc/pacman.conf
+-> [multilib]
+-> Include = /etc/pacman.d/mirrorlist
+
+-> [archlinuxfr]
+-> SigLevel = PackageOptional
+-> Server = https://repo.archlinux.fr/$arch
+
+pacman -Syu yaourt
+
+# Install missing firmware modulen
+yaourt -S wd719x-firmware aic94xx-firmware
+
+# Install dotfile manager and grsecurity
+yaourt -S stow etckeeper linux-grsec
+
+sudoedit /boot/syslinux/syslinux.cfg
+-> LINUX ../vmlinuz-linux-grsec
+-> INITRD ../initramfs-linux-grsec.img
+# Create further entries
+
+# Set loader option
+nvim /boot/loader/loader.conf
+-> TIMEOUT 10
+-> DEFAULT arch-grsec
+# reboot to grsec
+
+# Setup etckeeper
+sudo systemctl enable etckeeper.timer
+sudoedit /etc/etckeeper/commit.d/50vcs-commit
+-> git gc # Add after git commit
+
+sudo etckeeper init
+cd /etc
+sudo git status
+sudo git commit -m "Initial checkin"
+sudo git gc
+
+# Get dotfiles
+cd ~/
+git clone https://github.com/GRBurst/dotfiles.git
+
+# AUR vote
+yaourt -S aurvote
+aurvote --configure
+
+# Install stuff
+yaourt -S zsh cope-git fasd
+
+# Install graphics
+yaourt -S xf86-video-ati mesa-libgl mesa-vdpau
+yaourt -S i3
+
+cd ~/dotfiles
+stow xserver
+stow zsh
+
+# Basic setup
+yaourt -S termite rofi npm downgrade fzf
+stow bin
+stow npm
+stow termite
+stow vim
+stow dircolors
+
+sudo ln -s /usr/bin/rofi /usr/bin/dmenu
+
+yaourt -S neovim neovim-symlinks python-neovim python2-neovim
+ln -s ~/.vim .config/nvim
+ln -s ~/.vimrc .config/nvim/init.vim
+
+yaourt -S openssh gnome-keyring ctags
+yaourt -S namcap pkgfile pkgcacheclean
+
+basic-update
+
+# reboot
+
+# Neo keyboard
+localectl --no-convert set-x11-keymap de thinkpad neo
+setxkbmap de neo
+
+# Configure i3
+stow i3
+stow i3status
+
+xrandr #to get out
+cd ~/.i3/local
+nvim config
+    -> set correct $OUT
+i3-update-conf
+
+# Install disk tools
+yaourt -S gvfs gvfs-mtp gvfs-smb
+yaourt -S ntfs-3g
+
+yaourt -S xdg-user-dirs xdg-utils
+vim ~/.config/user-dirs.dirs
+    -> change to lowercase
+mv [Documents] [documents] # mv all to lowercase
+
+# Install nemo applications
+yaourt -S nemo nemo-fileroller nemo-preview nemo-seahorse nemo-share
+-> gsettings set org.nemo.desktop show-desktop-icons false
+-> gsettings set org.cinnamon.desktop.default-applications.terminal exec termite
+
+yaourt -S keepass xdotool xsel
+
+# Graphics
+yaourt -S python-gobject python-xdg librsvg
+yaourt -S redshift
+cd dotfiles
+stow redshift
+
+# Laptop tools
+yaourt -S lm_sensors
+sudo sensors-detect
+sudo systemctl enable lm_sensors.service
+
+yaourt -S tlp
+yaourt -S cpupower acpid bluez-utils smartmontools ethtool
+yaourt -S cbatticon
+
+sudo systemctl enable tlp.service
+sudo systemctl start tlp.service
+
+sudoedit /etc/default/tlp
+-> SATA_LINKPWR_ON_BAT=max_performance
+
+yaourt -S xf86-input-libinput
+
+# background
+yaourt -S feh
+feh --bg-scale "$HOME/.i3/background0.jpg" "$HOME/.i3/background1.jpg"
+
+# Sound
+yaourt -S pulseaudio pulseaudio-alsa
+yaourt -S pasystray
+yaourt -S paman pavucontrol pavumeter paprefs
+
+# Internet / NetworkManager
+yaourt -S networkmanager
+yaourt -S networkmanager-openvpn networkmanager-vpnc
+yaourt -S network-manager-applet
+# Network manager dmenu yaourt -S network
+yaourt -S networkmanager-dmenu-git
+
+sudo systemctl disable dhcpcd@.service
+systemctl enable NetworkManager.service
+systemctl start NetworkManager.service
+
+# Bluetooth
+yaourt -S bluez bluez-utils
+
+# Setup keepass electron
+yaourt -S crpto++
+mkdir ~/local
+cd ~/local
+https://github.com/gustavnikolaj/keepass-reader.git
+npm install
+npm start
+
+# Seahorse
+yaourt -S seahorse
+
+# Notification
+yaourt -S notify-osd
+
+# Further stuff
+yaourt -S unclutter
+yaourt -S mlocate
+yaourt -S clamav
+sudo systemctl enable clamd.service
+sudo systemctl enable freshclamd.service
+
+
+# Further configuration

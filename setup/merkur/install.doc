@@ -1,0 +1,130 @@
+# Connect to Internet (WiFi)
+wifi-menu
+
+# Get neo keyboard layout
+wget https://svn.neo-layout.org/linux/console/neo.map
+gzip neo.map
+mkdir /usr/share/kbd/keymaps/i386/neo
+mv neo.map.gz /usr/share/kbd/keymaps/i386/neo/
+localectl --no-convert set-keymap neo
+
+# Update the system clock
+timedatectl set-ntp true
+
+# Load dm-crpyt module
+modprobe dm-crypt
+
+# Prepare the storage devices
+lsblk # determine system device
+gdisk /dev/sdx #For defaults just press enter
+    o       # Delete all partitions on disk
+    n       # Create new partition
+    1       # Set partition number to 1 [default]
+    [ENTER] # Set first sector to 2048
+    +512M   # Set last sector of partition with 512MB to first sector
+#    ef00    # Change partition to efi system
+
+    n
+    [ENTER] # Create partition 2
+    [ENTER] # Set first sector
+    [ENTER] # Set second sector
+    [ENTER] # Accept parition type 8300, linux filesystem
+
+    w       # Write changes to disk
+
+# Check available ciphers and cipher speed
+cryptsetup benchmark
+
+# Set encrytion with aes bloch cipher in xts mode with keysize of 512 on /dev/sdx2
+cryptsetup -c aes-xts-plain -y -s 512 luksFormat /dev/sdx2
+cryptsetup luksOpen /dev/sdX2 lvm
+
+# Create logical encrypted partitions
+pvcreate /dev/mapper/lvm
+vgcreate arch /dev/mapper/lvm
+
+lvcreate -L 8G -n swap arch
+lvcreate -L 32G -n root arch
+lvcreate -L 224G -n home arch
+
+# Format volumes
+mkswap /dev/mapper/arch-swap
+mkfs.btrfs /dev/mapper/arch-root
+mkfs.ext4 /dev/mapper/arch-home
+mkfs.ext4 /dev/sdx1
+
+# uefi: mkfs.fat -F32 /dev/sdx1
+
+# Mount partitions
+mount -o compress=lzo,autodefrag,inode_cache /dev/mapper/arch-root /mnt
+mkdir /mnt/boot
+mkdir /mnt/home
+mount /dev/mapper/arch-home /mnt/home
+mount /dev/sda1 /mnt/boot
+swapon /dev/mapper/arch-swap
+
+# Install base system
+vim /etc/pacman.d/mirrorlist # Change ordering
+pacstrap -i /mnt base base-devel
+
+# Generate an fstab using UUIDs
+genfstab -U /mnt > /mnt/etc/fstab
+
+# Change root into the new system
+arch-chroot /mnt /bin/bash
+
+# Locales
+vi /etc/locale.gen
+    de_DE.UTF-8 UTF-8
+    en_US.UTF-8 UTF-8
+
+locale-gen
+echo LANG=en_US.UTF-8 > /etc/locale.conf
+
+# Keymap
+vi /etc/vconsole.conf
+    KEYMAP=neo
+    FONT=Lat2-Terminus16
+
+# Time
+ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
+hwclock --systohc --utc
+
+# Hostname
+echo [hostname] > /etc/hostname
+vim /etc/hosts
+    # append [hostname]
+
+# Internet
+pacman -S iw wpa_supplicant
+pacman -S dialog
+
+# Initramfs
+pacman -S btrfs-progs
+vi /etc/mkinitcpio.conf
+HOOKS="base udev autodetect modconf block keyboard keymap encrypt lvm2 filesystems fsck"
+mkinitcpio -p linux
+
+# bootmanager
+pacman -S syslinux gptfdisk
+syslinux-install_update -i -a -m #fail? -> manual will work
+vim /boot/syslinux/syslinux.cfg
+    APPEND cryptdevice=/dev/sdx2:arch root=/dev/mapper/arch-root rw
+
+# manual syslinux version
+mkdir /boot/syslinux
+cp -r /usr/lib/syslinux/bios/*.c32 /boot/syslinux/
+extlinux --install /boot/syslinux
+fdisk /dev/sdx
+    a   # Make partition bootable
+    1   # choose partition 1
+    w   # Write and exit
+dd bs=440 count=1 if=/usr/lib/syslinux/bios/mbr.bin of=/dev/sda
+
+# set root password
+passwd
+
+# exit and reboot
+exit
+umount -R /mnt/
+reboot  # plug off usb-stick
