@@ -1,0 +1,13 @@
+#!/bin/bash
+killall conky
+conky -p 1 -c ~/.conky/ConkyBar/configs/conky_bg &
+conky -c ~/.conky/ConkyBar/configs/conky_clock &
+conky -c ~/.conky/ConkyBar/configs/conky_txt &
+conky -c ~/.conky/ConkyBar/configs/conky_network &
+#conky -c ~/.conky/ConkyBar/configs/conky_banshee4 &
+conky -c ~/.conky/ConkyBar/configs/conky_system &
+conky -c ~/.conky/ConkyBar/configs/conky_cpu2 &
+conky -c ~/.conky/ConkyBar/configs/conky_ram &
+conky -c ~/.conky/ConkyBar/configs/conky_files2 &
+conky -c ~/.conky/ConkyBar/configs/conky_weather &
+exit

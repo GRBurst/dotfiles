@@ -1,0 +1,64 @@
+conky.config = {
+-- ------------------------- Windows Settings
+    own_window = true,
+    own_window_type = 'override',
+    own_window_transparent = false,
+    own_window_hints = 'undecorated,sticky,below,skip_taskbar,skip_pager',
+-- own_window_colour black,
+-- own_window_class Conky,
+-- own_window_title Simple Default Conky,
+    own_window_argb_visual = true,
+    own_window_argb_value = 0,
+    double_buffer = true,
+
+-- ------------------------- Position
+    alignment = 'top_left',
+    minimum_width = 250,
+    minimum_height = 175,
+    maximum_width = 250,
+    gap_x = 915,
+    gap_y = 625,
+
+-- ------------------------- Font
+    use_xft = true,
+    font = 'Monofur:bold:size=8',
+    xftalpha = 0.8, 	-- Alpha of Xft font. Must be a value at or between 1 and 0 ###
+    override_utf8_locale = true,
+    draw_shades = true,
+    default_shade_color = 'black',
+    draw_outline = false,
+    uppercase = false,
+
+-- ------------------------- Color
+    default_color = 'DCDCDC', 		-- 220 220 220	Gainsboro
+    color0 = '1793d0',			-- Special Color
+    color1 = 'DDDDDD',			-- Shades of grey
+    color2 = 'AAAAAA',
+    color3 = '888888',
+
+-- ------------------------- Borders
+    draw_borders = false,
+    draw_outline = false,
+    stippled_borders = 0,
+    border_inner_margin = 0,
+    border_outer_margin = 0,
+    border_width = 0,
+
+    default_bar_width = 250,
+    default_bar_height = 5,
+
+--------------------------- OTHER
+    use_spacer = 'none',
+    background = false,
+    use_spacer = 'none',
+    update_interval = 1,
+};
+
+conky.text = [[
+${voffset 25}${GOTO 50}${execi 300 curl -s -o /tmp/weather.xml https://query.yahooapis.com/v1/public/yql?q=select%20item.condition%2Cwind%2Clocation%2Catmosphere%20from%20weather.forecast%20where%20woeid%20%3D%20633175%20and%20u%3D%27c%27&format=xml&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys}${font GE Inspira:size=15}${execi 300 grep "yweather:location" /tmp/weather.xml | grep -o "city=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*"}, ${execi 300 grep "yweather:location" /tmp/weather.xml | grep -o "country=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*"}${font}
+${font GE Inspira:size=40}${alignr}${execi 300 grep "yweather:condition" /tmp/weather.xml | grep -o "temp=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*"}°C ${font}
+${voffset -20}${execi 300 cp -f ~/.conky/ConkyBar/img/conky-google-now/$(grep "yweather:condition" /tmp/weather.xml | grep -o "code=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*").png /tmp/weather.png}${image /tmp/weather.png -p 0,45 -s 56x56}
+${voffset 10}${execi 300 grep "yweather:condition" /tmp/weather.xml | grep -o "text=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*"}${voffset 0}${font Monofur:size=8}
+${voffset 3}${image ~/.conky/ConkyBar/img/conky-google-now/wind.png -p 0,115 -s 15x15}${goto 25}${execi 300 grep "yweather:wind" /tmp/weather.xml | grep -o "speed=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*"} km/h
+${voffset 8}${image ~/.conky/ConkyBar/img/conky-google-now/humidity.png -p 0,135 -s 15x15}${goto 25}${execi 300 grep "yweather:atmosphere" /tmp/weather.xml | grep -o "humidity=\"[^\"]*\"" | grep -o "\"[^\"]*\"" | grep -o "[^\"]*"}%
+]];
