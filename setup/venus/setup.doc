@@ -280,7 +280,7 @@ y -S libmythes mythes-en mythes-de
 y -S languagetool libreoffice-extension-languagetool
 
 # Virtualbox
-y -S virtualbox virtualbox-host-modules-arch virtualbox-ext-oracle virtualbox-guest-iso qt5-x11extras
+y -S virtualbox virtualbox-host-modules-arch virtualbox-ext-oracle virtualbox-guest-iso qt5-x11extras net-tools
 sudo usermod -aG vboxusers $USER
 sudoedit /etc/modules-load.d/virtualbox.conf
     vboxdrv
@@ -295,10 +295,18 @@ y -S pidgin-encryption pidgin-otr
 y -S pidgin-libnotify pidgin-opensteamworks purple-facebook purple-whatsapp
 
 # Conky
-y -S conky-lua-nv hddtemp stsstat alsa-utils conky-manager
+y -S conky-lua-nv hddtemp sysstat alsa-utils conky-manager
+sudo mkdir /etc/systemd/system/hddtemp.service.d
+sudoedit /etc/systemd/system/hddtemp.service.d/customexec.conf
+    ->  [Service]
+        ExecStart=
+        ExecStart=/usr/bin/hddtemp -dF /dev/sda /dev/sdb
+sudo systemctl daemon-reload
+sudo systemctl start hddtemp.service
+sudo systemctl enable hddtemp.service
 
-# Misc
-y -S tree xcwd-git gksu meld strace tig htop iotop atop pmount imv speedtest
+# Image viewer
+y -S imv shotwell
 
 # SSH configuration / key creation
 y -S openssh
@@ -307,10 +315,5 @@ y -S openssh
 # cat ~/id_*.pub >> ~/.ssh/authorized_keys
 # rm ~/id_*.pub
 
-
-
-# Container
-# Link scripts
-# allow sudo mount
-# create folder in /mnt
-# link folder appropriate#
+# Misc
+y -S tree xcwd-git gksu meld strace tig htop iotop atop pmount speedtest
