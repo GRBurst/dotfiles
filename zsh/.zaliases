@@ -65,6 +65,7 @@ raid_watch() {
 }
 
 # vim
+alias se="sudoedit"
 alias vimt='vim $(date +"%Y-%m-%d")'
 v() {
     (
