@@ -22,6 +22,11 @@ yauort -Rns vim
 # Disable root
 sudo passwd -l root
 
+# Configure raid
+yaourt -S dma
+sudoedit /etc/mdadm.conf
+-> add email
+
 # Set max size of journal logfiles
 sudoedit /etc/systemd/journald.conf
 -> SystemMaxUse=100M
@@ -241,16 +246,71 @@ sudoedit /etc/pacman.conf
 y -Sy
 y -S infinality-bundle
 
+# Syncthing
+y -S syncthing syncthing-inotify
+systemctl --user enable syncthing.service
+systemctl --user start syncthing.service
+
+# Mozilla
+# y -S claws-mail spamassassin libgdata
+yaourt -S thunderbird
+-> Plugins: Lightning, Enigmail, muttator
+
+yaourt -S firefox
+-> BetterPrivacy, DownThemAll!, FlashGot, Ghostery, HTTPS Everywhere, KeeFox, Lightbeam, NoScript, Screengrab, Self-Destructing Cookies, Session Manager, Random Agent Spoofer, Tab Mix Plus, uBlock Origin, Vimperator, ...
+-> startpage
+## Firefox KeeFox
+-> Install keefox addon, set path to /usr/share/keepass
+sudo mkdir /usr/share/keepass/plugins
+sudo cp ~/.mozilla/firefox/lu7qc209.default/extensions/keefox@chris.tomlinson/deps/KeePassRPC.plgx /usr/share/keepass/plugins/
+y -S profile-sync-daemon
+
+# Backup tools
+yaourt -S rsync unison
+
+# UMTS stick
+yaourt -S usb_modeswitch modemmanager modem-manager-gui
+
+# Libre office
+y -S libreoffice-still
+y -S libreoffice-still-de
+y -S hunspell hunspell-en hunspell-de
+y -S hyphen hyphen-en hyphen-de
+y -S libmythes mythes-en mythes-de
+y -S languagetool libreoffice-extension-languagetool
+
+# Virtualbox
+y -S virtualbox virtualbox-host-modules-arch virtualbox-ext-oracle virtualbox-guest-iso qt5-x11extras
+sudo usermod -aG vboxusers $USER
+sudoedit /etc/modules-load.d/virtualbox.conf
+    vboxdrv
+    vboxnetadp
+    vboxnetflt
+    vboxpci
+
+# Conversations with pidgin
+y -S pidgin
+y -S pidgin-gnome-keyring
+y -S pidgin-encryption pidgin-otr
+y -S pidgin-libnotify pidgin-opensteamworks purple-facebook purple-whatsapp
+
+# Conky
+y -S conky-lua-nv hddtemp stsstat alsa-utils conky-manager
+
 # Misc
-yaourt -S tree
-yaourt -S xcwd-git
-yaourt -S gksu
-yaourt -S meld
-yaourt -S strace
+y -S tree xcwd-git gksu meld strace tig htop iotop atop pmount imv speedtest
 
 # SSH configuration / key creation
-yaourt -S openssh
+y -S openssh
 # ssh-keygen -t rsa -b 4096 -C "$(whoami)@$(hostname)-$(date -I)"
 # scp ~/.ssh/id_rsa.pub username@server:
 # cat ~/id_*.pub >> ~/.ssh/authorized_keys
 # rm ~/id_*.pub
+
+
+
+# Container
+# Link scripts
+# allow sudo mount
+# create folder in /mnt
+# link folder appropriate#
