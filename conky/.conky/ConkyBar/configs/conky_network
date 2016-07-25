@@ -49,7 +49,7 @@ ${if_existing /proc/net/route enp9s0}${voffset 25}${GOTO 50}${font}Cable Network
 ${GOTO 50}${font}Public IP:${GOTO 160}${font Monofur:size=8}${texeci 36000 wget -qO - http://ifconfig.co | tail}
 ${GOTO 50}${font}Local IP:${GOTO 160}${font Monofur:size=8}${addr enp9s0}
 ${voffset 75}${GOTO 50}${font}Receive: ${font Monofur:size=8}${downspeed enp9s0}${GOTO 160}${font}Send: ${font Monofur:size=8}${upspeed enp9s0}
-${image ~/.conky/ConkyBar/img/networkhigh.png -p 0,15}${else}${if_existing /proc/net/route wlp7s0}${voffset 25}${GOTO 50}${font}WiFi Network:${GOTO 160}${font Monofur:size=8}${wireless_link_qual_perc wlp7s0}% @ ${wireless_essid}
+${image ~/.conky/ConkyBar/img/networkhigh.png -p 0,15}${else}${if_existing /proc/net/route wlp7s0}${voffset 25}${GOTO 50}${font}WiFi Network:${GOTO 160}${font Monofur:size=8}${wireless_link_qual_perc wlp7s0}% @ ${wireless_essid} ${wireless_bitrate}
 ${GOTO 50}${font}Public IP:${GOTO 160}${font Monofur:size=8}${texeci 36000 wget -qO - http://ifconfig.co | tail}
 ${GOTO 50}${font}Local IP:${GOTO 160}${font Monofur:size=8}${addr wlp7s0}
 ${voffset 75}${GOTO 50}${font}Receive: ${font Monofur:size=8}${downspeed wlp7s0}${GOTO 160}${font}Send: ${font Monofur:size=8}${upspeed wlp7s0}

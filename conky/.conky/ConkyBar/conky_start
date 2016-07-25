@@ -8,6 +8,7 @@ conky -c ~/.conky/ConkyBar/configs/conky_network &
 conky -c ~/.conky/ConkyBar/configs/conky_system &
 conky -c ~/.conky/ConkyBar/configs/conky_cpu2 &
 conky -c ~/.conky/ConkyBar/configs/conky_ram &
-conky -c ~/.conky/ConkyBar/configs/conky_files2 &
+conky -c ~/.conky/ConkyBar/configs/conky_files &
+# conky -c ~/.conky/ConkyBar/configs/conky_files2 &
 conky -c ~/.conky/ConkyBar/configs/conky_weather &
 exit
