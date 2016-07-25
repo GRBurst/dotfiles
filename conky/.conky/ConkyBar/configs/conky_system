@@ -47,8 +47,8 @@ ${GOTO 50}${font}Uptime: ${font Monofur:size=8}${uptime_short}
 ${font Monofur:size=8}${GOTO 50}${font}Processes:${GOTO 136}${color0}${running_processes}${color} / ${font Monofur:size=8}${processes}
 ${GOTO 50}${font}Threads:${GOTO 136}${font Monofur:size=8}${running_threads}
 ${GOTO 50}${font}Connections:${GOTO 136}${font Monofur:size=8}${tcp_portmon 1 65535 count}
-${GOTO 50}${font}CPU Temp:${GOTO 136}${font Monofur:size=8}${hwmon 0 temp 1}°C
-${GOTO 50}${font}GPU Temp:${GOTO 136}${font Monofur:size=8}${hwmon 1 temp 1}°C
-${GOTO 50}${font}Volume ♪:${GOTO 136}${font Monofur:size=8}${execpi 500 pactl list sinks | grep -m 1 "Volume" | cut -d " " -f6}
+${GOTO 50}${font}GPU Temp:${GOTO 136}${font Monofur:size=8}${hwmon 1 temp 1} °C
+${GOTO 50}${font}GPU Volt:${GOTO 136}${font Monofur:size=8}${hwmon 1 in 0} V
+${GOTO 50}${font}Volume ♪:${GOTO 136}${font Monofur:size=8}${execpi 500 pactl list sinks | grep -m 1 -o -E "[0-9]+%" | head -n 1}
 ${image ~/.conky/ConkyBar/img/system.png -p 0,15}
 ]];
