@@ -1,4 +1,65 @@
 require 'cairo'
+-- Based on:
+--==============================================================================
+--                            seamod_rings.lua
+--
+--  Date    : 05/02/2012
+--  Author  : SeaJey
+--  Version : v0.1
+--  License : Distributed under the terms of GNU GPL version 2 or later
+--
+--  This version is a modification of lunatico_rings.lua wich is modification of conky_orange.lua
+--
+--  conky_orange.lua:    http://gnome-look.org/content/show.php?content=137503&forumpage=0
+--  lunatico_rings.lua:  http://gnome-look.org/content/show.php?content=142884
+--==============================================================================
+
+--------------------------------------------------------------------------------
+--                                                                    gauge DATA
+gauge = {
+    {
+        name='fs_used_perc',            arg='',                  max_value=100,
+        x=155,                          y=180,
+        graph_radius=110,
+        graph_thickness=5,
+        graph_start_angle=-60,
+        graph_unit_angle=1.2,          graph_unit_thickness=2.7,
+        graph_bg_colour=0xffffff,      graph_bg_alpha=0.1,
+        graph_fg_colour=0xFFFFFF,      graph_fg_alpha=0.3,
+        hand_fg_colour=0x1793d0,       hand_fg_alpha=1.0,
+        txt_radius=120,
+        txt_weight=0,                  txt_size=9.0,
+        txt_fg_colour=0x1793d0,        txt_fg_alpha=1.0,
+        graduation_radius=28,
+        graduation_thickness=0,        graduation_mark_thickness=1,
+        graduation_unit_angle=27,
+        graduation_fg_colour=0xFFFFFF, graduation_fg_alpha=0.3,
+        caption='',
+        caption_weight=1,              caption_size=9.0,
+        caption_fg_colour=0xFFFFFF,    caption_fg_alpha=0.3,
+    },
+}
+
+function set_settings()
+    graph_settings={
+
+        {--HDD io graph
+        name="exec",
+        arg="~/.conky/ConkyBar/scripts/diskio.sh",
+        max=100,
+        autoscale=true,
+        x=84,
+        y=135,
+        width=146,
+        height=30,
+        nb_values=70,
+        background =false,
+        fg_colour={ {0,0x666666,1}, {1,0x666666,1}},
+        fg_orientation="ww"
+    },
+
+}
+end
 
 function conky_main()
 
@@ -92,48 +153,6 @@ function conky_main()
 
 end
 
---==============================================================================
---                            seamod_rings.lua
---
---  Date    : 05/02/2012
---  Author  : SeaJey
---  Version : v0.1
---  License : Distributed under the terms of GNU GPL version 2 or later
---
---  This version is a modification of lunatico_rings.lua wich is modification of conky_orange.lua
---
---  conky_orange.lua:    http://gnome-look.org/content/show.php?content=137503&forumpage=0
---  lunatico_rings.lua:  http://gnome-look.org/content/show.php?content=142884
---==============================================================================
-
-require 'cairo'
-
-
---------------------------------------------------------------------------------
---                                                                    gauge DATA
-gauge = {
-{
-    name='fs_used_perc',            arg='',                  max_value=100,
-    x=155,                          y=180,
-    graph_radius=110,
-    graph_thickness=5,
-    graph_start_angle=-60,
-    graph_unit_angle=1.2,          graph_unit_thickness=2.7,
-    graph_bg_colour=0xffffff,      graph_bg_alpha=0.1,
-    graph_fg_colour=0xFFFFFF,      graph_fg_alpha=0.3,
-    hand_fg_colour=0x1793d0,       hand_fg_alpha=1.0,
-    txt_radius=120,
-    txt_weight=0,                  txt_size=9.0,
-    txt_fg_colour=0x1793d0,        txt_fg_alpha=1.0,
-    graduation_radius=28,
-    graduation_thickness=0,        graduation_mark_thickness=1,
-    graduation_unit_angle=27,
-    graduation_fg_colour=0xFFFFFF, graduation_fg_alpha=0.3,
-    caption='',
-    caption_weight=1,              caption_size=9.0,
-    caption_fg_colour=0xFFFFFF,    caption_fg_alpha=0.3,
-},
-}
 
 -------------------------------------------------------------------------------
 --                                                                 rgb_to_r_g_b
@@ -270,26 +289,6 @@ end
 -------------------------------------------------------------------------------
 --                                                                         MAIN
 
-function set_settings()
-    graph_settings={
-
-        {--HDD io graph
-        name="exec",
-        arg="~/.conky/ConkyBar/scripts/diskio.sh",
-        max=100,
-        autoscale=true,
-        x=90,
-        y=135,
-        width=140,
-        height=30,
-        nb_values=70,
-        background =false,
-        fg_colour={ {0,0x666666,1}, {1,0x666666,1}},
-        fg_orientation="ww"
-    },
-
-}
-end
 
 
 function check_settings(t)

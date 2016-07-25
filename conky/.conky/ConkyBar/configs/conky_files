@@ -48,7 +48,7 @@ conky.config = {
 
 conky.text = [[
 ${voffset 25}${GOTO 50}${font}File System
-${GOTO 50}${font}Hdd: ${font Monofur:size=8}${fs_used /}${GOTO 180}${font}Temp: ${font Monofur:size=8}${hddtemp /dev/sda} | ${hddtemp /dev/sdb} °C
+${GOTO 50}${font}HDD: ${font Monofur:size=8}${fs_used /}${GOTO 180}${font}Temp: ${font Monofur:size=8}${hddtemp /dev/sda} | ${hddtemp /dev/sdb} °C
 ${voffset 75}
 ${GOTO 50}${font}Read: ${font Monofur:size=8}${diskio_read}${GOTO 180}${font}Write: ${font Monofur:size=8}${diskio_write}
 ${image ~/.conky/ConkyBar/img/files.png -p 0,15}
