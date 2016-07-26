@@ -1,8 +1,11 @@
 export BROWSER=firefox
 export SUDO_EDITOR=rvim
 export VISUAL="vim"
-export DE=gnome
 export PAGER=vimpager
+
+export QT_QPA_PLATFORMTHEME="qt5ct"
+export DE=gnome
+export XDG_CURRENT_DESKTOP=gnome
 
 # color wrappers for common commands
 export PATH="$(cope_path)":$PATH
