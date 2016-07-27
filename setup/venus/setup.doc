@@ -87,8 +87,12 @@ aurvote --configure
 yaourt -S zsh cope-git fasd
 
 # Install graphics
-yaourt -S xf86-video-ati mesa-libgl mesa-vdpau
+yaourt -S xf86-video-nouveau nouveau-fw mesa-libgl mesa-vdpau
 yaourt -S i3
+yaourt -S vdpauinfo
+vdpauinfo | grep "Information string:"
+-> See if loaded if there is a date
+
 
 cd ~/dotfiles
 stow xserver
@@ -263,7 +267,17 @@ yaourt -S firefox
 -> Install keefox addon, set path to /usr/share/keepass
 sudo mkdir /usr/share/keepass/plugins
 sudo cp ~/.mozilla/firefox/lu7qc209.default/extensions/keefox@chris.tomlinson/deps/KeePassRPC.plgx /usr/share/keepass/plugins/
+
+## Profile sync daemon (psd)
 y -S profile-sync-daemon
+psd
+vim ~/.config/psd/psd.conf
+-> USE_OVERLAYFS="yes"
+systemctl --user enable psd.service
+systemctl --user start psd.service
+sudo visudo
+-> %wheel ALL=(ALL) NOPASSWD: /usr/bin/psd-overlay-helper
+
 
 # Backup tools
 yaourt -S rsync unison
@@ -305,15 +319,25 @@ sudo systemctl daemon-reload
 sudo systemctl start hddtemp.service
 sudo systemctl enable hddtemp.service
 
-# Image viewer
-y -S imv shotwell
-
 # SSH configuration / key creation
 y -S openssh
 # ssh-keygen -t rsa -b 4096 -C "$(whoami)@$(hostname)-$(date -I)"
 # scp ~/.ssh/id_rsa.pub username@server:
 # cat ~/id_*.pub >> ~/.ssh/authorized_keys
 # rm ~/id_*.pub
+
+# Image viewer
+y -S imv shotwell
+
+# Video
+y -S mpv
+cd ~/dotfiles
+stow mpv
+
+# Theme optimization
+y -S lxappearance qt5ct breeze breeze-gtk
+-> Change theme to breeze
+
 
 # Misc
 y -S tree xcwd-git gksu meld strace tig htop iotop atop pmount speedtest
