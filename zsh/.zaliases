@@ -125,3 +125,18 @@ mdot() {
 }
 
 # vim: ft=sh
+
+# General
+godzilla-mount() {
+    sudo mount -t cifs //godzilla/ateam /mnt/godzilla/ateam -o guest,uid=$(id -u),gid=$(id -g),ro
+    sudo mount -t cifs //godzilla/upload /mnt/godzilla/upload -o guest,uid=$(id -u),gid=$(id -g),rw
+}
+godzilla-umount() {
+    sudo umount /mnt/godzilla/upload
+    sudo umount /mnt/godzilla/ateam
+}
+tmpremount() {
+    sudo mount -o remount,size="$1",noatime /tmp
+}
+
+alias inet="ping -q -w 1 -c 1 google.com > /dev/null && echo online || echo offline"
