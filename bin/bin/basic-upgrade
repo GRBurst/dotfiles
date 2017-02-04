@@ -50,6 +50,7 @@ cd -
 # Filesystem related
 echo "updating mlocate database..."
 sudo updatedb
+sudo mandb
 
 # sudo btrfs filesystem defragment /
 sync
