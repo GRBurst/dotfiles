@@ -36,5 +36,6 @@ export _JAVA_AWT_WM_NONREPARENTING=1
 export AWT_TOOLKIT=MToolkit
 export GDK_USE_XFT=1
 
-sbtopts="$sbtopts -Xms64M -Xmx4G -Xss1M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC"
+# sbtopts="$sbtopts -Xms64M -Xmx4G -Xss1M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC"
+sbtopts="$sbtopts -Xms64M -Xmx4G -Xss4M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC"
 export SBT_OPTS=$sbtopts
