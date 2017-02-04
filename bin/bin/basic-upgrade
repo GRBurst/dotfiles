@@ -41,10 +41,12 @@ vim +PlugInstall +PlugUpgrade +PlugUpdate +qall
 echo "updating global npm packages"
 npm -g update
 
-echo "Update LibreSignal"
-cd ~/projects/LibreSignal-Desktop
-git stash && git pull && git stash pop
-cd -
+if [ -d "~/projects/LibreSignal-Desktop" ]; then
+    echo "Update LibreSignal"
+    cd ~/projects/LibreSignal-Desktop
+    git stash && git pull && git stash pop
+    cd -
+fi
 
 
 # Filesystem related
