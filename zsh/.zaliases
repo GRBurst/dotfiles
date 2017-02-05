@@ -119,6 +119,9 @@ alias i3-update-conf="cat ~/.i3/common/config > ~/.i3/config; cat ~/.i3/local/co
 
 
 # Projects
+sshkeygen() {
+    ssh-keygen -t ed25519 -b 4096 -C "$(whoami)@$(hostname)-$(date -I)" -f "~/.ssh/$1"
+}
 mdot() {
     local n=$(basename "$1")
     dot -Tsvg $1 -o /tmp/$n.svg; atril -s /tmp/$n.svg
@@ -140,3 +143,4 @@ tmpremount() {
 }
 
 alias inet="ping -q -w 1 -c 1 google.com > /dev/null && echo online || echo offline"
+alias tv="sudo systemctl start teamviewerd.service && teamviewer"
