@@ -1,4 +1,0 @@
-#compton --config /home/jelias/.config/compton.conf &
-#feh --bg-scale '/home/jelias/.i3/background0.jpg' '/home/jelias/.i3/background1.jpg' &
-/home/jelias/.conky/ConkyBar/conky_start --window-id=$XSCREENSAVER_WINDOW
-#/usr/lib/xscreensaver/glslideshow -root
