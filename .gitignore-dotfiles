@@ -3,3 +3,10 @@
 # To whitelist anything that's a directory
 #!*/
 # Whitelist files
+#!file
+!.gitignore-dotfiles
+# zsh files
+!.zshrc*
+!.zaliases
+!.zprofile
+!.zshenv
