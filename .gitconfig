@@ -5,6 +5,8 @@
 
 [alias]
     # Most used
+    a   = add
+    A   = add -A
     cl  = clone
     st  = status
     h   = help
