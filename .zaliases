@@ -1,0 +1,168 @@
+# Git
+alias g="git"
+
+# Dotfiles
+DOTFILES_GIT='GIT_DIR=$HOME/projects/dotfiles GIT_WORK_TREE=$HOME'
+DOTFILES_PRIVATE_GIT='GIT_DIR=$HOME/projects/dotfiles-private GIT_WORK_TREE=$HOME'
+alias d="$DOTFILES_GIT         git -c core.excludesfile=~/.gitignore-dotfiles"
+# which yadm > /dev/null && alias     d='yadm --yadm-repo $HOME/projects/dotfiles         -c core.excludesfile=~/.gitignore-dotfiles'
+# which yadm > /dev/null && alias    dp='yadm --yadm-repo $HOME/projects/dotfiles-private -c core.excludesfile=~/.gitignore-dotfiles-private'
+alias dp="$DOTFILES_PRIVATE_GIT git -c core.excludesfile=~/.gitignore-dotfiles-private"
+alias tigd="$DOTFILES_GIT tig"
+alias tigdp="$DOTFILES_PRIVATE_GIT tig"
+vd() {(cd; eval $DOTFILES_GIT vim -c GitFiles);}
+
+# Dev
+alias m='make'
+alias mc='make clean'
+alias cg="cargo"
+alias scala='scala -Dscala.color -deprecation -unchecked -explaintypes -language:_'
+alias jsb='underscore print --color --outfmt json' # beautify json, package: npm -g install underscore-cli
+
+# Colors
+alias ssh='TERM=xterm-256color ssh'
+alias l='ls -l --color=auto'
+alias ls='ls --group-directories-first --color=auto -h'
+alias la='ls -lah --color=auto'
+alias lh='ls -hAl --color=auto'
+alias ll='ls -l --color=auto'
+alias lt='ls -ltr'
+
+# cd
+alias cdd='cd ~/downloads'
+alias cdp='cd ~/projects'
+alias cd.='cd ~/projects/dotfiles'
+alias cdt='cd-tmp'
+alias cdg='cd-git-root'
+alias pp='cd ~/projects/$(ls -t ~/projects | head -1)'
+alias vm='vim $(git-select-dirty-files)'
+p() { cd ~/projects/"$(ls -t ~/projects | fzf --query="$(echo $@ | tr ' ' '\ ' )")";}
+
+# file listing/interaction
+alias df='df -h'
+alias md='mkdir -p'
+alias mdcd='mkdir-cd'
+alias mvi='interactive-mv'
+alias mcp='noglob zmv -C -W'
+alias mln='noglob zmv -L -W'
+alias mmv='noglob zmv -W'
+o() { gio open $@ > /dev/null 2>&1; }
+
+# Tools
+alias t="tree -C"
+alias ta="tree -a"
+alias f="find"
+alias fif="find-in-file"
+
+# Raid
+raid_health() {
+    cat /proc/mdstat
+    sudo mdadm -D /dev/md0
+}
+
+raid_check() {
+    sudo bash -c 'echo 400000 >/proc/sys/dev/raid/speed_limit_min'
+    sudo bash -c 'echo 400000 >/proc/sys/dev/raid/speed_limit_max'
+    sudo bash -c 'echo check > /sys/block/md0/md/sync_action'
+}
+
+raid_watch() {
+    watch -t 'cat /proc/mdstat'
+}
+
+# vim
+alias se="sudoedit"
+alias vimt='vim $(date +"%Y-%m-%d")'
+v() {
+    (
+        cd-git-root > /dev/null
+        file="$(fzf --query="$(echo $@ | tr ' ' '\ ' )")"
+        [[ -n $file ]] && vim "$file"
+    );
+}
+# v() { echo $@ | vim -c Rooter -c Files }
+vr() { vim -c "History $*"; }
+vt() { vim -c "Tags $*"; }
+
+# alias vim="vim --servername vim-$$" # always start vim as server (for live colorscheme changing, working differently for neovim)
+nvim_command() {
+    # usage: nvim_command <socket> <command>
+    # requires: https://github.com/jakm/msgpack-cli
+
+    # https://github.com/msgpack-rpc/msgpack-rpc/blob/master/spec.md
+    # msgpack-rpc is an array of [type, msgid, method, params]
+    # encode and send it to nvims unix socket via netcat
+    msgpack-cli encode <(echo "[0,0,\"vim_command\",[\"$2\"]]") | netcat -U $1
+}
+
+nvim_all_command() {
+    # usage: nvim_all_command <command>
+    for nvim in /tmp/nvim*/0; do
+        nvim_command $nvim "$1"
+    done
+}
+
+x() {
+    $@ &
+    disown
+    exit
+}
+
+cgw() {
+    cargo $1
+    cargo watch $1
+}
+
+sbt() { (
+    # TODO: search tree upwards for build.sbt
+    if [ ! -f build.sbt ]; then
+        cd-git-root
+    fi
+    env sbt $@
+    )
+}
+
+# i3
+alias i3-update-conf="cat ~/.i3/common/config > ~/.i3/config; cat ~/.i3/local/config* >> ~/.i3/config; i3-msg reload;"
+
+
+# Projects
+sshkeygen() {
+    ssh-keygen -t ed25519 -C "$(whoami)@$(hostname)->$1 on $(date -I)" -f "$HOME/.ssh/@$(hostname)->$1"
+}
+mdot() {
+    local n=$(basename "$1")
+    dot -Tsvg $1 -o /tmp/$n.svg; atril -s /tmp/$n.svg
+}
+proj_ctags () {
+    cd-git-root
+    dir=$(realpath .)
+    touch $dir/tags
+    ctags --fields=+l --c-kinds=+p --c++-kinds=+p -f $dir/tags -R $dir
+}
+
+# General
+godzilla-mount() {
+    sudo mount -t cifs //godzilla/ateam /mnt/godzilla/ateam -o guest,uid=$(id -u),gid=$(id -g),ro
+    sudo mount -t cifs //godzilla/upload /mnt/godzilla/upload -o guest,uid=$(id -u),gid=$(id -g),rw
+}
+godzilla-umount() {
+    sudo umount /mnt/godzilla/upload
+    sudo umount /mnt/godzilla/ateam
+}
+tmpremount() {
+    sudo mount -o remount,size="$1",noatime /tmp
+}
+
+# Internet and Wlan
+alias inet="ping -q -w 1 -c 1 google.com > /dev/null && echo online || echo offline"
+alias won='nmcli radio wifi on; wscan'
+alias woff='nmcli radio wifi off'
+alias wscan='nmcli dev wifi rescan > /dev/null 2>&1; true'
+alias wlist='nmcli dev wifi list'
+alias wcon='nmcli dev wifi connect'
+
+# services & daemons
+alias tv="sudo systemctl start teamviewerd.service && teamviewer"
+
+# vim: ft=sh
