@@ -153,6 +153,16 @@ godzilla-umount() {
 tmpremount() {
     sudo mount -o remount,size="$1",noatime /tmp
 }
+nixos-details() {
+    printf '- System: '
+    nixos-version
+    printf '- Nix version: '
+    nix-env --version
+    printf '- Nixpkgs version: '
+    nix-instantiate --eval '<nixpkgs>' -A lib.nixpkgsVersion
+    printf '- Sandboxing enabled: '
+    grep build-use-sandbox /etc/nix/nix.conf | sed s/.*=//
+}
 
 # Internet and Wlan
 alias inet="ping -q -w 1 -c 1 google.com > /dev/null && echo online || echo offline"
