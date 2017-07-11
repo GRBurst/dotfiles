@@ -5,6 +5,8 @@
 # To whitelist directories
 !/.config
 /.config/*
+!/.config/htop
+!/.config/termite
 !/.config/i3
 !/.config/i3status
 !/.config/termite
