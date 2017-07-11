@@ -28,6 +28,7 @@
 !/documents
 /documents/*
 !/documents/setup
+!/.unison
 
 # $HOME files
 !.agignore
