@@ -9,6 +9,7 @@
 /.config/*
 
 # .config files
+!/.config/compton.conf
 !/.config/nvim
 !/.config/redshift.conf
 !/.config/user-dirs.*
@@ -17,11 +18,10 @@
 !/.config/fontconfig
 !/.config/git
 !/.config/htop
-!/.config/mpv
-!/.config/networkmanager-dmenu
-!/.config/termite
 !/.config/i3
 !/.config/i3status
+!/.config/mpv
+!/.config/networkmanager-dmenu
 !/.config/termite
 
 # $HOME dirs
