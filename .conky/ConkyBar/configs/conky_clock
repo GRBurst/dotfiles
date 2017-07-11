@@ -1,0 +1,45 @@
+conky.config = {
+-- ------------------------- Windows Settings
+	own_window = true,
+	own_window_type = 'override',
+	own_window_transparent = false,
+	own_window_hints = 'undecorated,sticky,below,skip_taskbar,skip_pager',
+	own_window_argb_visual = true,
+	own_window_argb_value = 0,
+
+	double_buffer = true,
+	background = true,
+
+-- ------------------------- Position
+	alignment = 'top_left',
+
+	minimum_width = 400,
+	minimum_height = 90,
+	maximum_width = 440,
+	gap_x = 990,
+	gap_y = 530,
+
+-- ------------------------- Font
+	use_xft = true,
+	xftalpha = 0.1,
+	override_utf8_locale = true,
+
+	draw_borders = false,
+	draw_outline = false,
+	draw_shades = false,
+
+-- ------------------------- Color
+	default_color = 'DCDCDC',
+	color0 = '1793d0',
+	color1 = 'DDDDDD',
+	color2 = 'AAAAAA',
+	color3 = '888888',
+
+-- ------------------------- Other
+	update_interval = 1,
+
+};
+
+conky.text = [[
+${color}${font GE Inspira:pixelsize=80}${time %H:%M}${font}${voffset -60}${offset 20}${color0}${font GE Inspira:pixelsize=32}${time %d} ${voffset -15}${color}${font GE Inspira:pixelsize=18}${time  %B} ${time %Y}${font}${voffset 30}${font GE Inspira:pixelsize=46}${offset -148}${time %A}${font}
+]];

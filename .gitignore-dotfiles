@@ -29,6 +29,7 @@
 /documents/*
 !/documents/setup
 !/.unison
+!/.conky
 
 # $HOME files
 !.agignore

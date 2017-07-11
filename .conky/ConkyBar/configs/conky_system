@@ -1,0 +1,55 @@
+conky.config = {
+-- ------------------------- Windows Settings
+	own_window = true,
+	own_window_type = 'override',
+	own_window_transparent = false,
+	own_window_hints = 'undecorated,sticky,below,skip_taskbar,skip_pager',
+	own_window_argb_visual = true,
+	own_window_argb_value = 0,
+
+	double_buffer = true,
+	background = true,
+
+-- ------------------------- Position
+	alignment = 'top_left',
+
+	minimum_width = 170,
+	minimum_height = 165,
+	maximum_width = 170,
+	gap_x = 10,
+	gap_y = 630,
+
+-- ------------------------- Font
+	use_xft = true,
+	xftalpha = 0.8,
+	override_utf8_locale = true,
+
+	draw_shades = true,
+	default_shade_color = 'black',
+
+	draw_borders = false,
+	draw_outline = false,
+
+	font = 'Monofur:bold:size=8',
+
+-- ------------------------ Colors
+	default_color = 'DCDCDC',
+	color0 = '1793d0',
+
+-- ------------------------- Other
+	update_interval = 1,
+};
+
+conky.text = [[
+${voffset 25}${GOTO 50}${font}System
+${GOTO 50}${font}Uptime: ${font Monofur:size=8}${uptime_short}
+
+${font Monofur:size=8}${GOTO 50}${font}Processes:${GOTO 136}${color0}${running_processes}${color} / ${font Monofur:size=8}${processes}
+${GOTO 50}${font}Threads:${GOTO 136}${font Monofur:size=8}${running_threads}
+${GOTO 50}${font}Connections:${GOTO 136}${font Monofur:size=8}${tcp_portmon 1 65535 count}
+${GOTO 50}${font}GPU Temp:${GOTO 136}${font Monofur:size=8}${hwmon 1 temp 1} °C
+${GOTO 50}${font}GPU Volt:${GOTO 136}${font Monofur:size=8}${hwmon 1 in 0} V
+${GOTO 50}${font}Volume ♪:${GOTO 136}${font Monofur:size=8}${execpi 500 pactl list sinks | grep -m 1 -o -E "[0-9]+%" | head -n 1}
+${GOTO 50}${font Monofur:size=8}${battery_time BAT1}
+${image ~/.conky/ConkyBar/img/system.png -p 0,15}
+]];
