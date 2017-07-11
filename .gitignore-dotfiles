@@ -1,11 +1,14 @@
-# First, ignore everything
-*
-# To whitelist anything that's a directory
-#!*/
+# First, ignore everything at root
+/*
+
+# To whitelist directories
+!/.config
+/.config/*
+!/.config/i3
+!/.config/i3status
+
 # Whitelist files
-#!file
 !.gitignore-dotfiles
-# zsh files
 !.zshrc*
 !.zaliases
 !.zprofile
