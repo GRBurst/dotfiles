@@ -32,6 +32,7 @@
 
 # $HOME files
 !.agignore
+!.dir_colors
 !.npmrc
 !.zshrc*
 !.zaliases
