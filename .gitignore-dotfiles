@@ -1,5 +1,6 @@
 # First, ignore everything at root
 /*
+!.gitignore-dotfiles
 
 # To whitelist directories
 !/.config
@@ -8,7 +9,7 @@
 !/.config/i3status
 
 # Whitelist files
-!.gitignore-dotfiles
+!.agignore
 !.zshrc*
 !.zaliases
 !.zprofile
