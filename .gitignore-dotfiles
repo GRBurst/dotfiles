@@ -9,6 +9,7 @@
 /.config/*
 
 # .config files
+!/.config/nvim
 !/.config/redshift.conf
 !/.config/user-dirs.*
 
