@@ -16,6 +16,7 @@
 # .config dirs
 !/.config/git
 !/.config/htop
+!/.config/mpv
 !/.config/termite
 !/.config/i3
 !/.config/i3status
