@@ -1,0 +1,343 @@
+# Add new user
+useradd -m -g users -G wheel -s /bin/zsh [username]
+passwd [username]
+
+# Install sudo & zsh
+pacman -S sudo
+pacman -S zsh
+
+# Allow user to sudo by uncommenting:
+visudo
+-> %wheel ALL=(ALL) ALL
+
+# logout of system
+# login with new user
+
+# Login as user and setup zsh in dialog
+nvim .zshrc
+-> export SUDO_EDITOR=rvim
+
+yauort -Rns vim
+
+# Disable root
+sudo passwd -l root
+
+# Configure raid
+yaourt -S dma
+sudoedit /etc/mdadm.conf
+-> add email
+
+# Set max size of journal logfiles
+sudoedit /etc/systemd/journald.conf
+-> SystemMaxUse=100M
+
+# Edit locales
+sudoedit /etc/locale.conf
+-> LANG=en_US.UTF-8
+-> LC_MONERATY=de_DE.UTF-8
+
+# Uncomment in pacman conf and install yaourt
+sudoedit /etc/pacman.conf
+-> [multilib]
+-> Include = /etc/pacman.d/mirrorlist
+
+-> [archlinuxfr]
+-> SigLevel = PackageOptional
+-> Server = https://repo.archlinux.fr/$arch
+
+pacman -Syu yaourt
+
+# Install missing firmware modulen
+yaourt -S wd719x-firmware aic94xx-firmware
+
+# Install dotfile manager and grsecurity
+yaourt -S stow etckeeper linux-grsec
+
+sudoedit /boot/syslinux/syslinux.cfg
+-> LINUX ../vmlinuz-linux-grsec
+-> INITRD ../initramfs-linux-grsec.img
+# Create further entries
+
+# Set loader option
+nvim /boot/loader/loader.conf
+-> TIMEOUT 10
+-> DEFAULT arch-grsec
+# reboot to grsec
+
+# Setup etckeeper
+sudo systemctl enable etckeeper.timer
+sudoedit /etc/etckeeper/commit.d/50vcs-commit
+-> git gc # Add after git commit
+
+sudo etckeeper init
+cd /etc
+sudo git status
+sudo git commit -m "Initial checkin"
+sudo git gc
+
+# Get dotfiles
+cd ~/
+git clone https://github.com/GRBurst/dotfiles.git
+
+# AUR vote
+yaourt -S aurvote
+aurvote --configure
+
+# Install stuff
+yaourt -S zsh cope-git fasd
+
+# Install graphics
+yaourt -S xf86-video-nouveau nouveau-fw mesa-libgl mesa-vdpau
+yaourt -S i3
+yaourt -S vdpauinfo
+vdpauinfo | grep "Information string:"
+-> See if loaded if there is a date
+
+
+cd ~/dotfiles
+stow xserver
+stow zsh
+
+# Basic setup
+yaourt -S termite rofi npm downgrade fzf
+stow bin
+stow npm
+stow termite
+stow vim
+stow dircolors
+
+sudo ln -s /usr/bin/rofi /usr/bin/dmenu
+
+yaourt -S neovim neovim-symlinks python-neovim python2-neovim
+ln -s ~/.vim .config/nvim
+ln -s ~/.vimrc .config/nvim/init.vim
+
+yaourt -S openssh gnome-keyring ctags
+yaourt -S namcap pkgfile pkgcacheclean
+
+basic-update
+
+# reboot
+
+# Neo keyboard
+localectl --no-convert set-x11-keymap de thinkpad neo
+setxkbmap de neo
+
+# Configure i3
+stow i3
+stow i3status
+
+xrandr #to get out
+cd ~/.i3/local
+nvim config
+    -> set correct $OUT
+i3-update-conf
+
+# Install disk tools
+yaourt -S gvfs gvfs-mtp gvfs-smb
+yaourt -S ntfs-3g
+
+yaourt -S xdg-user-dirs xdg-utils
+vim ~/.config/user-dirs.dirs
+    -> change to lowercase
+mv [Documents] [documents] # mv all to lowercase
+
+# Install nemo applications
+yaourt -S nemo nemo-fileroller nemo-preview nemo-seahorse nemo-share
+-> gsettings set org.nemo.desktop show-desktop-icons false
+-> gsettings set org.cinnamon.desktop.default-applications.terminal exec termite
+
+yaourt -S keepass xdotool xsel
+
+# Graphics
+yaourt -S python-gobject python-xdg librsvg
+yaourt -S redshift
+cd dotfiles
+stow redshift
+
+# Laptop tools
+yaourt -S lm_sensors
+sudo sensors-detect
+sudo systemctl enable lm_sensors.service
+
+yaourt -S tlp
+yaourt -S cpupower acpid bluez-utils smartmontools ethtool
+yaourt -S cbatticon
+
+sudo systemctl enable tlp.service
+sudo systemctl start tlp.service
+
+sudoedit /etc/default/tlp
+-> SATA_LINKPWR_ON_BAT=max_performance
+
+yaourt -S xf86-input-libinput
+
+# background
+yaourt -S feh
+feh --bg-scale "$HOME/.i3/background0.jpg" "$HOME/.i3/background1.jpg"
+
+# Sound
+yaourt -S pulseaudio pulseaudio-alsa
+yaourt -S pasystray
+yaourt -S paman pavucontrol pavumeter paprefs
+# umute with volume control
+
+# Internet / NetworkManager
+yaourt -S networkmanager
+yaourt -S networkmanager-openvpn networkmanager-vpnc
+yaourt -S network-manager-applet
+# Network manager dmenu yaourt -S network
+yaourt -S networkmanager-dmenu-git
+
+sudo systemctl disable dhcpcd@.service
+systemctl enable NetworkManager.service
+systemctl start NetworkManager.service
+
+# Bluetooth
+yaourt -S bluez bluez-utils
+
+# Setup keepass electron
+yaourt -S crpto++
+mkdir ~/local
+cd ~/local
+https://github.com/gustavnikolaj/keepass-reader.git
+npm install
+npm start
+
+# Seahorse
+yaourt -S seahorse
+
+# Gnome Keyring configuration
+sudoedit /etc/pam.d/login
+-> add line: auth optional pam_gnome_keyring.so
+-> add line: sessios optional pam_gnome_keyring.so auto_start
+
+sudoedit /etc/pam.d/passwd
+-> add line: password optional pam_gnome_keyring.so
+
+# Timeout after 3 failed login attempts
+vim /etc/pam.d/system-login
+    #auth required pam_tally.so onerr=succeed file=/var/log/faillog
+    auth required pam_tally.so deny=2 unlock_time=600 onerr=succeed file=/var/log/faillog
+
+# Notification
+yaourt -S notify-osd
+
+# Further stuff
+yaourt -S unclutter
+yaourt -S mlocate
+sudo updatedb
+yaourt -S clamav
+sudo freshclam
+sudo systemctl enable clamd.service
+sudo systemctl enable freshclamd.service
+
+# Font configuration
+# Add infinality repos
+sudo dirmngr < /dev/null
+# Check key first!!
+sudo pacman-key -r 962DDE58
+sudo pacman-key -f 962DDE58
+sudo pacman-key --lsign-key 962DDE58
+sudoedit /etc/pacman.conf
+-> [infinality-bundle]
+-> Server = http://bohoomil.com/repo/$arch
+# -> [infinality-bundle-multilib]
+# -> Server = http://bohoomil.com/repo/multilib/$arch
+-> [infinality-bundle-fonts]
+-> Server = http://bohoomil.com/repo/fonts
+
+y -Sy
+y -S infinality-bundle
+
+# Syncthing
+y -S syncthing syncthing-inotify
+systemctl --user enable syncthing.service
+systemctl --user start syncthing.service
+
+# Mozilla
+# y -S claws-mail spamassassin libgdata
+yaourt -S thunderbird
+-> Plugins: Lightning, Enigmail, muttator
+
+yaourt -S firefox
+-> BetterPrivacy, DownThemAll!, FlashGot, Ghostery, HTTPS Everywhere, KeeFox, Lightbeam, NoScript, Screengrab, Self-Destructing Cookies, Session Manager, Random Agent Spoofer, Tab Mix Plus, uBlock Origin, Vimperator, ...
+-> startpage
+## Firefox KeeFox
+-> Install keefox addon, set path to /usr/share/keepass
+sudo mkdir /usr/share/keepass/plugins
+sudo cp ~/.mozilla/firefox/lu7qc209.default/extensions/keefox@chris.tomlinson/deps/KeePassRPC.plgx /usr/share/keepass/plugins/
+
+## Profile sync daemon (psd)
+y -S profile-sync-daemon
+psd
+vim ~/.config/psd/psd.conf
+-> USE_OVERLAYFS="yes"
+systemctl --user enable psd.service
+systemctl --user start psd.service
+sudo visudo
+-> %wheel ALL=(ALL) NOPASSWD: /usr/bin/psd-overlay-helper
+
+
+# Backup tools
+yaourt -S rsync unison
+
+# UMTS stick
+yaourt -S usb_modeswitch modemmanager modem-manager-gui
+
+# Libre office
+y -S libreoffice-still
+y -S libreoffice-still-de
+y -S hunspell hunspell-en hunspell-de
+y -S hyphen hyphen-en hyphen-de
+y -S libmythes mythes-en mythes-de
+y -S languagetool libreoffice-extension-languagetool
+
+# Virtualbox
+y -S virtualbox virtualbox-host-modules-arch virtualbox-ext-oracle virtualbox-guest-iso qt5-x11extras net-tools
+sudo usermod -aG vboxusers $USER
+sudoedit /etc/modules-load.d/virtualbox.conf
+    vboxdrv
+    vboxnetadp
+    vboxnetflt
+    vboxpci
+
+# Conversations with pidgin
+y -S pidgin
+y -S pidgin-gnome-keyring
+y -S pidgin-encryption pidgin-otr
+y -S pidgin-libnotify pidgin-opensteamworks purple-facebook purple-whatsapp
+
+# Conky
+y -S conky-lua-nv hddtemp sysstat alsa-utils conky-manager
+sudo mkdir /etc/systemd/system/hddtemp.service.d
+sudoedit /etc/systemd/system/hddtemp.service.d/customexec.conf
+    ->  [Service]
+        ExecStart=
+        ExecStart=/usr/bin/hddtemp -dF /dev/sda /dev/sdb
+sudo systemctl daemon-reload
+sudo systemctl start hddtemp.service
+sudo systemctl enable hddtemp.service
+
+# SSH configuration / key creation
+y -S openssh
+# ssh-keygen -t rsa -b 4096 -C "$(whoami)@$(hostname)-$(date -I)"
+# scp ~/.ssh/id_rsa.pub username@server:
+# cat ~/id_*.pub >> ~/.ssh/authorized_keys
+# rm ~/id_*.pub
+
+# Image viewer
+y -S imv shotwell
+
+# Video
+y -S mpv
+cd ~/dotfiles
+stow mpv
+
+# Theme optimization
+y -S lxappearance qt5ct breeze breeze-gtk
+-> Change theme to breeze
+
+
+# Misc
+y -S tree xcwd-git gksu meld strace tig htop iotop atop pmount speedtest

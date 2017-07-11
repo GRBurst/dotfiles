@@ -1,0 +1,139 @@
+# Add new user
+useradd -m -g users -G wheel -s /bin/zsh [username]
+passwd [username]
+
+# Install sudo & zsh
+pacman -S sudo
+pacman -S zsh
+
+# Allow user to sudo by uncommenting:
+visudo
+-> %wheel ALL=(ALL) ALL
+
+# logout of system
+# login with new user
+
+# Login as user and setup zsh in dialog
+vim .zshrc
+-> export SUDO_EDITOR=rvim
+
+# Disable root
+sudo passwd -l root
+
+# Set max size of journal logfiles
+sudoedit /etc/systemd/journald.conf
+-> SystemMaxUse=100M
+
+# Edit locales
+sudoedit /etc/locale.conf
+-> LANG=en_US.UTF-8
+-> LC_MONERATY=de_DE.UTF-8
+
+# Uncomment in pacman conf and install yaourt
+sudoedit /etc/pacman.conf
+-> [multilib]
+-> Include = /etc/pacman.d/mirrorlist
+
+-> [archlinuxfr]
+-> SigLevel = PackageOptional
+-> Server = https://repo.archlinux.fr/$arch
+
+pacman -Syu yaourt
+
+# Install missing firmware modulen
+yaourt -S wd719x-firmware aic94xx-firmware
+
+# Install dotfile manager and grsecurity
+yaourt -S stow etckeeper linux-grsec
+
+sudoedit /boot/syslinux/syslinux.cfg
+-> LINUX ../vmlinuz-linux-grsec
+-> INITRD ../initramfs-linux-grsec.img
+
+# Setup etckeeper
+sudo systemctl enable etckeeper.timer
+sudoedit /etc/etckeeper/commit.d/50vcs-commit
+-> git gc # Add after git commit
+
+sudo etckeeper init
+cd /etc
+sudo git status
+sudo git commit -m "Initial checkin"
+sudo git gc
+
+# Setup dotfiles
+cd ~/
+git clone https://github.com/GRBurst/dotfiles.git
+cd dotfiles
+stow redshift
+stow termite
+
+# Install graphics
+yaourt -S xf86-video-ati
+yaourt -S mesa-libgl lib32-mesa-libgl
+yaourt -S mesa-vdpau lib32-mesa-vdpau
+yaourt -S xorg-server xorg-xinit xorg-server-utils xorg-utils
+yaourt -S i3
+
+cp /etc/X11/xinit/xinitrc ~/.xinitrc
+vim ~/.xinitrc
+-> exec i3
+
+vim ~/.zprofile
+-> [[ -z $DISPLAY && $XDG_VTNR -eq 1 ]] && exec startx
+
+# reboot
+
+# Neo keyboard
+localectl --no-convert set-x11-keymap de thinkpad neo
+
+# Internet
+yaourt -S ifplugd wireless_tools wpa_supplicant wpa_actiond dialog
+sudo wifi-menu # Choose network
+systemctl enable netctl-ifplugd@enp2s0.service
+systemctl enable netctl-auto@wlp1s0.service
+
+# Install disk tools
+yaourt -S gvfs gvfs-mtp gvfs-smb
+yaourt -S ntfs-3g
+
+yaourt -S xdg-user-dirs xdg-utils
+
+# Graphics
+yaourt -S redshift
+yaourt -S python-gobject python-xdg librsvg
+systemctl --user enable redshift-gtk.service
+
+# Laptop tools
+yaourt -S lm_sensors
+sudo sensors-detect
+sudo systemctl enable lm_sensors.service
+
+yaourt -S tlp
+yaourt -S cpupower acpid bluez-utils smartmontools ethtool
+yaourt -S cbatticon
+
+sudo systemctl enable tlp.service
+sudo systemctl start tlp.service
+
+sudoedit /etc/default/tlp
+-> SATA_LINKPWR_ON_BAT=max_performance
+
+yaourt -S xf86-input-synaptics
+
+# Install applications
+yaourt -S termite
+yaourt -S gvim
+yaourt -S nemo
+-> gsettings set org.nemo.desktop show-desktop-icons false
+-> gsettings set org.cinnamon.desktop.default-applications.terminal exec termite
+
+yaourt -S keepass xdotool xsel
+
+# Install & setup sound
+#yaourt -S alsa-utils alsa-lib
+
+
+
+
+

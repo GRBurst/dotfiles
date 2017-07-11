@@ -22,7 +22,12 @@
 !/.config/i3status
 !/.config/termite
 
-# $HOME
+# $HOME dirs
+!/documents
+/documents/*
+!/documents/setup
+
+# $HOME files
 !.agignore
 !.zshrc*
 !.zaliases

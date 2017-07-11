@@ -1,0 +1,182 @@
+# AUR vote
+yaourt -S aurvote
+aurvote --configure
+
+# fasd productivity tool (combined: z, v, autojump)
+yaourt -S fasd
+
+# xserver, background
+yaourt -S feh
+feh --bg-scale "$HOME/.i3/background0.jpg" "$HOME/.i3/background1.jpg"
+
+# Install web browser
+yaourt -S qutebrowser
+
+yaourt -S firefox
+-> Adblock Edge, BetterPrivacy, DownThemAll!, FlashGot, Ghostery, KeeFox, Lightbeam, NoScript, Random Agent Spoofer, Tab Mix Plus, Vimperator, ...
+-> startpage
+## Firefox KeeFox
+-> Install keefox addon, set path to /usr/share/keepass
+sudo mkdir /usr/share/keepass/plugins
+sudo cp ~/.mozilla/firefox/lu7qc209.default/extensions/keefox@chris.tomlinson/deps/KeePassRPC.plgx /usr/share/keepass/plugins/
+
+# Setup keepass-dmenu (https://github.com/gustavnikolaj/keepass-dmenu)
+yaourt -S crypto++
+yaourt -S npm
+npm install -g keepass-dmenu
+
+# E-Mail: Thunderbird
+yaourt -S thunderbird
+-> Plugins: Lightning, Enigmail, muttator
+
+# Install dmeun replacement rofi
+yaourt -S rofi
+sudo ln -s /usr/bin/rofi /usr/bin/dmenu
+
+# Setup zsh
+cd dotfiles
+stow zsh
+
+# Setup Network Manange
+yaourt -S networkmanager
+yaourt -S networkmanager-openvpn networkmanager-vpnc
+yaourt -S network-manager-applet
+# Network manager dmenu yaourt -S network
+yaourt -S networkmanager-dmenu-git
+
+systemctl disable netctl-ifplugd@.service
+systemctl disable netctl-auto@.service
+sudo rm /etc/netctl/[network-profile]
+
+# Bluetooth
+yaourt -S bluez bluez-utils
+
+# Notifications
+#yaourt -S notify-osd-customizable
+#yaourt -S notifyconf
+yaourt -S notify-osd
+
+# Sound
+yaourt -S pulseaudio pulseaudio-alsa
+yaourt -S pasystray
+yaourt -S paman pavucontrol pavumeter paprefs
+
+# Gnome Keyring
+yaourt -S gnome-keyring
+yaourt -S seahorse nemo-neahorse
+
+# Create a keyring "Login" with same pw as login
+
+sudoedit /etc/pam.d/login
+-> add line: auth optional pam_gnome_keyring.so
+-> add line: session optional pam_gnome_keyring.so auto_start
+
+sudoedit /etc/pam.d/passwd
+-> add line: password optional pam_gnome_keyring.so
+
+vim ~/.xinitrc
+-> eval $(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
+-> export SSH_AUTH_SOCK
+
+# Compositor
+yaourt -S compton
+cd ~/dotifles && stow compton && cd -
+
+# Conversations with pidgin
+yaourt -S pidgin
+yaourt -S pidgin-gnome-keyring
+yaourt -S pidgin-encryption pidgin-otr
+yaourt -S pidgin-libnotify pidgin-opensteamworks purple-facebook
+
+# Hide mouse after some seconds
+yaourt -S unclutter
+vim ~/.i3/common/start.sh
+-> unclutter &
+
+# Locate for arch
+yaourt -S mlocate
+sudo updatedb
+
+# Disable beep as root
+echo "blacklist pcspkr" > /etc/modprobe.d/nobeep.conf
+
+# Package analyzer
+yaourt -S namcap
+yaourt -S pkgfile
+
+# Autologin
+#sudoedit /etc/systemd/system/getty@tty1.service.d/override.conf
+#-> [Service]
+#-> ExecStart=
+#-> ExecStart=-/usr/bin/agetty --autologin [username] --noclear %I 38400 linux
+#-> Type=simple
+
+# Setup owncloud with encryption
+yaourt -S owncloud-client
+# encfs?
+
+# SSH
+yaourt -S openssh
+# ssh-keygen -t rsa -b 4096 -C "$(whoami)@$(hostname)-$(date -I)"
+# scp ~/.ssh/id_rsa.pub username@server:
+# cat ~/id_*.pub >> ~/.ssh/authorized_keys
+# rm ~/id_*.pub
+
+# Anti-virus
+yaourt -S clamav
+sudo freshclam
+sudo systemctl enable clamd.service
+sudo systemctl enable freshclamd.service
+
+# Dropbox for enryted backups
+yaourt -S dropbox nemo-dropbox
+# Duplicity? Dedicated LUKS container?
+
+# Command line colorizer cope
+yaourt -S cope-git
+
+# Backup tools
+yaourt -S rsync
+yaourt -S unison
+
+# Pam mount
+#yaourt -S pam_mount
+
+# UMTS stick
+yaourt -S usb_modeswitch modemmanager
+
+# Fonts
+# Add infinality repos
+sudo dirmngr < /dev/null
+# Check key first!!
+sudo pacman-key -r 962DDE58
+sudo pacman-key -f 962DDE58
+sudo pacman-key --lsign-key 962DDE58
+sudo rvim /etc/pacman.conf
+-> [infinality-bundle]
+-> Server = http://bohoomil.com/repo/$arch
+-> [infinality-bundle-multilib]
+-> Server = http://bohoomil.com/repo/multilib/$arch
+-> [infinality-bundle-fonts]
+-> Server = http://bohoomil.com/repo/fonts
+
+y -Sy
+y -S infinality-bundle
+y -S infinality-bundle-multilib
+
+mkdir -p .config/fontconfig/conf.d
+ln -s /etc/fonts/conf.avail.infinality/10-base-rendering.conf ~/.config/fontconfig/conf.d
+
+# Java
+#y -S jre8-openjdk
+y -S jre8-openjdk-infinality
+
+
+# Misc
+yaourt -S tree
+yaourt -S downgrade
+yaourt -S xcwd-git
+yaourt -S gksu
+yaourt -S meld
+yaourt -S strace
+yaourt -S jxplorer
