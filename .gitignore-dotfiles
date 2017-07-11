@@ -9,6 +9,7 @@
 /.config/*
 
 # .config files
+!/.config/redshift.conf
 !/.config/user-dirs.*
 
 # .config dirs
