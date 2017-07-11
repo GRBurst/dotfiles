@@ -36,6 +36,7 @@
 !.dir_colors
 !.ideavimrc
 !.npmrc
+!.Xresources
 !.zshrc*
 !.zaliases
 !.zprofile
