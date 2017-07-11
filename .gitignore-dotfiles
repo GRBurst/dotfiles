@@ -18,6 +18,7 @@
 !/.config/git
 !/.config/htop
 !/.config/mpv
+!/.config/networkmanager-dmenu
 !/.config/termite
 !/.config/i3
 !/.config/i3status
