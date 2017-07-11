@@ -33,6 +33,7 @@
 # $HOME files
 !.agignore
 !.dir_colors
+!.ideavimrc
 !.npmrc
 !.zshrc*
 !.zaliases
