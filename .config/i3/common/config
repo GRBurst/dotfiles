@@ -3,12 +3,12 @@
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
 # Start common scripts
-exec --no-startup-id sh ~/.i3/common/start.sh
+exec --no-startup-id sh ~/.config/i3/common/start.sh
 
 # Start local scripts
-exec --no-startup-id sh ~/.i3/local/start.sh
+exec --no-startup-id sh ~/.config/i3/local/start.sh
 
-set $sp ~/.i3/scripts
+set $sp ~/.config/i3/scripts
 
 # neo modifier, Mod4 is the windows key
 set $mod mod4
