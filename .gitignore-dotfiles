@@ -1,17 +1,24 @@
 # First, ignore everything at root
 /*
+
+# Whitelist
 !.gitignore-dotfiles
 
-# To whitelist directories
+# .config
 !/.config
 /.config/*
+
+# .config files
+!/.config/user-dirs.*
+
+# .config dirs
 !/.config/htop
 !/.config/termite
 !/.config/i3
 !/.config/i3status
 !/.config/termite
 
-# Whitelist files
+# $HOME
 !.agignore
 !.zshrc*
 !.zaliases
