@@ -3,7 +3,8 @@
 export BROWSER=firefox
 export SUDO_EDITOR=rvim
 export VISUAL="vim"
-export PAGER=vimpager
+export PAGER=less
+# export PAGER=vimpager
 
 # Desktop environment
 export QT_QPA_PLATFORMTHEME="qt5ct"
