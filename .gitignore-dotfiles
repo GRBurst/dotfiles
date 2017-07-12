@@ -30,13 +30,12 @@
 !/documents/setup
 !/.unison
 !/.conky
+!/local
 
 # $HOME files
 !.agignore
 !.dir_colors
 !.ideavimrc
-!.npmrc
-!.xinitrc
 !.Xresources
 !.zshrc*
 !.zaliases
