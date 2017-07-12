@@ -53,6 +53,7 @@ alias t="tree -C"
 alias ta="tree -a"
 alias f="find"
 alias fif="find-in-file"
+alias dsize="sudo du -hsx ./* | sort -rh | head -n 40"
 
 # Raid
 raid_health() {
