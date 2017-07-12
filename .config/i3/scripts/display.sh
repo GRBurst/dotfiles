@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 case $1 in
     standby|suspend|off)
         xset dpms force $1

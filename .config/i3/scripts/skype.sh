@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 docker start dreamy_goodall
 status=$?
 if [[ $status != 0 ]]; then

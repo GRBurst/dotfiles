@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Find focused workspace
 activeWorkspace="$(i3-msg -t get_workspaces | grep -P '"name"[^}]*?("focused"):true' -o | sed 's/"name":"\(.*\)","visible":true,"focused":true/\1/g')"
     number=$(echo $activeWorkspace | cut -d ":" -f1)

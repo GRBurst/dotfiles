@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 cat ~/.i3/common/config > ~/.i3/config;
 cat ~/.i3/local/config >> ~/.i3/config;
 if[[ -z $1 ]]; then

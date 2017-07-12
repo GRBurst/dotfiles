@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 wid=`xdotool search --name urxvtp | head -n 1`
 if [ -z "$wid" ]; then
    /usr/bin/urxvt -name urxvtp &
-   while [ -z "$(xdotool search --name urxvtp | head -n 1)" ] 
+   while [ -z "$(xdotool search --name urxvtp | head -n 1)" ]
    do
    :
    done

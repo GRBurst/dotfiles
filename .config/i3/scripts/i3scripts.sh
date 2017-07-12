@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 declare -r FILE="/tmp/i3scripts.conf"
 init()
 {

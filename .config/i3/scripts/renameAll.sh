@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 winIds=$(xprop -root | awk '/_NET_CLIENT_LIST\(WINDOW\)/{$1=$2=$3=$4=""; print}')
 
