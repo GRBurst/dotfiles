@@ -9,7 +9,7 @@ allow_bold          = true
 dynamic_title       = true
 urgent_on_bell      = true
 clickable_url       = true
-font                = Inconsolata 20
+font                = Inconsolata 12
 scrollback_lines    = 10000
 search_wrap         = true
 decorated           = false
@@ -43,11 +43,11 @@ cursor_shape = block
 #highlight      = #000000
 
 #cursor         = #eeeeee
-background      = #efefef
+background      = #fafafa
 foreground      = #333333
 foreground_bold = #333333
 
- black
+# black
 color0          = #000000
 color8          = #000000
 
@@ -78,6 +78,8 @@ color14         = #00a8ff
 # white
 color7          = #ffffff
 color15         = #ffffff
+
+#}
 
 [hints]
 #font = Monospace 12
