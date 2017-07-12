@@ -28,9 +28,11 @@
 !/documents
 /documents/*
 !/documents/setup
+!/projects
+/projects/*
+!/projects/bin
 !/.unison
 !/.conky
-!/local
 
 # $HOME files
 !.agignore
