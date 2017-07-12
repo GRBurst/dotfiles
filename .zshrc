@@ -2,7 +2,7 @@ export PURE_GIT_PULL=0 # disable pure-promt git pull when entering git repo
 DISABLE_AUTO_UPDATE="true" # disable oh-my-zsh auto-update
 
 eval    "$(fasd --init auto)"
-source  "${HOME}/.zsh/zgen/zgen.zsh"
+source  "${HOME}/local/zgen/zgen.zsh"
 
 if ! zgen saved; then
     echo "creating zgen save..."
