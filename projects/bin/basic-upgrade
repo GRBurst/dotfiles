@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh -ie
+#!/usr/bin/env zsh
 
 # Clone boot disc
 # echo "Mounting redundant boot disk /dev/sdb1"
@@ -13,7 +13,7 @@
 
 # System related
 echo "upgrading installed packages..."
-nixos-rebuild switch --upgrade
+sudo nixos-rebuild switch --upgrade
 
 echo "cleanup nix garbage"
 nix-collect-garbage
@@ -28,11 +28,11 @@ zgen update
 echo "updating vim plugins..."
 vim +PlugUpgrade +PlugInstall +PlugUpdate +PlugClean! +qall
 
-echo "updating global npm packages"
-npm -g update
+# echo "updating global npm packages"
+# npm -g update
 
-echo "updating git repos"
-mr update
+# echo "updating git repos"
+# mr update
 
 # Filesystem related
 echo "updating mlocate database..."
