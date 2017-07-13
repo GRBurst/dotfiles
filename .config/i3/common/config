@@ -145,7 +145,7 @@ bindsym $mod+$AltGr+Delete exec rofi-choose-container
 bindsym $mod+$AltGr+KP_Separator exec dropbox
 bindsym $mod+$AltGr+KP_9 exec nemo
 bindsym $mod+$AltGr+KP_8 exec pidgin
-bindsym $mod+$AltGr+exclamdown exec ko
+bindsym $mod+$AltGr+exclamdown exec ~/local/keepass/kxo
 bindsym $mod+$AltGr+Shift+exclamdown exec kd
 bindsym $mod+$AltGr+KP_1 exec thunderbird
 bindsym $mod+$AltGr+KP_4 exec nmcli_dmenu
@@ -162,9 +162,6 @@ bindsym $mod+$AltGr+Down exec thunderbird; exec firefox; exec pidgin
 
 assign [class="(?i)thunderbird"] "1: mail"
 assign [class="(?i)firefox"] "2: browser"
-#assign [class="(?i)steam"] "18: steam"
-#assign [class="(?i)pidgin"] "19: communication"
-#assign [class="(?i)skype"] "19: communication"
 
 # switch to workspace
 bindsym $mod+1 workspace number 1: mail; [con_mark="awot"] move workspace current;
