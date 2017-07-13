@@ -1,11 +1,11 @@
-Xft.dpi: 190
+Xft.dpi: 168
 
 ! Rofi colors now specified by:
 ! State: 'bg', 'fg', 'bgalt', 'hlbg', 'hlfg'
 
 
 ! rofi.X.value
-rofi.dpi:           190
+rofi.dpi:           168
 rofi.location:      2
 rofi.width:         100
 rofi.lines:         5
