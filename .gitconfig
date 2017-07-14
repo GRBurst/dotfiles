@@ -12,18 +12,28 @@
     h   = help
 
     # Branch
-    br  = branch
-    brr = branch -r
+    b  = branch
+    br = branch -r
 
     # Checkout
     o  = checkout
     ob = checkout -b
+    cb = checkout -b
+    cm = checkout origin/master
+
+    # Fetch
+    f   = fetch
+    fu  = fetch upstream
+    po  = "!git push --set-upstream origin \"$(git rev-parse --abbrev-ref HEAD)\"" # push current branch to origin
+    fum = "!f() { local curBranch=$(git rev-parse --abbrev-ref HEAD); git fetch upstream; git checkout master; git merge upstream/master; git checkout $curBranch }; f" # fetch upstream and merge master
+    fur = "!f() { local curBranch=$(git rev-parse --abbrev-ref HEAD); git fetch upstream; git checkout master; git merge upstream/master; git checkout $curBranch; git rebase -i master }; f" # fetch upstream, merge master, rebase branch
 
     # Commit
     c       = commit
     cm      = commit -m
     cam     = commit -a -m
     amend   = commit --amend
+    ca      = commit --amend
 
     # Move pointer
     prev    = reset --soft HEAD~1
@@ -43,6 +53,8 @@
     pf  = push --force-with-lease
     po  = "!git push --set-upstream origin \"$(git rev-parse --abbrev-ref HEAD)\"" # push current branch to origin
     up  = pull
+    pl  = pull
+    prm = pull --rebase origin master
 
     # Cleanup
     prune   = fetch --prune # remove old branches
@@ -55,15 +67,17 @@
     sp  = stash pop
 
     # Rebase
-    rba = rebase --abort
-    rbs = rebase --skip
-    rbc = rebase --continue
-    rbi = rebase -i
+    ra = rebase --abort
+    rs = rebase --skip
+    rc = rebase --continue
+    ri = rebase -i
+    rm = rebase master
 
     # Merge
-    mra = merge --abort
-    mrs = merge --skip
-    mrc = merge --continue
+    ma = merge --abort
+    ms = merge --skip
+    mc = merge --continue
+    mum = merge upstream/master
 
     # Cherry-pick
     cpa = cherry-pick --abort
