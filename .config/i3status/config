@@ -21,7 +21,7 @@ order += "volume master"
 order += "tztime local"
 
 wireless wlp17s0f3u1u4u3 {
-        format_up = "W: (%quality at %essid, %bitrate) %ip"
+        format_up = "📶: (%quality at %essid, %bitrate) %ip"
         format_down = ""
 }
 
@@ -49,7 +49,8 @@ battery 0 {
 }
 
 volume master {
-        format = "♪: %volume"
+        format = "🔊: %volume"
+        format_muted = "🔉"
         device = "default"
         mixer = "Master"
         mixer_idx = 0

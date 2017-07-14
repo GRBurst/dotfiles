@@ -22,8 +22,8 @@ set $Down   mod3+a
 set $Right  mod3+e
 set $Up     mod3+l
 
-font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
-#font pango:Droid Sans Mono 11
+# font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
+font pango:Droid Sans Mono 11
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
