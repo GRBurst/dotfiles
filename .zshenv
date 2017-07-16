@@ -20,6 +20,9 @@ export PATH="$HOME/projects/bin":$PATH
 # add npm to path
 export PATH="$HOME/.node_modules/bin":$PATH
 
+# Always source zgen -> needed for update script
+# source  "${HOME}/local/zgen/zgen.zsh"
+
 # Ibus
 export GTK_IM_MODULE=ibus
 export XMODIFIERS=@im=ibus

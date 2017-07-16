@@ -1,4 +1,5 @@
-#!/usr/bin/env zsh
+#!/run/current-system/sw/bin/zsh -ie
+# #!/usr/bin/env zsh
 
 # Clone boot disc
 # echo "Mounting redundant boot disk /dev/sdb1"
