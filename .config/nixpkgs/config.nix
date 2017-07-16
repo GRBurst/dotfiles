@@ -1,9 +1,8 @@
 with (import <nixpkgs> {});
 
 let
-
-  nixpkgs = import <nixpkgs/nixos> {};
   localpkgs = import ~/projects/nixpkgs/default.nix {};
+  nixpkgs   = import <nixpkgs/nixos> {};
 
 in {
 
@@ -11,19 +10,27 @@ in {
 
   packageOverrides = pkgs: with pkgs; {
 
-    user-packages = buildEnv {
+    common-packages = buildEnv {
 
       inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
       extraOutputsToInstall = [ "man" ];
-      name = "user-packages";
+      name = "common-packages";
 
       paths = [
-        clamav
-        profile-sync-daemon
-        thunderbird
-        # firefox
         localpkgs.xcwd
+
+        # clamav
+        gnome3.file-roller
+        libnotify
+        pidgin
+        purple-facebook telegram-purple toxprpl
+        pidginotr pidgin-skypeweb pidgin-opensteamworks
+        # firefox
+          # profile-sync-daemon
+        simple-scan
+        spaceFM	shared_mime_info desktop_file_utils
         xorg.xev
+        zathura
       ];
 
     };
@@ -35,19 +42,40 @@ in {
       name = "dev-packages";
 
       paths = [
-        irssi
+        irssi irssi_otr
       ];
 
     };
 
+    highres-packages = buildEnv {
+
+      inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
+      extraOutputsToInstall = [ "man" ];
+      name = "highres-packages";
+
+      paths = [
+        common-packages
+        dev-packages
+        evince
+        thunderbird
+      ];
+
   };
 
-  firefox = {
-    enableGoogleTalkPlugin  = false;
-    enableAdobeFlash        = false;
-    enableAdobeFlashDRM     = true;
-    jre                     = false;
-    icedtea                 = true;
+    lowres-packages = buildEnv {
+
+      inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
+      extraOutputsToInstall = [ "man" ];
+      name = "lowres-packages";
+
+      paths = [
+        common-packages
+        claws-mail
+        mutt
+        llpp
+        ranger
+      ];
+
   };
 
 }
