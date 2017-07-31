@@ -16,6 +16,7 @@ export PATH=$HOME/projects/dottr/pan.git:$PATH
 
 # add home bin folder to path
 export PATH="$HOME/projects/bin":$PATH
+export PATH="$HOME/local/bin":$PATH
 
 # add npm to path
 export PATH="$HOME/.node_modules/bin":$PATH
