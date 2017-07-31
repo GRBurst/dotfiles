@@ -114,6 +114,10 @@ nvim_all_command() {
 }
 
 x() {
+    (nohup $@ > /tmp/$1_$2.log) &
+}
+
+xx() {
     $@ &
     disown
     exit
