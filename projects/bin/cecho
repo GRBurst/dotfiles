@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+LVL="$1"
+TXT="$2"
+# shift 2
+# ARGS="$@"
+
+case "$LVL" in
+    "BL"|"BLACK")
+        echo -e "\e[30m${TXT}\e[0m"
+        ;;
+    "R"|"RED"|"ERR"|"ERROR")
+        echo -e "\e[31m${TXT}\e[0m"
+        ;;
+    "G"|"GREEN"|"OK")
+        echo -e "\e[32m${TXT}\e[0m"
+        ;;
+    "Y"|"YELLOW"|"WARN"|"WARNING")
+        echo -e "\e[33m${TXT}\e[0m"
+        ;;
+    "B"|"BLUE")
+        echo -e "\e[34m${TXT}\e[0m"
+        ;;
+    "M"|"MAGENTA")
+        echo -e "\e[35m${TXT}\e[0m"
+        ;;
+    "C"|"CYAN")
+        echo -e "\e[36m${TXT}\e[0m"
+        ;;
+    "GR"|"GRAY")
+        echo -e "\e[37m${TXT}\e[0m"
+        ;;
+    "DGRAY")
+        echo -e "\e[90m${TXT}\e[0m"
+        ;;
+    "LRED")
+        echo -e "\e[91m${TXT}\e[0m"
+        ;;
+    "LGREEN")
+        echo -e "\e[92m${TXT}\e[0m"
+        ;;
+    "LYELLOW")
+        echo -e "\e[93m${TXT}\e[0m"
+        ;;
+    "LBLUE")
+        echo -e "\e[94m${TXT}\e[0m"
+        ;;
+    "LMAGENTA")
+        echo -e "\e[95m${TXT}\e[0m"
+        ;;
+    "LCYAN")
+        echo -e "\e[96m${TXT}\e[0m"
+        ;;
+    "WHITE")
+        echo -e "\e[97m${TXT}\e[0m"
+        ;;
+    *)
+        echo -e "\e[39m${TXT}\e[0m"
+        ;;
+esac
+
