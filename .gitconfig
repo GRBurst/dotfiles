@@ -19,13 +19,14 @@
     # Checkout
     o  = checkout
     ob = checkout -b
-    om = checkout origin/master
+    om = checkout master
+    oom = checkout origin/master
 
     # Fetch
     f   = fetch
     fu  = fetch upstream
-    fum = "!f() { local curBranch=$(git rev-parse --abbrev-ref HEAD); git fetch upstream; git checkout master; git merge upstream/master; git checkout $curBranch; }; f" # fetch upstream and merge master
-    fur = "!f() { local curBranch=$(git rev-parse --abbrev-ref HEAD); echo $curBranch; git fetch upstream; git checkout master; git merge upstream/master; git checkout $curBranch; git rebase -i master; }; f" # fetch upstream, merge master, rebase branch
+    fum = "!f() { local curBranch=$(git rev-parse --abbrev-ref HEAD) && git fetch upstream && git checkout master && git merge upstream/master && git checkout $curBranch; }; f" # fetch upstream and merge master
+    fur = "!f() { local curBranch=$(git rev-parse --abbrev-ref HEAD) && git fetch upstream && git checkout master && git merge upstream/master && git checkout $curBranch && git rebase -i master; }; f" # fetch upstream, merge master, rebase branch
 
     # Commit
     c       = commit
