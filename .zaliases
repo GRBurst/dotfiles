@@ -55,6 +55,8 @@ alias mln='noglob zmv -L -W'
 alias mmv='noglob zmv -W'
 o() { gio open $@ > /dev/null 2>&1; }
 
+alias rcp="rsync -ah --progress"
+
 # Tools
 alias t="tree -C"
 alias ta="tree -a"
@@ -137,7 +139,7 @@ alias i3-update-conf="cat $HOME/.config/i3/common/config > $HOME/.config/i3/conf
 
 # Projects
 sshkeygen() {
-    ssh-keygen -t ed25519 -C "$(whoami)@$(hostname)->$1 on $(date -I)" -f "$HOME/.ssh/@$(hostname)->$1"
+    ssh-keygen -t ed25519 -C "$(whoami)@$(hostname)->$1 on $(date -I)" -f "$HOME/.ssh/$(hostname)->$1"
 }
 mdot() {
     local n=$(basename "$1")
@@ -151,13 +153,14 @@ proj_ctags () {
 }
 
 # General
+alias godzillasmb="cd /tmp && smbclient //godzilla/upload -U nobody -N -W FOO"
 godzilla-mount() {
-    sudo mount -t cifs //godzilla/ateam /mnt/godzilla/ateam -o guest,uid=$(id -u),gid=$(id -g),ro
-    sudo mount -t cifs //godzilla/upload /mnt/godzilla/upload -o guest,uid=$(id -u),gid=$(id -g),rw
+    sudo mount -t cifs //godzilla/ateam /media/godzilla/ateam -o guest,uid=$(id -u),gid=$(id -g),ro
+    sudo mount -t cifs //godzilla/upload /media/godzilla/upload -o guest,uid=$(id -u),gid=$(id -g),rw
 }
 godzilla-umount() {
-    sudo umount /mnt/godzilla/upload
-    sudo umount /mnt/godzilla/ateam
+    sudo umount /media/godzilla/upload
+    sudo umount /media/godzilla/ateam
 }
 tmpremount() {
     sudo mount -o remount,size="$1",noatime /tmp
@@ -171,6 +174,20 @@ nixos-details() {
     nix-instantiate --eval '<nixpkgs>' -A lib.nixpkgsVersion
     printf '- Sandboxing enabled: '
     grep build-use-sandbox /etc/nix/nix.conf | sed s/.*=//
+}
+
+sylvester-payments() {
+local days=30
+local entries=31
+if [[ "$#" -eq 1 ]]; then
+    entries=$((${1}+1))
+fi
+local result=$(ssh sylvester "dumpykota --data payments start=today-${days} end=now | sort -k 3 -t ',' | tail -n ${entries}")
+echo ${result} | tail -n 1
+echo ${result}
+# for value in "${result[@]}"; do
+#     printf "%-8s\n" "${value}"
+# done | column
 }
 
 # Internet and Wlan
