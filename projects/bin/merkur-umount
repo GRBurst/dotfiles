@@ -1,0 +1,28 @@
+#!/usr/bin/env zsh
+
+echo "Unmounting home to /media/merkur"
+if sudo umount /media/merkur; then
+    cecho "OK" "SUCCESS"
+else
+    cecho "ERR" "FAILED"
+    exit 1
+fi
+
+
+# sudo vgscan
+echo "Deactivating arch volume group"
+if sudo vgchange -an arch; then
+    cecho "OK" "SUCCESS"
+else
+    cecho "ERR" "FAILED"
+    exit 1
+fi
+
+echo "Closing encrypted device"
+if sudo cryptsetup luksClose merkur; then
+    cecho "OK" "SUCCESS"
+else
+    cecho "ERR" "FAILED"
+    exit 1
+fi
+

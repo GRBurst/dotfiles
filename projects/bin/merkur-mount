@@ -1,0 +1,33 @@
+#!/usr/bin/env zsh
+local DISK="$1"
+
+if [[ "$#" -ne 1 ]]; then
+    cecho "ERROR" "No device specified"
+    exit 1
+fi
+
+
+echo "Open encrypted device"
+if sudo cryptsetup luksOpen /dev/${DISK} merkur; then
+    cecho "OK" "SUCCESS"
+else
+    cecho "ERR" "FAILED"
+    exit 1
+fi
+
+# sudo vgscan
+echo "Activating arch volume group"
+if sudo vgchange -ay arch; then
+    cecho "OK" "SUCCESS"
+else
+    cecho "ERR" "FAILED"
+    exit 1
+fi
+
+echo "Mounting home to /media/merkur"
+if sudo mount /dev/mapper/arch-home /media/merkur; then
+    cecho "OK" "SUCCESS"
+else
+    cecho "ERR" "FAILED"
+    exit 1
+fi
