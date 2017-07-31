@@ -34,6 +34,7 @@
 !/projects/bin
 !/.unison
 !/.conky
+!/.vimrc*
 
 # $HOME files
 !.agignore
