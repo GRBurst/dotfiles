@@ -53,7 +53,8 @@ alias mvi='interactive-mv'
 alias mcp='noglob zmv -C -W'
 alias mln='noglob zmv -L -W'
 alias mmv='noglob zmv -W'
-o() { gio open $@ > /dev/null 2>&1; }
+#o() { gio open $@ > /dev/null 2>&1; } # gio not availabe in nixos
+o() { xdg-open $@ > /dev/null 2>&1; }
 
 alias rcp="rsync -ah --progress"
 
