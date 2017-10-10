@@ -19,13 +19,16 @@
 !/.config/git
 !/.config/htop
 !/.config/i3
+/.config/i3/local/config
 !/.config/i3status
+/.config/i3status/config
 !/.config/mpv
 !/.config/networkmanager-dmenu
 !/.config/nixpkgs
 !/.config/termite
 
 # $HOME dirs
+!/.conky
 !/documents
 /documents/*
 !/documents/setup
@@ -33,13 +36,15 @@
 /projects/*
 !/projects/bin
 !/.unison
-!/.conky
-!/.vimrc*
+!/.vim
+/.vim/*
+!/.vim/init.vim
 
 # $HOME files
 !.agignore
 !.dir_colors
 !.ideavimrc
+!/.vimrc*
 !.Xresources
 !.zshrc*
 !.zaliases
