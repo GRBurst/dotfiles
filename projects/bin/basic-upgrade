@@ -1,16 +1,4 @@
 #!/run/current-system/sw/bin/zsh -ie
-# #!/usr/bin/env zsh
-
-# Clone boot disc
-# echo "Mounting redundant boot disk /dev/sdb1"
-# if sudo /usr/sbin/mount -t vfat /dev/sdb1 /mnt/boot-partition; then
-#     echo "Successfully mounted /dev/sdb1 at /mnt/boot-partition"
-#     sudo rsync -avxHAX --progress /boot/ /mnt/boot-partition/
-#     echo "Successfully backuped boot partition"
-#     sudo /usr/bin/umount /mnt/boot-partition
-# else
-#     echo "Error mounting /dev/sdb1. Skipping..."
-# fi
 
 # System related
 echo "upgrading installed packages..."
