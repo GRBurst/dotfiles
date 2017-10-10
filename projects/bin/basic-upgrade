@@ -17,10 +17,13 @@ echo "upgrading installed packages..."
 sudo nixos-rebuild switch --upgrade
 
 echo "cleanup nix garbage"
-nix-collect-garbage
+nix-collect-garbage --delete-older-than 30d
 
 echo "optimize nix-store"
 nix-store --optimize
+
+# Local packages
+nix-env -iA highres-packages -f '<nixpkgs>'
 
 # Plugin manager and programs
 echo "updating zgen plugins..."

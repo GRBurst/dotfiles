@@ -96,10 +96,10 @@ new_window 1pixel
 new_float 1pixel
 
 # Make the currently focused window a scratchpad
-bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+Shift+KP_Subtract move scratchpad
 
 # Show the first scratchpad window
-bindsym $mod+Shift+plus scratchpad show
+bindsym $mod+Shift+KP_Add scratchpad show
 
 # Show the sup-mail scratchpad window, if any.
 #bindsym $mod+$AltGr+questiondown [title="^Sup ::"] scratchpad show
@@ -143,10 +143,11 @@ bindsym $mod+$AltGr+colon exec firefox
 #bindsym $mod+$AltGr+c exec termite -e finch
 bindsym $mod+$AltGr+Delete exec rofi-choose-container
 bindsym $mod+$AltGr+KP_Separator exec dropbox
-bindsym $mod+$AltGr+KP_9 exec nemo
+# bindsym $mod+$AltGr+KP_9 exec nemo
+bindsym $mod+$AltGr+KP_9 exec spacefm
 bindsym $mod+$AltGr+KP_8 exec pidgin
 bindsym $mod+$AltGr+exclamdown exec ~/local/keepass/kxo
-bindsym $mod+$AltGr+Shift+exclamdown exec kd
+bindsym $mod+$AltGr+Shift+exclamdown exec ~/local/keepass/kd
 bindsym $mod+$AltGr+KP_1 exec thunderbird
 bindsym $mod+$AltGr+KP_4 exec nmcli_dmenu
 bindsym $mod+$AltGr+End exec spotify-blockify

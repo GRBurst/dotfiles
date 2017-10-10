@@ -30,16 +30,22 @@ in {
         gptfdisk
         imagemagick7
         jmtpfs
+        keepass
         libnotify
+        lsof
+        nload
+        pavucontrol
         pidgin
         p7zip
         purple-facebook telegram-purple toxprpl
         pidginotr pidgin-skypeweb pidgin-opensteamworks
+        qtox
         # firefox
           # profile-sync-daemon
         simple-scan
         spaceFM	shared_mime_info desktop_file_utils
         speedtest-cli
+        traceroute
         unzip
         usbutils
         xorg.xev
@@ -55,6 +61,7 @@ in {
       name = "dev-packages";
 
       paths = [
+        cmakeCurses
         irssi irssi_otr
         swiProlog
       ];
@@ -72,7 +79,10 @@ in {
         dev-packages
         clementine
         evince
+        josm
+        kodi
         localpkgs.jbidwatcher
+        qutebrowser
         shotwell
         thunderbird
       ];
@@ -93,6 +103,19 @@ in {
         ranger
       ];
 
+  };
+
+
+  services.psd = {
+    enable  = true;
+    users   = [ "jelias" ];
+  };
+
+  firefox = {
+    enableGoogleTalkPlugin  = false;
+    enableAdobeFlash        = false;
+    enableAdobeFlashDRM     = true;
+    icedtea                 = true;
   };
 
 }

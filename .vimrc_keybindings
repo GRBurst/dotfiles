@@ -201,7 +201,8 @@ nmap <silent> <Leader>, <Plug>ToggleEndChar,
 nmap <silent> <Leader>. <Plug>ToggleEndChar.
 nmap <silent> <Leader>: <Plug>ToggleEndChar:
 
-
+" word count
+nnoremap <Leader>wc g<c-g><CR>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

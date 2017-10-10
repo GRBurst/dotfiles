@@ -31,7 +31,8 @@ export QT_IM_MODULE=ibus
 
 # Rust
 #export PATH=$HOME/.multirust/toolchains/nightly/cargo/bin:$PATH
-export RUST_SRC_PATH=$HOME/projects/rust/src
+#export RUST_SRC_PATH=$HOME/projects/rust/src
+export RUSTFLAGS="-L $HOME/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/x86_64-unknown-linux-gnu/lib/"
 export RUST_BACKTRACE=1
 
 # Android -> nixos?

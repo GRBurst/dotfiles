@@ -8,11 +8,14 @@ let g:lightline = {
       \ 'colorscheme': 'wombat',
       \ 'active': {
       \   'left': [ [ 'mode' ], ['gitbranch', 'bufferinfo'], [ 'bufferbefore', 'buffercurrent', 'bufferafter' ]],
-      \   'right': [  ['scrollbar'], [ 'filetype' ] ]
+      \   'right': [  ['scrollbar'], [ 'filetype' ], [ 'column' ] ]
       \ },
       \ 'inactive': {
       \   'left': [ ['filename'] ],
       \   'right': [  ['scrollbar'] ]
+      \ },
+      \ 'component': {
+      \ 'column': '%c'
       \ },
       \ 'component_function': {
       \ 'gitbranch': 'BarGitBranch',

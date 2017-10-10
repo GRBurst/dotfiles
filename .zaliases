@@ -158,14 +158,14 @@ proj_ctags () {
 }
 
 # General
-alias godzillasmb="cd /tmp && smbclient //godzilla/upload -U nobody -N -W FOO"
-godzilla-mount() {
-    sudo mount -t cifs //godzilla/ateam /media/godzilla/ateam -o guest,uid=$(id -u),gid=$(id -g),ro
-    sudo mount -t cifs //godzilla/upload /media/godzilla/upload -o guest,uid=$(id -u),gid=$(id -g),rw
+alias ateamsmb="cd /tmp && smbclient //ateam/upload -U nobody -N -W FOO"
+ateam-mount() {
+    sudo mount -t cifs //ateam/ateam /media/ateam/ateam -o guest,uid=$(id -u),gid=$(id -g),ro
+    sudo mount -t cifs //ateam/upload /media/ateam/upload -o guest,uid=$(id -u),gid=$(id -g),rw
 }
-godzilla-umount() {
-    sudo umount /media/godzilla/upload
-    sudo umount /media/godzilla/ateam
+ateam-umount() {
+    sudo umount /media/ateam/upload
+    sudo umount /media/ateam/ateam
 }
 tmpremount() {
     sudo mount -o remount,size="$1",noatime /tmp
