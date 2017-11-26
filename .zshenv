@@ -50,6 +50,9 @@ export GDK_USE_XFT=1
 sbtopts="$sbtopts -Xms64M -Xmx4G -Xss4M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC"
 export SBT_OPTS=$sbtopts
 
+# Idea neo keyboard
+export _JAVA_OPTIONS=" -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar"
+
 ## Enhance environment
 # color wrappers for common commands
 which cope_path > /dev/null && export PATH=$(cope_path):$PATH
