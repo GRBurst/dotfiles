@@ -146,8 +146,8 @@ bindsym $mod+$AltGr+KP_Separator exec dropbox
 # bindsym $mod+$AltGr+KP_9 exec nemo
 bindsym $mod+$AltGr+KP_9 exec spacefm
 bindsym $mod+$AltGr+KP_8 exec pidgin
-bindsym $mod+$AltGr+exclamdown exec ~/local/keepass/kxo
-bindsym $mod+$AltGr+Shift+exclamdown exec ~/local/keepass/kd
+bindsym $mod+$AltGr+exclamdown exec ~/local/bin/kxo
+bindsym $mod+$AltGr+Shift+exclamdown exec ~/local/bin/kd
 bindsym $mod+$AltGr+KP_1 exec thunderbird
 bindsym $mod+$AltGr+KP_4 exec nmcli_dmenu
 bindsym $mod+$AltGr+End exec spotify-blockify
