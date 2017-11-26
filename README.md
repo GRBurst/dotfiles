@@ -10,7 +10,7 @@ Repo is located in $HOME/projects/dotfiles while index is over $HOME
 Usage:
 ```bash
 mkdir -p ~/projects
-git clone --bare https://github.com/grburst/dotfiles.git projects/dotfiles
+git clone --bare git@github.com:GRBurst/dotfiles.git projects/dotfiles
 GIT_DIR=$HOME/projects/dotfiles GIT_WORK_TREE=$HOME
 git checkout master
 
