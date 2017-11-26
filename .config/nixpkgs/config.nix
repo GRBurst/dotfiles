@@ -9,16 +9,26 @@ in {
 
   allowUnfree = true;
 
-  packageOverrides = pkgs: with pkgs; {
+  # Install local packages with localpkgs.X,
+  # e.g.: localpkgs.xcwd
+
+  # Install a package collection with:
+  # nix-env -iA common-packages -f "<nixpkgs>"
+  # Uninstall all packages with
+  # nix-env -e common-packages
+  packageOverrides = pkgs: rec {
+
+    # inherit pkgs;
+
+    pidgin-with-plugins = pkgs.pidgin-with-plugins.override {
+      plugins = [ pidginotr purple-facebook telegram-purple toxprpl pidginotr pidgin-skypeweb pidgin-opensteamworks localpkgs.purple-gnome-keyring ];
+    };
 
     common-packages = buildEnv {
 
-      inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
       name = "common-packages";
 
       paths = [
-        localpkgs.xcwd
 
         btrfs-progs
         # clamav
@@ -35,19 +45,18 @@ in {
         lsof
         nload
         pavucontrol
-        pidgin
+        pidgin-with-plugins
         p7zip
-        purple-facebook telegram-purple toxprpl
-        pidginotr pidgin-skypeweb pidgin-opensteamworks
         qtox
         # firefox
-          # profile-sync-daemon
+        # profile-sync-daemon
         simple-scan
         spaceFM	shared_mime_info desktop_file_utils
         speedtest-cli
         traceroute
         unzip
         usbutils
+        xcwd
         xorg.xev
         zathura
       ];
@@ -68,6 +77,19 @@ in {
 
     };
 
+    scala-packages = buildEnv {
+
+      inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
+      extraOutputsToInstall = [ "man" ];
+      name = "scala-packages";
+
+      paths = [
+        sbt
+        scala
+      ];
+
+    };
+
     highres-packages = buildEnv {
 
       inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
@@ -76,18 +98,22 @@ in {
 
       paths = [
         common-packages
-        dev-packages
+        chromium
         clementine
+        cryptsetup
         evince
+        jbidwatcher
         josm
         kodi
-        localpkgs.jbidwatcher
+        libreoffice-fresh
         qutebrowser
         shotwell
+        texmaker
+        tor-browser-bundle-bin
         thunderbird
       ];
 
-  };
+    };
 
     lowres-packages = buildEnv {
 
@@ -103,19 +129,38 @@ in {
         ranger
       ];
 
-  };
+    };
 
+    test-packages = buildEnv {
 
-  services.psd = {
-    enable  = true;
-    users   = [ "jelias" ];
-  };
+      inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
+      name = "test-packages";
 
-  firefox = {
-    enableGoogleTalkPlugin  = false;
-    enableAdobeFlash        = false;
-    enableAdobeFlashDRM     = true;
-    icedtea                 = true;
+      paths = [
+        # localpkgs.jbidwatcher
+        # localpkgs.iri
+        # localpkgs.purple-gnome-keyring
+      ];
+
+    };
+
+    services.psd = {
+      enable  = true;
+      users   = [ "jelias" ];
+    };
+
+    firefox = {
+      enableGoogleTalkPlugin  = false;
+      enableAdobeFlash        = false;
+      enableAdobeFlashDRM     = true;
+      icedtea                 = true;
+    };
+
+   chromium = {
+     enablePepperPDF = true;
+     enableWideVine = false;
+   };
+
   };
 
 }
