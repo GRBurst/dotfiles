@@ -16,6 +16,7 @@ vd() {(cd; eval $DOTFILES_GIT vim -c GitFiles);}
 alias vim="nvim"
 alias vi3="vim ~/.config/i3/config"
 alias vnpc="vim ~/.config/nixpkgs/config.nix"
+alias vssh="vim ~/.ssh/config"
 
 # Dev
 alias m='make'
@@ -169,6 +170,9 @@ ateam-umount() {
 }
 tmpremount() {
     sudo mount -o remount,size="$1",noatime /tmp
+}
+nix-update() {
+    nix-env -iA highres-packages -f "<nixpkgs>"
 }
 nixos-details() {
     printf '- System: '
