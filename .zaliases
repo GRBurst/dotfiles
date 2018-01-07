@@ -57,7 +57,9 @@ alias mmv='noglob zmv -W'
 #o() { gio open $@ > /dev/null 2>&1; } # gio not availabe in nixos
 o() { xdg-open $@ > /dev/null 2>&1; }
 
-alias rcp="rsync -ah --progress"
+alias rcp="rsync --append-verify --archive --compress --human-readable --info=progress2 --partial --progresse --sparse"
+# Nix
+alias ns='nix-shell --command "zsh"'
 
 # Tools
 alias t="tree -C"
