@@ -157,7 +157,8 @@ bindsym $mod+$AltGr+BackSpace exec VirtualBox
 #bindsym $mod+$AltGr+y exec sh -e $sp/skype.sh
 bindsym $mod+$AltGr+period exec skype
 
-bindsym $mod+$AltGr+Left exec thunderbird; exec firefox
+bindsym $mod+$AltGr+Left exec idea-community
+# bindsym $mod+$AltGr+ exec thunderbird; exec firefox
 #bindsym $mod+$AltGr+c exec pidgin; exec sskype
 bindsym $mod+$AltGr+Down exec thunderbird; exec firefox; exec pidgin
 

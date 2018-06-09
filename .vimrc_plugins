@@ -15,7 +15,7 @@ Plug 'tpope/vim-sensible'     " defaults everyone can agree on
 Plug 'tpope/vim-repeat'       " enable dot-command for Plugins
 " Plug 'zhaocai/GoldenView.Vim' " enlarge focused window
 Plug 'vim-scripts/matchit.zip'     " matches not only parantheses, but also HTML-Tags and more
-Plug 'Valloric/YouCompleteMe', { 'do': 'python3 ./install.py --clang-completer --racer-completer'} " fuzzy autocompletion
+" Plug 'Valloric/YouCompleteMe', { 'do': 'python3 ./install.py --clang-completer --racer-completer'} " fuzzy autocompletion
 " https://github.com/rdnetto/YCM-Generator
 " Plug 'kshenoy/vim-signature' " display and navigate marks
 " Plug 'henrik/vim-indexed-search' " show 'Match x of y' when searching (conflicts with incsearch)
@@ -88,11 +88,14 @@ Plug 'Valloric/MatchTagAlways', {'for': 'html'} " Highlight matching/surrounding
 Plug 'othree/yajs.vim', {'for': 'javascript'} " New JavaScript Standard Ecmascript 6
 Plug 'othree/javascript-libraries-syntax.vim', {'for': 'javascript'}
 Plug 'neo4j-contrib/cypher-vim-syntax', {'for' : 'cypher'} " Neo4j Cypher query language
+Plug 'tpope/vim-markdown' " markdown
 " Plug 'vim-scripts/JavaDecompiler.vim' " decompile java .class files on the fly
 Plug 'rust-lang/rust.vim', {'for': 'rust'} " Rust programming language by Mozilla
 Plug 'zah/nim.vim', {'for': 'nim'}
 Plug 'cespare/vim-toml', {'for': 'toml'} " TOML (used for Rust project configuration)
-Plug 'LaTeX-Box-Team/LaTeX-Box', {'for': 'tex'} " LaTeX
+" Plug 'LaTeX-Box-Team/LaTeX-Box', {'for': 'tex'} " LaTeX
+Plug 'lervag/vimtex', {'for': 'tex'} " LaTeX
+Plug 'vim-latex/vim-latex', {'for': 'tex'} " LaTeX
 Plug 'vim-scripts/gnuplot.vim', {'for': 'gnuplot'}
 Plug 'gorodinskiy/vim-coloresque' " Preview colors in css
 Plug 'shmup/vim-sql-syntax'
@@ -126,7 +129,8 @@ Plug 'fdietze/goodday.vim'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " experimental
 " Plug 'scrooloose/syntastic'
-Plug 'vim-scripts/LanguageTool' " spell grammar checking
+" Plug 'vim-scripts/LanguageTool' " spell grammar checking
+Plug 'rhysd/vim-grammarous' " spell grammar checking
 " Plug 'severin-lemaignan/vim-minimap' " draw a sublime like minimap
 " Plug 'ebfe/vim-racer' " auto completion for the Rust language
 " Plug 'Raimondi/delimitMate' " automatically-close-brackets-magic
@@ -241,16 +245,16 @@ let g:user_emmet_install_global = 0
 autocmd vimrc FileType html,css EmmetInstall
 
 " Languagetool
-let g:languagetool_jar=$HOME."/local/languagetool/languagetool-commandline.jar"
+" let g:languagetool_jar=$HOME."/local/languagetool/languagetool-commandline.jar"
 
 " Autoformat
 let g:autoformat_autoindent = 0
 let g:autoformat_retab = 0
 let g:autoformat_remove_trailing_spaces = 1
 
-let g:formatdef_scalariform ='"ng-scalariform"'
-let g:formatdef_scalafmt ='"ng-scalafmt --stdin"'
-let g:formatters_scala = ['scalariform', 'scalafmt']
+let g:formatdef_scalafmt = "'scalafmt --stdin'"
+let g:formatdef_scalariform = "'ng-scalariform'"
+let g:formatters_scala = ['scalafmt', 'scalariform']
 
 " rust.vim
 " let g:rustfmt_autosave = 1

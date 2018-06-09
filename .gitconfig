@@ -12,21 +12,23 @@
     h   = help
 
     # Branch
-    b  = branch
-    br = branch -r
-    bd = branch -d
+    b   = branch
+    br  = branch -r
+    bd  = branch -d
+    bD  = branch -D
+    bdr = push origin --delete
+    brename = branch -m
 
     # Checkout
     o  = checkout
     ob = checkout -b
-    om = checkout master
-    oom = checkout origin/master
+    om = checkout origin/master
 
     # Fetch
     f   = fetch
     fu  = fetch upstream
-    fum = "!f() { local curBranch=$(git rev-parse --abbrev-ref HEAD) && git fetch upstream && git checkout master && git merge upstream/master && git checkout $curBranch; }; f" # fetch upstream and merge master
-    fur = "!f() { local curBranch=$(git rev-parse --abbrev-ref HEAD) && git fetch upstream && git checkout master && git merge upstream/master && git checkout $curBranch && git rebase -i master; }; f" # fetch upstream, merge master, rebase branch
+    fumm = "!f() { local curBranch=$(git rev-parse --abbrev-ref HEAD) && git stash save && git fetch upstream && git checkout master && git merge upstream/master && git checkout $curBranch && git stash pop; }; f" # fetch upstream and merge master
+    furb = "!f() { local curBranch=$(git rev-parse --abbrev-ref HEAD) && git stash save && git fetch upstream && git checkout master && git merge upstream/master && git checkout $curBranch && git stash pop && git rebase -i master; }; f" # fetch upstream, merge master, rebase branch
 
     # Commit
     c       = commit
@@ -34,6 +36,7 @@
     cam     = commit -a -m
     amend   = commit --amend
     ca      = commit --amend
+    wip		= "!f() { git commit -a -m 'wip' && git push; }; f"
 
     # Move pointer
     prev    = reset --soft HEAD~1
@@ -43,11 +46,17 @@
     # Log and diffs
     ref     = reflog
     lg      = fry one-line-log-colors
+    lgg		= log --graph --pretty=format:'%Cred%h %C(reset)%C(dim)%ad%Creset %s%C(yellow)%d%C(reset) %C(blue)<%an> %Cgreen(%cr)%Creset' --abbrev-commit --date=short
     d       = diff
+    dr		= "!f() { local curBranch=$(git rev-parse --abbrev-ref HEAD) && git diff origin/$curBranch $curBranch; }; f" # Compare current branch with remote branch
     df      = fry word-based-diff
     dfs     = fry word-based-diff --staged
     diff    = diff --irreversible-delete --find-copies  --find-copies-harder --ignore-space-at-eol --ignore-space-change --ignore-all-space
     diffs   = diff --irreversible-delete --find-copies  --find-copies-harder --ignore-space-at-eol --ignore-space-change --ignore-all-space --staged
+    dpf     = diff HEAD^ --name-only
+    ds		= show
+    dt		= difftool
+    dtd		= difftool -d
 
     # Push and pull
     p   = push
@@ -63,25 +72,38 @@
     dtag    = "!f() { git tag -d $1; git push origin :$1;}; f" # delete local and remote tag
 
     # Stash
+    s	= stash
     sl  = stash list
     ss  = stash save
     ssu = stash save --include-untracked
+    ssp	= stash --patch
     sp  = stash pop
+    sa	= stash apply
 
     # Rebase
-    ra = rebase --abort
-    rs = rebase --skip
-    rc = rebase --continue
-    ri = rebase -i
-    rm = rebase master
+    r   = rebase
+    ra  = rebase --abort
+    rs  = rebase --skip
+    rc  = rebase --continue
+    ri  = rebase -i
+    rim  = rebase -i master
+    rbm  = rebase master
+    #git rebase --onto [newParent] [oldParent] [branchToMove]
+    #ro => rebase this branch from parent $1 onto parent $2
+    ro = "!f() { git rebase --onto $1 $2 \"$(git rev-parse --abbrev-ref HEAD)\" ;}; f"
+    #rom => rebase this branch from parent $1 onto master
+    rom = "!f() { git rebase --onto master $1 \"$(git rev-parse --abbrev-ref HEAD)\" ;}; f"
+    rum = rebase upstream/master
 
     # Merge
-    ma = merge --abort
-    ms = merge --skip
-    mc = merge --continue
+    m   = merge
+    ma  = merge --abort
+    ms  = merge --skip
+    mc  = merge --continue
     mum = merge upstream/master
 
     # Cherry-pick
+    cp  = cherry-pick
     cpa = cherry-pick --abort
     cps = cherry-pick --skip
     cpc = cherry-pick --continue
@@ -116,6 +138,7 @@
 
 [core]
     pager   = less
+	editor = nvim
 
 [credential]
     helper = cache
@@ -171,6 +194,9 @@
     generic = g move-first-line
     generic = G move-last-line
     main    = G move-last-line ; overwrite default keybinding
+    branch  = B !git checkout %(branch)
+    branch	= N !git branch -m %(branch) %(prompt)
+    ; branch	= M !git rebase --onto master %(branch)
     generic = F !git fetch
     generic = P !git push
     status  = A !git commit --amend

@@ -55,9 +55,12 @@ alias mcp='noglob zmv -C -W'
 alias mln='noglob zmv -L -W'
 alias mmv='noglob zmv -W'
 #o() { gio open $@ > /dev/null 2>&1; } # gio not availabe in nixos
-o() { xdg-open $@ > /dev/null 2>&1; }
+# o() { xdg-open $@ > /dev/null 2>&1; }
+o() { mimeo $@ > /dev/null 2>&1; }
 
-alias rcp="rsync --append-verify --archive --compress --human-readable --info=progress2 --partial --progresse --sparse"
+alias rcp="rsync --append-verify --archive --compress --human-readable --info=progress2 --partial --progress --sparse"
+alias ssh-tmate="ssh -o PreferredAuthentications=password -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+
 # Nix
 alias ns='nix-shell --command "zsh"'
 
@@ -199,6 +202,10 @@ echo ${result}
 # for value in "${result[@]}"; do
 #     printf "%-8s\n" "${value}"
 # done | column
+}
+
+search_replace() {
+    ag "$1" -l0 | xargs -0 sed -i "s/$1/$2/g"
 }
 
 # Internet and Wlan

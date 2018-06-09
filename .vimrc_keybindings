@@ -247,8 +247,8 @@ endif
 nnoremap <leader>tu :UndotreeToggle<CR>
 
 " LatexBox
-vmap <Leader>le <Plug>LatexWrapSelection
-vmap <buffer>lo <Plug>LatexEnvWrapSelection
+" vmap <Leader>le <Plug>LatexWrapSelection
+" vmap <buffer>lo <Plug>LatexEnvWrapSelection
 
 " Autoformat
 nmap <leader>f :Autoformat<CR>

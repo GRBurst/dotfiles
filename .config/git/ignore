@@ -1,3 +1,6 @@
 # project local ctags
 /tags
 /ctags
+
+/.idea
+/tokens.sh

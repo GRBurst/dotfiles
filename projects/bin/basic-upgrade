@@ -1,33 +1,72 @@
 #!/run/current-system/sw/bin/zsh -ie
 
+cecho "G" "Backup boot"
+sudo mount /dev/disk/by-uuid/9959-75AB /media/boot_backup
+sudo cp -r /boot/ /media/boot_backup
+sudo umount /media/boot_backup
+
+cecho "G" "Commiting nixos configuration"
+zsh -c "                                                                                \
+    cp /etc/nixos/configuration.nix $HOME/projects/nixos/;                              \
+    cp $HOME/.config/nixpkgs/config.nix $HOME/projects/nixos/;                          \
+    cd $HOME;                                                                           \
+    $DOTFILES_GIT git -c core.excludesfile=~/.gitignore-dotfiles add $HOME/projects/nixos/configuration.nix $HOME/projects/nixos/config.nix;       \
+    $DOTFILES_GIT git -c core.excludesfile=~/.gitignore-dotfiles commit -m 'Update nixos config';                                                  \
+"
+
+cecho "G" "updating package rescources"
+zsh -c "cd ~/projects/nixpkgs && git checkout master && git fetch upstream && git merge upstream/master"
+# (
+#     cd ~/projects/nixpkgs
+#     git checkout master
+#     git fetch upstream
+#     git merge upstream/master
+#     # exit 0
+# )
+
+cecho "G" "updating channels"
+nix-channel --update
+sudo nix-channel --update
+
 # System related
-echo "upgrading installed packages..."
-sudo nixos-rebuild switch --upgrade
-
-echo "cleanup nix garbage"
-nix-collect-garbage --delete-older-than 30d
-
-echo "optimize nix-store"
-nix-store --optimize
+cecho "G" "upgrading installed packages"
+sudo nixos-rebuild switch
+nix-env -u '*'
 
 # Local packages
+cecho "G" "upgrading highres packages"
 nix-env -iA highres-packages -f '<nixpkgs>'
 
+cecho "G" "upgrading dev packages"
+nix-env -iA dev-packages -f '<nixpkgs>'
+
+# cecho "G" "upgrading scala packages"
+# nix-env -iA scala-packages -f '<nixpkgs>'
+
+# nix-env -iA highres-packages -f '<nixpkgs>' && nix-env -iA dev-packages -f '<nixpkgs>' && nix-env -iA scala-packages -f '<nixpkgs>'
+
+# Cleanup and optimize
+cecho "G" "optimize nix-store"
+nix-store --optimize
+
+cecho "G" "cleanup nix garbage"
+nix-collect-garbage --delete-older-than 30d
+
 # Plugin manager and programs
-echo "updating zgen plugins..."
+cecho "G" "updating zgen plugins..."
 zgen update
 
-echo "updating vim plugins..."
+cecho "G" "updating vim plugins..."
 vim +PlugUpgrade +PlugInstall +PlugUpdate +PlugClean! +qall
 
-# echo "updating global npm packages"
+# cecho "G" "updating global npm packages"
 # npm -g update
 
-# echo "updating git repos"
+# cecho "G" "updating git repos"
 # mr update
 
 # Filesystem related
-echo "updating mlocate database..."
+cecho "G" "updating mlocate database..."
 sudo updatedb
 sudo mandb
 

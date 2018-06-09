@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+sudo systemctl stop syncthing.service
+sudo umount /media/data
+sudo cryptsetup close /dev/mapper/data
+sudo mdadm --stop /dev/md0
+sudo hdparm -Y /dev/sda
+sudo hd-idle -t sdc
+sudo hd-idle -t sdd
+sudo hd-idle -t sde
+sudo hd-idle -t sdf
+sudo hd-idle -t sdg

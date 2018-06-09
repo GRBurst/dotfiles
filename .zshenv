@@ -2,11 +2,14 @@
 # Default programs
 export BROWSER=firefox
 export SUDO_EDITOR=rvim
-export VISUAL="vim"
+export VISUAL="nvim"
 export PAGER=less
 # export PAGER=vimpager
 
 # Desktop environment
+# if [ -n "$DESKTOP_SESSION" ]; then
+#     eval $(gnome-keyring-daemon --start --components=pkcs11,secrets,ssh,gpg)
+# fi
 export QT_QPA_PLATFORMTHEME="qt5ct"
 export DE=gnome
 export XDG_CURRENT_DESKTOP=gnome
