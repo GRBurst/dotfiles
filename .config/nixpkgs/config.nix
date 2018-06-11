@@ -114,13 +114,13 @@ in {
 
         # Security
         keepass
-        localpkgs.keepassx-community
+        keepassx-community
         keybase-gui
 
         # Communication
         pidgin-with-plugins
         qtox
-        localpkgs.signal-desktop
+        signal-desktop
 
       ];
 
