@@ -12,10 +12,11 @@ zsh -c "                                                                        
     cd $HOME;                                                                           \
     $DOTFILES_GIT git -c core.excludesfile=~/.gitignore-dotfiles add $HOME/projects/nixos/configuration.nix $HOME/projects/nixos/config.nix;       \
     $DOTFILES_GIT git -c core.excludesfile=~/.gitignore-dotfiles commit -m 'Update nixos config';                                                  \
+    exit 0;
 "
 
 cecho "G" "updating package rescources"
-zsh -c "cd ~/projects/nixpkgs && git checkout master && git fetch upstream && git merge upstream/master"
+zsh -c "cd ~/projects/nixpkgs && git checkout master && git fetch upstream && git merge upstream/master && exit 0"
 # (
 #     cd ~/projects/nixpkgs
 #     git checkout master
