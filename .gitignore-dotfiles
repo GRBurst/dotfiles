@@ -19,7 +19,9 @@
 !/.config/git
 !/.config/htop
 !/.config/i3
-/.config/i3/local/config
+/.config/i3/local/*
+!/.config/i3/local/example_start.sh
+!/.config/i3/local/example_config
 !/.config/i3status
 /.config/i3status/config
 !/.config/mpv
@@ -29,9 +31,6 @@
 
 # $HOME dirs
 !/.conky
-!/documents
-/documents/*
-!/documents/setup
 !/projects
 /projects/*
 !/projects/bin
