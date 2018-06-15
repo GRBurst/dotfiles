@@ -36,7 +36,13 @@
 /projects/*
 !/projects/bin
 !/projects/nixos
+!/.sbt
+/.sbt/*
+!/.sbt/1.0
+/.sbt/1.0/*
 !/.sbt/1.0/global.sbt
+!/.sbt/1.0/plugins
+/.sbt/1.0/plugins/*
 !/.sbt/1.0/plugins/plugins.sbt
 !/.sbt/1.0/plugins/idea.sbt
 !/.unison
