@@ -10,29 +10,28 @@
       ./hardware-configuration.nix
     ];
 
-  # Use the systemd-boot EFI boot loader.
   boot = {
     loader = {
-      # Use the systemd-boot EFI boot loader
-      systemd-boot.enable = true;
+      systemd-boot.enable = true; # Use the systemd-boot EFI boot loader
       efi.canTouchEfiVariables = true;
     };
 
     kernelPackages = pkgs.linuxPackages_latest;
 
+    # kernelParams = [
+    #   "acpi_backlight=vendor"
+    # ];
+
     initrd.mdadmConf = ''
       DEVICE partitions
       ARRAY /dev/md/nixos:0 metadata=1.2 name=nixos:0 UUID=8b34463c:d38d231e:d6c35510:cd133929
       '';
+
     tmpOnTmpfs = true;
 
     kernel.sysctl = {
       "vm.swappiness" = 0;
     };
-  };
-
-  nixpkgs.config = {
-    allowUnfree = true;
   };
 
   hardware = {
@@ -41,6 +40,10 @@
     opengl.driSupport32Bit = true;
     sane.enable = true;
     cpu.intel.updateMicrocode = true;
+  };
+
+  nixpkgs.config = {
+    allowUnfree = true;
   };
 
   networking = {
@@ -53,8 +56,12 @@
     '';
   };
 
-  # Select internationalisation properties.
-  i18n = {
+  powerManagement = {
+    enable = true;
+  # powertop.enable = true;
+  };
+
+  i18n = { # Select internationalisation properties.
     consoleKeyMap = "neo";
     defaultLocale = "en_US.UTF-8";
   };
@@ -66,11 +73,8 @@
   # $ nix-env -qaP | grep wget
   # These are installed system-wide
   environment = {
-    systemPackages = with pkgs; [
-      # Security
-      gnome3.gnome_keyring gnome3.seahorse libsecret
-      openssl
-    ];
+    # systemPackages = with pkgs; [
+    # ];
 
     shellAliases = {
       l = "ls -l";
@@ -89,32 +93,42 @@
     };
   };
 
+  nix = {
+    maxJobs = 16;
+    buildCores = 4;
+    gc = {
+      automatic = true;
+      dates = "01:15";
+      options = "--delete-older-than 7d";
+    };
+  };
 
-  nix.maxJobs = 16;
-  nix.buildCores = 4;
-
-  nix.gc.automatic = true;
-  nix.gc.dates = "01:15";
-  nix.gc.options = "--delete-older-than 7d";
   system.autoUpgrade.enable = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   programs = {
-    bash.enableCompletion = true;
     command-not-found.enable = true;
+
+    bash.enableCompletion = true;
+
+    zsh = {
+      enable = true;
+      enableCompletion = true;
+    };
+
     adb.enable = true;
-    #mtr.enable = true;
+
+    # ssh.startAgent = true;
     gnupg.agent = { 
       enable = true;
       enableSSHSupport = true;
     };
-    # ssh.startAgent = true;
-    zsh.enable = true;
-    zsh.enableCompletion = true;
-  };
-  users.defaultUserShell = "/run/current-system/sw/bin/zsh";
 
+    # mtr.enable = true;
+  };
+
+  users.defaultUserShell = "/run/current-system/sw/bin/zsh";
 
   security = {
     pam.services = [
@@ -127,12 +141,16 @@
          '';
        }
     ];
+
     #// TODO: pmount needs /media folder (create it automatically)
     wrappers = {
       pmount.source = "${pkgs.pmount}/bin/pmount";
       pumount.source = "${pkgs.pmount}/bin/pumount";
       eject.source = "${pkgs.eject}/bin/eject";
+      # light.source = "${pkgs.light}/bin/light";
+      # slock.source = "${pkgs.slock}/bin/slock";
     };
+
     sudo = {
       enable = true;
       wheelNeedsPassword = false;
@@ -143,8 +161,15 @@
   # List services that you want to enable:
   services = {
 
+    udev.extraRules = ''
+      SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", ATTR{capacity}=="[0-7]", RUN+="/run/current-system/sw/bin/systemctl hibernate"
+    '';
+
     keybase.enable = true;
-    kbfs.enable = true;
+    kbfs = {
+      enable = true;
+      #mountPoint = "/keybase"; # mountpoint important for keybase-gui
+    };
 
     openssh = {
       enable = true;
@@ -166,29 +191,50 @@
 
     printing = {
       enable = true;
-      drivers = [ pkgs.hplip pkgs.epson-escpr ];
+      drivers = [ pkgs.gutenprint pkgs.hplip pkgs.epson-escpr ];
     };
 
     xserver = {
       enable = true;
+      # dpi = 190;
       videoDrivers = [ "nvidia" ];
       layout = "de,de";
       xkbVariant = "neo,basic";
       xkbOptions = "grp:menu_toggle";
-      displayManager.lightdm.enable = true;
+
+      # libinput = {
+      #   enable = true;
+      #   scrollMethod = "twofinger";
+      #   disableWhileTyping = true;
+      #   tapping = false;
+      # };
+
+      displayManager = {
+        lightdm = {
+          enable = true;
+          # autoLogin = {
+          #   enable = true;
+          #   user = "jelias";
+          # };
+        };
+      };
+
       windowManager.i3.enable = true;
     };
+
     # compton.enable = true;
+
     redshift = {
       enable = true;
       latitude = "50.77";
       longitude = "6.08";
-      temperature.day = 5000;
-      temperature.night = 3000;
-      brightness.day = "1.0";
-      brightness.night = "0.75";
+      # temperature.day = 5000;
+      # temperature.night = 3000;
+      # brightness.day = "1.0";
+      # brightness.night = "0.75";
     };
-    # unclutter-xfixes.enable = true; # not working?
+
+    unclutter-xfixes.enable = true; # not working?
 
     syncthing = {
       enable = true;
@@ -217,29 +263,66 @@
       updater.enable  = true;
     };
 
+    gnome3 = {
+      gvfs.enable  = true;
+      gnome-keyring.enable = true;
+    };
+
     upower.enable  = true;
-    gnome3.gvfs.enable  = true;
-    gnome3.gnome-keyring.enable = true;
     udisks2.enable = true;
+
+    # acpid.enable = true;
 
     # ipfs = {
     #   enable = true;
     # };
   };
 
+  # systemd.services.delayedHibernation = {
+  #   description = "Delayed hibernation trigger";
+  #   documentation = [ "https://wiki.archlinux.org/index.php/Power_management#Delayed_hibernation_service_file" ];
+  #   conflicts = ["hibernate.target" "hybrid-sleep.target"];
+  #   before = ["sleep.target"];
+  #   # stopWhenUnneeded = true; # TODO
+  #   serviceConfig = {
+  #     Type = "oneshot";
+  #     RemainAfterExit = "yes";
+  #     Environment = [ "WAKEALARM=/sys/class/rtc/rtc0/wakealarm" "SLEEPLENGTH=+2hour" ];
+  #     ExecStart = "-/usr/bin/sh -c 'echo -n \"alarm set for \"; date +%%s -d$SLEEPLENGTH | tee $WAKEALARM'";
+  #     ExecStop = ''
+  #       -/usr/bin/sh -c '\
+  #         alarm=$(cat $WAKEALARM); \
+  #         now=$(date +%%s); \
+  #         if [ -z "$alarm" ] || [ "$now" -ge "$alarm" ]; then \
+  #            echo "hibernate triggered"; \
+  #            systemctl hibernate; \
+  #         else \
+  #            echo "normal wakeup"; \
+  #         fi; \
+  #         echo 0 > $WAKEALARM; \
+  #       '
+  #     '';
+  #   };
+
+  #   wantedBy = [ "sleep.target" ];
+  # };
+
+  # systemd.services.delayedHibernation.enable = true;
+
   fonts = {
     enableFontDir = true;
     enableGhostscriptFonts = true;
+
     fonts = with pkgs; [
       corefonts
       dejavu_fonts
-      # opensans-ttf
       symbola # many unicode symbols
       ubuntu_font_family
       inconsolata
+      google-fonts
       font-droid # needed for firefox
-      siji # polybar icon font
     ];
+
     fontconfig = {
       includeUserConf = false;
       defaultFonts.monospace = [ "Inconsolata" "DejaVu Sans Mono" ];
