@@ -36,6 +36,9 @@
 /projects/*
 !/projects/bin
 !/projects/nixos
+!/.sbt/1.0/global.sbt
+!/.sbt/1.0/plugins/plugins.sbt
+!/.sbt/1.0/plugins/idea.sbt
 !/.unison
 !/.vim
 /.vim/*
