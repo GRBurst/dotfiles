@@ -43,9 +43,13 @@ cursor_shape = block
 #highlight      = #000000
 
 #cursor         = #eeeeee
-background      = #fafafa
-foreground      = #333333
-foreground_bold = #333333
+#background      = #fafafa
+# foreground      = #333333
+# foreground_bold = #333333
+background      = #ffffff
+foreground      = #000000
+foreground_bold = #000000
+
 
 # black
 color0          = #000000

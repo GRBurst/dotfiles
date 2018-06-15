@@ -20,7 +20,8 @@ Plug 'vim-scripts/matchit.zip'     " matches not only parantheses, but also HTML
 " Plug 'kshenoy/vim-signature' " display and navigate marks
 " Plug 'henrik/vim-indexed-search' " show 'Match x of y' when searching (conflicts with incsearch)
 Plug 'haya14busa/incsearch.vim' " highlight all matches in incremental search (conflicts with vim-indexed-search)
-Plug 'kopischke/vim-fetch' " open files at line with filename:32
+" Plug 'kopischke/vim-fetch' " open files at line with filename:32
+Plug 'wsdjeg/vim-fetch'
 Plug 'airblade/vim-rooter' " cd to project root
 Plug 'airblade/vim-gitgutter' " VCS change info per line (only git)
 " Plug 'mhinz/vim-signify' " git, mercurial, darcs, bazaar, subversion, cvs, rcs, fossil, accurev, perforce

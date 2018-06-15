@@ -6,12 +6,13 @@ sudo cp -r /boot/ /media/boot_backup
 sudo umount /media/boot_backup
 
 cecho "G" "Commiting nixos configuration"
-zsh -c "                                                                                \
-    cp /etc/nixos/configuration.nix $HOME/projects/nixos/;                              \
-    cp $HOME/.config/nixpkgs/config.nix $HOME/projects/nixos/;                          \
-    cd $HOME;                                                                           \
-    $DOTFILES_GIT git -c core.excludesfile=~/.gitignore-dotfiles add $HOME/projects/nixos/configuration.nix $HOME/projects/nixos/config.nix;       \
-    $DOTFILES_GIT git -c core.excludesfile=~/.gitignore-dotfiles commit -m 'Update nixos config';                                                  \
+zsh -c "                                                                                            \
+    cp /etc/nixos/configuration.nix $HOME/projects/nixos/;                                          \
+    cp /etc/nixos/hardware-configuration.nix $HOME/projects/nixos/;                                 \
+    cp $HOME/.config/nixpkgs/config.nix $HOME/projects/nixos/;                                      \
+    cd $HOME;                                                                                       \
+    $DOTFILES_GIT git -c core.excludesfile=~/.gitignore-dotfiles add $HOME/projects/nixos/configuration.nix $HOME/projects/nixos/hardware-configuration.nix $HOME/projects/nixos/config.nix;    \
+    $DOTFILES_GIT git -c core.excludesfile=~/.gitignore-dotfiles commit -m 'Update nixos config';   \
     exit 0;
 "
 

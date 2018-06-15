@@ -53,6 +53,10 @@ in {
         xorg.xev
         gnome3.dconf
 
+        # Security
+        gnome3.gnome_keyring gnome3.seahorse libsecret
+        openssl
+
         # Terminal
         termite nix-zsh-completions
 
