@@ -188,7 +188,7 @@
     };
 
     fstrim.enable = true;
-    smartd.enable = true;
+    # smartd.enable = true;
 
     printing = {
       enable = true;
@@ -242,7 +242,7 @@
       user = "jelias";
       dataDir = "/home/jelias/.config/syncthing";
       openDefaultPorts = true;
-      systemService = true;
+      systemService = false;
     };
 
     locate = {

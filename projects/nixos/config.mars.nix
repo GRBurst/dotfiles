@@ -162,6 +162,32 @@ in {
 
     };
 
+    ssd-packages = buildEnv {
+
+      inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
+      extraOutputsToInstall = [ "man" ];
+      name = "ssd-packages";
+
+      paths = [
+        nvme-cli
+      ];
+
+    };
+
+    laptop-packages = buildEnv {
+
+      inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
+      extraOutputsToInstall = [ "man" ];
+      name = "ssd-packages";
+
+      paths = [
+        light
+        cbatticon
+      ];
+
+    };
+
+
     highres-packages = buildEnv {
 
       inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
