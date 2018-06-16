@@ -1,30 +1,34 @@
 #!/run/current-system/sw/bin/zsh -ie
 
-cecho "G" "Backup boot"
-sudo mount /dev/disk/by-uuid/9959-75AB /media/boot_backup
-sudo cp -r /boot/ /media/boot_backup
-sudo umount /media/boot_backup
+if [ $(hostname) = jupiter ]; then
+    cecho "G" "Backup boot"
+    sudo mount /dev/disk/by-uuid/9959-75AB /media/boot_backup
+    sudo cp -r /boot/ /media/boot_backup
+    sudo umount /media/boot_backup
+fi
 
 cecho "G" "Commiting nixos configuration"
-zsh -c "                                                                                            \
-    cp /etc/nixos/configuration.nix $HOME/projects/nixos/;                                          \
-    cp /etc/nixos/hardware-configuration.nix $HOME/projects/nixos/;                                 \
-    cp $HOME/.config/nixpkgs/config.nix $HOME/projects/nixos/;                                      \
-    cd $HOME;                                                                                       \
-    $DOTFILES_GIT git -c core.excludesfile=~/.gitignore-dotfiles add $HOME/projects/nixos/configuration.nix $HOME/projects/nixos/hardware-configuration.nix $HOME/projects/nixos/config.nix;    \
-    $DOTFILES_GIT git -c core.excludesfile=~/.gitignore-dotfiles commit -m 'Update nixos config';   \
+zsh -c "                                                                                                                \
+    cp /etc/nixos/configuration.nix $HOME/projects/nixos/configuration.$(hostname).nix;                                 \
+    cp /etc/nixos/hardware-configuration.nix $HOME/projects/nixos/hardware-configuration.$(hostname).nix;               \
+    cp $HOME/.config/nixpkgs/config.nix $HOME/projects/nixos/config.$(hostname).nix;                                    \
+    cd $HOME;                                                                                                           \
+    $DOTFILES_GIT git -c core.excludesfile=~/.gitignore-dotfiles add $HOME/projects/nixos/configuration.$(hostname).nix $HOME/projects/nixos/hardware-configuration.$(hostname).nix $HOME/projects/nixos/config.$(hostname).nix;    \
+    $DOTFILES_GIT git -c core.excludesfile=~/.gitignore-dotfiles commit -m 'Update nixos config of $(hostname)';        \
     exit 0;
 "
 
-cecho "G" "updating package rescources"
-zsh -c "cd ~/projects/nixpkgs && git checkout master && git fetch upstream && git merge upstream/master && exit 0"
-# (
-#     cd ~/projects/nixpkgs
-#     git checkout master
-#     git fetch upstream
-#     git merge upstream/master
-#     # exit 0
-# )
+if [ -d "$HOME/projects/nixpkgs" ]; then
+    cecho "G" "updating package rescources"
+    zsh -c "cd ~/projects/nixpkgs && git checkout master && git fetch upstream && git merge upstream/master && exit 0"
+     # (
+     #     cd ~/projects/nixpkgs
+     #     git checkout master
+     #     git fetch upstream
+     #     git merge upstream/master
+     #     exit 0
+     # )
+fi
 
 cecho "G" "updating channels"
 nix-channel --update
@@ -36,16 +40,47 @@ sudo nixos-rebuild switch
 nix-env -u '*'
 
 # Local packages
-cecho "G" "upgrading highres packages"
-nix-env -iA highres-packages -f '<nixpkgs>'
+LOC_INSTALLED=$(echo $(nix-env -q))
 
-cecho "G" "upgrading dev packages"
-nix-env -iA dev-packages -f '<nixpkgs>'
+if echo "$LOC_INSTALLED" | grep -q common-packages; then
+    cecho "G" "upgrading common packages"
+    nix-env -iA common-packages -f '<nixpkgs>'
+fi
 
-# cecho "G" "upgrading scala packages"
-# nix-env -iA scala-packages -f '<nixpkgs>'
+if echo "$LOC_INSTALLED" | grep -q dev-packages; then
+    cecho "G" "upgrading dev packages"
+    nix-env -iA dev-packages -f '<nixpkgs>'
+fi
 
-# nix-env -iA highres-packages -f '<nixpkgs>' && nix-env -iA dev-packages -f '<nixpkgs>' && nix-env -iA scala-packages -f '<nixpkgs>'
+if echo "$LOC_INSTALLED" | grep -q scala-packages; then
+    cecho "G" "upgrading scala packages"
+    nix-env -iA scala-packages -f '<nixpkgs>'
+fi
+
+if echo "$LOC_INSTALLED" | grep -q ssd-packages; then
+    cecho "G" "upgrading ssd packages"
+    nix-env -iA ssd-packages -f '<nixpkgs>'
+fi
+
+if echo "$LOC_INSTALLED" | grep -q laptop-packages; then
+    cecho "G" "upgrading laptop packages"
+    nix-env -iA laptop-packages -f '<nixpkgs>'
+fi
+
+if echo "$LOC_INSTALLED" | grep -q highres-packages; then
+    cecho "G" "upgrading highres packages"
+    nix-env -iA highres-packages -f '<nixpkgs>'
+fi
+
+if echo "$LOC_INSTALLED" | grep -q lowres-packages; then
+    cecho "G" "upgrading lowres packages"
+    nix-env -iA lowres-packages -f '<nixpkgs>'
+fi
+
+if echo "$LOC_INSTALLED" | grep -q test-packages; then
+    cecho "G" "upgrading test packages"
+    nix-env -iA test-packages -f '<nixpkgs>'
+fi
 
 # Cleanup and optimize
 cecho "G" "optimize nix-store"

@@ -3,7 +3,7 @@ set $OUT DP-1
 #set $OUT2 HDMI-0
 
 # device specific binds
-bindsym $mod+$AltGr+questiondown exec chromium --app-id=[ID]
+# bindsym $mod+$AltGr+questiondown exec chromium --app-id=[ID]
 
 ## define workspaces
 workspace "1: mail" output $OUT
