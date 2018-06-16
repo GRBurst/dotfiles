@@ -178,7 +178,7 @@ in {
 
       inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
       extraOutputsToInstall = [ "man" ];
-      name = "ssd-packages";
+      name = "laptop-packages";
 
       paths = [
         light
