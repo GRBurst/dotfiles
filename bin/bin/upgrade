@@ -1,0 +1,12 @@
+#!/bin/zsh -ie
+
+# Pacman & system related
+yaourt -Syyua --devel
+# Choose to upgrade
+
+# echo "upgrading installed packages..."
+		# read "ans?Would you advise ${removal} and vote it anyhow? [y/N] "
+		# if [[ $ans == 'Y' || $ans == 'y' ]]; then
+			# echo -n "Voting "
+			# aurvote -v "$removal"
+		# fi

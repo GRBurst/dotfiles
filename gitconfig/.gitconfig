@@ -1,0 +1,188 @@
+# Git config for dotfiles
+[apply]
+    # do not produce whitespace conflicts
+    ignoreWhitespace = change
+
+[alias]
+    # Most used
+    a   = add
+    A   = add -A
+    cl  = clone
+    st  = status
+    h   = help
+
+    # Branch
+    b  = branch
+    br = branch -r
+    bd = branch -d
+
+    # Checkout
+    o  = checkout
+    ob = checkout -b
+    om = checkout master
+    oom = checkout origin/master
+
+    # Fetch
+    f   = fetch
+    fu  = fetch upstream
+    fum = "!f() { local curBranch=$(git rev-parse --abbrev-ref HEAD) && git fetch upstream && git checkout master && git merge upstream/master && git checkout $curBranch; }; f" # fetch upstream and merge master
+    fur = "!f() { local curBranch=$(git rev-parse --abbrev-ref HEAD) && git fetch upstream && git checkout master && git merge upstream/master && git checkout $curBranch && git rebase -i master; }; f" # fetch upstream, merge master, rebase branch
+
+    # Commit
+    c       = commit
+    cm      = commit -m
+    cam     = commit -a -m
+    amend   = commit --amend
+    ca      = commit --amend
+
+    # Move pointer
+    prev    = reset --soft HEAD~1
+    next    = reset --soft HEAD@{1}
+    unstage = reset HEAD
+
+    # Log and diffs
+    ref     = reflog
+    lg      = fry one-line-log-colors
+    d       = diff
+    df      = fry word-based-diff
+    dfs     = fry word-based-diff --staged
+    diff    = diff --irreversible-delete --find-copies  --find-copies-harder --ignore-space-at-eol --ignore-space-change --ignore-all-space
+    diffs   = diff --irreversible-delete --find-copies  --find-copies-harder --ignore-space-at-eol --ignore-space-change --ignore-all-space --staged
+
+    # Push and pull
+    p   = push
+    pf  = push --force-with-lease
+    po  = "!git push --set-upstream origin \"$(git rev-parse --abbrev-ref HEAD)\"" # push current branch to origin
+    up  = pull
+    pl  = pull
+    prm = pull --rebase origin master
+
+    # Cleanup
+    prune   = fetch --prune # remove old branches
+    dbr     = "!f() { git branch -D $1; git push origin :$1;}; f" # delete local and remote branch
+    dtag    = "!f() { git tag -d $1; git push origin :$1;}; f" # delete local and remote tag
+
+    # Stash
+    sl  = stash list
+    ss  = stash save
+    ssu = stash save --include-untracked
+    sp  = stash pop
+
+    # Rebase
+    ra = rebase --abort
+    rs = rebase --skip
+    rc = rebase --continue
+    ri = rebase -i
+    rm = rebase master
+
+    # Merge
+    ma = merge --abort
+    ms = merge --skip
+    mc = merge --continue
+    mum = merge upstream/master
+
+    # Cherry-pick
+    cpa = cherry-pick --abort
+    cps = cherry-pick --skip
+    cpc = cherry-pick --continue
+
+[branch]
+    autosetuprebase = always
+
+[color]
+    branch  = auto
+    diff    = auto
+    status  = auto
+
+[color "branch"]
+    current = yellow bold
+    local   = green bold
+    remote  = cyan bold
+
+[color "diff"]
+    meta        = yellow bold
+    frag        = magenta bold
+    old         = red bold
+    new         = green bold
+    whitespace  = red reverse
+
+[color "status"]
+    added       = green bold
+    changed     = yellow bold
+    untracked   = blue bold
+
+[commit]
+    verbose = true
+
+[core]
+    pager   = less
+
+[credential]
+    helper = cache
+
+[diff]
+    algorithm       = histogram
+    indentHeuristic = true
+    wordRege        =[A-Z][a-z]*|[a-z]+|[^[:space:]] # see camel case as separate words
+
+[fetch]
+    prune   = true
+
+[merge]
+    ff              = only
+    conflictstyle   = diff3
+
+[user]
+    email   = GRBurst@protonmail.com
+    name    = GRBurst
+
+[pull]
+    ff      = only
+    rebase  = true
+
+[push]
+    default     = simple
+    followTags  = true
+
+[rebase]
+    autoStash   = true
+    autoSquash  = true
+
+[status]
+    showUntrackedFiles  = all
+
+[tig]
+    vertical-split      = true
+    tab-size            = 4
+    ignore-space        = all
+    ignore-case         = true ; search
+    editor-line-number  = true
+    mouse-scroll        = true
+    show-changes        = true
+    status-show-untracked-dirs  = false
+
+[tig "bind"]
+    ;NEO
+    generic = ä Quit
+    generic = ü view-close
+    generic = 8 move-up ; NEO right hand analog to arrow up
+    generic = 5 move-down ; NEO right hand analog to arrow down
+
+    generic = g move-first-line
+    generic = G move-last-line
+    main    = G move-last-line ; overwrite default keybinding
+    generic = F !git fetch
+    generic = P !git push
+    status  = A !git commit --amend
+    stage   = u stage-update-line
+    stage   = <Home> stage-update-line ; NEO AltGr+u
+    stage   = U status-update
+    status  = U status-update
+    stage   = A !git commit --amend
+    stage   = C !git commit
+    status  = w !git fry word-based-diff
+    status  = W !git fry word-based-diff --staged
+    stage   = w !git fry word-based-diff %(file)
+    stage   = W !git fry word-based-diff --staged %(file)
+    lg      = log --graph --pretty=format:'%Cred%h %C(reset)%C(dim)%ad%Creset %s%C(yellow)%d%C(reset) %C(blue)<%an> %Cgreen(%cr)%Creset' --abbrev-commit --date=short
+

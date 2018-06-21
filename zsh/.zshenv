@@ -1,7 +1,8 @@
 export BROWSER=firefox
 export SUDO_EDITOR=rvim
 export VISUAL="vim"
-export PAGER=vimpager
+#export PAGER=vimpager
+export PAGER=less
 
 export QT_QPA_PLATFORMTHEME="qt5ct"
 export DE=gnome
@@ -12,6 +13,8 @@ export PATH="$(cope_path)":$PATH
 
 # add home bin folder to path
 export PATH="$HOME/bin":$PATH
+
+export PATH=$PATH:"$HOME/local/lyx-gc/"
 
 # add npm to path
 export PATH="$HOME/.node_modules/bin":$PATH
@@ -39,3 +42,7 @@ export GDK_USE_XFT=1
 # sbtopts="$sbtopts -Xms64M -Xmx4G -Xss1M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC"
 sbtopts="$sbtopts -Xms64M -Xmx4G -Xss4M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC"
 export SBT_OPTS=$sbtopts
+
+# https://github.com/chenkelmann/neo2-awt-hack
+# curl https://github.com/chenkelmann/neo2-awt-hack/blob/master/releases/neo2-awt-hack-0.4-java8oracle.jar\?raw\=true > ~/local/neo2-awt-hack-0.4-java8oracle.jar
+export _JAVA_OPTIONS=" -Xbootclasspath/p:$HOME/bin/neo2-awt-hack-0.4-java8oracle.jar"

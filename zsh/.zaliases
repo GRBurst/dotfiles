@@ -41,6 +41,15 @@ alias cdp='cd ~/projects'
 alias cd.='cd ~/projects/dotfiles'
 alias cdt='cd-tmp'
 alias cdg='cd-git-root'
+cl() {cd $1; ls}
+
+# zm*
+alias mmv='noglob zmv -W'
+alias mcp='noglob zmv -C -W'
+alias mln='noglob zmv -L -W'
+
+alias mvi='interactive-mv'
+alias vag='search-select-edit'
 
 # Tools
 alias cg="cargo"
@@ -120,7 +129,7 @@ alias i3-update-conf="cat ~/.i3/common/config > ~/.i3/config; cat ~/.i3/local/co
 
 # Projects
 sshkeygen() {
-    ssh-keygen -t ed25519 -C "$(whoami)@$(hostname)-$(date -I)" -f "$HOME/.ssh/$1"
+    ssh-keygen -t ed25519 -C "$(whoami)@$(hostname)->$1 on $(date -I)" -f "$HOME/.ssh/$(hostname)->$1"
 }
 mdot() {
     local n=$(basename "$1")
@@ -143,4 +152,13 @@ tmpremount() {
 }
 
 alias inet="ping -q -w 1 -c 1 google.com > /dev/null && echo online || echo offline"
-alias tv="sudo systemctl start teamviewerd.service && teamviewer"
+alias tvd="sudo systemctl start teamviewerd.service && teamviewer"
+alias cupsd="sudo systemctl start cups-browsed.service"
+alias dockerds="sudo systemctl start docker"
+
+# Sound
+alias mute="pactl set-sink-mute alsa_output.pci-0000_00_14.2.analog-stereo true"
+alias unmute="pactl set-sink-mute alsa_output.pci-0000_00_14.2.analog-stereo false"
+alias togglemute="pactl set-sink-mute alsa_output.pci-0000_00_14.2.analog-stereo toggle"
+alias louder="pactl set-sink-volume alsa_output.pci-0000_00_14.2.analog-stereo +10%"
+alias quiter="pactl set-sink-volume alsa_output.pci-0000_00_14.2.analog-stereo -10%"

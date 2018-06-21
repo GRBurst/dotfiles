@@ -22,6 +22,7 @@ yaourt -Syyua --devel --noconfirm
 # docker run -it --rm --volume /usr/local/bin:/target sameersbn/skype:latest install
 
 echo "cleaning package cache..."
+sudo pacman -Sc
 sudo pkgcacheclean
 
 echo "updating package search database..."
@@ -52,6 +53,7 @@ fi
 # Filesystem related
 echo "updating mlocate database..."
 sudo updatedb
+echo "updating mandb database..."
 sudo mandb
 
 # sudo btrfs filesystem defragment /

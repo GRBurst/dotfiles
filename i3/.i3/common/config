@@ -153,10 +153,10 @@ bindsym $mod+$AltGr+Delete exec rofi-choose-container
 bindsym $mod+$AltGr+KP_Separator exec dropbox
 bindsym $mod+$AltGr+KP_9 exec nemo
 bindsym $mod+$AltGr+KP_8 exec pidgin
-bindsym $mod+$AltGr+exclamdown exec ko
+bindsym $mod+$AltGr+exclamdown exec kxo
 bindsym $mod+$AltGr+Shift+exclamdown exec kd
 bindsym $mod+$AltGr+KP_1 exec thunderbird
-bindsym $mod+$AltGr+KP_4 exec nmcli_dmenu
+bindsym $mod+$AltGr+KP_4 exec networkmanager_dmenu
 bindsym $mod+$AltGr+End exec spotify-blockify
 bindsym $mod+$AltGr+KP_6 exec steam
 bindsym $mod+$AltGr+Home exec --no-startup-id termite -e 'upgrade'

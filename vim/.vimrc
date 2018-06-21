@@ -17,6 +17,9 @@ source $HOME/.vimrc_custom
 source $HOME/.vimrc_statusline
 source $HOME/.vimrc_keybindings
 
+" dottr
+source $HOME/projects/dottr/pan.vim
+Fry edit-multiple-files
 
 " Enable file type detection.
 filetype plugin indent on

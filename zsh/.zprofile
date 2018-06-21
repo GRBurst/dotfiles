@@ -22,3 +22,7 @@ export LESS_TERMCAP_us=$(printf "\33[01;35m")   # begin underline
 # fzf fuzzy file finder
 export FZF_DEFAULT_COMMAND='ag --hidden -g ""'
 export FZF_DEFAULT_OPTS="-x -m --ansi --exit-0 --select-1" # extended match and multiple selections
+
+# https://github.com/chenkelmann/neo2-awt-hack
+# curl https://github.com/chenkelmann/neo2-awt-hack/blob/master/releases/neo2-awt-hack-0.4-java8oracle.jar\?raw\=true > ~/local/neo2-awt-hack-0.4-java8oracle.jar
+export _JAVA_OPTIONS=" -Xbootclasspath/p:$HOME/bin/neo2-awt-hack-0.4-java8oracle.jar"
