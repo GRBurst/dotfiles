@@ -37,7 +37,7 @@ in {
         pv xclip xorg.xkill unclutter-xfixes
         lm_sensors calc gksu
         haskellPackages.yeganesh
-        make
+        gnumake
         nitrogen scrot
         networkmanagerapplet
         dmenu rofi
