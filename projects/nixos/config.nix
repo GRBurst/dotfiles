@@ -37,7 +37,7 @@ in {
         pv xclip xorg.xkill unclutter-xfixes
         lm_sensors calc gksu
         haskellPackages.yeganesh
-        numix-gtk-theme
+        make
         nitrogen scrot
         networkmanagerapplet
         dmenu rofi
@@ -52,6 +52,9 @@ in {
         xcwd
         xorg.xev
         gnome3.dconf
+        lxappearance
+        gnome3.adwaita-icon-theme
+        vanilla-dmz
 
         # Security
         gnome3.gnome_keyring gnome3.seahorse libsecret
@@ -143,6 +146,7 @@ in {
         graphviz gthumb
         irssi irssi_otr
         jetbrains.idea-community
+        nodejs-9_x
         scalafmt
         swiProlog
       ];

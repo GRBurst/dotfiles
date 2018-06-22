@@ -10,17 +10,56 @@
       ./hardware-configuration.nix
     ];
 
+  fileSystems."/media/data" =
+    { device = "/dev/disk/by-uuid/bd09798f-1676-47a0-b113-b735d4e811f5";
+      fsType = "ext4";
+      label = "data";
+      options = [ "x-systemd.automount" "noauto" ];
+    };
+
+  fileSystems."/media/windows" =
+    { device = "/dev/disk/by-uuid/B4AE3C45AE3BFE84";
+      fsType = "ntfs-3g";
+      label = "windows";
+      options = [ "uid=jelias" "gid=users" "dmask=022" "fmask=133" "x-systemd.automount" "noauto" "x-systemd.idle-timeout=1min" ];
+    };
+
+  fileSystems."/media/ntfs" =
+    { device = "/dev/disk/by-uuid/1AF86B704887DADD";
+      fsType = "ntfs-3g";
+      label = "ntfs";
+      options = [ "uid=jelias" "gid=users" "dmask=022" "fmask=133" "x-systemd.automount" "noauto" "x-systemd.idle-timeout=1min" ];
+    };
+
+  # fileSystems."/media/ateam/ateam" =
+  #   { device = "//ateam/ateam";
+  #     fsType = "cifs";
+  #     options = [ "uid=jelias" "username=x" "password=" "x-systemd.automount" "noauto" "_netdev" "x-systemd.device-timeout=30" ];
+  #   };
+
+  # fileSystems."/media/ateam/upload" =
+  #   { device = "//ateam/upload";
+  #     fsType = "cifs";
+  #     options = [ "uid=jelias" "username=x" "password=" "x-systemd.automount" "noauto" "_netdev" "x-systemd.device-timeout=30" ];
+  #   };
+
+  # boot.initrd.luks.devices = [
+  #   {
+  #     name = "root";
+  #     device = "/dev/disk/by-uuid/06e7d974-9549-4be1-8ef2-f013efad727e";
+  #     preLVM = true;
+  #     allowDiscards = true;
+  #   }
+  # ];
+
   boot = {
+    initrd.luks.devices."data".device = "/dev/disk/by-uuid/677297d7-e77c-457b-a5a8-d2457766882c";
     loader = {
       systemd-boot.enable = true; # Use the systemd-boot EFI boot loader
       efi.canTouchEfiVariables = true;
     };
 
     kernelPackages = pkgs.linuxPackages_latest;
-
-    # kernelParams = [
-    #   "acpi_backlight=vendor"
-    # ];
 
     initrd.mdadmConf = ''
       DEVICE partitions
@@ -88,8 +127,9 @@
       EDITOR = "nvim";
       BROWSER = "firefox";
       _JAVA_OPTIONS=" -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
-      SBT_OPTS="$SBT_OPTS -Xms64M -Xmx4G -Xss4M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC";
+      SBT_OPTS="$SBT_OPTS -Xms1G -Xmx8G -Xss4M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC";
       #SSH_AUTH_SOCK = "%t/keyring/ssh";
+      AUTOSSH_GATETIME="0";
     };
   };
 
@@ -176,6 +216,14 @@
       ports = [ 53292 ];
       passwordAuthentication = false;
     };
+
+    # autossh.sessions = [
+    #   {
+    #   user = "jelias";
+    #   name = "juptiter-pluto";
+    #   extraArguments = "-M 0 -N -q -o 'ServerAliveInterval=60' -o 'ServerAliveCountMax=3' -o 'ExitOnForwardFailure=yes' pluto -R 53292:127.0.0.1:53292 -i /home/jelias/.ssh/jupiter->pluto";
+    #   }
+    # ];
 
     journald = {
       extraConfig = ''
@@ -341,6 +389,7 @@
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM+BIE+0anEEYK0fBIEpjedblyGW0UnuYBCDtjZ5NW6P jelias@merkur"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAflU8X4g3kboxgFQPAxeadUY97iZoV0IPEwK61lZFW5 jelias@venus->jupiter on 2018-02-22"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJyIEvcpOua/vi61YIKYTxGs5Ylt7xWa2Rr/NMGT2qdp jelias@pluto->jupiter on 2018-06-20"
     ];
   };
 
