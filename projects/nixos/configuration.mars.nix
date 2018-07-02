@@ -39,6 +39,18 @@
     };
   };
 
+    fileSystems."/media/ateam/ateam" =
+    { device = "//ateam/ateam";
+      fsType = "cifs";
+      options = [ "uid=jelias" "username=x" "password=" "x-systemd.automount" "noauto" "_netdev" "x-systemd.device-timeout=30" ];
+    };
+
+  fileSystems."/media/ateam/upload" =
+    { device = "//ateam/upload";
+      fsType = "cifs";
+      options = [ "uid=jelias" "username=x" "password=" "x-systemd.automount" "noauto" "_netdev" "x-systemd.device-timeout=30" ];
+  };
+
   hardware = {
     pulseaudio.enable = true;
     # pulseaudio.support32Bit = true; # This might be needed for Steam games
@@ -54,6 +66,11 @@
   networking = {
     networkmanager.enable = true;
     hostName = "mars";
+    extraHosts = ''
+      134.130.59.240  ateam
+      134.130.57.2    sylvester
+      134.130.57.147  godzilla
+    '';
   };
 
   powerManagement = {
@@ -83,12 +100,13 @@
     };
 
     # TODO: Move to .profile
-    
+
+    #wget "https://github.com/chenkelmann/neo2-awt-hack/blob/master/releases/neo2-awt-hack-0.4-java8oracle.jar?raw=true" -O ~/local/jars/neo2-awt-hack-0.4-java8oracle.jar
     variables = {
       SUDO_EDITOR = "nvim";
       EDITOR = "nvim";
       BROWSER = "firefox";
-      SBT_OPTS="$SBT_OPTS -Xms64M -Xmx4G -Xss4M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC";
+      SBT_OPTS="$SBT_OPTS -Xms2G -Xmx8G -Xss4M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC";
       _JAVA_OPTIONS=" -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
       # SSH_AUTH_SOCK="%t/keyring/ssh";
     };
@@ -127,6 +145,8 @@
     };
 
     # mtr.enable = true;
+
+    light.enable = true;
   };
 
   users.defaultUserShell = "/run/current-system/sw/bin/zsh";
@@ -148,7 +168,7 @@
       pmount.source = "${pkgs.pmount}/bin/pmount";
       pumount.source = "${pkgs.pmount}/bin/pumount";
       eject.source = "${pkgs.eject}/bin/eject";
-      # light.source = "${pkgs.light}/bin/light";
+      light.source = "${pkgs.light}/bin/light";
       # slock.source = "${pkgs.slock}/bin/slock";
     };
 
@@ -197,8 +217,8 @@
 
     xserver = {
       enable = true;
-      # dpi = 190;
-      # videoDrivers = [ "nvidia" ];
+      dpi = 192;
+      videoDrivers = [ "intel" ];
       layout = "de,de";
       xkbVariant = "neo,basic";
       xkbOptions = "grp:menu_toggle";
@@ -213,14 +233,17 @@
       displayManager = {
         lightdm = {
           enable = true;
-          # autoLogin = {
-          #   enable = true;
-          #   user = "jelias";
-          # };
+          autoLogin = {
+            enable = true;
+            user = "jelias";
+          };
         };
       };
 
+      desktopManager.xterm.enable  = false;
+      desktopManager.default = "none";
       windowManager.i3.enable = true;
+      windowManager.default = "i3";
     };
 
     # compton.enable = true;
@@ -242,7 +265,7 @@
       user = "jelias";
       dataDir = "/home/jelias/.config/syncthing";
       openDefaultPorts = true;
-      systemService = false;
+      systemService = true;
     };
 
     locate = {

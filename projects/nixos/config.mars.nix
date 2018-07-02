@@ -29,6 +29,7 @@ in {
 
       paths = [
         # Linux tools
+        arandr
         binutils
         atop htop iotop
         wget netcat nmap
@@ -36,6 +37,7 @@ in {
         hdparm hd-idle hddtemp
         pv xclip xorg.xkill unclutter-xfixes
         lm_sensors calc gksu
+        pciutils
         haskellPackages.yeganesh
         numix-gtk-theme
         nitrogen scrot
@@ -83,6 +85,7 @@ in {
         filezilla
         jmtpfs
         libnotify
+        networkmanager_dmenu
         simple-scan
         typora
         zathura
@@ -178,7 +181,7 @@ in {
 
       inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
       extraOutputsToInstall = [ "man" ];
-      name = "ssd-packages";
+      name = "laptop-packages";
 
       paths = [
         light
