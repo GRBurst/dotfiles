@@ -355,6 +355,15 @@
   #   wantedBy = [ "sleep.target" ];
   # };
 
+  systemd.user.services.localnpm = {
+    description = "Local npm cache";
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = "${pkgs.nodejs-9_x}/bin/node /home/jelias/.node_modules/bin/local-npm -d /home/jelias/.cache/local-npm";
+    };
+    wantedBy = [ "multi-user.target" ];
+  };
+
   # systemd.services.delayedHibernation.enable = true;
 
   fonts = {
