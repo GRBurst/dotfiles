@@ -194,6 +194,7 @@ in {
         vlc
         vokoscreen
         # (localpkgs.xmr-stak.override {cudaSupport = true;})
+        (xmr-stak.override {cudaSupport = true; openclSupport = false; devDonationLevel = "0.0";})
       ];
 
     };
@@ -220,7 +221,7 @@ in {
       name = "test-packages";
 
       paths = [
-        (xmr-stak.override {cudaSupport = true; openclSupport = false; devDonationLevel = "0.0";})
+        # (xmr-stak.override {cudaSupport = true; openclSupport = false; devDonationLevel = "0.0";})
         # (localpkgs.xmr-stak.override {cudaSupport = true;})
         # localpkgs.protonmail-bridge
         # localpkgs.jbidwatcher
