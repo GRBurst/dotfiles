@@ -152,7 +152,9 @@
   users.defaultUserShell = "/run/current-system/sw/bin/zsh";
 
   security = {
-      pam.services."gnome_keyring".enableGnomeKeyring;
+    pam.services."gnome_keyring".enableGnomeKeyring;
+  };
+
     # pam.services = [
     #   {
     #      name = "gnome_keyring";
