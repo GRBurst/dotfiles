@@ -52,6 +52,7 @@ in {
         traceroute
         unzip
         xcwd
+        xdpyinfo
         xorg.xev
         gnome3.dconf
 
@@ -184,6 +185,7 @@ in {
       name = "laptop-packages";
 
       paths = [
+        # libqmi
         light
         cbatticon
       ];

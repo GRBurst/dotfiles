@@ -152,16 +152,17 @@
   users.defaultUserShell = "/run/current-system/sw/bin/zsh";
 
   security = {
-    pam.services = [
-      {
-         name = "gnome_keyring";
-         text = ''
-           auth     optional    pam_gnome_keyring.so
-           session  optional    pam_gnome_keyring.so auto_start
-           password optional    pam_gnome_keyring.so
-         '';
-       }
-    ];
+      pam.services."gnome_keyring".enableGnomeKeyring;
+    # pam.services = [
+    #   {
+    #      name = "gnome_keyring";
+    #      text = ''
+    #        auth     optional    pam_gnome_keyring.so
+    #        session  optional    pam_gnome_keyring.so auto_start
+    #        password optional    pam_gnome_keyring.so
+    #      '';
+    #    }
+    # ];
 
     #// TODO: pmount needs /media folder (create it automatically)
     wrappers = {
