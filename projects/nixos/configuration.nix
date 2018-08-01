@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   imports =
@@ -171,16 +171,18 @@
   users.defaultUserShell = "/run/current-system/sw/bin/zsh";
 
   security = {
-    pam.services = [
-      {
-         name = "gnome_keyring";
-         text = ''
-           auth     optional    pam_gnome_keyring.so
-           session  optional    pam_gnome_keyring.so auto_start
-           password optional    pam_gnome_keyring.so
-         '';
-       }
-    ];
+    pam.services."login".enableGnomeKeyring = true;
+    # pam.services."pam_gnome_keyring".enableGnomeKeyring = true;
+    # pam.services = [
+    #   {
+    #      name = "gnome_keyring";
+    #      text = ''
+    #        auth     optional    pam_gnome_keyring.so
+    #        session  optional    pam_gnome_keyring.so auto_start
+    #        password optional    pam_gnome_keyring.so
+    #      '';
+    #    }
+    # ];
 
     #// TODO: pmount needs /media folder (create it automatically)
     wrappers = {
@@ -208,7 +210,7 @@
     keybase.enable = true;
     kbfs = {
       enable = true;
-      #mountPoint = "/keybase"; # mountpoint important for keybase-gui
+      # mountPoint = "/keybase"; # mountpoint important for keybase-gui
     };
 
     openssh = {
@@ -225,9 +227,11 @@
     #   }
     # ];
 
+    avahi.enable = true;
+
     journald = {
       extraConfig = ''
-        Storage=persist
+        Storage=persistent
         Compress=yes
         SystemMaxUse=128M
         RuntimeMaxUse=8M
@@ -260,20 +264,32 @@
       displayManager = {
         lightdm = {
           enable = true;
-          # autoLogin = {
-          #   enable = true;
-          #   user = "jelias";
-          # };
+          autoLogin = {
+            enable = true;
+            user = "jelias";
+          };
         };
+        sessionCommands = lib.mkAfter
+        ''
+          ${pkgs.xorg.xsetroot}/bin/xsetroot -cursor_name left_ptr
+        '';
       };
 
-      windowManager.i3.enable = true;
+      desktopManager = {
+        xterm.enable = false;
+        default = "none";
+      };
+
+      windowManager = {
+        i3.enable = true;
+        default = "i3";
+      };
     };
 
     # compton.enable = true;
 
     redshift = {
-      enable = true;
+      enable = false;
       latitude = "50.77";
       longitude = "6.08";
       # temperature.day = 5000;
@@ -386,8 +402,8 @@
     };
   };
 
-  # virtualisation.virtualbox.host.enable = true;
-  # nixpkgs.config.virtualbox.enableExtensionPack = true;
+  virtualisation.virtualbox.host.enable = true;
+  nixpkgs.config.virtualbox.enableExtensionPack = true;
   virtualisation.docker.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.

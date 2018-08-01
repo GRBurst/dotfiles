@@ -31,6 +31,7 @@ in {
         # Linux tools
         binutils
         atop htop iotop
+        arandr
         wget netcat nmap
         psmisc
         hdparm hd-idle hddtemp
@@ -51,6 +52,7 @@ in {
         unzip
         xcwd
         xorg.xev
+        xorg.xmodmap
         gnome3.dconf
         lxappearance
         gnome3.adwaita-icon-theme
@@ -143,12 +145,15 @@ in {
         scala-packages
         cmakeCurses
         docker_compose
-        graphviz gthumb
+        entr
+        graphviz
+        gthumb
         irssi irssi_otr
         jetbrains.idea-community
         nodejs-9_x
         scalafmt
         swiProlog
+        wireshark
       ];
 
     };
