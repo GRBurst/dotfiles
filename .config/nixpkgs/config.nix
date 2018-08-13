@@ -29,6 +29,7 @@ in {
 
       paths = [
         # Linux tools
+        arandr
         binutils
         atop htop iotop
         wget netcat nmap
@@ -36,6 +37,7 @@ in {
         hdparm hd-idle hddtemp
         pv xclip xorg.xkill unclutter-xfixes
         lm_sensors calc gksu
+        pciutils
         haskellPackages.yeganesh
         numix-gtk-theme
         nitrogen scrot
@@ -50,6 +52,7 @@ in {
         traceroute
         unzip
         xcwd
+        xorg.xdpyinfo
         xorg.xev
         gnome3.dconf
 
@@ -83,6 +86,7 @@ in {
         filezilla
         jmtpfs
         libnotify
+        networkmanager_dmenu
         simple-scan
         typora
         zathura
@@ -181,6 +185,7 @@ in {
       name = "laptop-packages";
 
       paths = [
+        # libqmi
         light
         cbatticon
       ];

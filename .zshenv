@@ -15,7 +15,7 @@ export DE=gnome
 export XDG_CURRENT_DESKTOP=gnome
 
 # dottr for git
-export PATH=$HOME/projects/dottr/pan.git:$PATH
+export PATH=$HOME/.zgen/dottr/dottr-master/pan.git:$PATH
 
 # add home bin folder to path
 export PATH="$HOME/projects/bin":$PATH

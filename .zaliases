@@ -152,6 +152,9 @@ alias i3-update-conf="cat $HOME/.config/i3/common/config > $HOME/.config/i3/conf
 sshkeygen() {
     ssh-keygen -t ed25519 -C "$(whoami)@$(hostname)->$1 on $(date -I)" -f "$HOME/.ssh/$(hostname)->$1"
 }
+sshkeygen_legacy() {
+    ssh-keygen -t rsa -b 4096 -C "$(whoami)@$(hostname)->$1 on $(date -I)" -f "$HOME/.ssh/$(hostname)->$1"
+}
 mdot() {
     local n=$(basename "$1")
     dot -Tsvg $1 -o /tmp/$n.svg; atril -s /tmp/$n.svg
@@ -220,3 +223,8 @@ alias wcon='nmcli dev wifi connect'
 alias tv="sudo systemctl start teamviewerd.service && teamviewer"
 
 # vim: ft=sh
+alias rwu='cd ~/projects/woost/wust2; ./start nsbt'
+swu() {
+    cd ~/projects/woost/wust2
+    ./start "$@"
+}
