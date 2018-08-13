@@ -52,7 +52,7 @@ in {
         traceroute
         unzip
         xcwd
-        xdpyinfo
+        xorg.xdpyinfo
         xorg.xev
         gnome3.dconf
 

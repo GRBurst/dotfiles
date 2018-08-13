@@ -254,10 +254,10 @@
       enable = true;
       latitude = "50.77";
       longitude = "6.08";
-      # temperature.day = 5000;
-      # temperature.night = 3000;
-      # brightness.day = "1.0";
-      # brightness.night = "0.75";
+      temperature.day = 5000;
+      temperature.night = 3000;
+      brightness.day = "1.0";
+      brightness.night = "0.75";
     };
 
     unclutter-xfixes.enable = true; # not working?
