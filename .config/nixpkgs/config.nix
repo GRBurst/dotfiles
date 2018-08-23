@@ -32,6 +32,7 @@ in {
         arandr
         binutils
         atop htop iotop
+        arandr
         wget netcat nmap
         psmisc
         hdparm hd-idle hddtemp
@@ -39,7 +40,7 @@ in {
         lm_sensors calc gksu
         pciutils
         haskellPackages.yeganesh
-        numix-gtk-theme
+        gnumake
         nitrogen scrot
         networkmanagerapplet
         dmenu rofi
@@ -54,7 +55,11 @@ in {
         xcwd
         xorg.xdpyinfo
         xorg.xev
+        xorg.xmodmap
         gnome3.dconf
+        lxappearance
+        gnome3.adwaita-icon-theme
+        vanilla-dmz
 
         # Security
         gnome3.gnome_keyring gnome3.seahorse libsecret
@@ -144,11 +149,15 @@ in {
         scala-packages
         cmakeCurses
         docker_compose
-        graphviz gthumb
+        entr
+        graphviz
+        gthumb
         irssi irssi_otr
         jetbrains.idea-community
+        nodejs-9_x
         scalafmt
         swiProlog
+        wireshark
       ];
 
     };
@@ -221,6 +230,7 @@ in {
         vlc
         vokoscreen
         # (localpkgs.xmr-stak.override {cudaSupport = true;})
+        (xmr-stak.override {cudaSupport = true; openclSupport = false; devDonationLevel = "0.0";})
       ];
 
     };
@@ -247,7 +257,7 @@ in {
       name = "test-packages";
 
       paths = [
-        (xmr-stak.override {cudaSupport = true; openclSupport = false; devDonationLevel = "0.0";})
+        # (xmr-stak.override {cudaSupport = true; openclSupport = false; devDonationLevel = "0.0";})
         # (localpkgs.xmr-stak.override {cudaSupport = true;})
         # localpkgs.protonmail-bridge
         # localpkgs.jbidwatcher
