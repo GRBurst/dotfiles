@@ -60,6 +60,7 @@ fry transcode-video
 fry bind2maps
 fry git-dirty-files-command
 fry watchdo
+fry docker-host-status
 
 
 setopt nonomatch # avoid the zsh "no matches found" / allows sbt ~compile
