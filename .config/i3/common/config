@@ -154,11 +154,13 @@ bindsym $mod+$AltGr+End exec spotify-blockify
 bindsym $mod+$AltGr+KP_6 exec steam
 bindsym $mod+$AltGr+Home exec --no-startup-id termite -e 'upgrade'
 bindsym $mod+$AltGr+BackSpace exec VirtualBox
+bindsym $mod+$AltGr+questiondown exec signal-desktop
 #bindsym $mod+$AltGr+y exec sh -e $sp/skype.sh
 bindsym $mod+$AltGr+period exec skype
 bindsym $mod+$AltGr+questiondown exec signal-desktop
 
 bindsym $mod+$AltGr+Left exec idea-community
+# bindcode $mod+$AltGr+39 exec idea-community
 # bindsym $mod+$AltGr+ exec thunderbird; exec firefox
 #bindsym $mod+$AltGr+c exec pidgin; exec sskype
 bindsym $mod+$AltGr+Down exec thunderbird; exec firefox; exec pidgin
