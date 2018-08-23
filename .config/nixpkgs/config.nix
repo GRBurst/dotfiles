@@ -82,6 +82,7 @@ in {
         usbutils
 
         # Office
+        calibre
         firefox
         # profile-sync-daemon
         libreoffice-fresh hunspell hunspellDicts.en-us aspell aspellDicts.de languagetool mythes
