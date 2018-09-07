@@ -76,7 +76,7 @@
   swapDevices = [
     {
       device = "/var/swapfile";
-      device = "swap";
+      label = "swap";
       size = 8096;
     }
   ];
