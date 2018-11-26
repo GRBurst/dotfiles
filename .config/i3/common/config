@@ -154,7 +154,6 @@ bindsym $mod+$AltGr+End exec spotify-blockify
 bindsym $mod+$AltGr+KP_6 exec steam
 bindsym $mod+$AltGr+Home exec --no-startup-id termite -e 'upgrade'
 bindsym $mod+$AltGr+BackSpace exec VirtualBox
-bindsym $mod+$AltGr+questiondown exec signal-desktop
 #bindsym $mod+$AltGr+y exec sh -e $sp/skype.sh
 bindsym $mod+$AltGr+period exec skype
 bindsym $mod+$AltGr+questiondown exec signal-desktop
@@ -177,7 +176,7 @@ bindsym $mod+5 workspace number 5; [con_mark="awot"] move workspace current;
 bindsym $mod+6 workspace number 6; [con_mark="awot"] move workspace current;
 bindsym $mod+7 workspace number 7; [con_mark="awot"] move workspace current;
 bindsym $mod+8 workspace number 8; [con_mark="awot"] move workspace current;
-bindsym $mod+9 workspace number 9; [con_mark="awot"] move workspace current;
+bindsym $mod+9 workspace number 9: communication; [con_mark="awot"] move workspace current;
 bindsym $mod+0 workspace number 0; [con_mark="awot"] move workspace current;
 
 # move focused container to workspace
@@ -189,7 +188,7 @@ bindsym $mod+Shift+5 move container to workspace number 5
 bindsym $mod+Shift+6 move container to workspace number 6
 bindsym $mod+Shift+7 move container to workspace number 7
 bindsym $mod+Shift+8 move container to workspace number 8
-bindsym $mod+Shift+9 move container to workspace number 9
+bindsym $mod+Shift+9 move container to workspace number 9: communication
 bindsym $mod+Shift+0 move container to workspace number 0
 
 # Define different modes
@@ -220,7 +219,7 @@ mode "Screen / DMMS <<< Screens:(k) kino, (s) standby, (p) suspend, (o) off" {
         bindsym s exec i3lock && xset dpms force standby; mode "default"
         bindsym p exec i3lock && xset dpms force suspend; mode "default"
         bindsym o exec i3lock && xset dpms force off; mode "default"
-        bindsym k exec xset -dpms && xset s off; mode "default"
+        bindsym k exec xset -dpms && xset s off && systemctl --user stop redshift; mode "default"
 
         # back to normal: Enter or Escape
         bindsym Return mode "default"
