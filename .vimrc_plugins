@@ -81,6 +81,7 @@ Plug 'zirrostig/vim-schlepp' " Move selections / lines
 " Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets' " snippets
 Plug 'xolox/vim-easytags', {'on': 'Tags'} | Plug 'xolox/vim-misc', {'on': 'Tags'}
 Plug 'derekwyatt/vim-scala', {'for': 'scala'} " Scala programming language
+Plug 'dag/vim2hs', {'for': 'haskell'}
 " Plug 'ensime/ensime-vim'
 " Plug 'gre/play2vim' " play web framework
 Plug 'othree/html5.vim', {'for': 'html'} " HTML
