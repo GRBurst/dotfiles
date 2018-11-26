@@ -164,7 +164,7 @@ bindsym $mod+$AltGr+Left exec idea-community
 #bindsym $mod+$AltGr+c exec pidgin; exec sskype
 bindsym $mod+$AltGr+Down exec thunderbird; exec firefox; exec pidgin
 
-assign [class="(?i)thunderbird"] "1: mail"
+assign [class="(?i)mail"] "1: mail"
 assign [class="(?i)firefox"] "2: browser"
 
 # switch to workspace
