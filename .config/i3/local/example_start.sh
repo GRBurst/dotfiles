@@ -5,3 +5,5 @@
 #/usr/lib/notification-daemon-1.0/notification-daemon &
 #/HOME/.conkyconfig/conky_start &
 #cbatticon &
+# nm-applet &
+# blueman-applet &
