@@ -1,5 +1,10 @@
 #!/run/current-system/sw/bin/zsh -ie
 
+nixos-rebuild dry-build
+if [ $? -neq 0 ]; then 
+    exit 1;
+fi
+
 if [ $(hostname) = jupiter ]; then
     cecho "G" "Backup boot"
     sudo mount /dev/disk/by-uuid/9959-75AB /media/boot_backup
