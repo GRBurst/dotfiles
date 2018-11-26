@@ -39,16 +39,19 @@ in {
         hdparm hd-idle hddtemp
         pv xclip xorg.xkill unclutter-xfixes
         lm_sensors calc gksu
-        pciutils
+        gnome3.dconf
         haskellPackages.yeganesh
         gnumake
         nitrogen scrot
         networkmanagerapplet
-        dmenu rofi
+        pwgen
+        rofi #dmenu 
         btrfs-progs
         dbus-map
         lsof
+        #mosh
         nload
+        pciutils
         p7zip
         speedtest-cli
         traceroute
@@ -57,14 +60,17 @@ in {
         xorg.xdpyinfo
         xorg.xev
         xorg.xmodmap
-        gnome3.dconf
         lxappearance
         gnome3.adwaita-icon-theme
         vanilla-dmz
+        wireshark
 
         # Security
         gnome3.gnome_keyring gnome3.seahorse libsecret
         openssl
+        keepass
+        keepassx-community
+        keybase-gui
 
         # Terminal
         termite nix-zsh-completions
@@ -105,16 +111,6 @@ in {
         poppler_utils
         xournal
 
-        # Programming
-        ctags
-        git tig
-        neovim
-        python27Packages.neovim # ensime
-        python36Packages.neovim
-        tmate
-        #mosh
-        meld
-
         # Media
         gimp
         inkscape 
@@ -129,15 +125,11 @@ in {
         gnome3.cheese
         xdg_utils
 
-        # Security
-        keepass
-        keepassx-community
-        keybase-gui
-
         # Communication
         pidgin-with-plugins
         qtox
         signal-desktop
+        irssi irssi_otr
 
       ];
 
@@ -152,18 +144,26 @@ in {
       paths = [
         scala-packages
 
+        ctags
+        git tig
+        neovim
+        python27Packages.neovim # ensime
+        python36Packages.neovim
+        tmate
+        meld
+
         cmakeCurses
         docker_compose
         entr
         ghc
         graphviz
         gthumb
-        irssi irssi_otr
         jetbrains.idea-community
         nodejs-10_x
+        nixops
+
         swiProlog
         vscode
-        wireshark
       ];
 
     };
@@ -217,13 +217,12 @@ in {
       name = "highres-packages";
 
       paths = [
-        common-packages
-
         brasero
         (chromium.override { enablePepperFlash = true; enableWideVine = false;})
         clementine
         cryptsetup
         evince
+        okular
         jbidwatcher
         # jdownloader
         josm
@@ -231,6 +230,7 @@ in {
         openjdk
         qutebrowser
         screen
+        skypeforlinux
         shotwell
         texmaker texstudio #lyx
         # tor-browser-bundle-bin # prevented highres from upgrade
@@ -258,14 +258,31 @@ in {
 
     };
 
+
+    mining-packages = buildEnv {
+
+      inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
+      name = "mining-packages";
+
+      paths = [
+        # (xmr-stak.override {cudaSupport = true; openclSupport = false; devDonationLevel = "0.0";})
+        # (localpkgs.xmr-stak.override {cudaSupport = true;})
+        # localpkgs.protonmail-bridge
+        # localpkgs.jbidwatcher
+        # localpkgs.iri
+        # localpkgs.purple-gnome-keyring
+        # (localpkgs.xmr-stak.override {cudaSupport = true;})
+        (xmr-stak.override {cudaSupport = true; openclSupport = false; devDonationLevel = "0.0";})
+      ];
+
+    };
+
     test-packages = buildEnv {
 
       inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
       name = "test-packages";
 
       paths = [
-        # (xmr-stak.override {cudaSupport = true; openclSupport = false; devDonationLevel = "0.0";})
-        # (localpkgs.xmr-stak.override {cudaSupport = true;})
         # localpkgs.protonmail-bridge
         # localpkgs.jbidwatcher
         # localpkgs.iri
