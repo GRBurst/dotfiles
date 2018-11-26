@@ -9,6 +9,7 @@ alias d="$DOTFILES_GIT         git -c core.excludesfile=~/.gitignore-dotfiles"
 # which yadm > /dev/null && alias    dp='yadm --yadm-repo $HOME/projects/dotfiles-private -c core.excludesfile=~/.gitignore-dotfiles-private'
 alias dp="$DOTFILES_PRIVATE_GIT git -c core.excludesfile=~/.gitignore-dotfiles-private"
 alias tigd="$DOTFILES_GIT tig"
+alias meldd="$DOTFILES_GIT meld"
 alias tigdp="$DOTFILES_PRIVATE_GIT tig"
 vd() {(cd; eval $DOTFILES_GIT vim -c GitFiles);}
 
@@ -26,7 +27,7 @@ alias scala='scala -Dscala.color -deprecation -unchecked -explaintypes -language
 alias jsb='underscore print --color --outfmt json' # beautify json, package: npm -g install underscore-cli
 alias wn='cd ~/projects/woost/wust2 && nix-shell --command "zsh"'
 alias ws='cd ~/projects/woost/wust2 && ./start nsbt'
-alias rmt='rm -r target **/target **/.*/**/target'
+alias rmt='cdg; rm -r **/target **/.*/**/target'
 # alias rwu='cd ~/projects/woost/wust2; ./start nsbt'
 swu() {
     cd ~/projects/woost/wust2
