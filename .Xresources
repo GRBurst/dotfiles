@@ -1,4 +1,5 @@
 Xft.dpi: 168
+Xcursor.size: 64
 
 ! Rofi colors now specified by:
 ! State: 'bg', 'fg', 'bgalt', 'hlbg', 'hlfg'
