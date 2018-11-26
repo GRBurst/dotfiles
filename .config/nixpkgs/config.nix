@@ -30,6 +30,7 @@ in {
       paths = [
         # Linux tools
         arandr
+        acpi
         binutils
         atop htop iotop
         arandr
@@ -76,9 +77,11 @@ in {
         ntfs3g inotify-tools smartmontools
         exfat
         file
-        gnome3.file-roller
+        # gnome3.file-roller # mimeinfo collides with nautilus
         gptfdisk
-        spaceFM	shared_mime_info desktop_file_utils
+        spaceFM
+        shared_mime_info
+        desktop_file_utils
         usbutils
 
         # Office
@@ -97,7 +100,7 @@ in {
         typora
         zathura
         texlive.combined.scheme-full
-        biber
+        # biber # collides texlive full
         pdfshuffler
         poppler_utils
         xournal
@@ -107,7 +110,7 @@ in {
         git tig
         neovim
         python27Packages.neovim # ensime
-        python35Packages.neovim
+        python36Packages.neovim
         tmate
         #mosh
         meld
@@ -148,16 +151,18 @@ in {
 
       paths = [
         scala-packages
+
         cmakeCurses
         docker_compose
         entr
+        ghc
         graphviz
         gthumb
         irssi irssi_otr
         jetbrains.idea-community
-        nodejs-9_x
-        scalafmt
+        nodejs-10_x
         swiProlog
+        vscode
         wireshark
       ];
 
@@ -172,6 +177,7 @@ in {
       paths = [
         sbt
         scala
+        scalafmt
       ];
 
     };
@@ -196,8 +202,9 @@ in {
 
       paths = [
         # libqmi
-        light
+        blueman
         cbatticon
+        light
       ];
 
     };
@@ -213,7 +220,7 @@ in {
         common-packages
 
         brasero
-        chromium
+        (chromium.override { enablePepperFlash = true; enableWideVine = false;})
         clementine
         cryptsetup
         evince
@@ -226,12 +233,10 @@ in {
         screen
         shotwell
         texmaker texstudio #lyx
-        tor-browser-bundle-bin
+        # tor-browser-bundle-bin # prevented highres from upgrade
         thunderbird
         vlc
         vokoscreen
-        # (localpkgs.xmr-stak.override {cudaSupport = true;})
-        (xmr-stak.override {cudaSupport = true; openclSupport = false; devDonationLevel = "0.0";})
       ];
 
     };
@@ -244,6 +249,7 @@ in {
 
       paths = [
         common-packages
+
         claws-mail
         mutt
         llpp
@@ -268,6 +274,19 @@ in {
 
     };
 
+    mining-packages = buildEnv {
+
+      inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
+      extraOutputsToInstall = [ "man" ];
+      name = "mining-packages";
+
+      paths = [
+        # (localpkgs.xmr-stak.override {cudaSupport = true;})
+        (xmr-stak.override {cudaSupport = true; openclSupport = false; devDonationLevel = "0.0";})
+      ];
+
+    };
+
     # services.psd = {
     #   enable  = true;
     #   users   = [ "jelias" ];
@@ -280,10 +299,11 @@ in {
     #   icedtea                 = true;
     # };
 
-   # chromium = {
-   #   enablePepperPDF = true;
-   #   enableWideVine = false;
-   # };
+    # chromium = {
+    #   enablePepperFlash = true;
+    #   enablePepperPDF = true;
+    #   enableWideVine = false;
+    # };
 
   };
 
