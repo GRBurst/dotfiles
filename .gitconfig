@@ -76,10 +76,12 @@
     s	= stash
     sl  = stash list
     ss  = stash save
+    sd  = stash drop
     ssu = stash save --include-untracked
     ssp	= stash --patch
     sp  = stash pop
     sa	= stash apply
+    sw	= stash show -p
 
     # Rebase
     r   = rebase
