@@ -39,6 +39,25 @@ cecho "G" "upgrading installed system packages"
 sudo nixos-rebuild switch
 nix-env -u '*'
 
+# Colorschemes
+if [ -d "$HOME/local/intellij-colors-solarized" ]; then
+    cd "$HOME/local/intellij-colors-solarized"
+    git pull
+    cp "$HOME/local/intellij-colors-solarized"
+fi
+
+if [ -d "$HOME/local/sabuni" ]; then
+    cd "$HOME/local/sabuni"
+    git pull
+    cp "$HOME/local/sabuni"
+fi
+
+if [ -d "$HOME/local/termite-colors-solarized" ]; then
+    cd "$HOME/local/termite-colors-solarized"
+    git pull
+    cp "$HOME/local/termite-colors-solarized"
+fi
+
 # Local packages
 cecho "G" "Getting installed packages"
 LOC_INSTALLED=`nix-env -q`
@@ -46,49 +65,53 @@ printf -v LOC_INSTALLED "%s\n" "$LOC_INSTALLED"
 
 cecho "G" "Updating installed packages: $LOC_INSTALLED";
 
-if echo "$LOC_INSTALLED" | grep "common-packages"; then
-    cecho "G" "upgrading common packages"
-    nix-env -iA common-packages -f '<nixpkgs>'
-fi
+nix-env -iA highres-packages -f '<nixpkgs>'
+nix-env -iA dev-packages -f '<nixpkgs>'
+nix-env -iA laptop-packages -f '<nixpkgs>'
 
-if echo "$LOC_INSTALLED" | grep "dev-packages"; then
-    cecho "G" "upgrading dev packages"
-    nix-env -iA dev-packages -f '<nixpkgs>'
-fi
+# if echo "$LOC_INSTALLED" | grep "common-packages"; then
+#     cecho "G" "upgrading common packages"
+#     nix-env -iA common-packages -f '<nixpkgs>'
+# fi
 
-if echo "$LOC_INSTALLED" | grep "scala-packages"; then
-    cecho "G" "upgrading scala packages"
-    nix-env -iA scala-packages -f '<nixpkgs>'
-fi
+# if echo "$LOC_INSTALLED" | grep "dev-packages"; then
+#     cecho "G" "upgrading dev packages"
+#     nix-env -iA dev-packages -f '<nixpkgs>'
+# fi
 
-if echo "$LOC_INSTALLED" | grep "ssd-packages"; then
-    cecho "G" "upgrading ssd packages"
-    nix-env -iA ssd-packages -f '<nixpkgs>'
-else
-    cecho "R" "NOT upgrading ssd packages"
-fi
+# if echo "$LOC_INSTALLED" | grep "scala-packages"; then
+#     cecho "G" "upgrading scala packages"
+#     nix-env -iA scala-packages -f '<nixpkgs>'
+# fi
 
-if echo "$LOC_INSTALLED" | grep "laptop-packages"; then
-    cecho "G" "upgrading laptop packages"
-    nix-env -iA laptop-packages -f '<nixpkgs>'
-else
-    cecho "R" "NOT upgrading laptop packages"
-fi
+# if echo "$LOC_INSTALLED" | grep "ssd-packages"; then
+#     cecho "G" "upgrading ssd packages"
+#     nix-env -iA ssd-packages -f '<nixpkgs>'
+# else
+#     cecho "R" "NOT upgrading ssd packages"
+# fi
 
-if echo "$LOC_INSTALLED" | grep "highres-packages"; then
-    cecho "G" "upgrading highres packages"
-    nix-env -iA highres-packages -f '<nixpkgs>'
-fi
+# if echo "$LOC_INSTALLED" | grep "laptop-packages"; then
+#     cecho "G" "upgrading laptop packages"
+#     nix-env -iA laptop-packages -f '<nixpkgs>'
+# else
+#     cecho "R" "NOT upgrading laptop packages"
+# fi
 
-if echo "$LOC_INSTALLED" | grep "lowres-packages"; then
-    cecho "G" "upgrading lowres packages"
-    nix-env -iA lowres-packages -f '<nixpkgs>'
-fi
+# if echo "$LOC_INSTALLED" | grep "highres-packages"; then
+#     cecho "G" "upgrading highres packages"
+#     nix-env -iA highres-packages -f '<nixpkgs>'
+# fi
 
-if echo "$LOC_INSTALLED" | grep "test-packages"; then
-    cecho "G" "upgrading test packages"
-    nix-env -iA test-packages -f '<nixpkgs>'
-fi
+# if echo "$LOC_INSTALLED" | grep "lowres-packages"; then
+#     cecho "G" "upgrading lowres packages"
+#     nix-env -iA lowres-packages -f '<nixpkgs>'
+# fi
+
+# if echo "$LOC_INSTALLED" | grep "test-packages"; then
+#     cecho "G" "upgrading test packages"
+#     nix-env -iA test-packages -f '<nixpkgs>'
+# fi
 
 # Cleanup and optimize
 cecho "G" "optimize nix-store"
