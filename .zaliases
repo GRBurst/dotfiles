@@ -26,6 +26,14 @@ alias scala='scala -Dscala.color -deprecation -unchecked -explaintypes -language
 alias jsb='underscore print --color --outfmt json' # beautify json, package: npm -g install underscore-cli
 alias wn='cd ~/projects/woost/wust2 && nix-shell --command "zsh"'
 alias ws='cd ~/projects/woost/wust2 && ./start nsbt'
+alias rmt='rm -r target **/target **/.*/**/target'
+# alias rwu='cd ~/projects/woost/wust2; ./start nsbt'
+swu() {
+    cd ~/projects/woost/wust2
+    ./start "$@"
+}
+# alias got='git ot && cd /tmp/wust'
+alias got='git ot && cd /tmp/wust'
 
 # Colors
 alias ssh='TERM=xterm-256color ssh'
@@ -225,8 +233,3 @@ alias wcon='nmcli dev wifi connect'
 alias tv="sudo systemctl start teamviewerd.service && teamviewer"
 
 # vim: ft=sh
-alias rwu='cd ~/projects/woost/wust2; ./start nsbt'
-swu() {
-    cd ~/projects/woost/wust2
-    ./start "$@"
-}
