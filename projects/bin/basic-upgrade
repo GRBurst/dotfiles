@@ -1,7 +1,7 @@
 #!/run/current-system/sw/bin/zsh -ie
 
 nixos-rebuild dry-build
-if [ $? -neq 0 ]; then 
+if [ $? -ne 0 ]; then 
     exit 1;
 fi
 
@@ -48,19 +48,22 @@ nix-env -u '*'
 if [ -d "$HOME/local/intellij-colors-solarized" ]; then
     cd "$HOME/local/intellij-colors-solarized"
     git pull
-    cp "$HOME/local/intellij-colors-solarized"
+    # cp "$HOME/local/intellij-colors-solarized"
+    cd -
 fi
 
 if [ -d "$HOME/local/sabuni" ]; then
     cd "$HOME/local/sabuni"
     git pull
-    cp "$HOME/local/sabuni"
+    # cp "$HOME/local/sabuni"
+    cd -
 fi
 
 if [ -d "$HOME/local/termite-colors-solarized" ]; then
     cd "$HOME/local/termite-colors-solarized"
     git pull
-    cp "$HOME/local/termite-colors-solarized"
+    # cp "$HOME/local/termite-colors-solarized"
+    cd -
 fi
 
 # Local packages
@@ -70,9 +73,18 @@ printf -v LOC_INSTALLED "%s\n" "$LOC_INSTALLED"
 
 cecho "G" "Updating installed packages: $LOC_INSTALLED";
 
-nix-env -iA highres-packages -f '<nixpkgs>'
-nix-env -iA dev-packages -f '<nixpkgs>'
-nix-env -iA laptop-packages -f '<nixpkgs>'
+nix-env --set-flag priority 1 common-packages
+nix-env --set-flag priority 2 laptop-packages
+nix-env --set-flag priority 3 dev-packages
+nix-env --set-flag priority 4 highres-packages
+nix-env -iA common-packages -f '<nixos-unstable>'
+nix-env --set-flag priority 1 common-packages
+nix-env -iA laptop-packages -f '<nixos-unstable>'
+nix-env --set-flag priority 2 laptop-packages
+nix-env -iA dev-packages -f '<nixos-unstable>'
+nix-env --set-flag priority 3 dev-packages
+nix-env -iA highres-packages -f '<nixos-unstable>'
+nix-env --set-flag priority 4 highres-packages
 
 # if echo "$LOC_INSTALLED" | grep "common-packages"; then
 #     cecho "G" "upgrading common packages"
