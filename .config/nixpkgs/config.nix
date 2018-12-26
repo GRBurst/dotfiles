@@ -31,6 +31,7 @@ in {
         # Linux tools
         arandr
         acpi
+        avahi
         binutils
         atop htop iotop
         arandr
@@ -97,6 +98,7 @@ in {
         libreoffice-fresh hunspell hunspellDicts.en-us aspell aspellDicts.de languagetool mythes
         samba cifs-utils
         sane-frontends
+        gcolor3
         gnome3.gedit
         filezilla
         jmtpfs
@@ -129,7 +131,7 @@ in {
         pidgin-with-plugins
         qtox
         signal-desktop
-        irssi irssi_otr
+        irssi_otr #irssi
 
       ];
 
@@ -248,31 +250,10 @@ in {
       name = "lowres-packages";
 
       paths = [
-        common-packages
-
         claws-mail
         mutt
         llpp
         ranger
-      ];
-
-    };
-
-
-    mining-packages = buildEnv {
-
-      inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
-      name = "mining-packages";
-
-      paths = [
-        # (xmr-stak.override {cudaSupport = true; openclSupport = false; devDonationLevel = "0.0";})
-        # (localpkgs.xmr-stak.override {cudaSupport = true;})
-        # localpkgs.protonmail-bridge
-        # localpkgs.jbidwatcher
-        # localpkgs.iri
-        # localpkgs.purple-gnome-keyring
-        # (localpkgs.xmr-stak.override {cudaSupport = true;})
-        (xmr-stak.override {cudaSupport = true; openclSupport = false; devDonationLevel = "0.0";})
       ];
 
     };
