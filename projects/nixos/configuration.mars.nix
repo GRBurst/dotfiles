@@ -52,7 +52,14 @@
   };
 
   hardware = {
-    pulseaudio.enable = true;
+    pulseaudio = {
+      enable = true;
+      package = pkgs.pulseaudioFull;
+    };
+    bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+    };
     # pulseaudio.support32Bit = true; # This might be needed for Steam games
     # opengl.driSupport32Bit = true;
     sane.enable = true;
@@ -65,6 +72,8 @@
 
   networking = {
     networkmanager.enable = true;
+    firewall.enable = true;
+    firewall.allowedTCPPorts = [ 12345 ];
     hostName = "mars";
     extraHosts = ''
       134.130.59.240  ateam
@@ -298,6 +307,7 @@
     udisks2.enable = true;
 
     acpid.enable = true;
+    avahi.enable = true;
 
     # ipfs = {
     #   enable = true;
@@ -383,6 +393,6 @@
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
   # should.
-  system.stateVersion = "18.03"; # Did you read the comment?
+  system.stateVersion = "18.09"; # Did you read the comment?
 
 }
