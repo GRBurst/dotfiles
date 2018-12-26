@@ -64,9 +64,10 @@ set display=lastline,uhex         " if last line does not fit on screen, display
 " editing
 set gdefault                      " substitute all occurrences in line per default
 set backspace=indent,eol,start    " allow backspacing over everything in insert mode
-set tabstop=4                     " size of a hard tabstop
+set tabstop=8                     " size of a hard tabstop
 set shiftwidth=4                  " size of an "indent"
 set softtabstop=4                 " a combination of spaces and tabs are used to simulate tab stops at a width
+set shiftround
 set smarttab                      " make "tab" insert indents instead of tabs at the beginning of a line
 set expandtab                     " always uses spaces instead of tab characters
 set virtualedit=block,onemore
