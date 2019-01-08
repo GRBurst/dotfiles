@@ -30,6 +30,8 @@ in {
       paths = [
         # Linux tools
         arandr
+        acpi
+        avahi
         binutils
         atop htop iotop
         arandr
@@ -38,17 +40,19 @@ in {
         hdparm hd-idle hddtemp
         pv xclip xorg.xkill unclutter-xfixes
         lm_sensors calc gksu
-        pciutils
+        gnome3.dconf
         haskellPackages.yeganesh
         gnumake
         nitrogen scrot
         networkmanagerapplet
         pwgen
-        dmenu rofi
+        rofi #dmenu 
         btrfs-progs
         dbus-map
         lsof
+        #mosh
         nload
+        pciutils
         p7zip
         speedtest-cli
         traceroute
@@ -57,14 +61,17 @@ in {
         xorg.xdpyinfo
         xorg.xev
         xorg.xmodmap
-        gnome3.dconf
         lxappearance
         gnome3.adwaita-icon-theme
         vanilla-dmz
+        wireshark
 
         # Security
         gnome3.gnome_keyring gnome3.seahorse libsecret
         openssl
+        keepass
+        keepassx-community
+        keybase-gui
 
         # Terminal
         termite nix-zsh-completions
@@ -77,17 +84,21 @@ in {
         ntfs3g inotify-tools smartmontools
         exfat
         file
-        gnome3.file-roller
+        # gnome3.file-roller # mimeinfo collides with nautilus
         gptfdisk
-        spaceFM	shared_mime_info desktop_file_utils
+        spaceFM
+        shared_mime_info
+        desktop_file_utils
         usbutils
 
         # Office
+        calibre
         firefox
         # profile-sync-daemon
         libreoffice-fresh hunspell hunspellDicts.en-us aspell aspellDicts.de languagetool mythes
         samba cifs-utils
         sane-frontends
+        gcolor3
         gnome3.gedit
         filezilla
         jmtpfs
@@ -97,20 +108,10 @@ in {
         typora
         zathura
         texlive.combined.scheme-full
-        biber
+        # biber # collides texlive full
         pdfshuffler
         poppler_utils
         xournal
-
-        # Programming
-        ctags
-        git tig
-        neovim
-        python27Packages.neovim # ensime
-        python35Packages.neovim
-        tmate
-        #mosh
-        meld
 
         # Media
         gimp
@@ -126,15 +127,11 @@ in {
         gnome3.cheese
         xdg_utils
 
-        # Security
-        keepass
-        keepassx-community
-        keybase-gui
-
         # Communication
         pidgin-with-plugins
         qtox
         signal-desktop
+        irssi_otr #irssi
 
       ];
 
@@ -148,18 +145,27 @@ in {
 
       paths = [
         scala-packages
+
+        ctags
+        git tig
+        neovim
+        python27Packages.neovim # ensime
+        python36Packages.neovim
+        tmate
+        meld
+
         cmakeCurses
         docker_compose
         entr
+        ghc
         graphviz
         gthumb
-        irssi irssi_otr
         jetbrains.idea-community
+        nodejs-10_x
         nixops
-        nodejs-9_x
-        scalafmt
+
         swiProlog
-        wireshark
+        vscode
       ];
 
     };
@@ -171,8 +177,10 @@ in {
       name = "scala-packages";
 
       paths = [
+        ammonite
         sbt
         scala
+        scalafmt
       ];
 
     };
@@ -197,8 +205,12 @@ in {
 
       paths = [
         # libqmi
-        light
+        blueman
         cbatticon
+        light
+        linuxPackages.tp_smapi
+        linuxPackages.acpi_call
+        tlp
       ];
 
     };
@@ -211,10 +223,8 @@ in {
       name = "highres-packages";
 
       paths = [
-        common-packages
-
         brasero
-        chromium
+        (chromium.override { enablePepperFlash = true; enableWideVine = false;})
         clementine
         cryptsetup
         evince
@@ -229,12 +239,10 @@ in {
         skypeforlinux
         shotwell
         texmaker texstudio #lyx
-        tor-browser-bundle-bin
+        # tor-browser-bundle-bin # prevented highres from upgrade
         thunderbird
         vlc
         vokoscreen
-        # (localpkgs.xmr-stak.override {cudaSupport = true;})
-        (xmr-stak.override {cudaSupport = true; openclSupport = false; devDonationLevel = "0.0";})
       ];
 
     };
@@ -246,7 +254,6 @@ in {
       name = "lowres-packages";
 
       paths = [
-        common-packages
         claws-mail
         mutt
         llpp
@@ -261,12 +268,23 @@ in {
       name = "test-packages";
 
       paths = [
-        # (xmr-stak.override {cudaSupport = true; openclSupport = false; devDonationLevel = "0.0";})
-        # (localpkgs.xmr-stak.override {cudaSupport = true;})
         # localpkgs.protonmail-bridge
         # localpkgs.jbidwatcher
         # localpkgs.iri
         # localpkgs.purple-gnome-keyring
+      ];
+
+    };
+
+    mining-packages = buildEnv {
+
+      inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
+      extraOutputsToInstall = [ "man" ];
+      name = "mining-packages";
+
+      paths = [
+        # (localpkgs.xmr-stak.override {cudaSupport = true;})
+        (xmr-stak.override {cudaSupport = true; openclSupport = false; devDonationLevel = "0.0";})
       ];
 
     };
@@ -283,10 +301,11 @@ in {
     #   icedtea                 = true;
     # };
 
-   # chromium = {
-   #   enablePepperPDF = true;
-   #   enableWideVine = false;
-   # };
+    # chromium = {
+    #   enablePepperFlash = true;
+    #   enablePepperPDF = true;
+    #   enableWideVine = false;
+    # };
 
   };
 

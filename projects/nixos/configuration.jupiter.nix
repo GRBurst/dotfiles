@@ -14,7 +14,7 @@
     { device = "/dev/disk/by-uuid/bd09798f-1676-47a0-b113-b735d4e811f5";
       fsType = "ext4";
       label = "data";
-      options = [ "x-systemd.automount" "noauto" ];
+      options = [ "x-systemd.automount" "noauto"  "x-systemd.idle-timeout=15min"];
     };
 
   fileSystems."/media/windows" =
@@ -100,6 +100,7 @@
       134.130.57.2    sylvester
       134.130.57.147  godzilla
     '';
+    firewall.allowedTCPPorts = [ 12345 ];
   };
 
   powerManagement = {
@@ -211,9 +212,10 @@
   # List services that you want to enable:
   services = {
 
-    udev.extraRules = ''
-      SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", ATTR{capacity}=="[0-7]", RUN+="/run/current-system/sw/bin/systemctl hibernate"
-    '';
+    # Do this only on laptop
+    # udev.extraRules = ''
+    #   SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", ATTR{capacity}=="[0-7]", RUN+="${pgks.systemd}/bin/systemctl hibernate"
+    # '';
 
     keybase.enable = true;
     kbfs = {
@@ -300,10 +302,10 @@
       enable = false;
       latitude = "50.77";
       longitude = "6.08";
-      # temperature.day = 5000;
-      # temperature.night = 3000;
-      # brightness.day = "1.0";
-      # brightness.night = "0.75";
+      temperature.day = 5000;
+      temperature.night = 3000;
+      brightness.day = "1.0";
+      brightness.night = "0.75";
     };
 
     unclutter-xfixes.enable = true; # not working?
@@ -323,7 +325,7 @@
 
     psd = {
       enable = true;
-      users = ["jelias"];
+      users = [ "jelias" ];
     };
 
     clamav = {
@@ -383,7 +385,7 @@
     description = "Local npm cache";
     serviceConfig = {
       Type = "simple";
-      ExecStart = "${pkgs.nodejs-9_x}/bin/node /home/jelias/.node_modules/bin/local-npm -d /home/jelias/.cache/local-npm";
+      ExecStart = "${pkgs.nodejs-10_x}/bin/node /home/jelias/.node_modules/bin/local-npm -d /home/jelias/.cache/local-npm";
     };
     wantedBy = [ "multi-user.target" ];
   };
@@ -438,6 +440,6 @@
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
   # should.
-  system.stateVersion = "18.03"; # Did you read the comment?
+  system.stateVersion = "18.09"; # Did you read the comment?
 
 }

@@ -74,14 +74,14 @@ printf -v LOC_INSTALLED "%s\n" "$LOC_INSTALLED"
 cecho "G" "Updating installed packages: $LOC_INSTALLED";
 
 nix-env --set-flag priority 1 common-packages
-nix-env --set-flag priority 2 laptop-packages
+# nix-env --set-flag priority 2 laptop-packages
 nix-env --set-flag priority 3 dev-packages
 nix-env --set-flag priority 4 highres-packages
 nix-env -iA common-packages -f '<nixos-unstable>'
 nix-env --set-flag priority 1 common-packages
 nix-env -iA laptop-packages -f '<nixos-unstable>'
-nix-env --set-flag priority 2 laptop-packages
-nix-env -iA dev-packages -f '<nixos-unstable>'
+# nix-env --set-flag priority 2 laptop-packages
+# nix-env -iA dev-packages -f '<nixos-unstable>'
 nix-env --set-flag priority 3 dev-packages
 nix-env -iA highres-packages -f '<nixos-unstable>'
 nix-env --set-flag priority 4 highres-packages
