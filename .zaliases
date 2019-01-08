@@ -233,4 +233,8 @@ alias wcon='nmcli dev wifi connect'
 # services & daemons
 alias tv="sudo systemctl start teamviewerd.service && teamviewer"
 
+# monitor
+alias rhdmi="xrandr --output eDP1 --primary --auto --output HDMI2 --right-of eDP1 --auto"
+alias hdmi="xrandr --output eDP1 --off --output HDMI2 --auto"
+alias edp="xrandr --output eDP1 --primary --auto --output HDMI2 --off"
 # vim: ft=sh
