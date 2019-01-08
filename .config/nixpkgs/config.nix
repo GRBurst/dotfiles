@@ -208,6 +208,9 @@ in {
         blueman
         cbatticon
         light
+        linuxPackages.tp_smapi
+        linuxPackages.acpi_call
+        tlp
       ];
 
     };
