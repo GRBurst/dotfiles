@@ -177,6 +177,7 @@ in {
       name = "scala-packages";
 
       paths = [
+        ammonite
         sbt
         scala
         scalafmt
