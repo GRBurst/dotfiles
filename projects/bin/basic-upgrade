@@ -77,6 +77,8 @@ nix-env --set-flag priority 1 common-packages
 # nix-env --set-flag priority 2 laptop-packages
 nix-env --set-flag priority 3 dev-packages
 nix-env --set-flag priority 4 highres-packages
+nix-env --set-flag priority 6 ssd-packages
+# nix-env --set-flag priority 7 mining-packages
 nix-env -iA common-packages -f '<nixos-unstable>'
 nix-env --set-flag priority 1 common-packages
 nix-env -iA laptop-packages -f '<nixos-unstable>'
@@ -85,6 +87,10 @@ nix-env -iA laptop-packages -f '<nixos-unstable>'
 nix-env --set-flag priority 3 dev-packages
 nix-env -iA highres-packages -f '<nixos-unstable>'
 nix-env --set-flag priority 4 highres-packages
+nix-env -iA ssd-packages -f '<nixos-unstable>'
+nix-env --set-flag priority 6 ssd-packages
+# nix-env -iA mining-packages -f '<nixos-unstable>'
+# nix-env --set-flag priority 7 mining-packages
 
 # if echo "$LOC_INSTALLED" | grep "common-packages"; then
 #     cecho "G" "upgrading common packages"
