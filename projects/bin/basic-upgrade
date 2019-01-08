@@ -23,17 +23,17 @@ zsh -c "                                                                        
     exit 0;
 "
 
-if [ -d "$HOME/projects/nixpkgs" ]; then
-    cecho "G" "updating package rescources"
-    zsh -c "cd ~/projects/nixpkgs && git checkout master && git fetch upstream && git merge upstream/master && exit 0"
-     # (
-     #     cd ~/projects/nixpkgs
-     #     git checkout master
-     #     git fetch upstream
-     #     git merge upstream/master
-     #     exit 0
-     # )
-fi
+# if [ -d "$HOME/projects/nixpkgs" ]; then
+#     cecho "G" "updating package rescources"
+#     zsh -c "cd ~/projects/nixpkgs && git checkout master && git fetch upstream && git merge upstream/master && exit 0"
+#      # (
+#      #     cd ~/projects/nixpkgs
+#      #     git checkout master
+#      #     git fetch upstream
+#      #     git merge upstream/master
+#      #     exit 0
+#      # )
+# fi
 
 cecho "G" "updating channels"
 nix-channel --update
@@ -67,74 +67,32 @@ if [ -d "$HOME/local/termite-colors-solarized" ]; then
 fi
 
 # Local packages
-cecho "G" "Getting installed packages"
-LOC_INSTALLED=`nix-env -q`
-printf -v LOC_INSTALLED "%s\n" "$LOC_INSTALLED"
+# cecho "G" "Getting installed packages"
+# cecho "G" "Updating installed packages: $LOC_INSTALLED";
+LOC_INSTALLED=(${(f)"$(nix-env -q)"})
+cecho "G" "Updating installed packages";
 
-cecho "G" "Updating installed packages: $LOC_INSTALLED";
+typeset -A pkg_prio
+pkg_prio[common-packages]=4
+pkg_prio[laptop-packages]=7
+pkg_prio[dev-packages]=8
+pkg_prio[highres-packages]=9
+pkg_prio[ssd-packages]=10
+pkg_prio[mining-packages]=11
 
-nix-env --set-flag priority 1 common-packages
-# nix-env --set-flag priority 2 laptop-packages
-nix-env --set-flag priority 3 dev-packages
-nix-env --set-flag priority 4 highres-packages
-nix-env --set-flag priority 6 ssd-packages
-# nix-env --set-flag priority 7 mining-packages
-nix-env -iA common-packages -f '<nixos-unstable>'
-nix-env --set-flag priority 1 common-packages
-nix-env -iA laptop-packages -f '<nixos-unstable>'
-# nix-env --set-flag priority 2 laptop-packages
-# nix-env -iA dev-packages -f '<nixos-unstable>'
-nix-env --set-flag priority 3 dev-packages
-nix-env -iA highres-packages -f '<nixos-unstable>'
-nix-env --set-flag priority 4 highres-packages
-nix-env -iA ssd-packages -f '<nixos-unstable>'
-nix-env --set-flag priority 6 ssd-packages
-# nix-env -iA mining-packages -f '<nixos-unstable>'
-# nix-env --set-flag priority 7 mining-packages
+# for loc_pkg loc_prio in ${(kv)pkg_prio}
+# do
+#     cecho "G" "setting ${loc_pkg} to prio ${loc_prio}"
+#     nix-env --set-flag priority "${loc_prio}" "${loc_pkg}"
+# done
 
-# if echo "$LOC_INSTALLED" | grep "common-packages"; then
-#     cecho "G" "upgrading common packages"
-#     nix-env -iA common-packages -f '<nixpkgs>'
-# fi
-
-# if echo "$LOC_INSTALLED" | grep "dev-packages"; then
-#     cecho "G" "upgrading dev packages"
-#     nix-env -iA dev-packages -f '<nixpkgs>'
-# fi
-
-# if echo "$LOC_INSTALLED" | grep "scala-packages"; then
-#     cecho "G" "upgrading scala packages"
-#     nix-env -iA scala-packages -f '<nixpkgs>'
-# fi
-
-# if echo "$LOC_INSTALLED" | grep "ssd-packages"; then
-#     cecho "G" "upgrading ssd packages"
-#     nix-env -iA ssd-packages -f '<nixpkgs>'
-# else
-#     cecho "R" "NOT upgrading ssd packages"
-# fi
-
-# if echo "$LOC_INSTALLED" | grep "laptop-packages"; then
-#     cecho "G" "upgrading laptop packages"
-#     nix-env -iA laptop-packages -f '<nixpkgs>'
-# else
-#     cecho "R" "NOT upgrading laptop packages"
-# fi
-
-# if echo "$LOC_INSTALLED" | grep "highres-packages"; then
-#     cecho "G" "upgrading highres packages"
-#     nix-env -iA highres-packages -f '<nixpkgs>'
-# fi
-
-# if echo "$LOC_INSTALLED" | grep "lowres-packages"; then
-#     cecho "G" "upgrading lowres packages"
-#     nix-env -iA lowres-packages -f '<nixpkgs>'
-# fi
-
-# if echo "$LOC_INSTALLED" | grep "test-packages"; then
-#     cecho "G" "upgrading test packages"
-#     nix-env -iA test-packages -f '<nixpkgs>'
-# fi
+for loc_pkg in "${LOC_INSTALLED[@]}"
+do
+    cecho "G" "upgrading ${loc_pkg} with prio ${pkg_prio[${loc_pkg}]}"
+    nix-env --set-flag priority "${pkg_prio[${loc_pkg}]}" "${loc_pkg}"
+    nix-env -iA "${loc_pgk}" -f '<nixos-unstable>'
+    nix-env --set-flag priority "${pkg_prio[${loc_pkg}]}" "${loc_pkg}"
+done
 
 # Cleanup and optimize
 cecho "G" "optimize nix-store"

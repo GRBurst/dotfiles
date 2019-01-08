@@ -126,7 +126,7 @@
     buildCores = 4;
     gc = {
       automatic = true;
-      dates = "01:15";
+      dates = "monthly";
       options = "--delete-older-than 7d";
     };
   };
@@ -193,9 +193,12 @@
   # List services that you want to enable:
   services = {
 
-    #udev.extraRules = ''
-    #  SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", ATTR{capacity}=="[0-7]", RUN+="/run/current-system/sw/bin/systemctl hibernate"
-    #'';
+    # udev.extraRules = ''
+    #   SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", ATTR{capacity}=="[0-5]", RUN+="/run/current-system/sw/bin/systemctl hibernate"
+    #   SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", RUN+="/run/current-system/sw/bin/touch /tmp/discharging"
+    # '';
+
+    tlp.enable = true;
 
     keybase.enable = true;
     kbfs = {

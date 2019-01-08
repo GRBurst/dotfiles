@@ -131,7 +131,7 @@ in {
         pidgin-with-plugins
         qtox
         signal-desktop
-        irssi irssi_otr
+        irssi_otr #irssi
 
       ];
 
@@ -177,6 +177,7 @@ in {
       name = "scala-packages";
 
       paths = [
+        ammonite
         sbt
         scala
         scalafmt
@@ -207,6 +208,9 @@ in {
         blueman
         cbatticon
         light
+        linuxPackages.tp_smapi
+        linuxPackages.acpi_call
+        tlp
       ];
 
     };
