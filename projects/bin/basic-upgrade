@@ -42,7 +42,6 @@ sudo nix-channel --update
 # System related
 cecho "G" "upgrading installed system packages"
 sudo nixos-rebuild switch
-nix-env -u '*'
 
 # Colorschemes
 if [ -d "$HOME/local/intellij-colors-solarized" ]; then
@@ -71,6 +70,7 @@ fi
 # cecho "G" "Updating installed packages: $LOC_INSTALLED";
 LOC_INSTALLED=(${(f)"$(nix-env -q)"})
 cecho "G" "Updating installed packages";
+nix-env -u '*'
 
 typeset -A pkg_prio
 pkg_prio[common-packages]=4
@@ -86,12 +86,21 @@ pkg_prio[mining-packages]=11
 #     nix-env --set-flag priority "${loc_prio}" "${loc_pkg}"
 # done
 
+# for loc_pkg in "${LOC_INSTALLED[@]}"
+# do
+#     if test "${pkg_prio[${loc_pkg}]+isset}"; then
+#         nix-env --set-flag priority "${pkg_prio[${loc_pkg}]}" "${loc_pkg}"
+#     fi
+# done
+
 for loc_pkg in "${LOC_INSTALLED[@]}"
 do
     cecho "G" "upgrading ${loc_pkg} with prio ${pkg_prio[${loc_pkg}]}"
-    nix-env --set-flag priority "${pkg_prio[${loc_pkg}]}" "${loc_pkg}"
-    nix-env -iA "${loc_pgk}" -f '<nixos-unstable>'
-    nix-env --set-flag priority "${pkg_prio[${loc_pkg}]}" "${loc_pkg}"
+    if test "${pkg_prio[${loc_pkg}]+isset}"; then
+        nix-env --set-flag priority "${pkg_prio[${loc_pkg}]}" "${loc_pkg}"
+        nix-env -iA "${loc_pgk}" -f '<nixos-unstable>'
+        nix-env --set-flag priority "${pkg_prio[${loc_pkg}]}" "${loc_pkg}"
+    fi
 done
 
 # Cleanup and optimize
