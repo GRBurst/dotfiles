@@ -55,13 +55,13 @@
     pulseaudio = {
       enable = true;
       package = pkgs.pulseaudioFull;
+      support32Bit = true; # This might be needed for Steam games
     };
     bluetooth = {
       enable = true;
       powerOnBoot = true;
     };
-    # pulseaudio.support32Bit = true; # This might be needed for Steam games
-    # opengl.driSupport32Bit = true;
+    opengl.driSupport32Bit = true;
     sane.enable = true;
     cpu.intel.updateMicrocode = true;
   };
