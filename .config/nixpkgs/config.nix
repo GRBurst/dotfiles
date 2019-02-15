@@ -262,6 +262,19 @@ in {
 
     };
 
+    gaming-packages = buildEnv {
+
+      inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
+      name = "gaming-packages";
+
+      paths = [
+        runelite
+        steam
+        # steam-run
+      ];
+
+    };
+
     test-packages = buildEnv {
 
       inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
