@@ -1,5 +1,7 @@
 # Git
 alias g="git"
+alias got='git ot && cd /tmp/wust'
+alias grsc='git rebase -i $(git-select-commit)^'
 
 # Dotfiles
 DOTFILES_GIT='GIT_DIR=$HOME/projects/dotfiles GIT_WORK_TREE=$HOME'
@@ -33,8 +35,6 @@ swu() {
     cd ~/projects/woost/wust2
     ./start "$@"
 }
-# alias got='git ot && cd /tmp/wust'
-alias got='git ot && cd /tmp/wust'
 
 # Colors
 alias ssh='TERM=xterm-256color ssh'
