@@ -163,6 +163,7 @@ in {
         jetbrains.idea-community
         nodejs-10_x
         nixops
+        nox
 
         swiProlog
         vscode
@@ -224,7 +225,7 @@ in {
 
       paths = [
         brasero
-        (chromium.override { enablePepperFlash = true; enableWideVine = false;})
+        (chromium.override { enablePepperFlash = false; enableWideVine = false;})
         clementine
         cryptsetup
         evince
@@ -239,8 +240,9 @@ in {
         skypeforlinux
         shotwell
         texmaker texstudio #lyx
-        # tor-browser-bundle-bin # prevented highres from upgrade
+        tor-browser-bundle-bin # prevented highres from upgrade
         thunderbird
+        protonmail-bridge
         vlc
         vokoscreen
       ];
