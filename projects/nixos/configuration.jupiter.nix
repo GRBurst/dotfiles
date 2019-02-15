@@ -8,6 +8,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./woost-configuration.nix
     ];
 
   fileSystems."/media/data" =
@@ -96,11 +97,14 @@
     networkmanager.enable = true;
     hostName = "jupiter";
     extraHosts = ''
+      192.168.1.10    DeathStar
       134.130.59.240  ateam
       134.130.57.2    sylvester
       134.130.57.147  godzilla
     '';
-    firewall.allowedTCPPorts = [ 12345 ];
+    firewall.allowedTCPPorts = [ 139 445 12345 ];
+    firewall.allowedUDPPorts = [ 137 138 5353 ];
+    firewall.enable = true;
   };
 
   powerManagement = {
@@ -147,7 +151,7 @@
     buildCores = 4;
     gc = {
       automatic = true;
-      dates = "01:15";
+      dates = "monthly";
       options = "--delete-older-than 7d";
     };
   };
@@ -299,12 +303,12 @@
     # compton.enable = true;
 
     redshift = {
-      enable = false;
+      enable = true;
       latitude = "50.77";
       longitude = "6.08";
       temperature.day = 5000;
       temperature.night = 3000;
-      brightness.day = "1.0";
+      brightness.day = "0.9";
       brightness.night = "0.75";
     };
 
@@ -418,7 +422,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.extraUsers.jelias = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "vboxusers" "docker" "scanner" "adbusers" "networkmanager" ];
+    extraGroups = [ "wheel" "vboxusers" "docker" "scanner" "adbusers" "networkmanager" "wireshark" ];
     useDefaultShell = true;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM+BIE+0anEEYK0fBIEpjedblyGW0UnuYBCDtjZ5NW6P jelias@merkur"
