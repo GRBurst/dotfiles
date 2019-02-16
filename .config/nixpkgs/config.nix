@@ -241,6 +241,7 @@ in {
         texmaker texstudio #lyx
         # tor-browser-bundle-bin # prevented highres from upgrade
         thunderbird
+        protonmail-bridge
         vlc
         vokoscreen
       ];
