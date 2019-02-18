@@ -166,6 +166,7 @@ in {
         nodejs-10_x
         nixops
         nox
+        patchelfUnstable
 
         swiProlog
         vscode
@@ -227,7 +228,7 @@ in {
 
       paths = [
         brasero
-        (chromium.override { enablePepperFlash = false; enableWideVine = false;})
+        (chromium.override { enablePepperFlash = true; enableWideVine = false;})
         clementine
         cryptsetup
         evince
