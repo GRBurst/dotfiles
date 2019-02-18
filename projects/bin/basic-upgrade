@@ -1,5 +1,9 @@
 #!/run/current-system/sw/bin/zsh -ie
 
+cecho "G" "updating channels"
+nix-channel --update
+sudo nix-channel --update
+
 nixos-rebuild dry-build
 if [ $? -ne 0 ]; then 
     exit 1;
