@@ -114,6 +114,26 @@
 [branch]
     autosetuprebase = always
 
+; [difftool "kdiff3"]
+;     path = /home/jelias/.nix-profile/bin/kdiff3
+;     trustExitCode = false
+
+; [difftool]
+;     prompt = false
+
+; [diff]
+;     tool = kdiff3
+
+[mergetool "kdiff3"]
+    path = /home/jelias/.nix-profile/bin/kdiff3
+    trustExitCode = false
+
+[mergetool]
+    keepBackup = false
+
+[merge]
+    tool = kdiff3
+
 [color]
     branch  = auto
     diff    = auto
@@ -141,7 +161,7 @@
 
 [core]
     pager   = less
-	editor = nvim
+    editor = nvim
 
 [credential]
     helper = cache
