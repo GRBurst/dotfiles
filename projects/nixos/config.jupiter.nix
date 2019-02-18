@@ -147,12 +147,14 @@ in {
         scala-packages
 
         ctags
+        gdb
         git tig
         neovim
         python27Packages.neovim # ensime
         python36Packages.neovim
         tmate
         meld
+        kdiff3
 
         cmakeCurses
         docker_compose
@@ -260,6 +262,19 @@ in {
         mutt
         llpp
         ranger
+      ];
+
+    };
+
+    gaming-packages = buildEnv {
+
+      inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
+      name = "gaming-packages";
+
+      paths = [
+        runelite
+        steam
+        # steam-run
       ];
 
     };
