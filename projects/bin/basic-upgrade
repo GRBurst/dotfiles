@@ -73,12 +73,14 @@ cecho "G" "Updating installed packages";
 nix-env -u '*'
 
 typeset -A pkg_prio
+pkg_prio[test-packages]=3
 pkg_prio[common-packages]=4
 pkg_prio[laptop-packages]=7
 pkg_prio[dev-packages]=8
 pkg_prio[highres-packages]=9
 pkg_prio[ssd-packages]=10
-pkg_prio[mining-packages]=11
+pkg_prio[gaming-packages]=11
+pkg_prio[mining-packages]=12
 
 # for loc_pkg loc_prio in ${(kv)pkg_prio}
 # do
