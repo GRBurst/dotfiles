@@ -147,12 +147,14 @@ in {
         scala-packages
 
         ctags
+        gdb
         git tig
         neovim
         python27Packages.neovim # ensime
         python36Packages.neovim
         tmate
         meld
+        kdiff3
 
         cmakeCurses
         docker_compose
@@ -163,6 +165,7 @@ in {
         jetbrains.idea-community
         nodejs-10_x
         nixops
+        nox
 
         swiProlog
         vscode
@@ -239,8 +242,9 @@ in {
         skypeforlinux
         shotwell
         texmaker texstudio #lyx
-        # tor-browser-bundle-bin # prevented highres from upgrade
+        tor-browser-bundle-bin # prevented highres from upgrade
         thunderbird
+        # protonmail-bridge
         vlc
         vokoscreen
       ];
@@ -281,7 +285,7 @@ in {
       name = "test-packages";
 
       paths = [
-        # localpkgs.protonmail-bridge
+        localpkgs.protonmail-bridge
         # localpkgs.jbidwatcher
         # localpkgs.iri
         # localpkgs.purple-gnome-keyring

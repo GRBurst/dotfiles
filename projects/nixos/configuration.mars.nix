@@ -368,8 +368,8 @@
     };
   };
 
-  # virtualisation.virtualbox.host.enable = true;
-  # nixpkgs.config.virtualbox.enableExtensionPack = true;
+  virtualisation.virtualbox.host.enable = true;
+  virtualisation.virtualbox.host.enableExtensionPack = true;
   virtualisation.docker.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
