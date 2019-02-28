@@ -113,8 +113,8 @@ zgen update
 cecho "G" "updating vim plugins..."
 vim +PlugUpgrade +PlugInstall +PlugUpdate +PlugClean! +qall
 
-cecho "G" "updating global npm packages"
-npm -g update
+# cecho "G" "updating global npm packages"
+# npm -g update
 
 # cecho "G" "updating git repos"
 # mr update
