@@ -11,6 +11,9 @@
     st  = status
     h   = help
 
+    clwu = "!f() { git clone $1 && git remote add upstream $2 && git remote -v ; }; f"
+
+
     # Branch
     b   = branch
     br  = branch -r
