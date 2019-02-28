@@ -94,7 +94,7 @@ in {
         # Office
         calibre
         firefox
-        # profile-sync-daemon
+        profile-sync-daemon
         libreoffice-fresh hunspell hunspellDicts.en-us aspell aspellDicts.de languagetool mythes
         samba cifs-utils
         sane-frontends
@@ -162,6 +162,7 @@ in {
         ghc
         graphviz
         gthumb
+        filezilla
         jetbrains.idea-community
         nodejs-10_x
         nixops
