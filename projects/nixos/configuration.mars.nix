@@ -129,6 +129,7 @@
       dates = "monthly";
       options = "--delete-older-than 7d";
     };
+    useSandbox = true;
   };
 
   system.autoUpgrade.enable = true;
