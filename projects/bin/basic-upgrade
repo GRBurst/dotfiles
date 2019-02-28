@@ -39,10 +39,6 @@ zsh -c "                                                                        
 #      # )
 # fi
 
-cecho "G" "updating channels"
-nix-channel --update
-sudo nix-channel --update
-
 # System related
 cecho "G" "upgrading installed system packages"
 sudo nixos-rebuild switch
@@ -70,51 +66,45 @@ if [ -d "$HOME/local/termite-colors-solarized" ]; then
 fi
 
 # Local packages
-# cecho "G" "Getting installed packages"
-# cecho "G" "Updating installed packages: $LOC_INSTALLED";
 LOC_INSTALLED=(${(f)"$(nix-env -q)"})
 cecho "G" "Updating installed packages";
-nix-env -u '*'
+nix-env --upgrade '*'
 
-typeset -A pkg_prio
-pkg_prio[test-packages]=3
-pkg_prio[common-packages]=4
-pkg_prio[laptop-packages]=7
-pkg_prio[dev-packages]=8
-pkg_prio[highres-packages]=9
-pkg_prio[ssd-packages]=10
-pkg_prio[gaming-packages]=11
-pkg_prio[mining-packages]=12
-
-# for loc_pkg loc_prio in ${(kv)pkg_prio}
-# do
-#     cecho "G" "setting ${loc_pkg} to prio ${loc_prio}"
-#     nix-env --set-flag priority "${loc_prio}" "${loc_pkg}"
-# done
-
-# for loc_pkg in "${LOC_INSTALLED[@]}"
-# do
-#     if test "${pkg_prio[${loc_pkg}]+isset}"; then
-#         nix-env --set-flag priority "${pkg_prio[${loc_pkg}]}" "${loc_pkg}"
-#     fi
-# done
+typeset -A pkg_nixpkgs_prio
+pkg_nixpkgs_prio[test-packages]=3
+typeset -A pkg_unstable_prio
+pkg_unstable_prio[common-packages]=4
+pkg_unstable_prio[laptop-packages]=7
+pkg_unstable_prio[dev-packages]=8
+pkg_unstable_prio[highres-packages]=9
+pkg_unstable_prio[ssd-packages]=10
+pkg_unstable_prio[gaming-packages]=11
+pkg_unstable_prio[mining-packages]=12
 
 for loc_pkg in "${LOC_INSTALLED[@]}"
 do
-    cecho "G" "upgrading ${loc_pkg} with prio ${pkg_prio[${loc_pkg}]}"
-    if test "${pkg_prio[${loc_pkg}]+isset}"; then
-        nix-env --set-flag priority "${pkg_prio[${loc_pkg}]}" "${loc_pkg}"
-        nix-env -iA "${loc_pgk}" -f '<nixos-unstable>'
-        nix-env --set-flag priority "${pkg_prio[${loc_pkg}]}" "${loc_pkg}"
+    if test "${pkg_unstable_prio[${loc_pkg}]+isset}"; then
+        cecho "G" "upgrading ${loc_pkg} with prio ${pkg_unstable_prio[${loc_pkg}]} on channel <nixos-unstable>"
+        nix-env --set-flag priority "${pkg_unstable_prio[${loc_pkg}]}" "${loc_pkg}"
+        nix-env -iA "${loc_pkg}" -f "<nixos-unstable>"
+        nix-env --set-flag priority "${pkg_unstable_prio[${loc_pkg}]}" "${loc_pkg}"
+    elif test "${pkg_nixpkgs_prio[${loc_pkg}]+isset}"; then
+        cecho "G" "upgrading ${loc_pkg} with prio ${pkg_nixpkgs_prio[${loc_pkg}]} on channel <nixpkgs>"
+        nix-env --set-flag priority "${pkg_nixpkgs_prio[${loc_pkg}]}" "${loc_pkg}"
+        nix-env -iA "${loc_pkg}" -f "<nixpkgs>"
+        nix-env --set-flag priority "${pkg_nixpkgs_prio[${loc_pkg}]}" "${loc_pkg}"
+    else
+        nix-env -u "${loc_pkg}"
     fi
 done
+
 
 # Cleanup and optimize
 cecho "G" "optimize nix-store"
 nix-store --optimize
 
 cecho "G" "cleanup nix garbage"
-nix-collect-garbage --delete-older-than 30d
+nix-collect-garbage --delete-older-than 90d
 
 # Plugin manager and programs
 cecho "G" "updating zgen plugins..."
@@ -123,8 +113,8 @@ zgen update
 cecho "G" "updating vim plugins..."
 vim +PlugUpgrade +PlugInstall +PlugUpdate +PlugClean! +qall
 
-# cecho "G" "updating global npm packages"
-# npm -g update
+cecho "G" "updating global npm packages"
+npm -g update
 
 # cecho "G" "updating git repos"
 # mr update
