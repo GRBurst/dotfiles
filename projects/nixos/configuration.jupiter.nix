@@ -354,6 +354,11 @@
     # ipfs = {
     #   enable = true;
     # };
+
+    saned = {
+      enable = true;
+      extraConfig = "192.168.1.20";
+    };
   };
 
   # systemd.services.delayedHibernation = {
