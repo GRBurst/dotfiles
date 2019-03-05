@@ -69,7 +69,7 @@ alias mmv='noglob zmv -W'
 # o() { xdg-open $@ > /dev/null 2>&1; }
 o() { mimeo $@ > /dev/null 2>&1; }
 
-alias rcp="rsync --append-verify --archive --compress --human-readable --info=progress2 --partial --progress --sparse"
+alias rcp="rsync --append-verify --archive --compress --human-readable --info=progress2 --partial --sparse"
 alias ssh-tmate="ssh -o PreferredAuthentications=password -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 
 # Nix
