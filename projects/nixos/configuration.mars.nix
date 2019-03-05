@@ -39,11 +39,11 @@
     };
   };
 
-    fileSystems."/media/ateam/ateam" =
-    { device = "//ateam/ateam";
-      fsType = "cifs";
-      options = [ "uid=jelias" "username=x" "password=" "x-systemd.automount" "noauto" "_netdev" "x-systemd.device-timeout=30" ];
-    };
+  fileSystems."/media/ateam/ateam" =
+  { device = "//ateam/ateam";
+    fsType = "cifs";
+    options = [ "uid=jelias" "username=x" "password=" "x-systemd.automount" "noauto" "_netdev" "x-systemd.device-timeout=30" ];
+  };
 
   fileSystems."/media/ateam/upload" =
     { device = "//ateam/upload";
@@ -116,6 +116,9 @@
       EDITOR = "nvim";
       BROWSER = "firefox";
       SBT_OPTS="$SBT_OPTS -Xms2G -Xmx8G -Xss4M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC";
+      GDK_SCALE = "2";
+      QT_FONT_DPI = "168";
+      QT_AUTO_SCREEN_SCALE_FACTOR = "1";
       _JAVA_OPTIONS=" -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
       # SSH_AUTH_SOCK="%t/keyring/ssh";
     };
@@ -376,7 +379,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.extraUsers.jelias = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "vboxusers" "docker" "scanner" "adbusers" "networkmanager" ];
+    extraGroups = [ "wheel" "vboxusers" "docker" "fuse" "scanner" "adbusers" "networkmanager" ];
     useDefaultShell = true;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM+BIE+0anEEYK0fBIEpjedblyGW0UnuYBCDtjZ5NW6P jelias@merkur"

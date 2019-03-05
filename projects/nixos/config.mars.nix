@@ -79,6 +79,7 @@ in {
         # Filesystem
         gnome3.nautilus gnome3.gvfs
         ncdu fzf fasd file silver-searcher
+        fuse-common
         pmount
         tree gparted
         ntfs3g inotify-tools smartmontools
@@ -104,6 +105,7 @@ in {
         jmtpfs
         libnotify
         networkmanager_dmenu
+        qrencode
         simple-scan
         typora
         zathura
@@ -245,7 +247,7 @@ in {
         texmaker texstudio #lyx
         tor-browser-bundle-bin # prevented highres from upgrade
         thunderbird
-        # protonmail-bridge
+        protonmail-bridge
         vlc
         vokoscreen
       ];
@@ -286,7 +288,7 @@ in {
       name = "test-packages";
 
       paths = [
-        localpkgs.protonmail-bridge
+        # localpkgs.protonmail-bridge
         # localpkgs.jbidwatcher
         # localpkgs.iri
         # localpkgs.purple-gnome-keyring
