@@ -79,6 +79,7 @@ in {
         # Filesystem
         gnome3.nautilus gnome3.gvfs
         ncdu fzf fasd file silver-searcher
+        fuse-common
         pmount
         tree gparted
         ntfs3g inotify-tools smartmontools
