@@ -100,6 +100,9 @@ done
 
 
 # Cleanup and optimize
+cecho "G" "delete previous generations"
+nix-env --delete-generations 90d
+
 cecho "G" "optimize nix-store"
 nix-store --optimize
 
