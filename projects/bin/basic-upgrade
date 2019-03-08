@@ -103,11 +103,11 @@ done
 cecho "G" "delete previous generations"
 nix-env --delete-generations 90d
 
-cecho "G" "optimize nix-store"
-nix-store --optimize
-
 cecho "G" "cleanup nix garbage"
 nix-collect-garbage --delete-older-than 90d
+
+cecho "G" "optimize nix-store"
+nix-store --optimize
 
 # Plugin manager and programs
 cecho "G" "updating zgen plugins..."
