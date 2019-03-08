@@ -41,7 +41,7 @@ zsh -c "                                                                        
 
 # System related
 cecho "G" "upgrading installed system packages"
-sudo nixos-rebuild switch
+sudo nixos-rebuild boot
 
 # Colorschemes
 if [ -d "$HOME/local/intellij-colors-solarized" ]; then
