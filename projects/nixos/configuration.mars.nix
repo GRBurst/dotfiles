@@ -117,6 +117,7 @@
       BROWSER = "firefox";
       SBT_OPTS="$SBT_OPTS -Xms2G -Xmx8G -Xss4M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC";
       GDK_SCALE = "2";
+      GDK_DPI_SCALE = "0.5";
       QT_FONT_DPI = "168";
       QT_AUTO_SCREEN_SCALE_FACTOR = "1";
       _JAVA_OPTIONS=" -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
@@ -189,7 +190,7 @@
 
     sudo = {
       enable = true;
-      wheelNeedsPassword = false;
+      wheelNeedsPassword = true;
     };
   };
 
