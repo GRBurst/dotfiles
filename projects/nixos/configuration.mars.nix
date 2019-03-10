@@ -21,9 +21,9 @@
     initrd.luks.devices = [
       {
         name = "root";
-	device = "/dev/disk/by-uuid/d95b210b-6105-43d9-b527-3744578a16cd";
-	preLVM = true;
-	allowDiscards = true;
+        device = "/dev/disk/by-uuid/d95b210b-6105-43d9-b527-3744578a16cd";
+        preLVM = true;
+        allowDiscards = true;
       }
     ];
 
@@ -35,6 +35,8 @@
     tmpOnTmpfs = true;
 
     kernel.sysctl = {
+      "fs.inotify.max_user_watches" = "409600";
+      "kernel.sysrq" = 1;
       "vm.swappiness" = 0;
     };
   };
@@ -99,8 +101,9 @@
   # $ nix-env -qaP | grep wget
   # These are installed system-wide
   environment = {
-    # systemPackages = with pkgs; [
-    # ];
+    systemPackages = with pkgs; [
+      vim
+    ];
 
     shellAliases = {
       l = "ls -l";
@@ -131,7 +134,7 @@
     gc = {
       automatic = true;
       dates = "monthly";
-      options = "--delete-older-than 7d";
+      options = "--delete-older-than 90d";
     };
     useSandbox = true;
   };
@@ -277,7 +280,7 @@
       brightness.night = "0.75";
     };
 
-    unclutter-xfixes.enable = true; # not working?
+    unclutter-xfixes.enable = true;
 
     syncthing = {
       enable = true;
@@ -360,11 +363,11 @@
     fonts = with pkgs; [
       corefonts
       dejavu_fonts
+      font-droid # needed for firefox
+      google-fonts
+      inconsolata
       symbola # many unicode symbols
       ubuntu_font_family
-      inconsolata
-      google-fonts
-      font-droid # needed for firefox
     ];
 
     fontconfig = {
