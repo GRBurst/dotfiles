@@ -15,6 +15,7 @@
 !/.config/user-dirs.*
 
 # .config dirs
+!/.config/pgcli/config.conf
 !/.config/fontconfig
 !/.config/git
 !/.config/htop
