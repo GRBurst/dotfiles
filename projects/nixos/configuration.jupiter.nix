@@ -140,9 +140,9 @@
       BROWSER = "firefox";
       # _JAVA_OPTIONS=" -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
       # SBT_OPTS="-J-Xms1G -J-Xmx4G -J-Xss4M -J-XX:+CMSClassUnloadingEnabled -J-XX:+UseConcMarkSweepGC";
-      _JAVA_OPTIONS="-Xms1G -Xmx4G -Xss1M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
+      _JAVA_OPTIONS = "-Xms1G -Xmx4G -Xss1M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
       #SSH_AUTH_SOCK = "%t/keyring/ssh";
-      AUTOSSH_GATETIME="0";
+      AUTOSSH_GATETIME = "0";
     };
   };
 
@@ -171,6 +171,11 @@
     };
 
     adb.enable = true;
+
+    ccache = {
+      enable = true;
+      cacheDir = "/tmp/ccache";
+    };
 
     # ssh.startAgent = true;
     gnupg.agent = { 
@@ -208,7 +213,7 @@
 
     sudo = {
       enable = true;
-      wheelNeedsPassword = false;
+      wheelNeedsPassword = true;
     };
   };
 
@@ -390,14 +395,14 @@
   #   wantedBy = [ "sleep.target" ];
   # };
 
-  systemd.user.services.localnpm = {
-    description = "Local npm cache";
-    serviceConfig = {
-      Type = "simple";
-      ExecStart = "${pkgs.nodejs-10_x}/bin/node /home/jelias/.node_modules/bin/local-npm -d /home/jelias/.cache/local-npm";
-    };
-    wantedBy = [ "multi-user.target" ];
-  };
+  # systemd.user.services.localnpm = {
+  #   description = "Local npm cache";
+  #   serviceConfig = {
+  #     Type = "simple";
+  #     ExecStart = "${pkgs.nodejs-10_x}/bin/node /home/jelias/.node_modules/bin/local-npm -d /home/jelias/.cache/local-npm";
+  #   };
+  #   wantedBy = [ "multi-user.target" ];
+  # };
 
   # systemd.services.delayedHibernation.enable = true;
 
@@ -420,8 +425,10 @@
     };
   };
 
-  virtualisation.virtualbox.host.enable = true;
-  nixpkgs.config.virtualbox.enableExtensionPack = true;
+  virtualisation.virtualbox.host = {
+    enable = true;
+    enableExtensionPack = true;
+  };
   virtualisation.docker.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.

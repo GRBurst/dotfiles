@@ -80,12 +80,13 @@ in {
         # Filesystem
         gnome3.nautilus gnome3.gvfs
         ncdu fzf fasd file silver-searcher
+        fuse-common
         pmount
         tree gparted
         ntfs3g inotify-tools smartmontools
         exfat
         file
-        # gnome3.file-roller # mimeinfo collides with nautilus
+        gnome3.file-roller # mimeinfo collides with nautilus
         gptfdisk
         spaceFM
         shared_mime_info
@@ -289,7 +290,7 @@ in {
       name = "test-packages";
 
       paths = [
-        localpkgs.protonmail-bridge
+        # localpkgs.protonmail-bridge
         # localpkgs.jbidwatcher
         # localpkgs.iri
         # localpkgs.purple-gnome-keyring
