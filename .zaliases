@@ -56,6 +56,7 @@ alias cdnpc='cd ~/.config/nixpkgs'
 alias cdi3='cd ~/.config/i3'
 alias pp='cd ~/projects/$(ls -t ~/projects | head -1)'
 alias vm='vim $(git-select-dirty-files)'
+alias vbu="vim ~/projects/bin/basic-upgrade"
 p() { cd ~/projects/"$(ls -t ~/projects | fzf --query="$(echo $@ | tr ' ' '\ ' )")";}
 
 # file listing/interaction
