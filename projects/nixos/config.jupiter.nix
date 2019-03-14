@@ -78,20 +78,20 @@ in {
         termite nix-zsh-completions
 
         # Filesystem
-        gnome3.nautilus gnome3.gvfs
-        ncdu fzf fasd file silver-searcher
+        desktop_file_utils
+        shared_mime_info
         fuse-common
-        pmount
+        ncdu fzf fasd file silver-searcher
         tree gparted
+        pmount
         ntfs3g inotify-tools smartmontools
         exfat
-        file
-        gnome3.file-roller # mimeinfo collides with nautilus
         gptfdisk
-        spaceFM
-        shared_mime_info
-        desktop_file_utils
         usbutils
+        gnome3.gvfs
+        gnome3.file-roller # mimeinfo collides with nautilus
+        # gnome3.nautilus
+        spaceFM
 
         # Office
         calibre
