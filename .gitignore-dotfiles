@@ -29,6 +29,7 @@
 !/.config/networkmanager-dmenu
 !/.config/nixpkgs
 !/.config/termite
+!/.config/tig
 
 # $HOME dirs
 !/.conky

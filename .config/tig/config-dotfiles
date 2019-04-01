@@ -1,0 +1,4 @@
+source ~/.config/tig/config
+
+bind stage C !git -c core.excludesfile=~/.gitignore-dotfiles commit
+bind status C !git -c core.excludesfile=~/.gitignore-dotfiles commit
