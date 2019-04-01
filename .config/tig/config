@@ -5,7 +5,6 @@ set ignore-case         = true # search
 set editor-line-number  = true
 set mouse-scroll        = true
 set show-changes        = true
-set status-show-untracked-dirs  = false
 
 # NEO
 bind generic ä Quit
