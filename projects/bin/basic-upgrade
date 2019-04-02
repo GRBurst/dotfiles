@@ -11,9 +11,10 @@ fi
 
 if [ $(hostname) = jupiter ]; then
     cecho "G" "Backup boot"
-    sudo mount /dev/disk/by-uuid/9959-75AB /media/boot_backup
-    sudo cp -r /boot/ /media/boot_backup
-    sudo umount /media/boot_backup
+    sudo mount /dev/disk/by-uuid/9959-75AB /media/data/backup/boot
+    #sudo cp -r /boot/ "/media/data/backup/boot/$(date -I)"
+    sudo cp -r /boot/ "/media/data/backup/boot/"
+    sudo umount /media/data/backup/boot
 fi
 
 cecho "G" "Commiting nixos configuration"
