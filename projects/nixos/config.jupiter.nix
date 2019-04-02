@@ -8,6 +8,7 @@ in {
 
   allowUnfree = true;
   android_sdk.accept_license = true;
+  oraclejdk.accept_license = true;
 
   # Install local packages with localpkgs.X,
   # e.g.: localpkgs.xcwd
@@ -127,7 +128,8 @@ in {
         pavucontrol
         playerctl
         spotify
-        gnome3.cheese
+        # gnome3.cheese
+        guvcview
         xdg_utils
 
         # Communication
