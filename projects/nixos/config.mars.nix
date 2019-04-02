@@ -230,7 +230,7 @@ in {
 
       paths = [
         brasero
-        (chromium.override { enablePepperFlash = true; enableWideVine = false;})
+        (chromium.override { enablePepperFlash = false; enableWideVine = false;})
         clementine
         cryptsetup
         evince
