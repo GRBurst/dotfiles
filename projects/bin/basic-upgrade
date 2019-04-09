@@ -9,7 +9,7 @@ if [ $? -ne 0 ]; then
     exit 1;
 fi
 
-if [ $(hostname) = jupiter ]; then
+if [ $(hostname) = "jupiter" ]; then
     cecho "G" "Backup boot"
     sudo mount /dev/disk/by-uuid/9959-75AB /media/data/backup/boot
     #sudo cp -r /boot/ "/media/data/backup/boot/$(date -I)"
