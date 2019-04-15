@@ -7,6 +7,7 @@ let
 in {
 
   allowUnfree = true;
+  oraclejdk.accept_license = true;
 
   # Install local packages with localpkgs.X,
   # e.g.: localpkgs.xcwd
@@ -111,7 +112,7 @@ in {
         zathura
         texlive.combined.scheme-full
         # biber # collides texlive full
-        pdfshuffler
+        # pdfshuffler
         poppler_utils
         xournal
 
@@ -152,8 +153,8 @@ in {
         gdb
         git tig
         neovim
-        python27Packages.neovim # ensime
-        python36Packages.neovim
+        python27Packages.pynvim # ensime
+        python37Packages.pynvim
         tmate
         meld
         kdiff3
@@ -230,7 +231,7 @@ in {
 
       paths = [
         brasero
-        (chromium.override { enablePepperFlash = true; enableWideVine = false;})
+        (chromium.override { enablePepperFlash = false; enableWideVine = false;})
         clementine
         cryptsetup
         evince
@@ -288,6 +289,7 @@ in {
       name = "test-packages";
 
       paths = [
+        chromiumDev
         # localpkgs.protonmail-bridge
         # localpkgs.jbidwatcher
         # localpkgs.iri
