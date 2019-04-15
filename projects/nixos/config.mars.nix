@@ -153,8 +153,8 @@ in {
         gdb
         git tig
         neovim
-        python27Packages.neovim # ensime
-        python36Packages.neovim
+        python27Packages.pynvim # ensime
+        python37Packages.pynvim
         tmate
         meld
         kdiff3
