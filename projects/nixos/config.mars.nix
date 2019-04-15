@@ -112,7 +112,7 @@ in {
         zathura
         texlive.combined.scheme-full
         # biber # collides texlive full
-        pdfshuffler
+        # pdfshuffler
         poppler_utils
         xournal
 
