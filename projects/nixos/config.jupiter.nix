@@ -7,7 +7,6 @@ let
 in {
 
   allowUnfree = true;
-  android_sdk.accept_license = true;
   oraclejdk.accept_license = true;
 
   # Install local packages with localpkgs.X,
@@ -79,20 +78,20 @@ in {
         termite nix-zsh-completions
 
         # Filesystem
-        desktop_file_utils
-        shared_mime_info
-        fuse-common
+        gnome3.nautilus gnome3.gvfs
         ncdu fzf fasd file silver-searcher
-        tree gparted
+        fuse-common
         pmount
+        tree gparted
         ntfs3g inotify-tools smartmontools
         exfat
+        file
+        # gnome3.file-roller # mimeinfo collides with nautilus
         gptfdisk
-        usbutils
-        gnome3.gvfs
-        gnome3.file-roller # mimeinfo collides with nautilus
-        # gnome3.nautilus
         spaceFM
+        shared_mime_info
+        desktop_file_utils
+        usbutils
 
         # Office
         calibre
@@ -113,7 +112,7 @@ in {
         zathura
         texlive.combined.scheme-full
         # biber # collides texlive full
-        pdfshuffler
+        # pdfshuffler
         poppler_utils
         xournal
 
@@ -128,8 +127,7 @@ in {
         pavucontrol
         playerctl
         spotify
-        # gnome3.cheese
-        guvcview
+        gnome3.cheese
         xdg_utils
 
         # Communication
@@ -155,8 +153,8 @@ in {
         gdb
         git tig
         neovim
-        python27Packages.neovim # ensime
-        python36Packages.neovim
+        python27Packages.pynvim # ensime
+        python37Packages.pynvim
         tmate
         meld
         kdiff3
@@ -172,7 +170,6 @@ in {
         nodejs-10_x
         nixops
         nox
-        patchelfUnstable
 
         swiProlog
         vscode
@@ -292,6 +289,7 @@ in {
       name = "test-packages";
 
       paths = [
+        chromiumDev
         # localpkgs.protonmail-bridge
         # localpkgs.jbidwatcher
         # localpkgs.iri
