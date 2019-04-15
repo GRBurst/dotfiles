@@ -297,7 +297,7 @@
 
     psd = {
       enable = true;
-      users = ["jelias"];
+      # users = ["jelias"];
     };
 
     clamav = {
@@ -363,7 +363,7 @@
     fonts = with pkgs; [
       corefonts
       dejavu_fonts
-      font-droid # needed for firefox
+      # font-droid # needed for firefox
       google-fonts
       inconsolata
       symbola # many unicode symbols
