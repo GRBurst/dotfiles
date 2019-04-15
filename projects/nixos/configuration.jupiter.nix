@@ -124,8 +124,9 @@
   # $ nix-env -qaP | grep wget
   # These are installed system-wide
   environment = {
-    # systemPackages = with pkgs; [
-    # ];
+    systemPackages = with pkgs; [
+      vim
+    ];
 
     shellAliases = {
       l = "ls -l";
@@ -334,7 +335,7 @@
 
     psd = {
       enable = true;
-      users = [ "jelias" ];
+      # users = [ "jelias" ];
     };
 
     clamav = {
@@ -456,6 +457,6 @@
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
   # should.
-  system.stateVersion = "18.09"; # Did you read the comment?
+  system.stateVersion = "19.03"; # Did you read the comment?
 
 }
