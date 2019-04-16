@@ -48,11 +48,13 @@ set cursorline                    " highlight current line
 set number                        " enable line numbers
 " set relativenumber                " show relative numbers for all lines but the current one
 set ruler                         " show the cursor position all the time
+set inccommand=nosplit            " live substitution preview
 set incsearch                     " do incremental searching
 set ignorecase                    " smart case sensitive search
 set smartcase                     "              "
 set hls                           " hightlight search results
 set scrolloff=5 sidescrolloff=10  " keep some lines before and after the cursor visible
+set sidescroll=1                  " used when wrap is off
 set wrap                          " break long lines
 set linebreak                     " break only at word boundary
 set listchars=tab:⊳\ ,trail:·     " display whitespaces
@@ -64,7 +66,7 @@ set display=lastline,uhex         " if last line does not fit on screen, display
 " editing
 set gdefault                      " substitute all occurrences in line per default
 set backspace=indent,eol,start    " allow backspacing over everything in insert mode
-set tabstop=8                     " size of a hard tabstop
+set tabstop=4                     " size of a hard tabstop
 set shiftwidth=4                  " size of an "indent"
 set softtabstop=4                 " a combination of spaces and tabs are used to simulate tab stops at a width
 set shiftround
@@ -113,6 +115,7 @@ endif
 
 " change directory to the current buffer when opening files.
 " set autochdir
+autocmd vimrc BufEnter * set noreadonly " no delay, when editing read-only files
 autocmd vimrc BufEnter * silent! lcd %:p:h
 
 " break text automatically
@@ -121,6 +124,8 @@ autocmd vimrc FileType text setlocal textwidth=78
 let g:tex_flavor = "latex"
 
 " set spell spelllang=en_us
+
+autocmd vimrc Filetype scala setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
 
 " filetype aliases
 autocmd vimrc BufNewFile,BufRead *.sbt set filetype=scala

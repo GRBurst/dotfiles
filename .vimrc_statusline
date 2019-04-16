@@ -7,33 +7,34 @@ set noshowmode
 let g:lightline = {
       \ 'colorscheme': 'wombat',
       \ 'active': {
-      \   'left': [ [ 'mode' ], ['gitbranch', 'bufferinfo'], [ 'bufferbefore', 'buffercurrent', 'bufferafter' ]],
-      \   'right': [  ['scrollbar'], [ 'filetype' ], [ 'column' ] ]
+      \   'left': [ [ 'mode' ], [ 'gitbranch' ], [ 'buffers'] ],
+      \   'right': [  [ 'scrollbar' ], [ 'filetype' ], [ 'column' ] ]
       \ },
       \ 'inactive': {
       \   'left': [ ['filename'] ],
       \   'right': [  ['scrollbar'] ]
       \ },
       \ 'component': {
-      \ 'column': '%c'
+        \ 'column': '%c'
       \ },
       \ 'component_function': {
-      \ 'gitbranch': 'BarGitBranch',
-      \ 'filename' : 'BarFilename',
-      \ 'scrollbar': 'BarScrollbar',
-      \ 'bufferbefore': 'lightline#buffer#bufferbefore',
-      \ 'bufferafter': 'lightline#buffer#bufferafter',
-      \ 'bufferinfo': 'lightline#buffer#bufferinfo',
+        \ 'gitbranch': 'BarGitBranch',
+        \ 'filename' : 'BarFilename',
+        \ 'scrollbar': 'BarScrollbar',
       \ },
       \ 'component_expand': {
-      \ 'buffercurrent': 'lightline#buffer#buffercurrent2'
+        \ 'buffercurrent': 'lightline#bufferline#buffers'
       \ },
       \ 'component_type': {
-      \ 'buffercurrent': 'tabsel'
+        \ 'buffercurrent': 'tabsel'
       \ },
       \ 'separator': { 'left': '', 'right': '' },
       \ 'subseparator': { 'left': '▍', 'right': '▐' }
       \ }
+
+let g:lightline#bufferline#modified = '*'
+let g:lightline#bufferline#filename_modifier = ':t'
+autocmd vimrc BufWritePost,TextChanged,TextChangedI * call lightline#update() " https://github.com/mgee/lightline-bufferline/issues/5
 
 function! BarScrollbar()
     return winwidth(0) > 70 ? Scrollbar_Highres(20) : Scrollbar_SingleChar()
