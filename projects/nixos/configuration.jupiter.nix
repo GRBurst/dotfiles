@@ -323,6 +323,7 @@
     syncthing = {
       enable = true;
       user = "jelias";
+      configDir = "/home/jelias/.config/syncthing";
       dataDir = "/home/jelias/.config/syncthing";
       openDefaultPorts = true;
       systemService = true;
