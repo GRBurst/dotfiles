@@ -3,7 +3,7 @@
 export BROWSER=firefox
 export SUDO_EDITOR=rvim
 export VISUAL="nvim"
-export PAGER=less
+export PAGER="less -R -F"
 # export PAGER=vimpager
 
 # Desktop environment

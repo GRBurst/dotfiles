@@ -1,4 +1,5 @@
 [[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
+
 # if this is a login shell
 # if [[ -o login ]]; then
     # if first tty: start x

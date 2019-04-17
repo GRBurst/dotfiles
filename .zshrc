@@ -1,5 +1,10 @@
+[[ -e ~/.zprofile ]] && emulate sh -c 'source ~/.zprofile'
+
+source ~/.zprofile
+
 export PURE_GIT_PULL=0 # disable pure-promt git pull when entering git repo
-DISABLE_AUTO_UPDATE="true" # disable oh-my-zsh auto-update
+export DISABLE_AUTO_UPDATE="true" # disable oh-my-zsh auto-update
+export DISABLE_UPDATE_PROMPT="true" # disable oh-my-zsh update prompt
 
 eval    "$(fasd --init auto)"
 source  "${HOME}/local/zgen/zgen.zsh"
@@ -7,8 +12,6 @@ source  "${HOME}/local/zgen/zgen.zsh"
 if ! zgen saved; then
     echo "creating zgen save..."
     zgen oh-my-zsh # oh-my-zsh default settings
-
-    zgen load zsh-users/zsh-syntax-highlighting
 
     zgen load mafredri/zsh-async # for pure-prompt
     zgen load sindresorhus/pure # prompt
@@ -39,29 +42,29 @@ PageDown "${terminfo[knp]}"
 BackTab  "${terminfo[kcbt]}"
 )
 
-
-fry completion
-fry ncserve
 fry alias-usage-analysis
-fry print-expanded-alias
-# fry vim-open-files-at-lines
-fry search-select-edit
-fry git-select-commit
-fry git-onstage
-fry github-clone
-fry interactive-mv
-fry cd-tmp
-fry cd-git-root
-fry neo4j-query
-#NEO4J_QUERY_JSON_FORMATTER="underscore print --color --outfmt json"
-fry mkdir-cd
-fry screencapture
-fry transcode-video
+fry bell-on-precmd
 fry bind2maps
+fry cd-git-root
+fry cd-tmp
+fry completion
+fry github-clone
 fry git-dirty-files-command
+fry git-onstage
+fry git-select-commit
+fry interactive-mv
+fry mkdir-cd
+fry ncserve
+fry nvim-rpc
+fry print-expanded-alias
+fry screencapture
+fry search-select-edit
+fry transcode-video
 fry watchdo
-fry docker-host-status
-
+# fry vim-open-files-at-lines
+# fry neo4j-query
+#NEO4J_QUERY_JSON_FORMATTER="underscore print --color --outfmt json"
+# fry docker-host-status
 
 setopt nonomatch # avoid the zsh "no matches found" / allows sbt ~compile
 setopt hash_list_all # rehash command path and completions on completion attempt
@@ -74,6 +77,14 @@ autoload -U zmv # renaming utils
 source ~/.zshrc.vimode
 RPROMPT='${MODE_INDICATOR}'
 
+bind2maps emacs viins vicmd -- -s '^[[1;5C' forward-word
+bind2maps emacs viins vicmd -- -s '^[[1;5D' backward-word
+
+autoload edit-command-line
+zle -N edit-command-line
+bind2maps vicmd viins -- -s '^v' edit-command-line
+
+autoload bashcompinit && bashcompinit
 
 # history prefix search
 autoload -U history-search-end
@@ -83,8 +94,12 @@ bind2maps emacs viins vicmd -- "Up" up-line-or-search
 bind2maps emacs viins vicmd -- "Down" down-line-or-search
 
 # fzf fuzzy file matcher shell extensions
-. $HOME/.vim/bundle/fzf/shell/completion.zsh
-. $HOME/.vim/bundle/fzf/shell/key-bindings.zsh
+if [ -n "${commands[fzf-share]}" ]; then
+    source "$(fzf-share)/key-bindings.zsh"
+    source "$(fzf-share)/completion.zsh"
+fi
+# . $HOME/.vim/bundle/fzf/shell/completion.zsh
+# . $HOME/.vim/bundle/fzf/shell/key-bindings.zsh
 
 source ~/.zaliases
 
