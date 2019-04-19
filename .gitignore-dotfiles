@@ -30,6 +30,9 @@
 !/.config/nixpkgs
 !/.config/termite
 !/.config/tig
+!/.config/qutebrowser
+/.config/qutebrowser/*
+!/.config/qutebrowser/config.py
 
 # $HOME dirs
 !/.conky
