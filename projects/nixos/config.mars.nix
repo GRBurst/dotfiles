@@ -279,7 +279,7 @@ in {
 
       paths = [
         runelite
-        linux-steam-integration
+        # linux-steam-integration
         # steam
         # steam-run
       ];
