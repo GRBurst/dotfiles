@@ -1,4 +1,4 @@
-Xft.dpi: 168
+Xft.dpi: 192
 Xcursor.size: 64
 
 ! Rofi colors now specified by:
@@ -6,7 +6,7 @@ Xcursor.size: 64
 
 
 ! rofi.X.value
-rofi.dpi:           168
+rofi.dpi:           192
 rofi.location:      2
 rofi.width:         100
 rofi.lines:         5
