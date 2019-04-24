@@ -83,7 +83,6 @@ alias ta="tree -a"
 alias f="find"
 alias fif="find-in-file"
 alias dsize="sudo du -hsx ./* | sort -rh | head -n 40"
-alias local-update="nix-env -iA userPackages -f '<nixpkgs>'"
 
 # Raid
 raid_health() {
@@ -191,9 +190,6 @@ ateam-umount() {
 }
 tmpremount() {
     sudo mount -o remount,size="$1",noatime /tmp
-}
-nix-update() {
-    nix-env -iA highres-packages -f "<nixpkgs>"
 }
 nixos-details() {
     printf '- System: '
