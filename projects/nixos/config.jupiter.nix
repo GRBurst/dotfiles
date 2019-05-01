@@ -1,9 +1,9 @@
-with (import <nixpkgs> {});
-with import <nixpkgs/lib>;
+with (import <nixos-unstable> {});
+with import <nixos-unstable/lib>;
 
 let
   localpkgs = import ~/projects/nixpkgs/default.nix {};
-  nixpkgs   = import <nixpkgs/nixos> {};
+  unstable  = import <nixos-unstable/nixos> {};
 in {
 
   allowUnfree = true;
@@ -13,7 +13,7 @@ in {
   # e.g.: localpkgs.xcwd
 
   # Install a package collection with:
-  # nix-env -iA common-packages -f "<nixpkgs>"
+  # nix-env -iA common-packages -f "<nixos-unstable>"
   # Uninstall all packages with
   # nix-env -e common-packages
   packageOverrides = pkgs: rec {
@@ -26,6 +26,8 @@ in {
 
     common-packages = buildEnv {
 
+      inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
+      extraOutputsToInstall = [ "man" ];
       name = "common-packages";
 
       paths = [
@@ -142,7 +144,7 @@ in {
 
     dev-packages = buildEnv {
 
-      inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
+      inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
       extraOutputsToInstall = [ "man" ];
       name = "dev-packages";
 
@@ -179,7 +181,7 @@ in {
 
     scala-packages = buildEnv {
 
-      inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
+      inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
       extraOutputsToInstall = [ "man" ];
       name = "scala-packages";
 
@@ -194,7 +196,7 @@ in {
 
     ssd-packages = buildEnv {
 
-      inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
+      inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
       extraOutputsToInstall = [ "man" ];
       name = "ssd-packages";
 
@@ -206,7 +208,7 @@ in {
 
     laptop-packages = buildEnv {
 
-      inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
+      inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
       extraOutputsToInstall = [ "man" ];
       name = "laptop-packages";
 
@@ -222,10 +224,9 @@ in {
 
     };
 
-
     highres-packages = buildEnv {
 
-      inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
+      inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
       extraOutputsToInstall = [ "man" ];
       name = "highres-packages";
 
@@ -241,6 +242,7 @@ in {
         josm
         kodi
         openjdk
+        protonmail-bridge
         qutebrowser
         screen
         skypeforlinux
@@ -248,7 +250,6 @@ in {
         texmaker texstudio #lyx
         tor-browser-bundle-bin # prevented highres from upgrade
         thunderbird
-        protonmail-bridge
         vlc
         vokoscreen
       ];
@@ -257,7 +258,7 @@ in {
 
     lowres-packages = buildEnv {
 
-      inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
+      inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
       extraOutputsToInstall = [ "man" ];
       name = "lowres-packages";
 
@@ -272,12 +273,14 @@ in {
 
     gaming-packages = buildEnv {
 
-      inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
+      inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
+      extraOutputsToInstall = [ "man" ];
       name = "gaming-packages";
 
       paths = [
         runelite
-        steam
+        linux-steam-integration
+        # steam
         # steam-run
       ];
 
@@ -285,7 +288,7 @@ in {
 
     test-packages = buildEnv {
 
-      inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
+      inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
       name = "test-packages";
 
       paths = [
@@ -300,7 +303,7 @@ in {
 
     mining-packages = buildEnv {
 
-      inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
+      inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
       extraOutputsToInstall = [ "man" ];
       name = "mining-packages";
 
