@@ -31,5 +31,5 @@ bind status  w !git fry word-based-diff
 bind status  W !git fry word-based-diff --staged
 bind stage   w !git fry word-based-diff %(file)
 bind stage   W !git fry word-based-diff --staged %(file)
-bind lg      log --graph --pretty=format:'%Cred%h %C(reset)%C(dim)%ad%Creset %s%C(yellow)%d%C(reset) %C(blue)<%an> %Cgreen(%cr)%Creset' --abbrev-commit --date=short
+# bind lg      log --graph --pretty=format:'%Cred%h %C(reset)%C(dim)%ad%Creset %s%C(yellow)%d%C(reset) %C(blue)<%an> %Cgreen(%cr)%Creset' --abbrev-commit --date=short
 
