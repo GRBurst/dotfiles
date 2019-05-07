@@ -1,7 +1,6 @@
 #!/run/current-system/sw/bin/zsh -ie
 
-cecho "G" "updating channels"
-nix-channel --update
+cecho "G" "updating system channels"
 sudo nix-channel --update
 
 nixos-rebuild dry-build
@@ -67,36 +66,7 @@ if [ -d "$HOME/local/termite-colors-solarized" ]; then
 fi
 
 # Local packages
-LOC_INSTALLED=(${(f)"$(nix-env -q)"})
-cecho "G" "Updating installed packages";
-nix-env --upgrade '*'
-
-typeset -A pkg_nixpkgs_prio
-pkg_nixpkgs_prio[test-packages]=3
-typeset -A pkg_unstable_prio
-pkg_unstable_prio[common-packages]=4
-pkg_unstable_prio[laptop-packages]=7
-pkg_unstable_prio[dev-packages]=8
-pkg_unstable_prio[highres-packages]=9
-pkg_unstable_prio[ssd-packages]=10
-pkg_unstable_prio[gaming-packages]=11
-pkg_unstable_prio[mining-packages]=12
-
-for loc_pkg in "${LOC_INSTALLED[@]}"
-do
-    if test "${pkg_unstable_prio[${loc_pkg}]+isset}"; then
-        cecho "G" "upgrading ${loc_pkg} with prio ${pkg_unstable_prio[${loc_pkg}]} on channel <nixos-unstable>"
-        nix-env --set-flag priority "${pkg_unstable_prio[${loc_pkg}]}" "${loc_pkg}"
-        nix-env -iA "${loc_pkg}" -f "<nixos-unstable>"
-        nix-env --set-flag priority "${pkg_unstable_prio[${loc_pkg}]}" "${loc_pkg}"
-    elif test "${pkg_nixpkgs_prio[${loc_pkg}]+isset}"; then
-        cecho "G" "upgrading ${loc_pkg} with prio ${pkg_nixpkgs_prio[${loc_pkg}]} on channel <nixpkgs>"
-        nix-env --set-flag priority "${pkg_nixpkgs_prio[${loc_pkg}]}" "${loc_pkg}"
-        nix-env -iA "${loc_pkg}" -f "<nixpkgs>"
-        nix-env --set-flag priority "${pkg_nixpkgs_prio[${loc_pkg}]}" "${loc_pkg}"
-    fi
-done
-
+userpkgs-update
 
 # Cleanup and optimize
 cecho "G" "delete previous generations"

@@ -1,6 +1,6 @@
 #!/run/current-system/sw/bin/zsh -ie
 
-cecho "G" "updating channels"
+cecho "G" "updating userspace channels"
 nix-channel --update
 
 # Local packages
