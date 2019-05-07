@@ -251,7 +251,7 @@ in {
         tor-browser-bundle-bin # prevented highres from upgrade
         thunderbird
         vlc
-        vokoscreen key-mon
+        vokoscreen keymon
       ];
 
     };
