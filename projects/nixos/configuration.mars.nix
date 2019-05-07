@@ -16,7 +16,7 @@
       efi.canTouchEfiVariables = true;
     };
 
-    kernelPackages = pkgs.linuxPackages_latest;
+    # kernelPackages = pkgs.linuxPackages_latest;
 
     initrd.luks.devices = [
       {
@@ -268,7 +268,11 @@
       windowManager.default = "i3";
     };
 
-    # compton.enable = true;
+    compton = {
+      enable = true;
+      backend = "glx";
+    };
+
 
     redshift = {
       enable = true;
