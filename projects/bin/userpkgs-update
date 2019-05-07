@@ -32,9 +32,6 @@ do
         nix-env --set-flag priority "${pkg_nixpkgs_prio[${loc_pkg}]}" "${loc_pkg}"
         nix-env -iA "${loc_pkg}" -f "<nixpkgs>"
         nix-env --set-flag priority "${pkg_nixpkgs_prio[${loc_pkg}]}" "${loc_pkg}"
-    else
-        cecho "G" "upgrading ${loc_pkg} "
-        nix-env -u "${loc_pkg}"
     fi
 done
 
