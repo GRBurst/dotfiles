@@ -251,7 +251,7 @@ in {
         tor-browser-bundle-bin # prevented highres from upgrade
         thunderbird
         vlc
-        vokoscreen
+        vokoscreen keymon
       ];
 
     };
@@ -280,6 +280,7 @@ in {
       paths = [
         runelite
         linux-steam-integration
+        xboxdrv
         # steam
         # steam-run
       ];
