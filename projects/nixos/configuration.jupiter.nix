@@ -136,18 +136,36 @@
 
     # TODO: Move to .profile
     variables = {
-      SUDO_EDITOR = "nvim";
       EDITOR = "nvim";
+      SUDO_EDITOR = "nvim";
+      VISUAL = "nvim";
+
       BROWSER = "firefox";
+
+      _JAVA_OPTIONS = "-Xms1G -Xmx4G -Xss1M -XX:+CMSClassUnloadingEnabled -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd";
+
+      AUTOSSH_GATETIME = "0";
+
+      DE = "gnome";
+      XDG_CURRENT_DESKTOP = "gnome";
+      QT_QPA_PLATFORMTHEME = "qt5ct";
+      QT_AUTO_SCREEN_SCALE_FACTOR = "0";
+      QT_SCALE_FACTOR = "1";
+
+      GTK_IM_MODULE = "ibus";
+      XMODIFIERS = "@im=ibus";
+      QT_IM_MODULE = "ibus";
+
+      _JAVA_AWT_WM_NONREPARENTING = "1";
+     
+      AWT_TOOLKIT = "MToolkit";
+      GDK_USE_XFT = "1";
+
+    };
       # _JAVA_OPTIONS=" -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
       # SBT_OPTS="-J-Xms1G -J-Xmx4G -J-Xss4M -J-XX:+CMSClassUnloadingEnabled -J-XX:+UseConcMarkSweepGC";
       # _JAVA_OPTIONS = "-Xms1G -Xmx4G -Xss1M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
-      _JAVA_OPTIONS = "-Xms1G -Xmx4G -Xss1M -XX:+CMSClassUnloadingEnabled -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd";
       #SSH_AUTH_SOCK = "%t/keyring/ssh";
-      AUTOSSH_GATETIME = "0";
-      QT_AUTO_SCREEN_SCALE_FACTOR = "0";
-      QT_SCALE_FACTOR = "1";
-    };
   };
 
   nix = {
@@ -354,6 +372,8 @@
     gnome3 = {
       gvfs.enable  = true;
       gnome-keyring.enable = true;
+      gpaste.enable = true;
+      seahorse.enable = true;
     };
 
     upower.enable  = true;

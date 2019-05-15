@@ -70,7 +70,7 @@ in {
         wireshark
 
         # Security
-        gnome3.gnome_keyring gnome3.seahorse libsecret
+        gnome3.gnome-keyring gnome3.libgnome-keyring gnome3.seahorse libsecret
         openssl
         keepass
         keepassx-community
