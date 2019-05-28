@@ -7,6 +7,7 @@
 {
   imports =
     [ # Include the results of the hardware scan.
+      <nixos-hardware/lenovo/thinkpad/t480s>
       ./hardware-configuration.nix
     ];
 
@@ -52,6 +53,8 @@
       fsType = "cifs";
       options = [ "uid=jelias" "username=x" "password=" "x-systemd.automount" "noauto" "_netdev" "x-systemd.device-timeout=30" ];
   };
+
+  sound.enable = true;
 
   hardware = {
     pulseaudio = {
@@ -118,12 +121,15 @@
       SUDO_EDITOR = "nvim";
       EDITOR = "nvim";
       BROWSER = "firefox";
-      SBT_OPTS="$SBT_OPTS -Xms2G -Xmx8G -Xss4M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC";
+      SBT_OPTS="$SBT_OPTS -Xms2G -Xmx8G -Xss4M -XX:+CMSClassUnloadingEnabled";
+      #SBT_OPTS="$SBT_OPTS -Xms2G -Xmx8G -Xss4M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC";
       # GDK_SCALE = "2";
       # GDK_DPI_SCALE = "0.5";
       QT_FONT_DPI = "192";
-      QT_AUTO_SCREEN_SCALE_FACTOR = "1";
-      _JAVA_OPTIONS=" -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
+      #QT_AUTO_SCREEN_SCALE_FACTOR = "1";
+      QT_AUTO_SCREEN_SCALE_FACTOR = "0";
+      QT_SCALE_FACTOR = "1";
+      # _JAVA_OPTIONS=" -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
       # SSH_AUTH_SOCK="%t/keyring/ssh";
     };
   };
@@ -260,6 +266,9 @@
             user = "jelias";
           };
         };
+        #setupCommands = ''
+        #  gnome-keyring-daemon --start --components=pkcs11,secrets,ssh
+        #'';
       };
 
       desktopManager.xterm.enable  = false;
