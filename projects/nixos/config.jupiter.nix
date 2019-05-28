@@ -49,7 +49,7 @@ in {
         nitrogen scrot
         networkmanagerapplet
         pwgen
-        rofi #dmenu 
+        rofi rofi-systemd #dmenu
         btrfs-progs
         dbus-map
         lsof
@@ -114,7 +114,7 @@ in {
         zathura
         texlive.combined.scheme-full
         # biber # collides texlive full
-        # pdfshuffler
+        pdftk #pdfshuffler
         poppler_utils
         xournal
 
@@ -251,7 +251,7 @@ in {
         tor-browser-bundle-bin # prevented highres from upgrade
         thunderbird
         vlc
-        vokoscreen keymon
+        localpkgs.vokoscreen keymon
       ];
 
     };

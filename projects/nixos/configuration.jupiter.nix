@@ -148,7 +148,6 @@
 
       DE = "gnome";
       XDG_CURRENT_DESKTOP = "gnome";
-      QT_QPA_PLATFORMTHEME = "qt5ct";
       QT_AUTO_SCREEN_SCALE_FACTOR = "0";
       QT_SCALE_FACTOR = "1";
 
@@ -162,6 +161,7 @@
       GDK_USE_XFT = "1";
 
     };
+      #QT_QPA_PLATFORMTHEME = "qt5ct";
       # _JAVA_OPTIONS=" -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
       # SBT_OPTS="-J-Xms1G -J-Xmx4G -J-Xss4M -J-XX:+CMSClassUnloadingEnabled -J-XX:+UseConcMarkSweepGC";
       # _JAVA_OPTIONS = "-Xms1G -Xmx4G -Xss1M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
@@ -205,13 +205,16 @@
       enableSSHSupport = true;
     };
 
+    qt5ct.enable = true;
     # mtr.enable = true;
+
+    dconf.enable = true;
   };
 
   users.defaultUserShell = "/run/current-system/sw/bin/zsh";
 
   security = {
-    pam.services."login".enableGnomeKeyring = true;
+    pam.services.lightdm.enableGnomeKeyring = true;
     # pam.services."pam_gnome_keyring".enableGnomeKeyring = true;
     # pam.services = [
     #   {
@@ -253,6 +256,8 @@
       enable = true;
       # mountPoint = "/keybase"; # mountpoint important for keybase-gui
     };
+
+    dbus.packages = with pkgs; [ gnome3.dconf gnome2.GConf ];
 
     openssh = {
       enable = true;
@@ -310,10 +315,10 @@
             user = "jelias";
           };
         };
-        sessionCommands = lib.mkAfter
-        ''
-          ${pkgs.xorg.xsetroot}/bin/xsetroot -cursor_name left_ptr
-        '';
+        #sessionCommands = lib.mkAfter
+        #''
+        #  ${pkgs.xorg.osetroot}/bin/xsetroot -cursor_name left_ptr
+        #'';
       };
 
       desktopManager = {
@@ -322,7 +327,14 @@
       };
 
       windowManager = {
-        i3.enable = true;
+        i3 = {
+          enable = true;
+          extraPackages = with pkgs; [ feh rofi i3status i3lock ];
+          extraSessionCommands = ''
+            xsetroot -bg black
+            xsetroot -cursor_name left_ptr
+          '';
+        };
         default = "i3";
       };
     };
