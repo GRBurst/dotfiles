@@ -84,6 +84,9 @@ alias f="find"
 alias fif="find-in-file"
 alias dsize="sudo du -hsx ./* | sort -rh | head -n 40"
 
+# FS
+alias lsblk="lsblk -o NAME,FSTYPE,LABEL,UUID,FSAVAIL,FSUSE%,MOUNTPOINT,RO,RM"
+
 # Raid
 raid_health() {
     cat /proc/mdstat
