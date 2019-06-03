@@ -60,6 +60,7 @@ Plug 'PeterRincker/vim-argumentative' " text object ',' / also provides argument
 Plug 'tpope/vim-fugitive' " git support
 Plug 'junegunn/vim-easy-align'
 Plug 'tpope/vim-eunuch' " unix commands
+" Plug 'tpope/sudavim' " replaces eunuch
 Plug 'lambdalisue/suda.vim' " temporary fix for eunch not working in neovim https://github.com/neovim/neovim/issues/1716
 Plug 'junegunn/goyo.vim' " distraction-free writing
 Plug 'terryma/vim-smooth-scroll' " redraw some intermediate steps when using PageUp/Down
@@ -105,19 +106,24 @@ Plug 'LnL7/vim-nix' " nixos syntax
 " Plug 'ensime/ensime-vim'
 " Plug 'gre/play2vim' " play web framework
 " Plug 'vim-scripts/JavaDecompiler.vim' " decompile java .class files on the fly
-" Plug 'LaTeX-Box-Team/LaTeX-Box', {'for': 'tex'} " LaTeX
+Plug 'LaTeX-Box-Team/LaTeX-Box', {'for': 'tex'} " LaTeX
 
 
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 let g:deoplete#enable_at_startup = 1
 
 Plug 'natebosch/vim-lsc'
-let g:lsc_enable_autocomplete = v:false
 let g:lsc_server_commands = {
   \ 'scala': 'metals-vim'
   \}
+let g:lsc_enable_autocomplete = v:true
+let g:lsc_preview_split_direction = 'below'
 let g:lsc_auto_map = {
     \ 'GoToDefinition': 'gd',
+    \ 'FindReferences': 'gr',
+    \ 'ShowHover': v:true,
+    \ 'SignatureHelp': 'gm',
+    \ 'Completion': 'completefunc',
     \}
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -180,6 +186,7 @@ let g:colorizer_auto_filetype='css,html,dosini'
 
 " fzf
 let g:fzf_layout = {} " default to full screen
+
 function! s:find_git_root()
   return system('git rev-parse --show-toplevel 2> /dev/null')[:-2]
 endfunction
@@ -277,9 +284,9 @@ let g:autoformat_autoindent = 0
 let g:autoformat_retab = 0
 let g:autoformat_remove_trailing_spaces = 1
 
-let g:formatdef_scalariform = '"ng-scalariform"'
-let g:formatdef_scalafmt = '"scalafmt --stdin"'
-let g:formatters_scala = ['scalariform', 'scalafmt']
+let g:formatdef_scalariform = '"scalariform"'
+let g:formatdef_scalafmt = '"ng-scalafmt --stdin"'
+let g:formatters_scala = ['scalariform']
 
 let g:formatdef_htmltidy ='"html-beautify -s 2"'
 let g:formatdef_jsbeautify ='"js-beautify -s 2"'
