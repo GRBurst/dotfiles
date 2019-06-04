@@ -62,6 +62,8 @@ p() { cd ~/projects/"$(ls -t ~/projects | fzf --query="$(echo $@ | tr ' ' '\ ' )
 
 # file listing/interaction
 alias df='df -h'
+alias cp='cp -i'
+alias mv='mv -i'
 alias md='mkdir -p'
 alias mdcd='mkdir-cd'
 alias mvi='interactive-mv'
