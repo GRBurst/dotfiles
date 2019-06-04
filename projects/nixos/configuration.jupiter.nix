@@ -215,6 +215,8 @@
 
   security = {
     pam.services.lightdm.enableGnomeKeyring = true;
+    pam.services.login.enableGnomeKeyring = true;
+    pam.services.i3lock.enableGnomeKeyring = true;
     # pam.services."pam_gnome_keyring".enableGnomeKeyring = true;
     # pam.services = [
     #   {
@@ -257,7 +259,7 @@
       # mountPoint = "/keybase"; # mountpoint important for keybase-gui
     };
 
-    dbus.packages = with pkgs; [ gnome3.dconf gnome2.GConf ];
+    dbus.packages = with pkgs; [ gnome3.dconf gnome2.GConf gnome3.gnome-keyring gcr ];
 
     openssh = {
       enable = true;
@@ -294,8 +296,10 @@
 
     xserver = {
       enable = true;
-      # dpi = 190;
-      videoDrivers = [ "nvidia" ];
+      # dpi = 192;
+      dpi = 96;
+      # videoDrivers = [ "nvidia" ];
+      videoDrivers = [ "intel" ];
       layout = "de,de";
       xkbVariant = "neo,basic";
       xkbOptions = "grp:menu_toggle";
@@ -315,10 +319,6 @@
             user = "jelias";
           };
         };
-        #sessionCommands = lib.mkAfter
-        #''
-        #  ${pkgs.xorg.osetroot}/bin/xsetroot -cursor_name left_ptr
-        #'';
       };
 
       desktopManager = {
@@ -329,10 +329,11 @@
       windowManager = {
         i3 = {
           enable = true;
-          extraPackages = with pkgs; [ feh rofi i3status i3lock ];
+          extraPackages = with pkgs; [ feh rofi i3status i3lock gnome3.gnome-keyring ];
           extraSessionCommands = ''
             xsetroot -bg black
             xsetroot -cursor_name left_ptr
+            gnome-keyring-daemon --start -d --components=pkcs11,secrets,ssh
           '';
         };
         default = "i3";
