@@ -3,6 +3,9 @@
 /ctags
 
 /tokens.sh
+/lsyncd.conf
+
+/.stignore
 
 # Intellij IDEA
 /.idea/*
