@@ -49,7 +49,7 @@ in {
         nitrogen scrot
         networkmanagerapplet
         pwgen
-        rofi #dmenu 
+        rofi rofi-systemd #dmenu
         btrfs-progs
         dbus-map
         lsof
@@ -70,7 +70,7 @@ in {
         wireshark
 
         # Security
-        gnome3.gnome_keyring gnome3.seahorse libsecret
+        gnome3.gnome-keyring gnome3.libgnome-keyring gnome3.seahorse libsecret
         openssl
         keepass
         keepassx-community
@@ -99,7 +99,7 @@ in {
         calibre
         firefox
         profile-sync-daemon
-        libreoffice-fresh hunspell hunspellDicts.en-us aspell aspellDicts.de languagetool mythes
+        libreoffice-fresh hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
         samba cifs-utils
         sane-frontends
         gcolor3
@@ -114,7 +114,7 @@ in {
         zathura
         texlive.combined.scheme-full
         # biber # collides texlive full
-        # pdfshuffler
+        pdftk #pdfshuffler
         poppler_utils
         xournal
 
@@ -251,7 +251,7 @@ in {
         tor-browser-bundle-bin # prevented highres from upgrade
         thunderbird
         vlc
-        localpkgs.vokoscreen keymon
+        vokoscreen keymon
       ];
 
     };

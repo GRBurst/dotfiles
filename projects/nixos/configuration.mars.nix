@@ -118,19 +118,34 @@
 
     #wget "https://github.com/chenkelmann/neo2-awt-hack/blob/master/releases/neo2-awt-hack-0.4-java8oracle.jar?raw=true" -O ~/local/jars/neo2-awt-hack-0.4-java8oracle.jar
     variables = {
-      SUDO_EDITOR = "nvim";
       EDITOR = "nvim";
+      SUDO_EDITOR = "nvim";
+      VISUAL = "nvim";
+
       BROWSER = "firefox";
+
+      _JAVA_OPTIONS = "-Xms1G -Xmx4G -Xss1M -XX:+CMSClassUnloadingEnabled -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd";
       SBT_OPTS="$SBT_OPTS -Xms2G -Xmx8G -Xss4M -XX:+CMSClassUnloadingEnabled";
       #SBT_OPTS="$SBT_OPTS -Xms2G -Xmx8G -Xss4M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC";
+      
+      DE = "gnome";
+      XDG_CURRENT_DESKTOP = "gnome";
+
+      GTK_IM_MODULE = "ibus";
+      XMODIFIERS = "@im=ibus";
+      QT_IM_MODULE = "ibus";
+
+      _JAVA_AWT_WM_NONREPARENTING = "1";
+     
+      AWT_TOOLKIT = "MToolkit";
+      GDK_USE_XFT = "1";
+
       # GDK_SCALE = "2";
       # GDK_DPI_SCALE = "0.5";
       QT_FONT_DPI = "192";
       #QT_AUTO_SCREEN_SCALE_FACTOR = "1";
       QT_AUTO_SCREEN_SCALE_FACTOR = "0";
       QT_SCALE_FACTOR = "1";
-      # _JAVA_OPTIONS=" -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
-      # SSH_AUTH_SOCK="%t/keyring/ssh";
     };
   };
 
@@ -175,7 +190,7 @@
   users.defaultUserShell = "/run/current-system/sw/bin/zsh";
 
   security = {
-    pam.services."gnome_keyring".enableGnomeKeyring = true;
+    pam.services.lightdm.enableGnomeKeyring = true;
 
     # pam.services = [
     #   {
@@ -212,6 +227,10 @@
     #   SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", RUN+="/run/current-system/sw/bin/touch /tmp/discharging"
     # '';
 
+    fwupd = {
+      enable = true;
+    };
+
     tlp.enable = true;
 
     keybase.enable = true;
@@ -219,6 +238,8 @@
       enable = true;
       #mountPoint = "/keybase"; # mountpoint important for keybase-gui
     };
+
+    dbus.packages = with pkgs; [ gnome3.dconf gnome2.GConf ];
 
     openssh = {
       enable = true;
@@ -273,14 +294,24 @@
 
       desktopManager.xterm.enable  = false;
       desktopManager.default = "none";
-      windowManager.i3.enable = true;
-      windowManager.default = "i3";
+      windowManager = {
+        i3 = {
+          enable = true;
+          extraPackages = with pkgs; [ feh rofi i3status i3lock gnome3.gnome-keyring ];
+          extraSessionCommands = ''
+            xsetroot -bg black
+            xsetroot -cursor_name left_ptr
+            gnome-keyring-daemon --start -d --components=pkcs11,secrets,ssh
+          '';
+        };
+        default = "i3";
+      };
     };
 
-    compton = {
-      enable = true;
-      backend = "glx";
-    };
+    # compton = {
+    #   enable = true;
+    #   backend = "glx";
+    # };
 
 
     redshift = {
@@ -326,6 +357,8 @@
     gnome3 = {
       gvfs.enable  = true;
       gnome-keyring.enable = true;
+      seahorse.enable = true;
+      gpaste.enable = true;
     };
 
     upower.enable  = true;
