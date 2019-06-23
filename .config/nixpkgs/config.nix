@@ -175,6 +175,11 @@ in {
 
         swiProlog
         vscode
+
+
+        chromiumDev
+        google-chrome
+        firefox-devedition-bin
       ];
 
     };
@@ -293,7 +298,6 @@ in {
       name = "test-packages";
 
       paths = [
-        chromiumDev
         # localpkgs.protonmail-bridge
         # localpkgs.jbidwatcher
         # localpkgs.iri
