@@ -148,7 +148,7 @@ bindsym $mod+$AltGr+KP_9 exec spacefm
 bindsym $mod+$AltGr+KP_8 exec pidgin
 bindsym $mod+$AltGr+exclamdown exec ~/local/bin/kxo
 bindsym $mod+$AltGr+Shift+exclamdown exec ~/local/bin/kd
-bindsym $mod+$AltGr+KP_1 exec thunderbird
+bindsym $mod+$AltGr+KP_1 exec protonmail-bridge; exec thunderbird;
 bindsym $mod+$AltGr+KP_4 exec nmcli_dmenu
 bindsym $mod+$AltGr+End exec spotify-blockify
 bindsym $mod+$AltGr+KP_6 exec steam
@@ -164,7 +164,8 @@ bindsym $mod+$AltGr+Left exec idea-community
 #bindsym $mod+$AltGr+c exec pidgin; exec sskype
 bindsym $mod+$AltGr+Down exec thunderbird; exec firefox; exec pidgin
 
-assign [instance="Mail" class="Daily"] "1: mail"
+# assign [instance="Mail" class="Daily"] "1: mail"
+assign [class="Daily"] "1: mail"
 assign [instance="(?i)protonmail-bridge" class="ProtonMail Bridge"] "1: mail"
 assign [class="(?i)firefox"] "2: browser"
 assign [class="(?i)keepassxc"] 7
