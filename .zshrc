@@ -61,6 +61,7 @@ fry screencapture
 fry search-select-edit
 fry transcode-video
 fry watchdo
+fry aws-profile-status
 # fry vim-open-files-at-lines
 # fry neo4j-query
 #NEO4J_QUERY_JSON_FORMATTER="underscore print --color --outfmt json"
