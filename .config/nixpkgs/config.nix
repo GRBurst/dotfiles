@@ -99,7 +99,7 @@ in {
         calibre
         firefox
         profile-sync-daemon
-        libreoffice-fresh hunspell hunspellDicts.en-us aspell aspellDicts.de languagetool mythes
+        libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
         samba cifs-utils
         sane-frontends
         gcolor3
