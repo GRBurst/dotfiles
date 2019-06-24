@@ -99,12 +99,11 @@ in {
         calibre
         firefox
         profile-sync-daemon
-        libreoffice-fresh hunspell hunspellDicts.en-us aspell aspellDicts.de languagetool mythes
+        libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
         samba cifs-utils
         sane-frontends
         gcolor3
         gnome3.gedit
-        filezilla
         jmtpfs
         libnotify
         networkmanager_dmenu
@@ -175,6 +174,11 @@ in {
 
         swiProlog
         vscode
+
+
+        chromiumDev
+        google-chrome
+        firefox-devedition-bin
       ];
 
     };
@@ -293,7 +297,6 @@ in {
       name = "test-packages";
 
       paths = [
-        chromiumDev
         # localpkgs.protonmail-bridge
         # localpkgs.jbidwatcher
         # localpkgs.iri
