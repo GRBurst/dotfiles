@@ -105,6 +105,8 @@
     firewall.allowedTCPPorts = [ 139 445 12345 ];
     firewall.allowedUDPPorts = [ 137 138 5353 ];
     firewall.enable = true;
+    #dhcpcd.enable = false;
+    interfaces.enp7s0.ipv4.addresses = [ { address = "192.168.1.50"; prefixLength = 24; } ];
   };
 
   powerManagement = {
@@ -265,6 +267,7 @@
       enable = true;
       ports = [ 53292 ];
       passwordAuthentication = false;
+      forwardX11 = true;
     };
 
     # autossh.sessions = [
@@ -478,6 +481,7 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM+BIE+0anEEYK0fBIEpjedblyGW0UnuYBCDtjZ5NW6P jelias@merkur"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAflU8X4g3kboxgFQPAxeadUY97iZoV0IPEwK61lZFW5 jelias@venus->jupiter on 2018-02-22"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJyIEvcpOua/vi61YIKYTxGs5Ylt7xWa2Rr/NMGT2qdp jelias@pluto->jupiter on 2018-06-20"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDKrT6YF+YxkiKGND/vR/TRPcAf0HSRkBsk1fjQkgt1G jelias@fff->jupiter on 2019-06-24"
     ];
   };
 
