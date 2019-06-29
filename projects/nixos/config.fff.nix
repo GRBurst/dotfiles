@@ -35,6 +35,7 @@ in {
         arandr
         acpi
         avahi
+        bind
         binutils
         atop htop iotop
         arandr
@@ -175,7 +176,7 @@ in {
         swiProlog
         vscode
 
-
+        brave
         chromiumDev
         google-chrome
         firefox-devedition-bin
@@ -244,6 +245,7 @@ in {
         jbidwatcher
         # jdownloader
         josm
+        peek # record gif videos
         kodi
         openjdk
         protonmail-bridge

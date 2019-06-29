@@ -319,7 +319,7 @@
     keybase.enable = true;
     kbfs = {
       enable = true;
-      # mountPoint = "/keybase"; # mountpoint important for keybase-gui
+      mountPoint = "/keybase"; # mountpoint important for keybase-gui
     };
 
     dbus.packages = with pkgs; [ gnome3.dconf gnome2.GConf gnome3.gnome-keyring gcr ];
@@ -369,6 +369,11 @@
       xkbVariant = "neo,basic,basic";
       xkbOptions = "grp:menu_toggle";
 
+      xrandrHeads = [
+        { output = "DP-0"; primary = true; }
+        { output = "HDMI-1"; }
+      ];
+
       # libinput = {
       #   enable = true;
       #   scrollMethod = "twofinger";
@@ -411,7 +416,7 @@
       };
     };
 
-    # compton.enable = true;
+    compton.enable = true;
 
     redshift = {
       enable = true;
