@@ -35,6 +35,7 @@ in {
         arandr
         acpi
         avahi
+        bind
         binutils
         atop htop iotop
         arandr
@@ -104,7 +105,6 @@ in {
         sane-frontends
         gcolor3
         gnome3.gedit
-        filezilla
         jmtpfs
         libnotify
         networkmanager_dmenu
@@ -176,8 +176,7 @@ in {
         swiProlog
         vscode
 
-
-        chromiumDev
+        brave
         google-chrome
         firefox-devedition-bin
       ];
@@ -245,6 +244,7 @@ in {
         jbidwatcher
         # jdownloader
         josm
+        peek # record gif videos
         kodi
         openjdk
         protonmail-bridge
