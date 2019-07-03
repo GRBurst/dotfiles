@@ -177,7 +177,6 @@ in {
         vscode
 
         brave
-        chromiumDev
         google-chrome
         firefox-devedition-bin
       ];
