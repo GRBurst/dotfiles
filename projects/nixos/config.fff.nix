@@ -244,7 +244,7 @@ in {
         jbidwatcher
         # jdownloader
         josm
-        peek # record gif videos
+        peek # record gif videos || green-recorder / gifcurry / screenToGif
         kodi
         openjdk
         protonmail-bridge
