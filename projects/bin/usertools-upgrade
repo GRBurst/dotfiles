@@ -1,0 +1,32 @@
+#!/run/current-system/sw/bin/zsh -ie
+
+# Colorschemes
+if [ -d "$HOME/local/intellij-colors-solarized" ]; then
+    cd "$HOME/local/intellij-colors-solarized"
+    git pull
+    # cp "$HOME/local/intellij-colors-solarized"
+    cd -
+fi
+
+if [ -d "$HOME/local/sabuni" ]; then
+    cd "$HOME/local/sabuni"
+    git pull
+    # cp "$HOME/local/sabuni"
+    cd -
+fi
+
+if [ -d "$HOME/local/termite-colors-solarized" ]; then
+    cd "$HOME/local/termite-colors-solarized"
+    git pull
+    # cp "$HOME/local/termite-colors-solarized"
+    cd -
+fi
+
+# Plugin manager and programs
+cecho "G" "updating zgen plugins..."
+zgen update
+
+cecho "G" "updating vim plugins..."
+vim +PlugUpgrade +PlugInstall +PlugUpdate +PlugClean! +qall
+
+exit 0

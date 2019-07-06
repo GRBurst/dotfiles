@@ -1,0 +1,11 @@
+#!/run/current-system/sw/bin/zsh -ie
+
+# Filesystem related
+cecho "G" "updating mlocate database..."
+sudo updatedb
+sudo mandb
+
+# sudo btrfs filesystem defragment /
+sync
+
+exit 0

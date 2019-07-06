@@ -1,102 +1,48 @@
-#!/run/current-system/sw/bin/zsh -ie
+#!/run/current-system/sw/bin/zsh -i
 
-cecho "G" "updating system channels"
-sudo nix-channel --update
+echo "Running self ${1:=system}"
 
-nixos-rebuild dry-build
-if [ $? -ne 0 ]; then 
-    exit 1;
-fi
+self () {
+    case "${1}" in
+        system)
+            # System updates
+            system-upgrade
+            echo "finished system upgrade"
+        ;&
+        userpkgs)
+            # Local packages upgrade
+            userpkgs-upgrade
 
-if [ $(hostname) = "jupiter" ]; then
-    cecho "G" "Backup boot"
-    sudo mount /dev/disk/by-uuid/9959-75AB /media/data/backup/boot
-    #sudo cp -r /boot/ "/media/data/backup/boot/$(date -I)"
-    sudo cp -r /boot/ "/media/data/backup/boot/"
-    sudo umount /media/data/backup/boot
-fi
+            # Local packages cleanup
+            userpkgs-cleanup
+            echo "finished userpkgs upgrade"
+        ;&
+        usertools)
+            # Plugin manager and programs
+            usertools-upgrade
 
-cecho "G" "Commiting nixos configuration"
-zsh -c "                                                                                                                \
-    cp /etc/nixos/configuration.nix $HOME/projects/nixos/configuration.$(hostname).nix;                                 \
-    cp /etc/nixos/hardware-configuration.nix $HOME/projects/nixos/hardware-configuration.$(hostname).nix;               \
-    cp $HOME/.config/nixpkgs/config.nix $HOME/projects/nixos/config.$(hostname).nix;                                    \
-    cd $HOME;                                                                                                           \
-    $DOTFILES_GIT git -c core.excludesfile=~/.gitignore-dotfiles add $HOME/projects/nixos/configuration.$(hostname).nix $HOME/projects/nixos/hardware-configuration.$(hostname).nix $HOME/projects/nixos/config.$(hostname).nix;    \
-    $DOTFILES_GIT git -c core.excludesfile=~/.gitignore-dotfiles commit -m 'Update nixos config of $(hostname)';        \
-    exit 0;
-"
+            # cecho "G" "updating global npm packages"
+            # npm -g update
 
-# if [ -d "$HOME/projects/nixpkgs" ]; then
-#     cecho "G" "updating package rescources"
-#     zsh -c "cd ~/projects/nixpkgs && git checkout master && git fetch upstream && git merge upstream/master && exit 0"
-#      # (
-#      #     cd ~/projects/nixpkgs
-#      #     git checkout master
-#      #     git fetch upstream
-#      #     git merge upstream/master
-#      #     exit 0
-#      # )
-# fi
+            # cecho "G" "updating git repos"
+            # mr update
+            echo "finished usertools upgrade"
+        ;&
+        filesystem)
+            # Filesystem related
+            filesystem-upgrade
+            echo "finished filesystem upgrade"
+        ;;
+        *)
+            echo "unknown parameter ${1}, expected one of:"
+            echo "\tsystem"
+            echo "\tuserpkgs"
+            echo "\tusertools"
+            echo "\tfilesystem"
+    esac
 
-# System related
-cecho "G" "upgrading installed system packages"
-sudo nixos-rebuild boot
+}
 
-# Colorschemes
-if [ -d "$HOME/local/intellij-colors-solarized" ]; then
-    cd "$HOME/local/intellij-colors-solarized"
-    git pull
-    # cp "$HOME/local/intellij-colors-solarized"
-    cd -
-fi
-
-if [ -d "$HOME/local/sabuni" ]; then
-    cd "$HOME/local/sabuni"
-    git pull
-    # cp "$HOME/local/sabuni"
-    cd -
-fi
-
-if [ -d "$HOME/local/termite-colors-solarized" ]; then
-    cd "$HOME/local/termite-colors-solarized"
-    git pull
-    # cp "$HOME/local/termite-colors-solarized"
-    cd -
-fi
-
-# Local packages
-userpkgs-update
-
-# Cleanup and optimize
-cecho "G" "delete previous generations"
-nix-env --delete-generations 30d
-
-cecho "G" "cleanup nix garbage"
-nix-collect-garbage --delete-older-than 30d
-
-cecho "G" "optimize nix-store"
-nix-store --optimize
-
-# Plugin manager and programs
-cecho "G" "updating zgen plugins..."
-zgen update
-
-cecho "G" "updating vim plugins..."
-vim +PlugUpgrade +PlugInstall +PlugUpdate +PlugClean! +qall
-
-# cecho "G" "updating global npm packages"
-# npm -g update
-
-# cecho "G" "updating git repos"
-# mr update
-
-# Filesystem related
-cecho "G" "updating mlocate database..."
-sudo updatedb
-sudo mandb
-
-# sudo btrfs filesystem defragment /
-sync
+self "$@"
 
 exit 0
