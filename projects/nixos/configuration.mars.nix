@@ -2,7 +2,12 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
+
+let
+  phpSocket = "/tmp/php-cgi.socket";
+  webserverDir = "/var/www/webserver";
+in
 
 {
   imports =
@@ -89,7 +94,8 @@
 
   powerManagement = {
     enable = true;
-  # powertop.enable = true;
+    cpuFreqGovernor = "powersave";
+    powertop.enable = true;
   };
 
   i18n = { # Select internationalisation properties.
@@ -313,6 +319,126 @@
     #   backend = "glx";
     # };
 
+    nginx = {
+      enable = true;
+      recommendedGzipSettings = true;
+      recommendedOptimisation = true;
+      recommendedProxySettings = true;
+      user = "ngnix";
+      statusPage = true;
+      upstreams."php-upstream".extraConfig = ''
+        server unix:${phpSocket};
+        server 127.0.0.1:9000;
+      '';
+      virtualHosts."localhost" = {
+        root = "${webserverDir}";
+        listen = [ { addr = "127.0.0.1"; port = 80; } { addr = "localhost"; port = 80; } ];
+        locations = {
+          "/syncthing".proxyPass = "http://localhost:8384";
+          "/woost".proxyPass = "http://localhost:12345";
+          "/" = {
+            index = "index.php index.html index.htm";
+          };
+          "/blog" = {
+            index = "index.php index.html index.htm";
+            tryFiles = "$uri $uri/ /index.php$is_args$args";
+          };
+          "/favicon.ico" = {
+            extraConfig = ''
+              log_not_found off;
+              access_log off;
+              expires max;
+            '';
+          };
+          "/robots.txt" = {
+            extraConfig = ''
+              allow all;
+              log_not_found off;
+              access_log off;
+            '';
+          };
+          "~ \.php$" = {
+            extraConfig = ''
+              fastcgi_intercept_errors on;
+              fastcgi_pass php-upstream;
+              fastcgi_buffers 16 16k;
+              fastcgi_buffer_size 32k;
+            '';
+          };
+          "~* \.(js|css|png|jpg|jpeg|gif|ico)$" = {
+            extraConfig = ''
+              expires max;
+              access_log off;
+              log_not_found off;
+            '';
+          };
+          "~ /\.ht" = {
+            extraConfig = ''deny all;'';
+          };
+        };
+      };
+      virtualHosts."metacosmos.space" = {
+      };
+    };
+
+    mysql = {
+      enable = true;
+      package = pkgs.mariadb;
+      bind = "127.0.0.1";
+      initialDatabases = [ { name = "wp"; } { name = "wb"; } ];
+      ensureDatabases = [ "wp" "wb" ];
+      ensureUsers = [
+        { ensurePermissions = { "wp.*" = "ALL PRIVILEGES"; }; name = "wp"; } # wordpress
+        { ensurePermissions = { "wb.*" = "ALL PRIVILEGES"; }; name = "wb"; } # wallabag
+      ];
+    };
+
+    phpfpm = {
+      pools.nginx = {
+        listen = "${phpSocket}";
+        extraConfig = ''
+          listen.owner = nginx
+          listen.group = nginx
+          user = nginx
+          group = nginx
+          pm = dynamic
+          pm.max_children = 4
+          pm.start_servers = 2
+          pm.min_spare_servers = 1 
+          pm.max_spare_servers = 4
+          pm.max_requests = 32
+          php_admin_value[error_log] = 'stderr'
+          php_admin_flag[log_errors] = on
+          env[PATH] = ${lib.makeBinPath [ pkgs.php ]}
+          catch_workers_output = yes
+        '';
+          #php_flag[display_errors] = off
+          #php_admin_value[error_log] = "/run/phpfpm/php-fpm.log"
+          #php_admin_flag[log_errors] = on
+          #php_value[date.timezone] = "UTC"
+      };
+        #;extension=${pkgs.phpPackages.redis}/lib/php/extensions/redis.so
+      phpOptions = ''
+        extension=bcmath
+        extension=ctype
+        extension=curl
+        extension=dom
+        extension=gd
+        extension=gettext
+        extension=hash
+        extension=iconv
+        extension=json
+        extension=mbstring
+        extension=session
+        extension=simplexml
+        extension=tidy
+        extension=tokenizer
+        extension=xml
+        extension=zip
+
+        extension=pdo_mysql
+      '';
+    };
 
     redshift = {
       enable = true;

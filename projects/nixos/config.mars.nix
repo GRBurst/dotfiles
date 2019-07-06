@@ -35,6 +35,7 @@ in {
         arandr
         acpi
         avahi
+        bind
         binutils
         atop htop iotop
         arandr
@@ -99,12 +100,11 @@ in {
         calibre
         firefox
         profile-sync-daemon
-        libreoffice-fresh hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
+        libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
         samba cifs-utils
         sane-frontends
         gcolor3
         gnome3.gedit
-        filezilla
         jmtpfs
         libnotify
         networkmanager_dmenu
@@ -175,6 +175,10 @@ in {
 
         swiProlog
         vscode
+
+        brave
+        google-chrome
+        firefox-devedition-bin
       ];
 
     };
@@ -240,6 +244,7 @@ in {
         jbidwatcher
         # jdownloader
         josm
+        peek # record gif videos
         kodi
         openjdk
         protonmail-bridge
@@ -293,7 +298,6 @@ in {
       name = "test-packages";
 
       paths = [
-        chromiumDev
         # localpkgs.protonmail-bridge
         # localpkgs.jbidwatcher
         # localpkgs.iri
