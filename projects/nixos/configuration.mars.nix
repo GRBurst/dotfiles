@@ -320,7 +320,7 @@ in
     # };
 
     nginx = {
-      enable = true;
+      enable = false;
       recommendedGzipSettings = true;
       recommendedOptimisation = true;
       recommendedProxySettings = true;
@@ -377,12 +377,10 @@ in
           };
         };
       };
-      virtualHosts."metacosmos.space" = {
-      };
     };
 
     mysql = {
-      enable = true;
+      enable = false;
       package = pkgs.mariadb;
       bind = "127.0.0.1";
       initialDatabases = [ { name = "wp"; } { name = "wb"; } ];
@@ -549,8 +547,8 @@ in
     };
   };
 
-  virtualisation.virtualbox.host.enable = true;
-  virtualisation.virtualbox.host.enableExtensionPack = true;
+  #virtualisation.virtualbox.host.enable = true;
+  #virtualisation.virtualbox.host.enableExtensionPack = true;
   virtualisation.docker.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
