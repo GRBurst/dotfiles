@@ -35,16 +35,16 @@ in {
         arandr
         acpi
         avahi
-        bind
-        binutils
         atop htop iotop
         arandr
+        bind
+        binutils
+        linuxPackages.cpupower
         wget netcat nmap
         psmisc
         hdparm hd-idle hddtemp
         pv xclip xorg.xkill unclutter-xfixes
         lm_sensors calc gksu
-        gnome3.dconf
         haskellPackages.yeganesh
         gnumake
         nitrogen scrot
@@ -65,7 +65,6 @@ in {
         xorg.xdpyinfo
         xorg.xev
         xorg.xmodmap
-        lxappearance
         gnome3.adwaita-icon-theme
         vanilla-dmz
         wireshark
@@ -119,6 +118,8 @@ in {
         xournal
 
         # Media
+        avidemux
+        audio-recorder
         gimp
         inkscape 
         mate.atril
@@ -138,6 +139,15 @@ in {
         signal-desktop
         irssi_otr #irssi
 
+        # Themes
+        breeze-gtk breeze-icons breeze-qt5 
+        adwaita-qt gnome3.adwaita-icon-theme 
+        papirus-icon-theme
+        gnome3.dconf
+        gnome3.dconf-editor
+        lxqt.lxqt-config
+        lxappearance
+
       ];
 
     };
@@ -153,7 +163,7 @@ in {
 
         ctags
         gdb
-        git tig
+        git tig gitRepo
         neovim
         python27Packages.pynvim # ensime
         python37Packages.pynvim
@@ -240,6 +250,7 @@ in {
         clementine
         cryptsetup
         evince
+        fwupd # bios + firmware updates
         okular
         jbidwatcher
         # jdownloader
