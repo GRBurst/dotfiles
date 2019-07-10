@@ -39,6 +39,7 @@ self () {
             echo "\tuserpkgs"
             echo "\tusertools"
             echo "\tfilesystem"
+            exit 1
     esac
 
 }
