@@ -19,9 +19,10 @@ vd() {(cd; eval $DOTFILES_GIT vim -c GitFiles);}
 
 # vim configs
 alias vim="nvim"
-alias vi3="vim ~/.config/i3/config"
+alias vi3="vim ~/.config/i3/common/config"
 alias vnpc="vim ~/.config/nixpkgs/config.nix"
 alias vssh="vim ~/.ssh/config"
+alias vza="vim ~/.zaliases"
 
 # Dev
 alias m='make'
@@ -79,7 +80,10 @@ alias rcp="rsync --append-verify --archive --compress --human-readable --info=pr
 alias ssh-tmate="ssh -o PreferredAuthentications=password -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 
 # Nix
+ni() { nix-env -iA "$@" -f "<nixos-unstable>" }
+alias nq='nix-env -q'
 alias ns='nix-shell --command "zsh"'
+alias ne='nix-env -e'
 
 # Tools
 alias t="tree -C"
