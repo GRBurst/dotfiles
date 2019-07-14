@@ -35,10 +35,11 @@ in {
         arandr
         acpi
         avahi
-        bind
-        binutils
         atop htop iotop
         arandr
+        bind
+        binutils
+        linuxPackages.cpupower
         wget netcat nmap
         psmisc
         hdparm hd-idle hddtemp
@@ -119,6 +120,8 @@ in {
         xournal
 
         # Media
+        avidemux
+        audio-recorder
         gimp
         inkscape 
         mate.atril
@@ -153,7 +156,7 @@ in {
 
         ctags
         gdb
-        git tig
+        git tig gitRepo
         neovim
         python27Packages.pynvim # ensime
         python37Packages.pynvim
@@ -240,6 +243,7 @@ in {
         clementine
         cryptsetup
         evince
+        fwupd # bios + firmware updates
         okular
         jbidwatcher
         # jdownloader

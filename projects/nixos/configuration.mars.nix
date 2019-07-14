@@ -94,7 +94,7 @@ in
 
   powerManagement = {
     enable = true;
-    cpuFreqGovernor = "powersave";
+    cpuFreqGovernor = lib.mkDefault "powersave";
     powertop.enable = true;
   };
 
