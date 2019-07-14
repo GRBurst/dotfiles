@@ -233,29 +233,46 @@ mode "Screen / DMMS <<< Screens:(k) kino, (s) standby, (p) suspend, (o) off" {
 bindsym $mod+Shift+m mode "Screen / DMMS <<< Screens:(k) kino, (s) standby, (p) suspend, (o) off"
 
 # resize window (you can also use the mouse for that)
-mode "resize" {
+mode "resize <<< Resolution:(2) 1920x1080, (4) 3840x2160, (7) 1280x720; Position: (c) center" {
         # These bindings trigger as soon as you enter the resize mode
 
         # Pressing left will shrink the window’s width.
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
-        bindsym $AltGr+Left resize shrink width 5 px or 5 ppt
-        bindsym $AltGr+Down resize grow height 5 px or 5 ppt
-        bindsym $AltGr+Up resize shrink height 5 px or 5 ppt
-        bindsym $AltGr+Right resize grow width 5 px or 5 ppt
+        bindsym $AltGr+Left resize shrink width 10 px or 10 ppt
+        bindsym $AltGr+Down resize grow height 10 px or 10 ppt
+        bindsym $AltGr+Up resize shrink height 10 px or 10 ppt
+        bindsym $AltGr+Right resize grow width 10 px or 10 ppt
 
         # same bindings, but for the arrow keys
-        bindsym Left resize shrink width 10 px or 10 ppt
-        bindsym Down resize grow height 10 px or 10 ppt
-        bindsym Up resize shrink height 10 px or 10 ppt
-        bindsym Right resize grow width 10 px or 10 ppt
+        bindsym Left resize shrink width 1 px or 1 ppt
+        bindsym Down resize grow height 1 px or 1 ppt
+        bindsym Up resize shrink height 1 px or 1 ppt
+        bindsym Right resize grow width 1 px or 1 ppt
+
+        # specific sizes
+        bindsym KP_2 resize set 1920 1080; move position center; mode "default"
+        bindsym KP_4 resize set 3840 2160; move position center; mode "default"
+        bindsym KP_7 resize set 1280 720; move position center; mode "default"
+
+        bindsym c move position center; mode "default"
 
         # back to normal: Enter or Escape
         bindsym Return mode "default"
         bindsym Escape mode "default"
 }
-bindsym $mod+Shift+r mode "resize"
+bindsym $mod+Shift+r mode "resize <<< Resolution:(2) 1920x1080, (4) 3840x2160, (7) 1280x720; Position: (c) center"
+
+mode "woost <<< Programs: (a) announcekit" {
+
+        bindsym a exec --no-startup-id "i3-msg 'workspace 0; append_layout ~/.config/i3/common/announcekit.json'"; exec chromium; exec peek; mode "default"
+
+        # back to normal: Enter or Escape
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+bindsym $mod+Shift+w mode "woost <<< Programs: (a) announcekit"
 
 # resize window (you can also use the mouse for that)
 mode "refocus" {
