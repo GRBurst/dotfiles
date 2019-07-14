@@ -1,15 +1,9 @@
-#!/run/current-system/sw/bin/zsh -ie
+#!/run/current-system/sw/bin/zsh -i
 
 cecho "G" "updating userspace channels"
 nix-channel --update
 
-# Local packages
-LOC_INSTALLED=(${(f)"$(nix-env -q)"})
-cecho "G" "Updating installed packages";
-nix-env --upgrade '*'
-
 typeset -A pkg_nixpkgs_prio
-# pkg_nixpkgs_prio[test-packages]=3
 typeset -A pkg_unstable_prio
 pkg_unstable_prio[test-packages]=3
 pkg_unstable_prio[common-packages]=4
@@ -20,19 +14,74 @@ pkg_unstable_prio[ssd-packages]=10
 pkg_unstable_prio[gaming-packages]=11
 pkg_unstable_prio[mining-packages]=12
 
-for loc_pkg in "${LOC_INSTALLED[@]}"
-do
-    if test "${pkg_unstable_prio[${loc_pkg}]+isset}"; then
-        cecho "G" "upgrading ${loc_pkg} with prio ${pkg_unstable_prio[${loc_pkg}]} on channel <nixos-unstable>"
-        nix-env --set-flag priority "${pkg_unstable_prio[${loc_pkg}]}" "${loc_pkg}"
-        nix-env -iA "${loc_pkg}" -f "<nixos-unstable>"
-        nix-env --set-flag priority "${pkg_unstable_prio[${loc_pkg}]}" "${loc_pkg}"
-    elif test "${pkg_nixpkgs_prio[${loc_pkg}]+isset}"; then
-        cecho "G" "upgrading ${loc_pkg} with prio ${pkg_nixpkgs_prio[${loc_pkg}]} on channel <nixpkgs>"
-        nix-env --set-flag priority "${pkg_nixpkgs_prio[${loc_pkg}]}" "${loc_pkg}"
-        nix-env -iA "${loc_pkg}" -f "<nixpkgs>"
-        nix-env --set-flag priority "${pkg_nixpkgs_prio[${loc_pkg}]}" "${loc_pkg}"
-    fi
-done
+update-pckg () {
+    cecho "G" "upgrading ${1} with prio ${pkg_unstable_prio[${1}]} on channel <nixos-unstable>"
+    nix-env --set-flag priority "${pkg_unstable_prio[${1}]}" "$1"
+    nix-env -iA "${1}" -f "<nixos-unstable>"
+    nix-env --set-flag priority "${pkg_unstable_prio[${1}]}" "$1"
+}
+
+self () {
+    case "${1:-full}" in
+        test)
+            update-pckg "test-packages"
+            ;;
+        common)
+            update-pckg "common-packages"
+            ;;
+        laptop)
+            update-pckg "laptop-packages"
+            ;;
+        dev)
+            update-pckg "dev-packages"
+            ;;
+        highres)
+            update-pckg "highres-packages"
+            ;;
+        ssd)
+            update-pckg "ssd-packages"
+            ;;
+        gaming)
+            update-pckg "gaming-packages"
+            ;;
+        mining)
+            update-pckg "mining-packages"
+            ;;
+        full)
+            # Local packages
+            LOC_INSTALLED=(${(f)"$(nix-env -q)"})
+            cecho "G" "Updating installed packages";
+            nix-env --upgrade '*'
+
+            for loc_pkg in "${LOC_INSTALLED[@]}"
+            do
+                if test "${pkg_unstable_prio[${loc_pkg}]+isset}"; then
+                    cecho "G" "upgrading ${loc_pkg} with prio ${pkg_unstable_prio[${loc_pkg}]} on channel <nixos-unstable>"
+                    nix-env --set-flag priority "${pkg_unstable_prio[${loc_pkg}]}" "${loc_pkg}"
+                    nix-env -iA "${loc_pkg}" -f "<nixos-unstable>"
+                    nix-env --set-flag priority "${pkg_unstable_prio[${loc_pkg}]}" "${loc_pkg}"
+                elif test "${pkg_nixpkgs_prio[${loc_pkg}]+isset}"; then
+                    cecho "G" "upgrading ${loc_pkg} with prio ${pkg_nixpkgs_prio[${loc_pkg}]} on channel <nixpkgs>"
+                    nix-env --set-flag priority "${pkg_nixpkgs_prio[${loc_pkg}]}" "${loc_pkg}"
+                    nix-env -iA "${loc_pkg}" -f "<nixpkgs>"
+                    nix-env --set-flag priority "${pkg_nixpkgs_prio[${loc_pkg}]}" "${loc_pkg}"
+                fi
+            done
+            ;;
+        *)
+            echo "unknown parameter ${1}, expected one of:"
+            echo "\tcommon"
+            echo "\tdev"
+            echo "\tfull"
+            echo "\tgaming"
+            echo "\thighres"
+            echo "\tlaptop"
+            echo "\tmining"
+            echo "\tssd"
+            echo "\ttest"
+    esac
+}
+
+self "$@"
 
 exit 0
