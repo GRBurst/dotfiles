@@ -45,7 +45,6 @@ in {
         hdparm hd-idle hddtemp
         pv xclip xorg.xkill unclutter-xfixes
         lm_sensors calc gksu
-        gnome3.dconf
         haskellPackages.yeganesh
         gnumake
         nitrogen scrot
@@ -66,7 +65,6 @@ in {
         xorg.xdpyinfo
         xorg.xev
         xorg.xmodmap
-        lxappearance
         gnome3.adwaita-icon-theme
         vanilla-dmz
         wireshark
@@ -140,6 +138,15 @@ in {
         qtox
         signal-desktop
         irssi_otr #irssi
+
+        # Themes
+        breeze-gtk breeze-icons breeze-qt5 
+        adwaita-qt gnome3.adwaita-icon-theme 
+        papirus-icon-theme
+        gnome3.dconf
+        gnome3.dconf-editor
+        lxqt.lxqt-config
+        lxappearance
 
       ];
 
@@ -248,7 +255,7 @@ in {
         jbidwatcher
         # jdownloader
         josm
-        peek # record gif videos
+        peek # record gif videos || green-recorder / gifcurry / screenToGif
         kodi
         openjdk
         protonmail-bridge
