@@ -81,8 +81,11 @@
   # '';
 
   hardware = {
-    pulseaudio.enable = true;
-    pulseaudio.support32Bit = true; # This might be needed for Steam games
+    pulseaudio = {
+      enable = true;
+      support32Bit = true;
+      package = pkgs.pulseaudioFull;
+    };
     opengl.driSupport32Bit = true;
     sane.enable = true;
 
