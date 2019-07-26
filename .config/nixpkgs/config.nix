@@ -119,7 +119,7 @@ in {
 
         # Media
         avidemux
-        audio-recorder
+        audacity
         gimp
         inkscape 
         mate.atril
@@ -132,6 +132,7 @@ in {
         spotify
         gnome3.cheese
         xdg_utils
+        (ffmpeg-full.override { nonfreeLicensing = true;})
 
         # Communication
         pidgin-with-plugins
