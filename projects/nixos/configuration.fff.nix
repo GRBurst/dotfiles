@@ -100,6 +100,7 @@
       134.130.57.2    sylvester
       134.130.57.13   neptun
       134.130.59.240  ateam
+      127.0.0.1       *.localhost
     '';
     # networking.wireless.enable = true;
     firewall.allowedUDPPorts = [ 137 138 5353 ]; # for mosh: { from = 60000; to = 61000; } 
@@ -322,7 +323,7 @@
     keybase.enable = true;
     kbfs = {
       enable = true;
-      mountPoint = "/keybase"; # mountpoint important for keybase-gui
+      mountPoint = "~/keybase"; # mountpoint important for keybase-gui
     };
 
     dbus.packages = with pkgs; [ gnome3.dconf gnome2.GConf gnome3.gnome-keyring gcr ];
@@ -365,9 +366,9 @@
       enable = true;
       dpi = 192;
       videoDrivers = [ "nvidia" ];
-      screenSection = ''
-        Option "metamodes" "nvidia-auto-select +0+0 {ForceCompositionPipeline=On}"
-      '';
+      # screenSection = ''
+      #   Option "metamodes" "nvidia-auto-select +0+0 {ForceCompositionPipeline=On}"
+      # '';
       layout = "de,de";
       xkbVariant = "neo,basic,basic";
       xkbOptions = "grp:menu_toggle";
