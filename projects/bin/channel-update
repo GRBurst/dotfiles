@@ -1,0 +1,7 @@
+#!/run/current-system/sw/bin/zsh -i
+
+cecho "G" "updating system channels"
+sudo nix-channel --update
+
+cecho "G" "updating userspace channels"
+nix-channel --update
