@@ -60,7 +60,7 @@ in {
         p7zip
         speedtest-cli
         traceroute
-        #zip
+        # zip
         unzip
         xcwd
         xorg.xdpyinfo
@@ -97,7 +97,7 @@ in {
         usbutils
 
         # Office
-        calibre
+        #calibre
         firefox
         profile-sync-daemon
         libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
