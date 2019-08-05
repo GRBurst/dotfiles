@@ -43,9 +43,8 @@ in {
         wget netcat nmap
         psmisc
         hdparm hd-idle hddtemp
-        pv xclip xorg.xkill unclutter-xfixes
+        pv xclip xorg.xkill unclutter-xfixes xwininfo
         lm_sensors calc gksu
-        gnome3.dconf
         haskellPackages.yeganesh
         gnumake
         nitrogen scrot
@@ -61,12 +60,11 @@ in {
         p7zip
         speedtest-cli
         traceroute
-        unzip
+        zip unzip
         xcwd
         xorg.xdpyinfo
         xorg.xev
         xorg.xmodmap
-        lxappearance
         gnome3.adwaita-icon-theme
         vanilla-dmz
         wireshark
@@ -116,12 +114,14 @@ in {
         texlive.combined.scheme-full
         # biber # collides texlive full
         pdftk #pdfshuffler
+        pdfsandwich
+        tesseract
         poppler_utils
         xournal
 
         # Media
         avidemux
-        audio-recorder
+        audacity
         gimp
         inkscape 
         mate.atril
@@ -134,12 +134,22 @@ in {
         spotify
         gnome3.cheese
         xdg_utils
+        (ffmpeg-full.override { nonfreeLicensing = true;})
 
         # Communication
         pidgin-with-plugins
         qtox
         signal-desktop
         irssi_otr #irssi
+
+        # Themes
+        breeze-gtk breeze-icons breeze-qt5 
+        adwaita-qt gnome3.adwaita-icon-theme 
+        papirus-icon-theme
+        gnome3.dconf
+        gnome3.dconf-editor
+        lxqt.lxqt-config
+        lxappearance
 
       ];
 
@@ -248,8 +258,9 @@ in {
         jbidwatcher
         # jdownloader
         josm
-        peek # record gif videos
+        peek # record gif videos || green-recorder / gifcurry / screenToGif
         kodi
+        linphone ekiga
         openjdk
         protonmail-bridge
         qutebrowser
@@ -257,7 +268,7 @@ in {
         skypeforlinux
         shotwell
         texmaker texstudio #lyx
-        tor-browser-bundle-bin # prevented highres from upgrade
+        tor-browser-bundle-bin
         thunderbird
         vlc
         vokoscreen keymon

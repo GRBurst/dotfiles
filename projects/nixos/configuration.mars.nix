@@ -4,10 +4,10 @@
 
 { config, pkgs, lib, ... }:
 
-let
-  phpSocket = "/tmp/php-cgi.socket";
-  webserverDir = "/var/www/webserver";
-in
+# let
+#   phpSocket = "/tmp/php-cgi.socket";
+#   webserverDir = "/var/www/webserver";
+# in
 
 {
   imports =
@@ -89,13 +89,14 @@ in
       134.130.59.240  ateam
       134.130.57.2    sylvester
       134.130.57.147  godzilla
+      127.0.0.1       *.localhost *.localhost.localdomain
     '';
   };
 
   powerManagement = {
     enable = true;
-    cpuFreqGovernor = lib.mkDefault "powersave";
-    powertop.enable = true;
+    #cpuFreqGovernor = lib.mkDefault "powersave";
+    #powertop.enable = true;
   };
 
   i18n = { # Select internationalisation properties.
@@ -237,7 +238,22 @@ in
       enable = true;
     };
 
-    tlp.enable = true;
+    tlp = {
+      enable = true;
+      extraConfig = ''
+        tlp_DEFAULT_MODE=BAT
+        CPU_SCALING_GOVERNOR_ON_AC=powersave
+        CPU_SCALING_GOVERNOR_ON_BAT=powersave
+        CPU_HWP_ON_AC=balance_power
+        CPU_HWP_ON_BAT=power
+        CPU_MIN_PERF_ON_AC=0
+        CPU_MAX_PERF_ON_AC=100
+        CPU_MIN_PERF_ON_BAT=0
+        CPU_MAX_PERF_ON_BAT=50
+        CPU_BOOST_ON_AC=1
+        CPU_BOOST_ON_BAT=0
+      '';
+    };
 
     keybase.enable = true;
     kbfs = {
@@ -319,124 +335,124 @@ in
     #   backend = "glx";
     # };
 
-    nginx = {
-      enable = false;
-      recommendedGzipSettings = true;
-      recommendedOptimisation = true;
-      recommendedProxySettings = true;
-      user = "ngnix";
-      statusPage = true;
-      upstreams."php-upstream".extraConfig = ''
-        server unix:${phpSocket};
-        server 127.0.0.1:9000;
-      '';
-      virtualHosts."localhost" = {
-        root = "${webserverDir}";
-        listen = [ { addr = "127.0.0.1"; port = 80; } { addr = "localhost"; port = 80; } ];
-        locations = {
-          "/syncthing".proxyPass = "http://localhost:8384";
-          "/woost".proxyPass = "http://localhost:12345";
-          "/" = {
-            index = "index.php index.html index.htm";
-          };
-          "/blog" = {
-            index = "index.php index.html index.htm";
-            tryFiles = "$uri $uri/ /index.php$is_args$args";
-          };
-          "/favicon.ico" = {
-            extraConfig = ''
-              log_not_found off;
-              access_log off;
-              expires max;
-            '';
-          };
-          "/robots.txt" = {
-            extraConfig = ''
-              allow all;
-              log_not_found off;
-              access_log off;
-            '';
-          };
-          "~ \.php$" = {
-            extraConfig = ''
-              fastcgi_intercept_errors on;
-              fastcgi_pass php-upstream;
-              fastcgi_buffers 16 16k;
-              fastcgi_buffer_size 32k;
-            '';
-          };
-          "~* \.(js|css|png|jpg|jpeg|gif|ico)$" = {
-            extraConfig = ''
-              expires max;
-              access_log off;
-              log_not_found off;
-            '';
-          };
-          "~ /\.ht" = {
-            extraConfig = ''deny all;'';
-          };
-        };
-      };
-    };
+    # nginx = {
+    #   enable = false;
+    #   recommendedGzipSettings = true;
+    #   recommendedOptimisation = true;
+    #   recommendedProxySettings = true;
+    #   user = "ngnix";
+    #   statusPage = true;
+    #   upstreams."php-upstream".extraConfig = ''
+    #     server unix:${phpSocket};
+    #     server 127.0.0.1:9000;
+    #   '';
+    #   virtualHosts."localhost" = {
+    #     root = "${webserverDir}";
+    #     listen = [ { addr = "127.0.0.1"; port = 80; } { addr = "localhost"; port = 80; } ];
+    #     locations = {
+    #       "/syncthing".proxyPass = "http://localhost:8384";
+    #       "/woost".proxyPass = "http://localhost:12345";
+    #       "/" = {
+    #         index = "index.php index.html index.htm";
+    #       };
+    #       "/blog" = {
+    #         index = "index.php index.html index.htm";
+    #         tryFiles = "$uri $uri/ /index.php$is_args$args";
+    #       };
+    #       "/favicon.ico" = {
+    #         extraConfig = ''
+    #           log_not_found off;
+    #           access_log off;
+    #           expires max;
+    #         '';
+    #       };
+    #       "/robots.txt" = {
+    #         extraConfig = ''
+    #           allow all;
+    #           log_not_found off;
+    #           access_log off;
+    #         '';
+    #       };
+    #       "~ \.php$" = {
+    #         extraConfig = ''
+    #           fastcgi_intercept_errors on;
+    #           fastcgi_pass php-upstream;
+    #           fastcgi_buffers 16 16k;
+    #           fastcgi_buffer_size 32k;
+    #         '';
+    #       };
+    #       "~* \.(js|css|png|jpg|jpeg|gif|ico)$" = {
+    #         extraConfig = ''
+    #           expires max;
+    #           access_log off;
+    #           log_not_found off;
+    #         '';
+    #       };
+    #       "~ /\.ht" = {
+    #         extraConfig = ''deny all;'';
+    #       };
+    #     };
+    #   };
+    # };
 
-    mysql = {
-      enable = false;
-      package = pkgs.mariadb;
-      bind = "127.0.0.1";
-      initialDatabases = [ { name = "wp"; } { name = "wb"; } ];
-      ensureDatabases = [ "wp" "wb" ];
-      ensureUsers = [
-        { ensurePermissions = { "wp.*" = "ALL PRIVILEGES"; }; name = "wp"; } # wordpress
-        { ensurePermissions = { "wb.*" = "ALL PRIVILEGES"; }; name = "wb"; } # wallabag
-      ];
-    };
+    # mysql = {
+    #   enable = false;
+    #   package = pkgs.mariadb;
+    #   bind = "127.0.0.1";
+    #   initialDatabases = [ { name = "wp"; } { name = "wb"; } ];
+    #   ensureDatabases = [ "wp" "wb" ];
+    #   ensureUsers = [
+    #     { ensurePermissions = { "wp.*" = "ALL PRIVILEGES"; }; name = "wp"; } # wordpress
+    #     { ensurePermissions = { "wb.*" = "ALL PRIVILEGES"; }; name = "wb"; } # wallabag
+    #   ];
+    # };
 
-    phpfpm = {
-      pools.nginx = {
-        listen = "${phpSocket}";
-        extraConfig = ''
-          listen.owner = nginx
-          listen.group = nginx
-          user = nginx
-          group = nginx
-          pm = dynamic
-          pm.max_children = 4
-          pm.start_servers = 2
-          pm.min_spare_servers = 1 
-          pm.max_spare_servers = 4
-          pm.max_requests = 32
-          php_admin_value[error_log] = 'stderr'
-          php_admin_flag[log_errors] = on
-          env[PATH] = ${lib.makeBinPath [ pkgs.php ]}
-          catch_workers_output = yes
-        '';
-          #php_flag[display_errors] = off
-          #php_admin_value[error_log] = "/run/phpfpm/php-fpm.log"
-          #php_admin_flag[log_errors] = on
-          #php_value[date.timezone] = "UTC"
-      };
-        #;extension=${pkgs.phpPackages.redis}/lib/php/extensions/redis.so
-      phpOptions = ''
-        extension=bcmath
-        extension=ctype
-        extension=curl
-        extension=dom
-        extension=gd
-        extension=gettext
-        extension=hash
-        extension=iconv
-        extension=json
-        extension=mbstring
-        extension=session
-        extension=simplexml
-        extension=tidy
-        extension=tokenizer
-        extension=xml
-        extension=zip
+    #phpfpm = {
+    #  pools.nginx = {
+    #    listen = "${phpSocket}";
+    #    extraConfig = ''
+    #      listen.owner = nginx
+    #      listen.group = nginx
+    #      user = nginx
+    #      group = nginx
+    #      pm = dynamic
+    #      pm.max_children = 4
+    #      pm.start_servers = 2
+    #      pm.min_spare_servers = 1 
+    #      pm.max_spare_servers = 4
+    #      pm.max_requests = 32
+    #      php_admin_value[error_log] = 'stderr'
+    #      php_admin_flag[log_errors] = on
+    #      env[PATH] = ${lib.makeBinPath [ pkgs.php ]}
+    #      catch_workers_output = yes
+    #    '';
+    #      #php_flag[display_errors] = off
+    #      #php_admin_value[error_log] = "/run/phpfpm/php-fpm.log"
+    #      #php_admin_flag[log_errors] = on
+    #      #php_value[date.timezone] = "UTC"
+    #  };
+    #    #;extension=${pkgs.phpPackages.redis}/lib/php/extensions/redis.so
+    #  phpOptions = ''
+    #    extension=bcmath
+    #    extension=ctype
+    #    extension=curl
+    #    extension=dom
+    #    extension=gd
+    #    extension=gettext
+    #    extension=hash
+    #    extension=iconv
+    #    extension=json
+    #    extension=mbstring
+    #    extension=session
+    #    extension=simplexml
+    #    extension=tidy
+    #    extension=tokenizer
+    #    extension=xml
+    #    extension=zip
 
-        extension=pdo_mysql
-      '';
-    };
+    #    extension=pdo_mysql
+    #  '';
+    #};
 
     redshift = {
       enable = true;
@@ -496,34 +512,34 @@ in
     # };
   };
 
-  systemd.services.delayedHibernation = {
-    description = "Delayed hibernation trigger";
-    documentation = [ "https://wiki.archlinux.org/index.php/Power_management#Delayed_hibernation_service_file" ];
-    conflicts = ["hibernate.target" "hybrid-sleep.target"];
-    before = ["sleep.target"];
-    # stopWhenUnneeded = true; # TODO
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = "yes";
-      Environment = [ "WAKEALARM=/sys/class/rtc/rtc0/wakealarm" "SLEEPLENGTH=+2hour" ];
-      ExecStart = "-/usr/bin/sh -c 'echo -n \"alarm set for \"; date +%%s -d$SLEEPLENGTH | tee $WAKEALARM'";
-      ExecStop = ''
-        -/usr/bin/sh -c '\
-          alarm=$(cat $WAKEALARM); \
-          now=$(date +%%s); \
-          if [ -z "$alarm" ] || [ "$now" -ge "$alarm" ]; then \
-             echo "hibernate triggered"; \
-             systemctl hibernate; \
-          else \
-             echo "normal wakeup"; \
-          fi; \
-          echo 0 > $WAKEALARM; \
-        '
-      '';
-    };
+  # systemd.services.delayedHibernation = {
+  #   description = "Delayed hibernation trigger";
+  #   documentation = [ "https://wiki.archlinux.org/index.php/Power_management#Delayed_hibernation_service_file" ];
+  #   conflicts = ["hibernate.target" "hybrid-sleep.target"];
+  #   before = ["sleep.target"];
+  #   # stopWhenUnneeded = true; # TODO
+  #   serviceConfig = {
+  #     Type = "oneshot";
+  #     RemainAfterExit = "yes";
+  #     Environment = [ "WAKEALARM=/sys/class/rtc/rtc0/wakealarm" "SLEEPLENGTH=+2hour" ];
+  #     ExecStart = "-/usr/bin/sh -c 'echo -n \"alarm set for \"; date +%%s -d$SLEEPLENGTH | tee $WAKEALARM'";
+  #     ExecStop = ''
+  #       -/usr/bin/sh -c '\
+  #         alarm=$(cat $WAKEALARM); \
+  #         now=$(date +%%s); \
+  #         if [ -z "$alarm" ] || [ "$now" -ge "$alarm" ]; then \
+  #            echo "hibernate triggered"; \
+  #            systemctl hibernate; \
+  #         else \
+  #            echo "normal wakeup"; \
+  #         fi; \
+  #         echo 0 > $WAKEALARM; \
+  #       '
+  #     '';
+  #   };
 
-    wantedBy = [ "sleep.target" ];
-  };
+  #   wantedBy = [ "sleep.target" ];
+  # };
 
   # systemd.services.delayedHibernation.enable = true;
 
