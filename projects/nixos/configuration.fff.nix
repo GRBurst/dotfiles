@@ -323,7 +323,7 @@
     keybase.enable = true;
     kbfs = {
       enable = true;
-      mountPoint = "~/keybase"; # mountpoint important for keybase-gui
+      mountPoint = "/keybase"; # mountpoint important for keybase-gui
     };
 
     dbus.packages = with pkgs; [ gnome3.dconf gnome2.GConf gnome3.gnome-keyring gcr ];

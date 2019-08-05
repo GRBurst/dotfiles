@@ -43,7 +43,7 @@ in {
         wget netcat nmap
         psmisc
         hdparm hd-idle hddtemp
-        pv xclip xorg.xkill unclutter-xfixes
+        pv xclip xorg.xkill unclutter-xfixes xwininfo
         lm_sensors calc gksu
         haskellPackages.yeganesh
         gnumake
@@ -60,7 +60,7 @@ in {
         p7zip
         speedtest-cli
         traceroute
-        unzip
+        zip unzip
         xcwd
         xorg.xdpyinfo
         xorg.xev
@@ -114,6 +114,8 @@ in {
         texlive.combined.scheme-full
         # biber # collides texlive full
         pdftk #pdfshuffler
+        pdfsandwich
+        tesseract
         poppler_utils
         xournal
 
@@ -258,14 +260,15 @@ in {
         josm
         peek # record gif videos || green-recorder / gifcurry / screenToGif
         kodi
+        linphone ekiga
         openjdk
         protonmail-bridge
         qutebrowser
         screen
         skypeforlinux
-        shotwell
+        shotwell # prevented highres from upgrade
         texmaker texstudio #lyx
-        tor-browser-bundle-bin # prevented highres from upgrade
+        tor-browser-bundle-bin
         thunderbird
         vlc
         vokoscreen keymon
