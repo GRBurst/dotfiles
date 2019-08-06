@@ -170,6 +170,7 @@ assign [instance="(?i)protonmail-bridge" class="ProtonMail Bridge"] "1: mail"
 assign [class="(?i)firefox"] "2: browser"
 assign [class="(?i)keepassxc"] 7
 assign [class="(?i)signal"] "9: communication"
+assign [class="(?i)ekiga"] "9: communication"
 assign [class="(?i)pidgin"] "9: communication"
 
 # switch to workspace
@@ -264,16 +265,17 @@ mode "resize <<< Resolution:(2) 1920x1080, (4) 3840x2160, (7) 1280x720; Position
 }
 bindsym $mod+Shift+r mode "resize <<< Resolution:(2) 1920x1080, (4) 3840x2160, (7) 1280x720; Position: (c) center"
 
-mode "woost <<< Programs: (a) announcekit, (v) video/vokoscreen" {
+mode "woost <<< Programs: (a) announcekit, (v) video/vokoscreen, (w) restore work layout" {
 
-        bindsym a exec --no-startup-id "i3-msg 'workspace 0; append_layout ~/.config/i3/common/announcekit.json'"; exec chromium; exec peek; mode "default"
+        bindsym a exec --no-startup-id "i3-msg 'workspace 0; append_layout ~/.config/i3/layouts/announcekit.json'"; exec chromium; exec peek; mode "default"
         bindsym v exec --no-startup-id "i3-msg 'workspace 0'"; exec chromium; exec vokoscreen; mode "default"
+        bindsym w exec --no-startup-id "i3-msg 'workspace 0; append_layout ~/.config/i3/layouts/work_left.json; ; append_layout ~/.config/i3/layouts/work_right.json'"; exec thunderbird; exec firefox; exec ~/local/bin/kxo; exec signal-desktop; exec ekiga; exec termite; exec spacefm; mode "default"
 
         # back to normal: Enter or Escape
         bindsym Return mode "default"
         bindsym Escape mode "default"
 }
-bindsym $mod+Shift+w mode "woost <<< Programs: (a) announcekit, (v) video/vokoscreen"
+bindsym $mod+Shift+w mode "woost <<< Programs: (a) announcekit, (v) video/vokoscreen, (w) restore work layout"
 
 # resize window (you can also use the mouse for that)
 mode "refocus" {

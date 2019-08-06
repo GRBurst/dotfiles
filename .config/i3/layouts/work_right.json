@@ -1,0 +1,62 @@
+// vim:ts=4:sw=4:et
+{
+    // workspace with 1 children
+    "border": "pixel",
+    "floating": "auto_off",
+    "fullscreen_mode": 1,
+    "layout": "splith",
+    "percent": null,
+    "type": "workspace",
+    "nodes": [
+        {
+            "border": "pixel",
+            "current_border_width": 2,
+            "floating": "auto_off",
+            "geometry": {
+               "height": 842,
+               "width": 1298,
+               "x": 0,
+               "y": 0
+            },
+            "name": "Termite",
+            "percent": 1,
+            "swallows": [
+               {
+                 "class": "Termite"
+               }
+            ],
+            "type": "con"
+        }
+    ]
+}
+
+{
+    // workspace with 1 children
+    "border": "pixel",
+    "floating": "auto_off",
+    "layout": "splith",
+    "percent": null,
+    "type": "workspace",
+    "nodes": [
+        {
+            "border": "pixel",
+            "current_border_width": 2,
+            "floating": "auto_off",
+            "geometry": {
+               "height": 2112,
+               "width": 3836,
+               "x": 0,
+               "y": 0
+            },
+            "name": "SpaceFM",
+            "percent": 1,
+            "swallows": [
+               {
+                 "class": "Spacefm"
+               }
+            ],
+            "type": "con"
+        }
+    ]
+}
+
