@@ -3,7 +3,6 @@
     // workspace with 1 children
     "border": "pixel",
     "floating": "auto_off",
-    "fullscreen_mode": 1,
     "layout": "splith",
     "percent": null,
     "type": "workspace",
