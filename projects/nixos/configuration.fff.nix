@@ -189,7 +189,7 @@
 
       BROWSER = "firefox";
 
-      _JAVA_OPTIONS = "-Xms1G -Xmx4G -Xss1M -XX:+CMSClassUnloadingEnabled -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd";
+      _JAVA_OPTIONS = "-Xms1G -Xmx4G -Xss4M -XX:+CMSClassUnloadingEnabled -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd";
 
       AUTOSSH_GATETIME = "0";
 
@@ -404,7 +404,7 @@
       windowManager = {
         i3 = {
           enable = true;
-          extraPackages = with pkgs; [ feh rofi i3status i3lock gnome3.gnome-keyring ];
+          extraPackages = with pkgs; [ feh rofi i3status-rust i3lock gnome3.gnome-keyring ];
           extraSessionCommands = ''
             xsetroot -bg black
             xsetroot -cursor_name left_ptr
