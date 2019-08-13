@@ -43,7 +43,7 @@ in {
         wget netcat nmap
         psmisc
         hdparm hd-idle hddtemp
-        pv xclip xorg.xkill unclutter-xfixes xwininfo
+        pv xclip xorg.xkill unclutter-xfixes xorg.xwininfo
         lm_sensors calc gksu
         haskellPackages.yeganesh
         gnumake
@@ -60,7 +60,8 @@ in {
         p7zip
         speedtest-cli
         traceroute
-        zip unzip
+        # zip
+        unzip
         xcwd
         xorg.xdpyinfo
         xorg.xev
@@ -96,7 +97,7 @@ in {
         usbutils
 
         # Office
-        calibre
+        #calibre
         firefox
         profile-sync-daemon
         libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
