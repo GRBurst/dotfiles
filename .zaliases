@@ -52,6 +52,7 @@ alias drst="docker status"
 alias drex="docker exec -it"
 alias drsa="docker stop -f $(docker ps -a -q)"
 alias drrmaf="docker stop $(docker ps -a -q); docker rm -f $(docker ps -a -q); docker image rm -f $(docker images -q); docker volume rm $(docker volume ls -q -f dangling=true)"
+alias drrmaff="docker container prune -f; docker image prune -af; docker volume prune -f"
 drsh() { docker exec -it $1 sh}
 drsh() { 
 
