@@ -37,6 +37,7 @@ in {
         avahi
         atop htop iotop
         arandr
+        bc
         bind
         binutils
         linuxPackages.cpupower
@@ -208,6 +209,7 @@ in {
         sbt
         scala
         scalafmt
+        visualvm
       ];
 
     };
