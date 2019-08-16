@@ -21,7 +21,8 @@ in {
     # inherit pkgs;
 
     pidgin-with-plugins = pkgs.pidgin-with-plugins.override {
-      plugins = [ pidginotr purple-facebook telegram-purple toxprpl pidginotr pidgin-skypeweb pidgin-opensteamworks localpkgs.purple-gnome-keyring ];
+      plugins = [ pidginotr purple-facebook telegram-purple toxprpl pidginotr pidgin-skypeweb pidgin-opensteamworks ];
+      # plugins = [ pidginotr purple-facebook telegram-purple toxprpl pidginotr pidgin-skypeweb pidgin-opensteamworks localpkgs.purple-gnome-keyring ];
     };
 
     common-packages = buildEnv {
@@ -37,6 +38,7 @@ in {
         avahi
         atop htop iotop
         arandr
+        bc
         bind
         binutils
         linuxPackages.cpupower
@@ -208,6 +210,7 @@ in {
         sbt
         scala
         scalafmt
+        visualvm
       ];
 
     };

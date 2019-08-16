@@ -189,7 +189,7 @@
 
       BROWSER = "firefox";
 
-      _JAVA_OPTIONS = "-Xms1G -Xmx4G -Xss4M -XX:+CMSClassUnloadingEnabled -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd";
+      _JAVA_OPTIONS = "-Xms1G -Xmx8G -Xss16M -XX:MaxMetaspaceSize=2G -XX:+CMSClassUnloadingEnabled -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd";
 
       AUTOSSH_GATETIME = "0";
 
