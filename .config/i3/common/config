@@ -269,7 +269,7 @@ mode "woost <<< Programs: (a) announcekit, (v) video/vokoscreen, (w) restore wor
 
         bindsym a exec --no-startup-id "i3-msg 'workspace 0; append_layout ~/.config/i3/layouts/announcekit.json'"; exec chromium; exec peek; mode "default"
         bindsym v exec --no-startup-id "i3-msg 'workspace 0'"; exec chromium; exec vokoscreen; mode "default"
-        bindsym w exec --no-startup-id "i3-msg 'workspace 0; append_layout ~/.config/i3/layouts/work_left.json; ; append_layout ~/.config/i3/layouts/work_right.json'"; exec thunderbird; exec firefox; exec ~/local/bin/kxo; exec signal-desktop; exec ekiga; exec termite; exec spacefm; mode "default"
+        bindsym w exec --no-startup-id "i3-msg 'workspace 7; append_layout ~/.config/i3/layouts/work_left.json; workspace \"11: terminal\"; append_layout ~/.config/i3/layouts/work_right.json'"; exec protonmail-bridge; exec thunderbird; exec firefox; exec ~/local/bin/kxo; exec signal-desktop; exec ekiga; exec termite; exec spacefm; mode "default"
 
         # back to normal: Enter or Escape
         bindsym Return mode "default"
