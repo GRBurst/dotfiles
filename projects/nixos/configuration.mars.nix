@@ -84,6 +84,7 @@
     networkmanager.enable = true;
     firewall.enable = true;
     firewall.allowedTCPPorts = [ 12345 ];
+    firewall.allowedUDPPorts = [ 50624 50625 ]; # Firefox WebIDE
     hostName = "mars";
     extraHosts = ''
       134.130.59.240  ateam
@@ -131,7 +132,7 @@
 
       BROWSER = "firefox";
 
-      _JAVA_OPTIONS = "-Xms1G -Xmx4G -Xss16M -XX:+CMSClassUnloadingEnabled -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd";
+      _JAVA_OPTIONS = "-Xms1G -Xmx4G -Xss16M -XX:MaxMetaspaceSize=2G -XX:+CMSClassUnloadingEnabled -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd";
       # SBT_OPTS="$SBT_OPTS -Xms2G -Xmx8G -Xss4M -XX:+CMSClassUnloadingEnabled";
       #SBT_OPTS="$SBT_OPTS -Xms2G -Xmx8G -Xss4M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC";
       
@@ -249,7 +250,7 @@
         CPU_MIN_PERF_ON_AC=0
         CPU_MAX_PERF_ON_AC=100
         CPU_MIN_PERF_ON_BAT=0
-        CPU_MAX_PERF_ON_BAT=50
+        CPU_MAX_PERF_ON_BAT=80
         CPU_BOOST_ON_AC=1
         CPU_BOOST_ON_BAT=0
       '';
@@ -330,10 +331,10 @@
       };
     };
 
-    # compton = {
-    #   enable = true;
+    compton = {
+      enable = true;
     #   backend = "glx";
-    # };
+    };
 
     # nginx = {
     #   enable = false;

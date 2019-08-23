@@ -37,6 +37,7 @@ in {
         avahi
         atop htop iotop
         arandr
+        bc
         bind
         binutils
         linuxPackages.cpupower
@@ -60,7 +61,7 @@ in {
         p7zip
         speedtest-cli
         traceroute
-        # zip
+        zip
         unzip
         xcwd
         xorg.xdpyinfo
@@ -208,6 +209,7 @@ in {
         sbt
         scala
         scalafmt
+        visualvm
       ];
 
     };
