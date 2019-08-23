@@ -265,17 +265,21 @@ mode "resize <<< Resolution:(2) 1920x1080, (4) 3840x2160, (7) 1280x720; Position
 }
 bindsym $mod+Shift+r mode "resize <<< Resolution:(2) 1920x1080, (4) 3840x2160, (7) 1280x720; Position: (c) center"
 
-mode "woost <<< Programs: (a) announcekit, (v) video/vokoscreen, (w) restore work layout" {
+mode "woost <<< Programs: (a) announcekit, (v) video/vokoscreen, (w) restore work layout, (s/S) move/show scratchpad" {
 
-        bindsym a exec --no-startup-id "i3-msg 'workspace 0; append_layout ~/.config/i3/layouts/announcekit.json'"; exec chromium; exec peek; mode "default"
+        bindsym a exec --no-startup-id "i3-msg 'workspace 0; append_layout ~/.config/i3/layouts/announcekit.json'"; exec chromium; exec peek; [class="(?i)peek"] move scratchpad; mode "default"
         bindsym v exec --no-startup-id "i3-msg 'workspace 0'"; exec chromium; exec vokoscreen; mode "default"
         bindsym w exec --no-startup-id "i3-msg 'workspace 7; append_layout ~/.config/i3/layouts/work_left.json; workspace \"11: terminal\"; append_layout ~/.config/i3/layouts/work_right.json'"; exec protonmail-bridge; exec thunderbird; exec firefox; exec ~/local/bin/kxo; exec signal-desktop; exec ekiga; exec termite; exec spacefm; mode "default"
+
+        # Make the currently focused window a scratchpad
+        bindsym s move scratchpad; mode "default"
+        bindsym Shift+S scratchpad show; mode "default"
 
         # back to normal: Enter or Escape
         bindsym Return mode "default"
         bindsym Escape mode "default"
 }
-bindsym $mod+Shift+w mode "woost <<< Programs: (a) announcekit, (v) video/vokoscreen, (w) restore work layout"
+bindsym $mod+Shift+w mode "woost <<< Programs: (a) announcekit, (v) video/vokoscreen, (w) restore work layout, (s/S) move/show scratchpad"
 
 # resize window (you can also use the mouse for that)
 mode "refocus" {
