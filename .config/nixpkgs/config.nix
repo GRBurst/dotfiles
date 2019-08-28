@@ -98,7 +98,7 @@ in {
         usbutils
 
         # Office
-        #calibre
+        calibre
         firefox
         profile-sync-daemon
         libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
