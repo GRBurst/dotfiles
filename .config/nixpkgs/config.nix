@@ -142,7 +142,7 @@ in {
         pidgin-with-plugins
         qtox
         signal-desktop
-        irssi_otr #irssi
+        irssi
 
         # Themes
         breeze-gtk breeze-icons breeze-qt5 

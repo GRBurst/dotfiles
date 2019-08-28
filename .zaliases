@@ -182,6 +182,7 @@ cgw() {
     cargo watch $1
 }
 
+alias ssbt="cd-git-root; ./start sbt"
 sbt() { (
     # TODO: search tree upwards for build.sbt
     if [ ! -f build.sbt ]; then
