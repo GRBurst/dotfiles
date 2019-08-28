@@ -46,13 +46,13 @@ bindsym $mod+s exec --no-startup-id rofi -show ssh
 # Focus should not follow mouse movements
 focus_follows_mouse no
 
-# change focus
-bindsym $mod+i move left
-bindsym $mod+a move down
-bindsym $mod+l move up
-bindsym $mod+e move right
-
 # move focused window
+bindsym $mod+i move left 100 px
+bindsym $mod+a move down 100 px
+bindsym $mod+e move right 100 px
+bindsym $mod+l move up 100 px
+
+# change focus
 bindsym $mod+n focus left
 bindsym $mod+r focus down
 bindsym $mod+g focus up
@@ -158,7 +158,7 @@ bindsym $mod+$AltGr+BackSpace exec VirtualBox
 bindsym $mod+$AltGr+period exec skype
 bindsym $mod+$AltGr+questiondown exec signal-desktop
 
-bindsym $mod+$AltGr+Left exec idea-community
+bindsym $mod+$AltGr+$Left exec idea-community
 # bindcode $mod+$AltGr+39 exec idea-community
 # bindsym $mod+$AltGr+ exec thunderbird; exec firefox
 #bindsym $mod+$AltGr+c exec pidgin; exec sskype
@@ -241,21 +241,27 @@ mode "resize <<< Resolution:(2) 1920x1080, (4) 3840x2160, (7) 1280x720; Position
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
-        bindsym $AltGr+Left resize shrink width 10 px or 10 ppt
-        bindsym $AltGr+Down resize grow height 10 px or 10 ppt
-        bindsym $AltGr+Up resize shrink height 10 px or 10 ppt
-        bindsym $AltGr+Right resize grow width 10 px or 10 ppt
+        bindsym $AltGr+$Left resize shrink width 10 px or 10 ppt
+        bindsym $AltGr+$Down resize grow height 10 px or 10 ppt
+        bindsym $AltGr+$Up resize shrink height 10 px or 10 ppt
+        bindsym $AltGr+$Right resize grow width 10 px or 10 ppt
 
         # same bindings, but for the arrow keys
-        bindsym Left resize shrink width 1 px or 1 ppt
-        bindsym Down resize grow height 1 px or 1 ppt
-        bindsym Up resize shrink height 1 px or 1 ppt
-        bindsym Right resize grow width 1 px or 1 ppt
+        bindsym $Left resize shrink width 1 px or 1 ppt
+        bindsym $Down resize grow height 1 px or 1 ppt
+        bindsym $Up resize shrink height 1 px or 1 ppt
+        bindsym $Right resize grow width 1 px or 1 ppt
 
         # specific sizes
         bindsym KP_2 resize set 1920 1080; move position center; mode "default"
         bindsym KP_4 resize set 3840 2160; move position center; mode "default"
         bindsym KP_7 resize set 1280 720; move position center; mode "default"
+
+        bindsym $Left move left
+        bindsym $Down move down
+        bindsym $Up move up
+        bindsym $Right move right
+
 
         bindsym c move position center; mode "default"
 
