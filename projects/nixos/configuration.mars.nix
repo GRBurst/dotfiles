@@ -181,9 +181,6 @@
   programs = {
     command-not-found.enable = true;
 
-    seahorse.enable = true;
-    gpaste.enable = true;
-
     bash.enableCompletion = true;
 
     zsh = {
@@ -506,6 +503,8 @@
 
     gnome3 = {
       gvfs.enable  = true;
+      seahorse.enable = true;
+      gpaste.enable = true;
       gnome-keyring.enable = true;
     };
 
