@@ -94,11 +94,11 @@
     '';
   };
 
-  location = {
-    provider = "manual";
-    latitude = 50.77;
-    longitude = 6.08;
-  };
+  # location = {
+  #   provider = "manual";
+  #   latitude = 50.77;
+  #   longitude = 6.08;
+  # };
 
   powerManagement = {
     enable = true;
@@ -466,6 +466,8 @@
 
     redshift = {
       enable = true;
+      latitude = "50.77";
+      longitude = "6.08";
       temperature.day = 5000;
       temperature.night = 3000;
       brightness.day = "1.0";
