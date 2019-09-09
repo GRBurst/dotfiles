@@ -136,7 +136,8 @@ in {
         spotify
         gnome3.cheese
         xdg_utils
-        (ffmpeg-full.override { nonfreeLicensing = true;})
+        ffmpeg-full.override
+        # (ffmpeg-full.override { nonfreeLicensing = true;})
 
         # Communication
         pidgin-with-plugins
