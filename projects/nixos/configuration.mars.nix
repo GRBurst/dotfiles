@@ -504,8 +504,8 @@
       updater.enable  = true;
     };
 
-    gvfs.enable  = true;
     gnome3 = {
+      gvfs.enable  = true;
       gnome-keyring.enable = true;
     };
 
