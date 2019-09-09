@@ -136,7 +136,7 @@ in {
         spotify
         gnome3.cheese
         xdg_utils
-        ffmpeg-full.override
+        ffmpeg-full
         # (ffmpeg-full.override { nonfreeLicensing = true;})
 
         # Communication
@@ -209,7 +209,7 @@ in {
         ammonite
         sbt
         scala
-        scalafmt
+        # scalafmt
         visualvm
       ];
 
