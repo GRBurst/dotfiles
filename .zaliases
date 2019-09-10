@@ -264,6 +264,16 @@ alias wscan='nmcli dev wifi rescan > /dev/null 2>&1; true'
 alias wlist='nmcli dev wifi list'
 alias wcon='nmcli dev wifi connect'
 
+gobile() {
+    echo "stopping network-heavy services and starting mobile network"
+    sudo systemctl stop ipfs > /dev/null 2>&1
+    sudo systemctl stop syncthing > /dev/null 2>&1
+    sudo systemctl stop nixos-upgrade.timer > /dev/null 2>&1
+    sudo systemctl stop nixos-upgrade > /dev/null 2>&1
+    # nmcli connection up "Mobil Hotspot (MD)"
+    sudo systemctl start modem-manager.service
+}
+
 # services & daemons
 alias tv="sudo systemctl start teamviewerd.service && teamviewer"
 
