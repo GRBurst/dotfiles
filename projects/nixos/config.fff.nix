@@ -37,7 +37,6 @@ in {
         acpi
         avahi
         atop htop iotop
-        arandr
         bc
         bind
         binutils
@@ -99,7 +98,7 @@ in {
         usbutils
 
         # Office
-        #calibre
+        calibre
         firefox
         profile-sync-daemon
         libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
@@ -143,7 +142,7 @@ in {
         pidgin-with-plugins
         qtox
         signal-desktop
-        irssi_otr #irssi
+        irssi
 
         # Themes
         breeze-gtk breeze-icons breeze-qt5 
