@@ -11,7 +11,8 @@
     st  = status
     h   = help
 
-    clwu = "!f() { git clone $1 && git remote add upstream $2 && git remote -v ; }; f"
+    clu = "!f() { git clone $1 && git remote add upstream $2 && git remote -v ; }; f"
+    clus = "!f() { IN=(${1//// }); git clone git@github.com:GRBurst/${IN[1]} && cd ${IN[1]} && git remote add upstream git@github.com:$1 && git remote -v ; }; f"
 
 
     # Branch
@@ -33,6 +34,7 @@
     fu  = fetch upstream
     fumm = "!f() { local curBranch=$(git rev-parse --abbrev-ref HEAD) && git stash save && git fetch upstream && git checkout master && git merge upstream/master && git checkout $curBranch && git stash pop; }; f" # fetch upstream and merge master
     furb = "!f() { local curBranch=$(git rev-parse --abbrev-ref HEAD) && git stash save && git fetch upstream && git checkout master && git merge upstream/master && git checkout $curBranch && git stash pop && git rebase -i master; }; f" # fetch upstream, merge master, rebase branch
+    fuub = "!f() { local curBranch=$(git rev-parse --abbrev-ref HEAD) && git fetch upstream && git merge upstream/$curBranch; }; f" # fetch upstream and merge
 
     # Commit
     c       = commit
