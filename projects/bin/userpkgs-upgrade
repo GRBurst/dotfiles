@@ -1,5 +1,11 @@
 #!/run/current-system/sw/bin/zsh -i
 
+# single-line-output
+slo() {
+    eval ${1} | cut -b1-$(tput cols) | sed -u 'i\\o033[2K' | stdbuf -o0 tr '\n' '\r'
+    echo
+}
+
 cecho "G" "updating userspace channels"
 nix-channel --update
 
@@ -16,6 +22,9 @@ pkg_unstable_prio[mining-packages]=12
 
 update-pckg () {
     cecho "G" "upgrading ${1} with prio ${pkg_unstable_prio[${1}]} on channel <nixos-unstable>"
+        # slo( 'nix-env --set-flag priority "${pkg_unstable_prio[${loc_pkg}]}" "${loc_pkg}"' )
+        # slo( 'nix-env -iA "${loc_pkg}" -f "<nixos-unstable>"' )
+        # slo( 'nix-env --set-flag priority "${pkg_unstable_prio[${loc_pkg}]}" "${loc_pkg}"' )
     nix-env --set-flag priority "${pkg_unstable_prio[${1}]}" "$1"
     nix-env -iA "${1}" -f "<nixos-unstable>"
     nix-env --set-flag priority "${pkg_unstable_prio[${1}]}" "$1"
@@ -46,6 +55,11 @@ self () {
             ;;
         mining)
             update-pckg "mining-packages"
+            ;;
+        separate)
+            update-pckg "separate packages"
+            nix-env --upgrade '*'
+            # slo( 'nix-env --upgrade "*"' )
             ;;
         full)
             # Local packages
