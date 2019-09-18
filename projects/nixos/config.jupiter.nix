@@ -35,15 +35,16 @@ in {
         arandr
         acpi
         avahi
-        binutils
         atop htop iotop
-        arandr
+        bc
+        bind
+        binutils
+        linuxPackages.cpupower
         wget netcat nmap
         psmisc
         hdparm hd-idle hddtemp
-        pv xclip xorg.xkill unclutter-xfixes
+        pv xclip xorg.xkill unclutter-xfixes xorg.xwininfo
         lm_sensors calc gksu
-        gnome3.dconf
         haskellPackages.yeganesh
         gnumake
         nitrogen scrot
@@ -59,12 +60,12 @@ in {
         p7zip
         speedtest-cli
         traceroute
+        # zip
         unzip
         xcwd
         xorg.xdpyinfo
         xorg.xev
         xorg.xmodmap
-        lxappearance
         gnome3.adwaita-icon-theme
         vanilla-dmz
         wireshark
@@ -99,12 +100,11 @@ in {
         calibre
         firefox
         profile-sync-daemon
-        libreoffice-fresh hunspell hunspellDicts.en-us aspell aspellDicts.de languagetool mythes
+        libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
         samba cifs-utils
         sane-frontends
         gcolor3
         gnome3.gedit
-        filezilla
         jmtpfs
         libnotify
         networkmanager_dmenu
@@ -115,10 +115,14 @@ in {
         texlive.combined.scheme-full
         # biber # collides texlive full
         pdftk #pdfshuffler
+        pdfsandwich
+        tesseract
         poppler_utils
         xournal
 
         # Media
+        avidemux
+        audacity
         gimp
         inkscape 
         mate.atril
@@ -131,12 +135,23 @@ in {
         spotify
         gnome3.cheese
         xdg_utils
+        ffmpeg-full
+        # (ffmpeg-full.override { nonfreeLicensing = true;})
 
         # Communication
         pidgin-with-plugins
         qtox
         signal-desktop
-        irssi_otr #irssi
+        irssi
+
+        # Themes
+        breeze-gtk breeze-icons breeze-qt5 
+        adwaita-qt gnome3.adwaita-icon-theme 
+        papirus-icon-theme
+        gnome3.dconf
+        gnome3.dconf-editor
+        lxqt.lxqt-config
+        lxappearance
 
       ];
 
@@ -153,7 +168,7 @@ in {
 
         ctags
         gdb
-        git tig
+        git tig gitRepo
         neovim
         python27Packages.pynvim # ensime
         python37Packages.pynvim
@@ -175,6 +190,10 @@ in {
 
         swiProlog
         vscode
+
+        brave
+        google-chrome
+        firefox-devedition-bin
       ];
 
     };
@@ -189,7 +208,8 @@ in {
         ammonite
         sbt
         scala
-        scalafmt
+        # scalafmt #-> cannot be build
+        visualvm
       ];
 
     };
@@ -236,11 +256,14 @@ in {
         clementine
         cryptsetup
         evince
+        fwupd # bios + firmware updates
         okular
         jbidwatcher
         # jdownloader
         josm
+        peek # record gif videos || green-recorder / gifcurry / screenToGif
         kodi
+        linphone ekiga
         openjdk
         protonmail-bridge
         qutebrowser
@@ -248,7 +271,7 @@ in {
         skypeforlinux
         shotwell
         texmaker texstudio #lyx
-        tor-browser-bundle-bin # prevented highres from upgrade
+        # tor-browser-bundle-bin # -> cannot be build
         thunderbird
         vlc
         vokoscreen keymon
@@ -293,7 +316,6 @@ in {
       name = "test-packages";
 
       paths = [
-        chromiumDev
         # localpkgs.protonmail-bridge
         # localpkgs.jbidwatcher
         # localpkgs.iri

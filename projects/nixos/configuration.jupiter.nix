@@ -106,7 +106,7 @@
     firewall.allowedUDPPorts = [ 137 138 5353 ];
     firewall.enable = true;
     #dhcpcd.enable = false;
-    interfaces.enp7s0.ipv4.addresses = [ { address = "192.168.1.50"; prefixLength = 24; } ];
+    #interfaces.enp7s0.ipv4.addresses = [ { address = "192.168.1.50"; prefixLength = 24; } ];
   };
 
   powerManagement = {
