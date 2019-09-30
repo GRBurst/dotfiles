@@ -404,7 +404,8 @@
       windowManager = {
         i3 = {
           enable = true;
-          extraPackages = with pkgs; [ feh rofi i3status-rust i3lock gnome3.gnome-keyring ];
+          # extraPackages = with pkgs; [ feh rofi i3status-rust i3lock gnome3.gnome-keyring ];
+          extraPackages = with pkgs; [ feh rofi i3status i3lock gnome3.gnome-keyring ];
           extraSessionCommands = ''
             xsetroot -bg black
             xsetroot -cursor_name left_ptr
@@ -537,8 +538,8 @@
     };
   };
 
-  #virtualisation.virtualbox.host.enable = true;
-  #virtualisation.virtualbox.host.enableExtensionPack = true;
+  virtualisation.virtualbox.host.enable = true;
+  virtualisation.virtualbox.host.enableExtensionPack = true;
   virtualisation.docker.enable = true;
 
   #users.mutableUsers = false;

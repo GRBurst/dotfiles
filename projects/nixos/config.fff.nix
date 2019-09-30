@@ -136,7 +136,8 @@ in {
         spotify
         gnome3.cheese
         xdg_utils
-        (ffmpeg-full.override { nonfreeLicensing = true;})
+        ffmpeg-full
+        # (ffmpeg-full.override { nonfreeLicensing = true;})
 
         # Communication
         pidgin-with-plugins
@@ -208,7 +209,7 @@ in {
         ammonite
         sbt
         scala
-        scalafmt
+        # scalafmt #-> cannot be build
         visualvm
       ];
 
@@ -271,7 +272,7 @@ in {
         skypeforlinux
         shotwell
         texmaker texstudio #lyx
-        tor-browser-bundle-bin
+        # tor-browser-bundle-bin # -> cannot be build
         thunderbird
         vlc
         vokoscreen keymon
