@@ -36,7 +36,6 @@ in {
         acpi
         avahi
         atop htop iotop
-        arandr
         bc
         bind
         binutils
@@ -209,7 +208,7 @@ in {
         ammonite
         sbt
         scala
-        # scalafmt
+        # scalafmt #-> cannot be build
         visualvm
       ];
 
@@ -272,7 +271,7 @@ in {
         skypeforlinux
         shotwell
         texmaker texstudio #lyx
-        tor-browser-bundle-bin
+        # tor-browser-bundle-bin # -> cannot be build
         thunderbird
         vlc
         vokoscreen keymon
