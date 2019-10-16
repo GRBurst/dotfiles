@@ -204,7 +204,7 @@
   users.defaultUserShell = "/run/current-system/sw/bin/zsh";
 
   security = {
-    pam.services.lightdm.enableGnomeKeyring = true;
+	pam.services.login.enableGnomeKeyring = true;
 
     # pam.services = [
     #   {
@@ -268,7 +268,7 @@
       #mountPoint = "/keybase"; # mountpoint important for keybase-gui
     };
 
-    dbus.packages = with pkgs; [ gnome3.dconf gnome2.GConf ];
+    dbus.packages = with pkgs; [ gnome3.dconf gnome2.GConf gnome3.gnome-keyring gcr ];
 
     openssh = {
       enable = true;
@@ -503,9 +503,9 @@
 
     gnome3 = {
       gvfs.enable  = true;
+      gnome-keyring.enable = true;
       seahorse.enable = true;
       gpaste.enable = true;
-      gnome-keyring.enable = true;
     };
 
     upower.enable  = true;
