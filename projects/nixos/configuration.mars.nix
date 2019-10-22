@@ -251,14 +251,14 @@
         tlp_DEFAULT_MODE=BAT
         CPU_SCALING_GOVERNOR_ON_AC=powersave
         CPU_SCALING_GOVERNOR_ON_BAT=powersave
-        CPU_HWP_ON_AC=balance_power
-        CPU_HWP_ON_BAT=power
+        CPU_HWP_ON_AC=balance_performance
+        CPU_HWP_ON_BAT=balance_power
         CPU_MIN_PERF_ON_AC=0
         CPU_MAX_PERF_ON_AC=100
         CPU_MIN_PERF_ON_BAT=0
-        CPU_MAX_PERF_ON_BAT=80
+        CPU_MAX_PERF_ON_BAT=100
         CPU_BOOST_ON_AC=1
-        CPU_BOOST_ON_BAT=0
+        CPU_BOOST_ON_BAT=1
       '';
     };
 
