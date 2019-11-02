@@ -270,7 +270,8 @@ in {
         screen
         skypeforlinux
         shotwell
-        texmaker texstudio #lyx
+        # texmaker #breaks on 2019-10-22
+        texstudio #lyx
         # tor-browser-bundle-bin # -> cannot be build
         thunderbird
         vlc

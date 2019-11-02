@@ -94,11 +94,11 @@
     '';
   };
 
-  # location = {
-  #   provider = "manual";
-  #   latitude = 50.77;
-  #   longitude = 6.08;
-  # };
+  location = {
+    provider = "manual";
+    latitude = 50.77;
+    longitude = 6.08;
+  };
 
   powerManagement = {
     enable = true;
@@ -195,6 +195,8 @@
       enable = true;
       enableSSHSupport = true;
     };
+    seahorse.enable = true;
+    gpaste.enable = true;
 
     # mtr.enable = true;
 
@@ -463,8 +465,6 @@
 
     redshift = {
       enable = true;
-      latitude = "50.77";
-      longitude = "6.08";
       temperature.day = 5000;
       temperature.night = 3000;
       brightness.day = "1.0";
@@ -501,11 +501,9 @@
       updater.enable  = true;
     };
 
+    gvfs.enable  = true;
     gnome3 = {
-      gvfs.enable  = true;
       gnome-keyring.enable = true;
-      seahorse.enable = true;
-      gpaste.enable = true;
     };
 
     upower.enable  = true;
