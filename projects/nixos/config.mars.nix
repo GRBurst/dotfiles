@@ -261,6 +261,7 @@ in {
         jbidwatcher
         # jdownloader
         josm
+        kdeApplications.kdenlive
         peek # record gif videos || green-recorder / gifcurry / screenToGif
         kodi
         linphone ekiga
