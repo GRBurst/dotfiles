@@ -258,6 +258,7 @@ in {
         cryptsetup
         evince
         fwupd # bios + firmware updates
+        guvcview
         okular
         jbidwatcher
         # jdownloader
@@ -276,6 +277,7 @@ in {
         thunderbird
         vlc
         vokoscreen keymon
+        zoom-us
       ];
 
     };
