@@ -107,6 +107,12 @@
     firewall.allowedTCPPorts = [ 139 445 12345 ];
   };
 
+  location = {
+    provider = "manual";
+    latitude = 50.77;
+    longitude = 6.08;
+  };
+
   powerManagement = {
     enable = true;
     # powertop.enable = true;
@@ -242,6 +248,9 @@
 	  enable = true;
 	  cacheDir = "/tmp/ccache";
 	};
+
+    gpaste.enable = true;
+    seahorse.enable = true;
 
 	# ssh.startAgent = true;
 	gnupg.agent = { 
@@ -425,8 +434,6 @@
 
     redshift = {
       enable = true;
-      latitude = "50.77";
-      longitude = "6.08";
       temperature.day = 5000;
       temperature.night = 3000;
       brightness.day = "0.9";
@@ -463,11 +470,10 @@
       updater.enable  = true;
     };
 
+    gvfs.enable  = true;
+
     gnome3 = {
-      gvfs.enable  = true;
       gnome-keyring.enable = true;
-      gpaste.enable = true;
-      seahorse.enable = true;
     };
 
     upower.enable  = true;

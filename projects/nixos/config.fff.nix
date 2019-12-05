@@ -265,7 +265,7 @@ in {
         josm
         peek # record gif videos || green-recorder / gifcurry / screenToGif
         kodi
-        linphone ekiga
+        linphone #ekiga
         openjdk
         protonmail-bridge
         qutebrowser
