@@ -109,6 +109,12 @@
     #interfaces.enp7s0.ipv4.addresses = [ { address = "192.168.1.50"; prefixLength = 24; } ];
   };
 
+  location = {
+    provider = "manual";
+    latitude = 50.77;
+    longitude = 6.08;
+  };
+
   powerManagement = {
     enable = true;
   # powertop.enable = true;
@@ -211,6 +217,9 @@
     # mtr.enable = true;
 
     dconf.enable = true;
+
+    gpaste.enable = true;
+    seahorse.enable = true;
   };
 
   users.defaultUserShell = "/run/current-system/sw/bin/zsh";
@@ -347,8 +356,6 @@
 
     redshift = {
       enable = true;
-      latitude = "50.77";
-      longitude = "6.08";
       temperature.day = 5000;
       temperature.night = 3000;
       brightness.day = "0.9";
@@ -385,11 +392,10 @@
       updater.enable  = true;
     };
 
+    gvfs.enable  = true;
+
     gnome3 = {
-      gvfs.enable  = true;
       gnome-keyring.enable = true;
-      gpaste.enable = true;
-      seahorse.enable = true;
     };
 
     upower.enable  = true;
