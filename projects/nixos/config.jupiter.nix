@@ -263,7 +263,7 @@ in {
         josm
         peek # record gif videos || green-recorder / gifcurry / screenToGif
         kodi
-        linphone ekiga
+        linphone # ekiga # ekiga breaks build on 2019-12-06
         openjdk
         protonmail-bridge
         qutebrowser
