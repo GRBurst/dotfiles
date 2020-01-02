@@ -96,6 +96,8 @@ in {
         desktop_file_utils
         usbutils
 
+        miniserve
+
         # Office
         calibre
         firefox
@@ -264,7 +266,7 @@ in {
         kdeApplications.kdenlive
         peek # record gif videos || green-recorder / gifcurry / screenToGif
         kodi
-        linphone ekiga
+        linphone # ekiga #breaks on 2019-12-09
         openjdk
         protonmail-bridge
         qutebrowser
@@ -276,7 +278,7 @@ in {
         # tor-browser-bundle-bin # -> cannot be build
         thunderbird
         vlc
-        vokoscreen keymon
+        vokoscreen # keymon -> abandoned
       ];
 
     };
