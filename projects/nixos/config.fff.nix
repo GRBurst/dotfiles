@@ -276,7 +276,7 @@ in {
         # tor-browser-bundle-bin # -> cannot be build
         thunderbird
         vlc
-        vokoscreen keymon
+        vokoscreen # keymon -> abandoned
         zoom-us
       ];
 
