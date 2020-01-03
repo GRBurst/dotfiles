@@ -41,21 +41,48 @@ swu() {
 
 # Docker
 alias dr="docker"
-alias drrm="docker rm"
-alias drvrm="docker volume rm"
-alias drirm="docker image rm"
+alias drc="docker container"
+alias dri="docker image"
+alias drv="docker volume"
+alias drn="docker network"
+alias drcl="docker container ls"
+alias dril="docker image ls"
+alias drvl="docker volume ls"
+alias drnl="docker network ls"
+alias drcr="docker container rm"
+alias drvr="docker volume rm"
+alias drir="docker image rm"
+alias drnr="docker network rm"
 alias drstop="docker stop"
 alias drstart="docker start"
 alias drps="docker ps"
 alias drl="docker logs"
 alias drst="docker status"
 alias drex="docker exec -it"
-alias drsa="docker stop -f $(docker ps -a -q)"
-alias drrmaf="docker stop $(docker ps -a -q); docker rm -f $(docker ps -a -q); docker image rm -f $(docker images -q); docker volume rm $(docker volume ls -q -f dangling=true)"
-alias drrmaff="docker container prune -f; docker image prune -af; docker volume prune -f"
-drsh() { docker exec -it $1 sh}
-drsh() { 
 
+drsa() { docker stop $(docker ps -a -q) }
+drsh() { docker exec -it $1 sh}
+drclean1() {
+    docker stop $(docker ps -a -f name="$1" -q )
+    docker container rm -f $(docker ps -a -f name="$1" -q )
+    docker volume rm -f $(docker volume ls -f name="$1" -q )
+    docker network rm $(docker network ls -f name="$1" -q )
+}
+drclean() {
+    docker stop $(docker ps -a -q )
+    docker container rm -f $(docker ps -a -q )
+    docker volume rm -f $(docker volume ls -q )
+    docker network rm $(docker network ls -q )
+}
+drclean?() {
+    local numContainer=$(docker container ls -q | wc -l)
+    local numVolumes=$(docker volume ls -q | wc -l)
+    local numNetworks=$(docker network ls -q | wc -l)
+    if [[ "$numContainer" -eq 0 && "$numVolumes" -eq 0 && "$numNetworks" -eq 3 ]]; then
+        echo "Docker clean"
+    else
+        echo "Docker unclean"
+    fi
 }
 
 # Colors
