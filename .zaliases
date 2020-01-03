@@ -135,6 +135,7 @@ alias ne='nix-env -e'
 alias t="tree -C"
 alias ta="tree -a"
 alias f="find"
+alias ff="find . -type f -iname "
 alias fif="find-in-file"
 alias dsize="sudo du -hsx ./* | sort -rh | head -n 40"
 
