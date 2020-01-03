@@ -11,16 +11,16 @@ exec --no-startup-id sh ~/.config/i3/local/start.sh
 set $sp ~/.config/i3/scripts
 
 # neo modifier, Mod4 is the windows key
-set $mod mod4
-set $Alt mod1
-set $AltGr mod3
-set $Strg control
+set $mod Mod4
+set $Alt Mod1
+set $AltGr Mod3
+set $Strg Control
 
 # Neo arrows
-set $Left   mod3+i
-set $Down   mod3+a
-set $Right  mod3+e
-set $Up     mod3+l
+set $MLeft  Mod3+Left
+set $MDown  Mod3+Down
+set $MRight Mod3+Right
+set $MUp    Mod3+Up
 
 # font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
 font pango:Droid Sans Mono 11
@@ -158,7 +158,7 @@ bindsym $mod+$AltGr+BackSpace exec VirtualBox
 bindsym $mod+$AltGr+period exec skype
 bindsym $mod+$AltGr+questiondown exec signal-desktop
 
-bindsym $mod+$AltGr+$Left exec idea-community
+bindsym $mod+$AltGr+Left exec idea-community
 # bindcode $mod+$AltGr+39 exec idea-community
 # bindsym $mod+$AltGr+ exec thunderbird; exec firefox
 #bindsym $mod+$AltGr+c exec pidgin; exec sskype
@@ -241,27 +241,21 @@ mode "resize <<< Resolution:(2) 1920x1080, (4) 3840x2160, (7) 1280x720; Position
         # Pressing right will grow the window’s width.
         # Pressing up will shrink the window’s height.
         # Pressing down will grow the window’s height.
-        bindsym $AltGr+$Left resize shrink width 10 px or 10 ppt
-        bindsym $AltGr+$Down resize grow height 10 px or 10 ppt
-        bindsym $AltGr+$Up resize shrink height 10 px or 10 ppt
-        bindsym $AltGr+$Right resize grow width 10 px or 10 ppt
+        bindsym $AltGr+$MLeft resize shrink width 10 px or 10 ppt
+        bindsym $AltGr+$MDown resize grow height 10 px or 10 ppt
+        bindsym $AltGr+$MUp resize shrink height 10 px or 10 ppt
+        bindsym $AltGr+$MRight resize grow width 10 px or 10 ppt
 
         # same bindings, but for the arrow keys
-        bindsym $Left resize shrink width 1 px or 1 ppt
-        bindsym $Down resize grow height 1 px or 1 ppt
-        bindsym $Up resize shrink height 1 px or 1 ppt
-        bindsym $Right resize grow width 1 px or 1 ppt
+        bindsym Left resize shrink width 1 px or 1 ppt
+        bindsym Down resize grow height 1 px or 1 ppt
+        bindsym Up resize shrink height 1 px or 1 ppt
+        bindsym Right resize grow width 1 px or 1 ppt
 
         # specific sizes
         bindsym KP_2 resize set 1920 1080; move position center; mode "default"
         bindsym KP_4 resize set 3840 2160; move position center; mode "default"
         bindsym KP_7 resize set 1280 720; move position center; mode "default"
-
-        bindsym $Left move left
-        bindsym $Down move down
-        bindsym $Up move up
-        bindsym $Right move right
-
 
         bindsym c move position center; mode "default"
 
@@ -287,22 +281,22 @@ mode "woost <<< Programs: (a) announcekit, (v) video/vokoscreen, (w) restore wor
 }
 bindsym $mod+Shift+w mode "woost <<< Programs: (a) announcekit, (v) video/vokoscreen, (w) restore work layout, (s/S) move/show scratchpad"
 
-# resize window (you can also use the mouse for that)
+# refocus window (you can also use the mouse for that)
 mode "refocus" {
         # change focus
-        bindsym $Left focus left
-        bindsym $Down focus down
-        bindsym $Up focus up
-        bindsym $Right focus right
+        bindsym $MLeft focus left
+        bindsym $MDown focus down
+        bindsym $MUp focus up
+        bindsym $MRight focus right
 
         bindsym p focus parent
         bindsym c focus child
 
         # move focused window
-        bindsym Shift+$Left move left
-        bindsym Shift+$Down move down
-        bindsym Shift+$Up move up
-        bindsym Shift+$Right move right
+        bindsym Shift+$MLeft move left
+        bindsym Shift+$MDown move down
+        bindsym Shift+$MUp move up
+        bindsym Shift+$MRight move right
 
         # back to normal: Enter or Escape
         bindsym Return mode "default"
