@@ -31,7 +31,7 @@ alias cg="cargo"
 alias scala='scala -Dscala.color -deprecation -unchecked -explaintypes -language:_'
 alias jsb='underscore print --color --outfmt json' # beautify json, package: npm -g install underscore-cli
 alias wn='cd ~/projects/woost/wust2 && nix-shell --command "zsh"'
-alias ws='cd ~/projects/woost/wust2 && ./start nsbt'
+alias ws='cd ~/projects/woost/wust2 && ./start sbt'
 alias rmt='cdg; rm -r **/target **/.*/**/target'
 # alias rwu='cd ~/projects/woost/wust2; ./start nsbt'
 swu() {
@@ -92,7 +92,7 @@ alias ls='ls --group-directories-first --color=auto -h'
 alias la='ls -lah --color=auto'
 alias lh='ls -hAl --color=auto'
 alias ll='ls -l --color=auto'
-alias lt='ls -ltr'
+alias lt='ls -lt --color=auto'
 
 # cd
 alias cdd='cd ~/downloads'
