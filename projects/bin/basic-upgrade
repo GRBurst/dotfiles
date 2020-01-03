@@ -1,8 +1,8 @@
 #!/run/current-system/sw/bin/zsh -i
 
-echo "Running self ${1:=system}"
-
 self () {
+    set -e
+
     case "${1}" in
         system)
             # System updates
@@ -42,7 +42,11 @@ self () {
             exit 1
     esac
 
+    exit 0
+
 }
+
+echo "Running self ${1:=system}"
 
 self "$@"
 
