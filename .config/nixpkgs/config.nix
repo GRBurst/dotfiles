@@ -21,7 +21,8 @@ in {
     # inherit pkgs;
 
     pidgin-with-plugins = pkgs.pidgin-with-plugins.override {
-      plugins = [ pidginotr purple-facebook telegram-purple toxprpl pidginotr pidgin-skypeweb pidgin-opensteamworks ]; #localpkgs.purple-gnome-keyring ];
+      plugins = [ pidginotr purple-facebook telegram-purple toxprpl pidginotr pidgin-skypeweb pidgin-opensteamworks ];
+      # plugins = [ pidginotr purple-facebook telegram-purple toxprpl pidginotr pidgin-skypeweb pidgin-opensteamworks localpkgs.purple-gnome-keyring ];
     };
 
     common-packages = buildEnv {
@@ -259,6 +260,7 @@ in {
         cryptsetup
         evince
         fwupd # bios + firmware updates
+        guvcview
         okular
         jbidwatcher
         # jdownloader
@@ -266,7 +268,7 @@ in {
         kdeApplications.kdenlive
         peek # record gif videos || green-recorder / gifcurry / screenToGif
         kodi
-        linphone # ekiga #breaks on 2019-12-09
+        linphone # ekiga -> breaks on 2019-12-09
         openjdk
         protonmail-bridge
         qutebrowser
@@ -279,6 +281,7 @@ in {
         thunderbird
         vlc
         vokoscreen # keymon -> abandoned
+        zoom-us
       ];
 
     };
