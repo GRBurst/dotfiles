@@ -285,7 +285,7 @@ search_replace() {
 }
 
 # Internet and Wlan
-alias inet="ping -q -w 1 -c 1 google.com > /dev/null && echo online || echo offline"
+alias inet="ping -q -w 1 -c 1 1.1.1.1 > /dev/null && echo online || echo offline"
 alias won='nmcli radio wifi on; wscan'
 alias woff='nmcli radio wifi off'
 alias wscan='nmcli dev wifi rescan > /dev/null 2>&1; true'
