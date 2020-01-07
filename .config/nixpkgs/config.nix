@@ -37,39 +37,35 @@ in {
         acpi
         avahi
         atop htop iotop
-        bc
-        bind
+        bc calc
         binutils
+        cryptsetup
         linuxPackages.cpupower
-        wget netcat nmap
         psmisc
         hdparm hd-idle hddtemp
-        pv xclip xorg.xkill unclutter-xfixes xorg.xwininfo
-        lm_sensors calc gksu
-        haskellPackages.yeganesh
+        lm_sensors
+        gksu
         gnumake
-        nitrogen scrot
-        networkmanagerapplet
+        openjdk
         pwgen
         rofi rofi-systemd #dmenu
         btrfs-progs
         dbus-map
         lsof
         #mosh
-        nload
         pciutils
         p7zip
-        speedtest-cli
-        traceroute
-        # zip
-        unzip
+        pv
+        screen
+        scrot
+        unzip # zip
+
+        # x-server
         xcwd
-        xorg.xdpyinfo
-        xorg.xev
-        xorg.xmodmap
-        gnome3.adwaita-icon-theme
-        vanilla-dmz
-        wireshark
+        xclip
+        unclutter-xfixes 
+        xorg.xdpyinfo xorg.xev xorg.xmodmap xorg.xkill xorg.xwininfo
+        vanilla-dmz # x cursor
 
         # Security
         gnome3.gnome-keyring gnome3.libgnome-keyring gnome3.seahorse libsecret
@@ -77,9 +73,24 @@ in {
         keepass
         keepassx-community
         keybase-gui
+        
+        # Network
+        bind
+        wget
+        netcat
+        nmap
+        miniserve
+        networkmanagerapplet
+        networkmanager_dmenu
+        nload
+        speedtest-cli
+        traceroute
+        whois
+        wireshark
 
         # Terminal
         termite nix-zsh-completions
+        haskellPackages.yeganesh
 
         # Filesystem
         gnome3.nautilus gnome3.gvfs
@@ -87,9 +98,10 @@ in {
         fuse-common
         pmount
         tree gparted
-        ntfs3g inotify-tools smartmontools
+        ntfs3g
+        inotify-tools
+        smartmontools
         exfat
-        file
         # gnome3.file-roller # mimeinfo collides with nautilus
         gptfdisk
         spaceFM
@@ -97,12 +109,9 @@ in {
         desktop_file_utils
         usbutils
 
-        miniserve
-
         # Office
         calibre
-        firefox
-        profile-sync-daemon
+        firefox profile-sync-daemon
         libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
         samba cifs-utils
         sane-frontends
@@ -110,27 +119,25 @@ in {
         gnome3.gedit
         jmtpfs
         libnotify
-        networkmanager_dmenu
         qrencode
         simple-scan
         typora
         zathura
         texlive.combined.scheme-full
+        thunderbird protonmail-bridge
         # biber # collides texlive full
         pdftk #pdfshuffler
         pdfsandwich
-        tesseract
         poppler_utils
         xournal
 
         # Media
-        avidemux
-        audacity
+        feh imv nitrogen 
         gimp
         inkscape 
         mate.atril
         mimeo
-        mpv imv feh
+        mpv
         imagemagick7
         pamixer
         pavucontrol
@@ -143,9 +150,7 @@ in {
 
         # Communication
         pidgin-with-plugins
-        qtox
         signal-desktop
-        irssi
 
         # Themes
         breeze-gtk breeze-icons breeze-qt5 
@@ -195,7 +200,7 @@ in {
         vscode
 
         brave
-        google-chrome
+        # google-chrome
         firefox-devedition-bin
       ];
 
@@ -254,13 +259,15 @@ in {
       name = "highres-packages";
 
       paths = [
+        avidemux
+        audacity
         brasero
         (chromium.override { enablePepperFlash = false; enableWideVine = false;})
         clementine
-        cryptsetup
         evince
         fwupd # bios + firmware updates
         guvcview
+        irssi
         okular
         jbidwatcher
         # jdownloader
@@ -269,16 +276,14 @@ in {
         peek # record gif videos || green-recorder / gifcurry / screenToGif
         kodi
         linphone # ekiga -> breaks on 2019-12-09
-        openjdk
-        protonmail-bridge
         qutebrowser
-        screen
+        qtox
         skypeforlinux
         shotwell
+        tesseract # open source ocr engine
         # texmaker #breaks on 2019-10-22
         texstudio #lyx
         # tor-browser-bundle-bin # -> cannot be build
-        thunderbird
         vlc
         vokoscreen # keymon -> abandoned
         zoom-us
