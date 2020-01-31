@@ -298,6 +298,11 @@
       '';
     };
 
+    timesyncd = {
+      enable = true;
+      servers = [ "ntp1.rwth-aachen.de" "ntp2.rwth-aachen.de" ];
+    };
+
     fstrim.enable = true;
     smartd.enable = true;
 
