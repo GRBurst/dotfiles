@@ -8,6 +8,7 @@ in {
 
   allowUnfree = true;
   oraclejdk.accept_license = true;
+  android_sdk.accept_license = true;
 
   # Install local packages with localpkgs.X,
   # e.g.: localpkgs.xcwd
