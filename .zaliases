@@ -61,7 +61,7 @@ alias drst="docker status"
 alias drex="docker exec -it"
 
 drsa() { docker stop $(docker ps -a -q) }
-drsh() { docker exec -it $1 sh}
+drsh() { docker exec -it $1 sh }
 drclean1() {
     docker stop $(docker ps -a -f name="$1" -q )
     docker container rm -f $(docker ps -a -f name="$1" -q )
@@ -113,7 +113,7 @@ alias df='df -h'
 alias cp='cp -i'
 alias mv='mv -i'
 alias md='mkdir -p'
-alias mdcd='mkdir-cd'
+alias mdcd='mkdir -cd'
 alias mvi='interactive-mv'
 alias mcp='noglob zmv -C -W'
 alias mln='noglob zmv -L -W'
@@ -293,6 +293,8 @@ alias woff='nmcli radio wifi off'
 alias wscan='nmcli dev wifi rescan > /dev/null 2>&1; true'
 alias wlist='nmcli dev wifi list'
 alias wcon='nmcli dev wifi connect'
+
+alias nload='nload -u h'
 
 gobile() {
     echo "stopping network-heavy services and starting mobile network"
