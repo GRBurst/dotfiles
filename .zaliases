@@ -13,7 +13,7 @@ DOTFILES_PRIVATE_TIG="TIGRC_USER=$HOME/.config/tig/config-dotfiles-private $DOTF
 alias d="$DOTFILES_GIT git -c core.excludesfile=~/.gitignore-dotfiles"
 alias dp="$DOTFILES_PRIVATE_GIT git -c core.excludesfile=~/.gitignore-dotfiles-private"
 alias tigd="$DOTFILES_TIG tig"
-alias tigdp="$DOTFILES_PRIVATE_GIT tig"
+alias tigdp="$DOTFILES_PRIVATE_TIG tig"
 alias meldd="$DOTFILES_GIT meld"
 vd() {(cd; eval $DOTFILES_GIT vim -c GitFiles);}
 
