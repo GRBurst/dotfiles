@@ -62,6 +62,7 @@ alias drex="docker exec -it"
 
 drsa() { docker stop $(docker ps -a -q) }
 drsh() { docker exec -it $1 sh }
+drbash() { docker exec -it $1 bash }
 drclean1() {
     docker stop $(docker ps -a -f name="$1" -q )
     docker container rm -f $(docker ps -a -f name="$1" -q )
@@ -75,9 +76,9 @@ drclean() {
     docker network rm $(docker network ls -q )
 }
 drclean?() {
-    local numContainer=$(docker container ls -q | wc -l)
-    local numVolumes=$(docker volume ls -q | wc -l)
-    local numNetworks=$(docker network ls -q | wc -l)
+    local numContainer="$(docker container ls -q | wc -l)"
+    local numVolumes="$(docker volume ls -q | wc -l)"
+    local numNetworks="$(docker network ls -q | wc -l)"
     if [[ "$numContainer" -eq 0 && "$numVolumes" -eq 0 && "$numNetworks" -eq 3 ]]; then
         echo "Docker clean"
     else
