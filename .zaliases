@@ -286,6 +286,9 @@ echo ${result}
 search_replace() {
     ag "$1" -l0 | xargs -0 sed -i "s/$1/$2/g"
 }
+search_replace_all() {
+    ag -a "$1" -l0 | xargs -0 sed -i "s/$1/$2/g"
+}
 
 # Internet and Wlan
 alias has_inet="ping -q -w 1 -c 1 1.1.1.1 > /dev/null && echo online || echo offline"
