@@ -23,7 +23,8 @@ nnoremap <leader>vr :source ~/.ideavimrc<CR>
 " NEO-Layout
 
 " simple closing and saving (helpful in NEO keyboard layout)
-nnoremap ö :w<CR>
+" nnoremap ö :w<CR>
+nnoremap ö :action SaveAll<CR>:action Flutter.Toolbar.ReloadAction<CR>
 nnoremap ä :action Exit<CR>
 nnoremap ü :q<CR>
 nnoremap <leader>ü :action CloseAllEditorsButActive<CR>
