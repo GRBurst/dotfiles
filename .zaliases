@@ -131,6 +131,7 @@ ni() { nix-env -iA "$@" -f "<nixos-unstable>" }
 alias nq='nix-env -q'
 alias ns='nix-shell --command "zsh"'
 alias ne='nix-env -e'
+alias nh='nix-hash --type sha256 --flat --base32'
 
 # Tools
 alias t="tree -C"
