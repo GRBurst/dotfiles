@@ -24,14 +24,13 @@
 
     # kernelPackages = pkgs.linuxPackages_latest;
 
-    initrd.luks.devices = [
-      {
-        name = "root";
+    initrd.luks.devices = {
+      root = {
         device = "/dev/disk/by-uuid/d95b210b-6105-43d9-b527-3744578a16cd";
         preLVM = true;
         allowDiscards = true;
-      }
-    ];
+      };
+    };
 
     # initrd.mdadmConf = ''
     #   DEVICE partitions
@@ -106,10 +105,11 @@
     #powertop.enable = true;
   };
 
-  i18n = { # Select internationalisation properties.
-    consoleKeyMap = "neo";
-    defaultLocale = "en_US.UTF-8";
+  console = { # Select internationalisation properties.
+    keyMap = "neo";
   };
+
+  i18n.defaultLocale = "en_US.UTF-8";
 
   # Set your time zone.
   time.timeZone = "Europe/Berlin";
@@ -318,13 +318,13 @@
             user = "jelias";
           };
         };
+        defaultSession = "none+i3";
         #setupCommands = ''
         #  gnome-keyring-daemon --start --components=pkcs11,secrets,ssh
         #'';
       };
 
       desktopManager.xterm.enable  = false;
-      desktopManager.default = "none";
       windowManager = {
         i3 = {
           enable = true;
@@ -335,7 +335,6 @@
             gnome-keyring-daemon --start -d --components=pkcs11,secrets,ssh
           '';
         };
-        default = "i3";
       };
     };
 
