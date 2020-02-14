@@ -206,7 +206,9 @@
   users.defaultUserShell = "/run/current-system/sw/bin/zsh";
 
   security = {
+	pam.services.lightdm.enableGnomeKeyring = true;
 	pam.services.login.enableGnomeKeyring = true;
+	pam.services.i3lock.enableGnomeKeyring = true;
 
     # pam.services = [
     #   {
