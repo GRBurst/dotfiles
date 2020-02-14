@@ -326,13 +326,15 @@
             user = "jelias";
           };
         };
-        defaultSession = "none+i3";
+        # defaultSession = "none+i3";
+
         #setupCommands = ''
         #  gnome-keyring-daemon --start --components=pkcs11,secrets,ssh
         #'';
       };
 
       desktopManager.xterm.enable  = false;
+      desktopManager.default = "none";
       windowManager = {
         i3 = {
           enable = true;
@@ -343,6 +345,7 @@
             gnome-keyring-daemon --start -d --components=pkcs11,secrets,ssh
           '';
         };
+        default = "i3";
       };
     };
 
