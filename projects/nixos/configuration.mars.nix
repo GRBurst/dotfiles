@@ -105,11 +105,17 @@
     #powertop.enable = true;
   };
 
-  console = { # Select internationalisation properties.
-    keyMap = "neo";
-  };
+  # console = { # Select internationalisation properties.
+  #   keyMap = "neo";
+  # };
 
-  i18n.defaultLocale = "en_US.UTF-8";
+  # i18n.defaultLocale = "en_US.UTF-8";
+
+
+  i18n = { # Select internationalisation properties.
+    consoleKeyMap = "neo";
+    defaultLocale = "en_US.UTF-8";
+  };
 
   # Set your time zone.
   time.timeZone = "Europe/Berlin";
