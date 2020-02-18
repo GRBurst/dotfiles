@@ -316,7 +316,7 @@
       # dpi = 192;
       dpi = 96;
       # videoDrivers = [ "nvidia" ];
-      videoDrivers = [ "intel" ];
+      videoDrivers = [ "nouveau" ];
       layout = "de,de";
       xkbVariant = "neo,basic";
       xkbOptions = "grp:menu_toggle";
