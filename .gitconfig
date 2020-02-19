@@ -37,12 +37,12 @@
     fuub = "!f() { local curBranch=$(git rev-parse --abbrev-ref HEAD) && git fetch upstream && git merge upstream/$curBranch; }; f" # fetch upstream and merge
 
     # Commit
-    c       = commit
-    cm      = commit -m
-    cam     = commit -a -m
-    amend   = commit --amend
-    ca      = commit --amend
-    wip		= "!f() { git commit -a -m 'wip' && git push; }; f"
+    c       = commit -S
+    cm      = commit -S -m
+    cam     = commit -S -a -m
+    amend   = commit -S --amend
+    ca      = commit -S --amend
+    wip		= "!f() { git commit -S -a -m 'wip' && git push; }; f"
 
     # Move pointer
     prev    = reset --soft HEAD~1
