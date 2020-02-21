@@ -107,12 +107,12 @@ Plug 'LnL7/vim-nix' " nixos syntax
 " Plug 'gre/play2vim' " play web framework
 " Plug 'vim-scripts/JavaDecompiler.vim' " decompile java .class files on the fly
 Plug 'LaTeX-Box-Team/LaTeX-Box', {'for': 'tex'} " LaTeX
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 let g:deoplete#enable_at_startup = 1
 
-Plug 'natebosch/vim-lsc'
+" Plug 'natebosch/vim-lsc'
 let g:lsc_server_commands = {
   \ 'scala': 'metals-vim'
   \}
