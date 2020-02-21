@@ -186,6 +186,7 @@
 [user]
     email   = GRBurst@protonmail.com
     name    = GRBurst
+	signingkey = 797F623868CD00C2
 
 [pull]
     ff      = only
