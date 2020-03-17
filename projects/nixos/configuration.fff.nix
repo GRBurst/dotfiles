@@ -27,10 +27,10 @@
       };
     };
 
-    kernelParams = ["processor.max_cstate=1"]; # fix for ryzen freeze?
+    kernelParams = [ "processor.max_cstate=5" "rcu_nocbs=0-11" ]; # fix for ryzen freeze?
 
     # kernelPackages = pkgs.linuxPackages_4_14;
-    # kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.linuxPackages_latest;
 
     tmpOnTmpfs = true;
 
