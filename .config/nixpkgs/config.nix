@@ -99,6 +99,7 @@ in {
         fuse-common
         pmount
         tree gparted
+        broot
         ntfs3g
         inotify-tools
         smartmontools
