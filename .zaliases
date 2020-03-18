@@ -178,6 +178,7 @@ v() {
     );
 }
 # v() { echo $@ | vim -c Rooter -c Files }
+vb() { vim $(which $1); }
 vr() { vim -c "History $*"; }
 vt() { vim -c "Tags $*"; }
 
