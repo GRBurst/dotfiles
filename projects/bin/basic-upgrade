@@ -2,8 +2,13 @@
 
 self () {
     set -e
+    local isInstall=false;
 
     case "${1}" in
+        install)
+            echo "Starting fresh install with ${@:2}"
+            isInstall=true;
+        ;&
         system)
             # System updates
             system-upgrade
@@ -11,7 +16,11 @@ self () {
         ;&
         userpkgs)
             # Local packages upgrade
-            userpkgs-upgrade
+            if [ "$isInstall" = true ]; then
+                userpkgs-upgrade "$@"
+            else
+                userpkgs-upgrade
+            fi
 
             # Local packages cleanup
             userpkgs-cleanup
@@ -22,7 +31,7 @@ self () {
             usertools-upgrade
 
             # cecho "G" "updating global npm packages"
-            # npm -g update
+            npm -g update
 
             # cecho "G" "updating git repos"
             # mr update
@@ -35,6 +44,7 @@ self () {
         ;;
         *)
             echo "unknown parameter ${1}, expected one of:"
+            echo "\tinstall"
             echo "\tsystem"
             echo "\tuserpkgs"
             echo "\tusertools"
@@ -46,7 +56,7 @@ self () {
 
 }
 
-echo "Running self ${1:=system}"
+echo "Running basic update: ${1:=system}"
 
 self "$@"
 
