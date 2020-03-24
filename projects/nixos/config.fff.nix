@@ -99,6 +99,7 @@ in {
         fuse-common
         pmount
         tree gparted
+        broot
         ntfs3g
         inotify-tools
         smartmontools
@@ -197,7 +198,7 @@ in {
         nixops
         nox
 
-        swiProlog
+        # swiProlog
         vscode
 
         brave

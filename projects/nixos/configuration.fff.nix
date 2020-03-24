@@ -12,6 +12,7 @@
   imports =
   [
     ./hardware-configuration.nix
+    ./woost-configuration.nix
   ];
 
   boot = {
