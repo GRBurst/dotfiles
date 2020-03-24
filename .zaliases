@@ -109,10 +109,12 @@ alias pp='cd ~/projects/$(ls -t ~/projects | head -1)'
 alias vm='vim $(git-select-dirty-files)'
 alias vbu="vim ~/projects/bin/basic-upgrade"
 p() { cd ~/projects/"$(ls -t ~/projects | fzf --query="$(echo $@ | tr ' ' '\ ' )")";}
+cdl() { cd "$1"; ls; }
 
 # file listing/interaction
 alias df='df -h'
 alias cp='cp -i'
+alias cpf='\cp -f'
 alias mv='mv -i'
 alias mp='mkdir -p'
 alias mdcd='mkdir -cd'
@@ -313,6 +315,7 @@ gobile() {
     # nmcli connection up "Mobil Hotspot (MD)"
     sudo systemctl start modem-manager.service
 }
+alias hotspot='nmcli connection up "Mobil Hotspot (MD)"'
 
 # services & daemons
 alias tv="sudo systemctl start teamviewerd.service && teamviewer"
