@@ -97,8 +97,10 @@ in {
         gnome3.nautilus gnome3.gvfs
         ncdu fzf fasd file silver-searcher
         fuse-common
+        bindfs
         pmount
         tree gparted
+        broot
         ntfs3g
         inotify-tools
         smartmontools
@@ -175,6 +177,7 @@ in {
       paths = [
         scala-packages
 
+        atom
         ctags
         gdb
         git tig gitRepo
@@ -316,6 +319,7 @@ in {
       paths = [
         runelite
         linux-steam-integration
+        discord
         xboxdrv
         # steam
         # steam-run
