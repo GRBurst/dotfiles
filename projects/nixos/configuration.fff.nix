@@ -42,6 +42,13 @@
     };
   };
 
+  fileSystems = {
+    "/media/macos" = {
+        device = "/dev/disk/by-uuid/aa4a3a0d-d16c-42cf-8c25-ec8215579337";
+        fsType = "ext4";
+        options = [ "defaults" "x-systemd.automount" "noauto" ];
+    };
+  };
 
   # fileSystems = {
     # "/media/ateam" = {
