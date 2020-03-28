@@ -146,4 +146,5 @@ source ~/.zaliases
 # added by travis gem
 [ -f $HOME/.travis/travis.sh ] && source $HOME/.travis/travis.sh
 
-source $HOME/.config/broot/launcher/bash/br
+# broot
+[ -f $HOME/.config/broot/launcher/bash/br ] && source $HOME/.config/broot/launcher/bash/br
