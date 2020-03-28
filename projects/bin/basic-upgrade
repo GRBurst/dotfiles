@@ -21,10 +21,6 @@ self () {
             else
                 userpkgs-upgrade
             fi
-
-            # Local packages cleanup
-            userpkgs-cleanup
-            echo "finished userpkgs upgrade"
         ;&
         usertools)
             # Plugin manager and programs
@@ -36,6 +32,11 @@ self () {
             # cecho "G" "updating git repos"
             # mr update
             echo "finished usertools upgrade"
+        ;&
+        cleanup)
+            # Local packages cleanup
+            pkgs-cleanup
+            echo "finished userpkgs upgrade"
         ;&
         filesystem)
             # Filesystem related
