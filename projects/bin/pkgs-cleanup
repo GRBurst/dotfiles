@@ -1,0 +1,15 @@
+#!/run/current-system/sw/bin/zsh -ie
+
+# Cleanup and optimize
+cecho "G" "delete previous generations"
+nix-env --delete-generations 30d
+sudo nix-env --delete-generations 30d
+
+cecho "G" "cleanup nix garbage"
+nix-collect-garbage --delete-older-than 30d
+sudo nix-collect-garbage --delete-older-than 30d
+
+cecho "G" "optimize nix-store"
+nix-store --optimize
+
+exit 0
