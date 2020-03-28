@@ -163,6 +163,7 @@
 
 [commit]
     verbose = true
+	gpgsign = true
 
 [core]
     pager   = less

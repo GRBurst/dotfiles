@@ -20,6 +20,7 @@ bind branch  N !git branch -m %(branch) %(prompt)
 # branch     M !git rebase --onto master %(branch)
 bind generic F !git fetch
 bind generic P !git push
+bind status  C !git commit -S
 bind status  A !git commit -S --amend
 bind stage   u stage-update-line
 bind stage   <Home> stage-update-line ; NEO AltGr+u
