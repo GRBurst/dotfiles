@@ -6,6 +6,9 @@ let
   unstable  = import <nixos-unstable/nixos> {};
 in {
 
+  permittedInsecurePackages = [
+    "openssl-1.0.2u"
+  ];
   allowUnfree = true;
   oraclejdk.accept_license = true;
   android_sdk.accept_license = true;
