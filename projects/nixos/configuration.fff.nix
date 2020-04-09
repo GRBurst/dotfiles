@@ -124,6 +124,7 @@
   powerManagement = {
     enable = true;
     # powertop.enable = true;
+    powerUpCommands = "${pkgs.hdparm}/sbin/hdparm -Y /dev/disk/by-id/ata-WDC_WD10EZEX-00BN5A0_WD-WCC3F5TTNUH";
   };
 
   i18n = {
@@ -139,6 +140,7 @@
   environment = {
     systemPackages = with pkgs; [
       vim
+      hdparm
       # wirelesstools
       # wget pv htop atop git netcat nmap xorg.xkill psmisc lm_sensors calc tree gparted gksu ntfs3g inotify-tools unzip
       # ncdu fzf fasd silver-searcher tig ctags xclip tmate pmount scrot nix-zsh-completions haskellPackages.yeganesh
@@ -352,13 +354,13 @@
       forwardX11 = true;
     };
 
-    # autossh.sessions = [
-    #   {
-    #   user = "jelias";
-    #   name = "juptiter-pluto";
-    #   extraArguments = "-M 0 -N -q -o 'ServerAliveInterval=60' -o 'ServerAliveCountMax=3' -o 'ExitOnForwardFailure=yes' pluto -R 53292:127.0.0.1:53292 -i /home/jelias/.ssh/jupiter->pluto";
-    #   }
-    # ];
+    autossh.sessions = [
+      {
+        user = "jelias";
+        name = "fff-pluto";
+        extraArguments = "-M 0 -N -q -o 'ServerAliveInterval=60' -o 'ServerAliveCountMax=3' -o 'ExitOnForwardFailure=yes' pluto -R 53292:127.0.0.1:41273 -i /home/jelias/.ssh/fff->autoplutossh";
+      }
+    ];
 
     avahi.enable = true;
 
@@ -565,6 +567,7 @@
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM+BIE+0anEEYK0fBIEpjedblyGW0UnuYBCDtjZ5NW6P jelias@merkur"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILM3FfAcv98v6F4a9GrJHLzBE7K0FiUKT4rZN9Hd++NE jelias@venus->fff on 2018-01-30"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINxRNNAwtoyhENMbvzzjMb/qRvk9rI3F+C2ORgPc7VGO jelias@mars->fff on 2020-04-06"
     ];
   };
 
