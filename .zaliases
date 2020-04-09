@@ -87,6 +87,12 @@ drclean?() {
     fi
 }
 
+# VirtualBox
+alias macvm='VBoxManage startvm "macOS" --type headless'
+alias macvmg='VBoxManage startvm "macOS"'
+alias macvms='ssh macvm; sleep 300; echo "shutting down at $(date)" >> ~/poweroff.log; poweroff'
+alias macvmds='VBoxManage startvm "macOS" --type headless; sleep 300; ssh macvm; sleep 300; echo "shutting down at $(date)" >> ~/poweroff.log; poweroff'
+
 # Colors
 alias ssh='TERM=xterm-256color ssh'
 alias l='ls -l --color=auto'
