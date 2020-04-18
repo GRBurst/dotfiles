@@ -319,7 +319,7 @@ gobile() {
     sudo systemctl stop nixos-upgrade.timer > /dev/null 2>&1
     sudo systemctl stop nixos-upgrade > /dev/null 2>&1
     # nmcli connection up "Mobil Hotspot (MD)"
-    sudo systemctl start modem-manager.service
+    sudo systemctl start ModemManager.service
 }
 alias hotspot='nmcli connection up "Mobil Hotspot (MD)"'
 
