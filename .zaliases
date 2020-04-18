@@ -89,8 +89,10 @@ drclean?() {
 }
 
 # VirtualBox
+# VBoxManage list runningvms | grep -c 1 macOS
 alias macvm='VBoxManage startvm "macOS" --type headless'
 alias macvmg='VBoxManage startvm "macOS"'
+alias macvmds='VBoxManage startvm "macOS" --type headless; sleep 300; ssh macvm'
 alias macvms='ssh macvm; sleep 300; echo "shutting down at $(date)" >> ~/poweroff.log; poweroff'
 alias macvmds='VBoxManage startvm "macOS" --type headless; sleep 300; ssh macvm; sleep 300; echo "shutting down at $(date)" >> ~/poweroff.log; poweroff'
 
