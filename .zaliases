@@ -258,6 +258,15 @@ proj_ctags () {
 }
 
 # General
+bindmount() {
+    sudo mkdir -p /media/{$2,$2-system} \
+        && sudo mount /dev/$1 /media/$2-system \
+        && sudo bindfs -u $(id -u) -g $(id -g) /media/$2-system /media/$2
+}
+bindumount() {
+    sudo umount /media/$1 \
+        && sudo umount /media/$1-system
+}
 alias ateamsmb="cd /tmp && smbclient //ateam/upload -U nobody -N -W FOO"
 ateam-mount() {
     sudo mount -t cifs //ateam/ateam /media/ateam/ateam -o guest,uid=$(id -u),gid=$(id -g),ro
