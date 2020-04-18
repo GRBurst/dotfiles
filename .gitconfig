@@ -103,6 +103,12 @@
     rom = "!f() { git rebase --onto master $1 \"$(git rev-parse --abbrev-ref HEAD)\" ;}; f"
     rum = rebase upstream/master
 
+    # Tags
+    tdl = "tag -d -s"
+    td  = "!f() { git tag -d $1; git push origin :$1;}; f" # delete local and remote tag
+    tm  = "tag -s -m"
+    t   = "tag -s"
+
     # Merge
     m   = merge
     ma  = merge --abort
