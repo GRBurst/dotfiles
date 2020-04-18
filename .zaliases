@@ -34,6 +34,7 @@ alias nw='cd ~/projects/woost/wust2 && git pull && nix-shell --command "zsh"'
 alias nl='cd ~/projects/woost/listo && git pull && nix-shell --command "zsh"'
 alias ws='cd ~/projects/woost/wust2 && ./start sbt'
 alias rmt='cdg; rm -r **/target **/.*/**/target'
+alias rm='rm -I'
 # alias rwu='cd ~/projects/woost/wust2; ./start nsbt'
 swu() {
     cd ~/projects/woost/wust2
