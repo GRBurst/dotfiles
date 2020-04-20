@@ -110,12 +110,11 @@ fi
 
 # Colors
 alias ssh='TERM=xterm-256color ssh'
-alias l='ls -l --color=auto'
-alias ls='ls --group-directories-first --color=auto -h'
-alias la='ls -lah --color=auto'
-alias lh='ls -hAl --color=auto'
-alias ll='ls -l --color=auto'
-alias lt='ls -lt --color=auto'
+alias l='ls -l'
+alias la='ls -lah'
+alias lh='ls -hAl'
+alias ll='ls -l'
+alias lt='ls -lt'
 
 # cd
 alias cdd='cd ~/downloads'
