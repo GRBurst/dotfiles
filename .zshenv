@@ -2,6 +2,7 @@
 # Default programs
 export BROWSER=firefox
 export SUDO_EDITOR=rvim
+export EDITOR=nvim
 export VISUAL="nvim"
 export PAGER="less -R -F"
 # export PAGER=vimpager
@@ -62,7 +63,9 @@ export GDK_USE_XFT=1
 which cope_path > /dev/null && export PATH=$(cope_path):$PATH
 
 # colorful file listings
-eval $(dircolors ~/.dir_colors)
+if [ -n "${commands[dircolors]}" ]; then
+    eval $(dircolors ~/.dir_colors)
+fi
 
 # colorize manpages (when using less as pager)
 export LESS_TERMCAP_mb=$(printf "\33[01;34m")   # begin blinking

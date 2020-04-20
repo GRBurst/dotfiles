@@ -23,6 +23,13 @@ GIT_DIR=$HOME/projects/dotfiles GIT_WORK_TREE=$HOME git checkout master
 
 # Clone zgen (used in dotfiles)
 git clone https://github.com/tarjoilija/zgen.git "${HOME}/local/zgen"
+# chsh -s /bin/zsh
+
+# For MacOS
+rm $HOME/.vim
+rm $HOME/.vimrc
+ln -sf $HOME/.vim $HOME/.config/nvim
+ln -sf $HOME/.vimrc $HOME/.vim/init.vim
 
 # Modify and run upgrade
 basic-upgrade install

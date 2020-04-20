@@ -5,6 +5,7 @@ source ~/.zprofile
 export PURE_GIT_PULL=0 # disable pure-promt git pull when entering git repo
 export DISABLE_AUTO_UPDATE="true" # disable oh-my-zsh auto-update
 export DISABLE_UPDATE_PROMPT="true" # disable oh-my-zsh update prompt
+export ZSH_DISABLE_COMPFIX="true" # disable oh-my-zsh security check
 
 eval    "$(fasd --init auto)"
 source  "${HOME}/local/zgen/zgen.zsh"
@@ -43,8 +44,8 @@ SPACESHIP_PROMPT_ORDER=(
   # php           # PHP section
   rust          # Rust section
   haskell       # Haskell Stack section
-  # julia         # Julia section
-  docker        # Docker section
+  julia         # Julia section
+  # docker        # Docker section
   aws           # Amazon Web Services section
   venv          # virtualenv section
   conda         # conda virtualenv section

@@ -96,6 +96,18 @@ alias macvmds='VBoxManage startvm "macOS" --type headless; sleep 300; ssh macvm'
 alias macvms='ssh macvm; sleep 300; echo "shutting down at $(date)" >> ~/poweroff.log; poweroff'
 alias macvmds='VBoxManage startvm "macOS" --type headless; sleep 300; ssh macvm; sleep 300; echo "shutting down at $(date)" >> ~/poweroff.log; poweroff'
 
+# cross-os file-listing
+if [ "$(uname 2> /dev/null)" != "Linux" ]; then
+    # for Mac
+    alias ls='ls -hFG'
+else
+    if [ -n "${commands[grc]}" ]; then
+        alias ls='grc ls --group-directories-first --color=always --escape --human-readable --classify'
+    else
+        alias ls='ls --group-directories-first --color=always --escape --human-readable --classify'
+    fi
+fi
+
 # Colors
 alias ssh='TERM=xterm-256color ssh'
 alias l='ls -l --color=auto'
@@ -310,7 +322,7 @@ search_replace() {
     ag "$1" -l0 | xargs -0 sed -i "s/$1/$2/g"
 }
 search_replace_all() {
-    ag -a "$1" -l0 | xargs -0 sed -i "s/$1/$2/g"
+    ag -a --hidden "$1" -l0 | xargs -0 sed -i "s/$1/$2/g"
 }
 
 # Internet and Wlan
