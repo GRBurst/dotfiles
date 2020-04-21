@@ -239,7 +239,7 @@ in {
 
         brave
         # google-chrome
-        firefox-devedition-bin
+        # firefox-devedition-bin
       ];
 
     };
