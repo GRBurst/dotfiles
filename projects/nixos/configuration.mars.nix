@@ -307,6 +307,8 @@
       '';
     };
 
+    usbmuxd.enable = true;
+
     fstrim.enable = true;
     # smartd.enable = true;
 

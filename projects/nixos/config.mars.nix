@@ -176,12 +176,30 @@ in {
 
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
       extraOutputsToInstall = [ "man" ];
-      name = "dev-packages";
+      name = "nixos-packages";
 
       paths = [
         nixops
         nix-prefetch-git
         nox
+      ];
+
+    };
+
+    ios-packages = buildEnv {
+
+      inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
+      extraOutputsToInstall = [ "man" ];
+      name = "ios-packages";
+
+      paths = [
+        libimobiledevice
+        libirecovery
+        libusbmuxd
+        ideviceinstaller
+        ifuse
+        # haskellPackages.push-notify-apn
+        usbmuxd
       ];
 
     };
