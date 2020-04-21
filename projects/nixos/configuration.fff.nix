@@ -31,7 +31,7 @@
     kernelParams = [ "processor.max_cstate=5" "rcu_nocbs=0-11" ]; # fix for ryzen freeze?
 
     # kernelPackages = pkgs.linuxPackages_4_14;
-    kernelPackages = pkgs.linuxPackages_latest;
+    # kernelPackages = pkgs.linuxPackages_latest;
 
     tmpOnTmpfs = true;
 
@@ -124,7 +124,9 @@
   powerManagement = {
     enable = true;
     # powertop.enable = true;
-    powerUpCommands = "${pkgs.hdparm}/sbin/hdparm -Y /dev/disk/by-id/ata-WDC_WD10EZEX-00BN5A0_WD-WCC3F5TTNUH";
+    powerUpCommands = "${pkgs.hdparm}/bin/hdparm -Y /dev/disk/by-id/ata-WDC_WD10EZEX-00BN5A0_WD-WCC3F5TTNUHT";
+
+    
   };
 
   i18n = {
@@ -140,7 +142,7 @@
   environment = {
     systemPackages = with pkgs; [
       vim
-      hdparm
+      # hdparm
       # wirelesstools
       # wget pv htop atop git netcat nmap xorg.xkill psmisc lm_sensors calc tree gparted gksu ntfs3g inotify-tools unzip
       # ncdu fzf fasd silver-searcher tig ctags xclip tmate pmount scrot nix-zsh-completions haskellPackages.yeganesh
@@ -272,6 +274,14 @@
 	# mtr.enable = true;
 
 	dconf.enable = true;
+
+    screen.screenrc = 
+    ''term screen-256color
+      termcapinfo xterm*|xs|rxvt* ti@:te@
+      startup_message off
+      caption string '%{= G}[ %{G}%H %{g}][%= %{= w}%?%-Lw%?%{= R}%n*%f %t%?%{= R}(%u)%?%{= w}%+Lw%?%= %{= g}][ %{y}Load: %l %{g}][%{B}%Y-%m-%d %{W}%c:%s %{g}]'
+      caption always
+    '';
   };
 
   users.defaultUserShell = "/run/current-system/sw/bin/zsh";
@@ -358,7 +368,8 @@
       {
         user = "jelias";
         name = "fff-pluto";
-        extraArguments = "-M 0 -N -q -o 'ServerAliveInterval=60' -o 'ServerAliveCountMax=3' -o 'ExitOnForwardFailure=yes' pluto -R 53292:127.0.0.1:41273 -i /home/jelias/.ssh/fff->autoplutossh";
+        monitoringPort = 0;
+        extraArguments = "-N -q -o 'ServerAliveInterval=60' -o 'ServerAliveCountMax=3' -o 'ExitOnForwardFailure=yes' pluto -R 2022:127.0.0.1:41273 -i /home/jelias/.ssh/fff->autoplutossh2";
       }
     ];
 
@@ -571,6 +582,6 @@
     ];
   };
 
- system.stateVersion = "19.09"; # Did you read the comment?
+ system.stateVersion = "20.03"; # Did you read the comment?
 
 }
