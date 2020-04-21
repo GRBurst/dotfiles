@@ -41,6 +41,7 @@ in {
         acpi
         avahi
         atop htop iotop
+        smem
         bc calc
         binutils
         cryptsetup
@@ -171,6 +172,20 @@ in {
 
     };
 
+    nixos-packages = buildEnv {
+
+      inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
+      extraOutputsToInstall = [ "man" ];
+      name = "dev-packages";
+
+      paths = [
+        nixops
+        nix-prefetch-git
+        nox
+      ];
+
+    };
+
     dev-packages = buildEnv {
 
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
@@ -200,8 +215,6 @@ in {
         filezilla
         jetbrains.idea-community
         nodejs-10_x
-        nixops
-        nox
 
         swiProlog
         vscode

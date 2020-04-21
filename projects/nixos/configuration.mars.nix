@@ -205,6 +205,13 @@
     gpaste.enable = true;
 
     # mtr.enable = true;
+    screen.screenrc = 
+    ''term screen-256color
+      termcapinfo xterm*|xs|rxvt* ti@:te@
+      startup_message off
+      caption string '%{= G}[ %{G}%H %{g}][%= %{= w}%?%-Lw%?%{= R}%n*%f %t%?%{= R}(%u)%?%{= w}%+Lw%?%= %{= g}][ %{y}Load: %l %{g}][%{B}%Y-%m-%d %{W}%c:%s %{g}]'
+      caption always
+    '';
 
     light.enable = true;
   };
