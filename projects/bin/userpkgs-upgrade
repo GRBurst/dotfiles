@@ -11,12 +11,14 @@ nix-channel --update
 
 typeset -A pkg_nixpkgs_prio
 typeset -A pkg_unstable_prio
-pkg_unstable_prio[test-packages]=3
-pkg_unstable_prio[common-packages]=4
+pkg_unstable_prio[test-packages]=2
+pkg_unstable_prio[common-packages]=3
 pkg_unstable_prio[laptop-packages]=7
-pkg_unstable_prio[dev-packages]=8
-pkg_unstable_prio[highres-packages]=9
-pkg_unstable_prio[ssd-packages]=10
+pkg_unstable_prio[ssd-packages]=8
+pkg_unstable_prio[dev-packages]=9
+pkg_unstable_prio[ios-packages]=9
+pkg_unstable_prio[nixos-packages]=9
+pkg_unstable_prio[highres-packages]=10
 pkg_unstable_prio[gaming-packages]=11
 pkg_unstable_prio[mining-packages]=12
 
