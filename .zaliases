@@ -40,6 +40,19 @@ swu() {
     cd ~/projects/woost/wust2
     ./start "$@"
 }
+tag() {
+    (
+        cd-git-root
+        ./scripts/increase-version-tag.sh sign "$@"
+    )
+}
+release() {
+    (
+        cd-git-root
+        ./scripts/release.sh "$@"
+    )
+}
+alias tagc="tag sign changlog"
 
 # Docker
 alias dr="docker"
