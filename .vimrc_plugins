@@ -108,6 +108,7 @@ Plug 'LnL7/vim-nix' " nixos syntax
 " Plug 'vim-scripts/JavaDecompiler.vim' " decompile java .class files on the fly
 Plug 'LaTeX-Box-Team/LaTeX-Box', {'for': 'tex'} " LaTeX
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'dart-lang/dart-vim-plugin', {'for': 'dart'}
 Plug 'keith/swift.vim' 
 
 " Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
