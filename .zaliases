@@ -33,7 +33,7 @@ alias jsb='underscore print --color --outfmt json' # beautify json, package: npm
 alias nw='cd ~/projects/woost/wust2 && git pull && nix-shell --command "zsh"'
 alias nl='cd ~/projects/woost/listo && git pull && nix-shell --command "zsh"'
 alias ws='cd ~/projects/woost/wust2 && ./start sbt'
-alias rmt='cdg; rm -r **/target **/.*/**/target'
+alias rmt='cd-git-root; rm -r **/target **/.*/**/target'
 alias rm='rm -I'
 # alias rwu='cd ~/projects/woost/wust2; ./start nsbt'
 swu() {
@@ -101,14 +101,6 @@ drclean?() {
     fi
 }
 
-# VirtualBox
-# VBoxManage list runningvms | grep -c 1 macOS
-alias macvm='VBoxManage startvm "macOS" --type headless'
-alias macvmg='VBoxManage startvm "macOS"'
-alias macvmds='VBoxManage startvm "macOS" --type headless; sleep 300; ssh macvm'
-alias macvms='ssh macvm; sleep 300; echo "shutting down at $(date)" >> ~/poweroff.log; poweroff'
-alias macvmds='VBoxManage startvm "macOS" --type headless; sleep 300; ssh macvm; sleep 300; echo "shutting down at $(date)" >> ~/poweroff.log; poweroff'
-
 # cross-os file-listing
 if [ "$(uname 2> /dev/null)" != "Linux" ]; then
     # for Mac
@@ -160,6 +152,13 @@ alias mmv='noglob zmv -W'
 # o() { xdg-open $@ > /dev/null 2>&1; }
 o() { mimeo $@ > /dev/null 2>&1; }
 
+# VirtualBox
+# VBoxManage list runningvms | grep -c 1 macOS
+alias macvm='VBoxManage startvm "macOS" --type headless'
+alias macvmg='VBoxManage startvm "macOS"'
+alias macvmds='VBoxManage startvm "macOS" --type headless; sleep 300; ssh macvm'
+alias macvms='ssh macvm; sleep 300; echo "shutting down at $(date)" >> ~/poweroff.log; poweroff'
+alias macvmds='VBoxManage startvm "macOS" --type headless; sleep 300; ssh macvm; sleep 300; echo "shutting down at $(date)" >> ~/poweroff.log; poweroff'
 alias rcp="rsync --append-verify --archive --compress --human-readable --info=progress2 --partial --sparse"
 alias ssh-tmate="ssh -o PreferredAuthentications=password -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 
