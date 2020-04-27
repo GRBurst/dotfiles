@@ -364,14 +364,14 @@
       forwardX11 = true;
     };
 
-    autossh.sessions = [
-      {
-        user = "jelias";
-        name = "fff-pluto";
-        monitoringPort = 0;
-        extraArguments = "-N -q -o 'ServerAliveInterval=60' -o 'ServerAliveCountMax=3' -o 'ExitOnForwardFailure=yes' pluto -R 2022:127.0.0.1:41273 -i /home/jelias/.ssh/fff->autoplutossh2";
-      }
-    ];
+    # autossh.sessions = [
+    #   {
+    #     user = "jelias";
+    #     name = "fff-pluto";
+    #     monitoringPort = 0;
+    #     extraArguments = "-N -q -o 'ServerAliveInterval=60' -o 'ServerAliveCountMax=3' -o 'ExitOnForwardFailure=yes' pluto -R 2022:127.0.0.1:41273 -i /home/jelias/.ssh/fff->autoplutossh2";
+    #   }
+    # ];
 
     avahi.enable = true;
 
