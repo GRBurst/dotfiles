@@ -281,7 +281,7 @@ in {
         josm
         kdeApplications.kdenlive
         peek # record gif videos || green-recorder / gifcurry / screenToGif
-        kodi
+        # kodi
         linphone # ekiga -> breaks on 2019-12-09
         qutebrowser
         qtox
