@@ -164,6 +164,7 @@ alias macvmds='VBoxManage startvm "macOS" --type headless; sleep 300; ssh macvm;
 alias rcp="rsync --append-verify --archive --compress --human-readable --info=progress2 --partial --sparse"
 alias ssh-tmate="ssh -o PreferredAuthentications=password -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 alias ssf="ssh -J pluto fff"
+alias ssp="ssh pluto"
 
 # Nix
 ni() { nix-env -iA "$@" -f "<nixos-unstable>" }
