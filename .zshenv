@@ -44,6 +44,7 @@ export RUST_BACKTRACE=1
 
 # Android -> nixos?
 #export ANDROID_HOME=/opt/android-sdk
+export ANDROID_SDK_ROOT="/usr/local/share/android-sdk"
 
 # fix java apps in tiling window managers
 export _JAVA_AWT_WM_NONREPARENTING=1
@@ -84,3 +85,5 @@ export FZF_DEFAULT_COMMAND='ag --hidden -g ""'
 export FZF_DEFAULT_OPTS="-x -m --ansi --exit-0 --select-1" # extended match and multiple selections
 
 export GPG_TTY=$(tty)
+
+export PATH="$PATH:$HOME/local/flutter/bin"

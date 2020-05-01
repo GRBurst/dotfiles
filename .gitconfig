@@ -214,3 +214,5 @@
 [status]
     showUntrackedFiles  = all
 
+[gpg]
+	program = /usr/local/bin/gpg
