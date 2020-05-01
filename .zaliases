@@ -35,6 +35,16 @@ alias nl='cd ~/projects/woost/listo && git pull && nix-shell --command "zsh"'
 alias ws='cd ~/projects/woost/wust2 && ./start sbt'
 alias rmt='cd-git-root; rm -r **/target **/.*/**/target'
 alias rm='rm -I'
+
+# cross-os rm -i
+if [ "$(uname 2> /dev/null)" != "Linux" ]; then
+    # for Mac
+    alias rm='rm -i'
+else
+    alias rm='rm -I'
+fi
+
+
 # alias rwu='cd ~/projects/woost/wust2; ./start nsbt'
 swu() {
     cd ~/projects/woost/wust2
