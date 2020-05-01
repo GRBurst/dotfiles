@@ -1,4 +1,7 @@
 ## Exports to define environment
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
 # Default programs
 export BROWSER=firefox
 export SUDO_EDITOR=rvim
@@ -79,3 +82,5 @@ export LESS_TERMCAP_us=$(printf "\33[01;35m")   # begin underline
 # fzf fuzzy file finder
 export FZF_DEFAULT_COMMAND='ag --hidden -g ""'
 export FZF_DEFAULT_OPTS="-x -m --ansi --exit-0 --select-1" # extended match and multiple selections
+
+export GPG_TTY=$(tty)
