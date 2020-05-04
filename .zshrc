@@ -151,3 +151,5 @@ source ~/.zaliases
 [ -f $HOME/.config/broot/launcher/bash/br ] && source $HOME/.config/broot/launcher/bash/br
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+cd $HOME/projects/listo
