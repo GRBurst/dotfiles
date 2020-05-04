@@ -1,3 +1,12 @@
+OS="$(uname 2> /dev/null)"
+IS_LINUX=false
+IS_MAC=false
+if [ "$OS" == "Linux" ]; then
+    IS_LINUX=true
+else if [ "$OS" == "Darwin" ]
+    IS_MAC=true
+fi
+
 # Git
 alias g="git"
 alias got='git ot && cd /tmp/wust'
@@ -37,11 +46,10 @@ alias rmt='cd-git-root; rm -r **/target **/.*/**/target'
 alias rm='rm -I'
 
 # cross-os rm -i
-if [ "$(uname 2> /dev/null)" != "Linux" ]; then
-    # for Mac
-    alias rm='rm -i'
-else
+if [ "$IS_LINUX" = true ]; then
     alias rm='rm -I'
+else
+    alias rm='rm -i'
 fi
 
 
@@ -112,15 +120,16 @@ drclean?() {
 }
 
 # cross-os file-listing
-if [ "$(uname 2> /dev/null)" != "Linux" ]; then
-    # for Mac
-    alias ls='ls -hFG'
-else
+
+if [ "$IS_LINUX" = true ]; then
     if [ -n "${commands[grc]}" ]; then
         alias ls='grc ls --group-directories-first --color=always --escape --human-readable --classify'
     else
         alias ls='ls --group-directories-first --color=always --escape --human-readable --classify'
     fi
+else
+    # for Mac
+    alias ls='ls -hFG'
 fi
 
 # VirtualBox
@@ -177,6 +186,9 @@ alias macvmg='VBoxManage startvm "macOS"'
 alias macvmds='VBoxManage startvm "macOS" --type headless; sleep 300; ssh macvm'
 alias macvms='ssh macvm; sleep 300; echo "shutting down at $(date)" >> ~/poweroff.log; poweroff'
 alias macvmds='VBoxManage startvm "macOS" --type headless; sleep 300; ssh macvm; sleep 300; echo "shutting down at $(date)" >> ~/poweroff.log; poweroff'
+if [ "$IS_MAC" = true ]; then
+    alias munlock='security unlock-keychain /Users/$USER/Library/Keychains/login.keychain'
+fi
 
 # SSH
 alias rcp="rsync --append-verify --archive --compress --human-readable --info=progress2 --partial --sparse"
