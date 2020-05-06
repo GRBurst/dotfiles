@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, options, ... }:
 
 # let
 #   # from: https://gist.github.com/LnL7/e645b9075933417e7fd8f93207787581
@@ -37,7 +37,7 @@
 
     kernel.sysctl = {
       "kernel.sysrq" = 1;
-      "vm.swappiness" = 0;
+      "vm.swappiness" = 1;
       "fs.inotify.max_user_watches" = "409600";
     };
   };
@@ -49,6 +49,11 @@
         options = [ "defaults" "x-systemd.automount" "noauto" ];
     };
   };
+  swapDevices =
+    [
+      { device = "/swapfile"; randomEncryption = true; }
+    ];
+
 
   # fileSystems = {
     # "/media/ateam" = {
@@ -68,8 +73,9 @@
     # };
   # };
 
-  nixpkgs.config = {
-    allowUnfree = true;
+  nixpkgs = {
+    config = {
+      allowUnfree = true;
     # chromium = {
     #   # enablePepperFlash = true;
     #   enableWideVine = false;
@@ -80,8 +86,19 @@
     # # '';
 
     # programs.qt5ct.enable = true;
-
+    };
+    # overlays = [
+    #   (import /home/jelias/projects/nixpkgs)
+    # ];
   };
+  # nix = {
+  #   nixPath = [
+  #     "nixpkgs=/home/jelias/projects/nixpkgs"
+  #     "nixpkgs-overlays=/home/jelias/projects/nixpkgs"
+  #   ] ++ options.nix.nixPath.default;
+  # };
+
+
 
   # nix.extraOptions = ''
   #   auto-optimise-store = true
@@ -112,7 +129,7 @@
     '';
     # networking.wireless.enable = true;
     firewall.allowedUDPPorts = [ 137 138 5353 ]; # for mosh: { from = 60000; to = 61000; } 
-    firewall.allowedTCPPorts = [ 139 445 12345 ];
+    firewall.allowedTCPPorts = [ 139 445 7575 12345 ];
   };
 
   location = {
@@ -124,9 +141,7 @@
   powerManagement = {
     enable = true;
     # powertop.enable = true;
-    powerUpCommands = "${pkgs.hdparm}/bin/hdparm -Y /dev/disk/by-id/ata-WDC_WD10EZEX-00BN5A0_WD-WCC3F5TTNUHT";
-
-    
+    # powerUpCommands = "${pkgs.hdparm}/bin/hdparm -Y /dev/disk/by-id/ata-WDC_WD10EZEX-00BN5A0_WD-WCC3F5TTNUHT";
   };
 
   i18n = {
@@ -497,6 +512,7 @@
       gnome-keyring.enable = true;
     };
 
+    usbmuxd.enable = true;
     upower.enable  = true;
     udisks2.enable = true;
 
@@ -551,17 +567,19 @@
     enableGhostscriptFonts = true;
 
     fonts = with pkgs; [
-      corefonts
+      corefonts # Arial, Verdana, ...
       dejavu_fonts
-      google-fonts
+      google-fonts # Droid Sans, Roboto, ...
       liberation_ttf
-      symbola
+      powerline-fonts
       ubuntu_font_family
+      symbola # unicode symbols
+      vistafonts # Consolas, ...
     ];
 
     fontconfig = {
       includeUserConf = false;
-      defaultFonts.monospace = [ "Inconsolata" "DejaVu Sans Mono" ];
+      defaultFonts.monospace = [ "Roboto Mono" "DejaVu Sans Mono" ];
     };
   };
 
