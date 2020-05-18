@@ -55,7 +55,7 @@ in {
         lsof
         #mosh
         pciutils
-        p7zip
+        # p7zip -> abandoned (2020-05-18)
         pv
         screen
         scrot
@@ -318,7 +318,7 @@ in {
 
       paths = [
         runelite
-        linux-steam-integration
+        # linux-steam-integration -> broken (2020-05-18)
         discord
         xboxdrv
         # steam
