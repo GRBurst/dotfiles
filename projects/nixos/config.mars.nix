@@ -6,9 +6,6 @@ let
   unstable  = import <nixos-unstable/nixos> {};
 in {
 
-  permittedInsecurePackages = [
-    "openssl-1.0.2u"
-  ];
   allowUnfree = true;
   oraclejdk.accept_license = true;
   android_sdk.accept_license = true;
@@ -41,7 +38,6 @@ in {
         acpi
         avahi
         atop htop iotop
-        smem
         bc calc
         binutils
         cryptsetup
@@ -172,38 +168,6 @@ in {
 
     };
 
-    nixos-packages = buildEnv {
-
-      inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
-      name = "nixos-packages";
-
-      paths = [
-        nixops
-        nix-prefetch-git
-        nox
-      ];
-
-    };
-
-    ios-packages = buildEnv {
-
-      inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
-      name = "ios-packages";
-
-      paths = [
-        libimobiledevice
-        libirecovery
-        libusbmuxd
-        ideviceinstaller
-        ifuse
-        # haskellPackages.push-notify-apn
-        usbmuxd
-      ];
-
-    };
-
     dev-packages = buildEnv {
 
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
@@ -233,13 +197,15 @@ in {
         filezilla
         jetbrains.idea-community
         nodejs-10_x
+        nixops
+        nox
 
         swiProlog
         vscode
 
         brave
         # google-chrome
-        # firefox-devedition-bin
+        firefox-devedition-bin
       ];
 
     };
@@ -312,7 +278,7 @@ in {
         josm
         kdeApplications.kdenlive
         peek # record gif videos || green-recorder / gifcurry / screenToGif
-        kodi
+        # kodi
         linphone # ekiga -> breaks on 2019-12-09
         qutebrowser
         qtox
