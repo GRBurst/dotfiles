@@ -5,7 +5,10 @@ let
   localpkgs = import ~/projects/nixpkgs/default.nix {};
   unstable  = import <nixos-unstable/nixos> {};
 in {
-
+  
+  permittedInsecurePackages = [
+    "openssl-1.0.2u"
+  ];
   allowUnfree = true;
   oraclejdk.accept_license = true;
   android_sdk.accept_license = true;
@@ -22,8 +25,8 @@ in {
     # inherit pkgs;
 
     pidgin-with-plugins = pkgs.pidgin-with-plugins.override {
-      plugins = [ pidginotr purple-facebook telegram-purple toxprpl pidginotr pidgin-skypeweb pidgin-opensteamworks ];
-      # plugins = [ pidginotr purple-facebook telegram-purple toxprpl pidginotr pidgin-skypeweb pidgin-opensteamworks localpkgs.purple-gnome-keyring ];
+      plugins = [ purple-plugin-pack purple-discord purple-facebook purple-hangouts purple-slack telegram-purple toxprpl pidginotr pidginotr pidgin-skypeweb pidgin-opensteamworks localpkgs.purple-gnome-keyring ];
+      # plugins = [ pidginotr purple-facebook telegram-purple toxprpl pidginotr pidgin-skypeweb pidgin-opensteamworks  ];
     };
 
     common-packages = buildEnv {
@@ -55,7 +58,7 @@ in {
         lsof
         #mosh
         pciutils
-        p7zip
+        # p7zip
         pv
         screen
         scrot
@@ -152,7 +155,7 @@ in {
         # (ffmpeg-full.override { nonfreeLicensing = true;})
 
         # Communication
-        pidgin-with-plugins
+        # pidgin-with-plugins
         signal-desktop
 
         # Themes
@@ -200,7 +203,7 @@ in {
         nixops
         nox
 
-        swiProlog
+        # swiProlog
         vscode
 
         brave
@@ -278,7 +281,7 @@ in {
         josm
         kdeApplications.kdenlive
         peek # record gif videos || green-recorder / gifcurry / screenToGif
-        kodi
+        # kodi
         linphone # ekiga -> breaks on 2019-12-09
         qutebrowser
         qtox

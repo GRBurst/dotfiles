@@ -24,10 +24,12 @@
     brename = branch -m
 
     # Checkout
-    o  = checkout
-    ob = checkout -b
-    om = checkout origin/master
-    ot = "!f() { local tmpCommit=${1:-master} && echo $tmpCommit && mkdir -p /tmp/wust && git --work-tree=/tmp/wust checkout $tmpCommit -- . ; }; f"
+    o   = checkout
+    ob  = checkout -b
+    oom = checkout master
+    #o.  = checkout master
+    oom = checkout origin/master
+    ot  = "!f() { local tmpCommit=${1:-master} && echo $tmpCommit && mkdir -p /tmp/wust && git --work-tree=/tmp/wust checkout $tmpCommit -- . ; }; f"
 
     # Fetch
     f   = fetch
@@ -214,3 +216,6 @@
 [status]
     showUntrackedFiles  = all
 
+[tag]
+    verbose = true
+	gpgsign = true

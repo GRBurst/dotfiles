@@ -58,7 +58,7 @@ in {
         lsof
         #mosh
         pciutils
-        p7zip
+        # p7zip
         pv
         screen
         scrot

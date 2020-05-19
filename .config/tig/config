@@ -5,6 +5,12 @@ set ignore-case         = true # search
 set editor-line-number  = true
 set mouse-scroll        = true
 set show-changes        = true
+set status-show-untracked-dirs = true
+set line-graphics = utf-8
+set refresh-mode = auto
+#set reference-format		= [head] [branch] <tag> <local-tag> {remote} ~replace~
+
+color main-local-tag magenta red standout
 
 # NEO
 bind generic ä Quit
@@ -15,6 +21,7 @@ bind generic 5 move-down ; NEO right hand analog to arrow down
 bind generic g move-first-line
 bind generic G move-last-line
 bind main    G move-last-line ; overwrite default keybinding
+bind main    T !git tag -s
 bind branch  B !git checkout %(branch)
 bind branch  N !git branch -m %(branch) %(prompt)
 # branch     M !git rebase --onto master %(branch)
