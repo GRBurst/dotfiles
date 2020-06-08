@@ -12,6 +12,9 @@ in {
 
   # Install local packages with localpkgs.X,
   # e.g.: localpkgs.xcwd
+  permittedInsecurePackages = [
+    "openssl-1.0.2u"
+  ];
 
   # Install a package collection with:
   # nix-env -iA common-packages -f "<nixos-unstable>"
