@@ -11,7 +11,7 @@ case "$LVL" in
     "R"|"RED"|"ERR"|"ERROR")
         echo -e "\e[31m${TXT}\e[0m"
         ;;
-    "G"|"GREEN"|"OK")
+    "G"|"GREEN"|"OK"|"0")
         echo -e "\e[32m${TXT}\e[0m"
         ;;
     "Y"|"YELLOW"|"WARN"|"WARNING")
@@ -54,7 +54,11 @@ case "$LVL" in
         echo -e "\e[97m${TXT}\e[0m"
         ;;
     *)
-        echo -e "\e[39m${TXT}\e[0m"
+        if [ $LVL -ne 0 ]; then
+            echo -e "\e[31m${TXT}\e[0m"
+        else
+            echo -e "\e[39m${TXT}\e[0m"
+        fi
         ;;
 esac
 
