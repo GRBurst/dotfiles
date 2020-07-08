@@ -104,7 +104,7 @@ bindsym $mod+Shift+KP_Add scratchpad show
 # Show the sup-mail scratchpad window, if any.
 #bindsym $mod+$AltGr+questiondown [title="^Sup ::"] scratchpad show
 
-# Mark as always on top
+# Mark as always on top (aot)
 bindsym $mod+u mark awot; floating enable;
 bindsym $mod+Shift+u unmark awot;
 
@@ -221,17 +221,18 @@ mode "Exit <<< System:(e) logout, (r) reboot, (s) suspend, (p) poweroff [+sync].
 bindsym $mod+Shift+e mode "Exit <<< System:(e) logout, (r) reboot, (s) suspend, (p) poweroff [+sync]. i3: (AltGr+c) reload, (AltGr+r) restart"
 
 # Turn off or suspend screen
-mode "Screen / DMMS <<< Screens:(k) kino, (s) standby, (p) suspend, (o) off" {
+mode "Screen / DMMS <<< Screens:(k)ino, (s)tandby, (p) suspend, (l)ock, (o)ff" {
         bindsym s exec i3lock && xset dpms force standby; mode "default"
         bindsym p exec i3lock && xset dpms force suspend; mode "default"
-        bindsym o exec i3lock && xset dpms force off; mode "default"
+        bindsym l exec i3lock && xset dpms force off; mode "default"
+        bindsym o exec xset dpms force off; mode "default"
         bindsym k exec xset -dpms && xset s off && systemctl --user stop redshift; mode "default"
 
         # back to normal: Enter or Escape
         bindsym Return mode "default"
         bindsym Escape mode "default"
 }
-bindsym $mod+Shift+m mode "Screen / DMMS <<< Screens:(k) kino, (s) standby, (p) suspend, (o) off"
+bindsym $mod+Shift+m mode "Screen / DMMS <<< Screens:(k)ino, (s)tandby, (p) suspend, (l)ock, (o)ff"
 
 # resize window (you can also use the mouse for that)
 mode "resize <<< Resolution:(2) 1920x1080, (4) 3840x2160, (7) 1280x720; Position: (c) center" {
