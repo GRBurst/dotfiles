@@ -76,6 +76,11 @@
   nixpkgs = {
     config = {
       allowUnfree = true;
+      packageOverrides = pkgs: {
+        unstable = import <nixos-unstable> {
+          config = config.nixpkgs.config;
+        };
+      };
     # chromium = {
     #   # enablePepperFlash = true;
     #   enableWideVine = false;
@@ -112,6 +117,7 @@
       package = pkgs.pulseaudioFull;
     };
     opengl.driSupport32Bit = true;
+    opengl.setLdLibraryPath = true;
     sane.enable = true;
 
     cpu.amd.updateMicrocode = true;
@@ -485,6 +491,7 @@
       dataDir = "/home/jelias/.config/syncthing";
       openDefaultPorts = true;
       systemService = true;
+      package = pkgs.unstable.syncthing;
     };
 
     locate = {
