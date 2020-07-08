@@ -43,4 +43,9 @@ zsh -c "                                                                        
 cecho "G" "upgrading installed system packages"
 sudo nixos-rebuild boot
 
+buildstatus=$?
+cecho "$buildstatus" "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+cecho "$buildstatus" "~~~~~~~~~~~~~ finished system upgrade ~~~~~~~~~~~~"
+cecho "$buildstatus" "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+
 exit 0
