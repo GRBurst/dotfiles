@@ -41,6 +41,7 @@ alias scala='scala -Dscala.color -deprecation -unchecked -explaintypes -language
 alias jsb='underscore print --color --outfmt json' # beautify json, package: npm -g install underscore-cli
 alias nw='cd ~/projects/woost/wust2 && git pull && nix-shell --command "zsh"'
 alias nl='cd ~/projects/woost/listo && git pull && nix-shell --command "zsh"'
+alias nld='cd ~/projects/woost/listo && git pull && nix-shell --arg stable false --command "zsh"'
 alias ws='cd ~/projects/woost/wust2 && ./start sbt'
 alias rmt='cd-git-root; rm -r **/target **/.*/**/target'
 alias rm='rm -I'
