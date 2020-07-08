@@ -217,7 +217,8 @@ alias fif="find-in-file"
 alias dsize="sudo du -hsx ./* | sort -rh | head -n 40"
 
 # FS
-alias lsblk="lsblk -o NAME,SIZE,FSTYPE,LABEL,UUID,FSSIZE,FSAVAIL,FSUSE%,MOUNTPOINT,RO,RM"
+alias blk="lsblk -o NAME,SIZE,FSTYPE,LABEL,UUID,FSSIZE,FSAVAIL,FSUSE%,MOUNTPOINT,RO,RM"
+alias lsblk="blk"
 
 # Reverse search links
 rln() {
