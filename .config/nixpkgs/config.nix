@@ -321,7 +321,7 @@ in {
 
       paths = [
         runelite
-        linux-steam-integration
+        # linux-steam-integration
         discord
         xboxdrv
         # steam
