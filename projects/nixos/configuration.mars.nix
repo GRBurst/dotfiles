@@ -77,6 +77,11 @@
 
   nixpkgs.config = {
     allowUnfree = true;
+    packageOverrides = pkgs: {
+      unstable = import <nixos-unstable> {
+        config = config.nixpkgs.config;
+      };
+    };
   };
 
   networking = {
@@ -504,6 +509,7 @@
       dataDir = "/home/jelias/.config/syncthing";
       openDefaultPorts = true;
       systemService = true;
+      package = pkgs.unstable.syncthing;
     };
 
     locate = {

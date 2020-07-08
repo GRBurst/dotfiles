@@ -127,7 +127,7 @@ in {
         libnotify
         qrencode
         simple-scan
-        typora
+        # typora # breaks
         zathura
         texlive.combined.scheme-full
         thunderbird protonmail-bridge
