@@ -5,16 +5,16 @@ let
   localpkgs = import ~/projects/nixpkgs/default.nix {};
   unstable  = import <nixos-unstable/nixos> {};
 in {
-
+  
+  permittedInsecurePackages = [
+    "openssl-1.0.2u"
+  ];
   allowUnfree = true;
   oraclejdk.accept_license = true;
   android_sdk.accept_license = true;
 
   # Install local packages with localpkgs.X,
   # e.g.: localpkgs.xcwd
-  permittedInsecurePackages = [
-    "openssl-1.0.2u"
-  ];
 
   # Install a package collection with:
   # nix-env -iA common-packages -f "<nixos-unstable>"
@@ -25,8 +25,8 @@ in {
     # inherit pkgs;
 
     pidgin-with-plugins = pkgs.pidgin-with-plugins.override {
-      plugins = [ pidginotr purple-facebook telegram-purple toxprpl pidginotr pidgin-skypeweb pidgin-opensteamworks ];
-      # plugins = [ pidginotr purple-facebook telegram-purple toxprpl pidginotr pidgin-skypeweb pidgin-opensteamworks localpkgs.purple-gnome-keyring ];
+      plugins = [ purple-plugin-pack purple-discord purple-facebook purple-hangouts purple-slack telegram-purple toxprpl pidginotr pidginotr pidgin-skypeweb pidgin-opensteamworks localpkgs.purple-gnome-keyring ];
+      # plugins = [ pidginotr purple-facebook telegram-purple toxprpl pidginotr pidgin-skypeweb pidgin-opensteamworks  ];
     };
 
     common-packages = buildEnv {
@@ -127,7 +127,7 @@ in {
         libnotify
         qrencode
         simple-scan
-        # typora # breaks
+        # typora # breaks on 2020-07-08
         zathura
         texlive.combined.scheme-full
         thunderbird protonmail-bridge
@@ -155,7 +155,7 @@ in {
         # (ffmpeg-full.override { nonfreeLicensing = true;})
 
         # Communication
-        pidgin-with-plugins
+        # pidgin-with-plugins
         signal-desktop
 
         # Themes
@@ -203,12 +203,12 @@ in {
         nixops
         nox
 
-        swiProlog
+        # swiProlog
         vscode
 
         brave
         # google-chrome
-        firefox-devedition-bin
+        # firefox-devedition-bin
       ];
 
     };
