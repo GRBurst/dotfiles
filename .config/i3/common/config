@@ -221,18 +221,23 @@ mode "Exit <<< System:(e) logout, (r) reboot, (s) suspend, (p) poweroff [+sync].
 bindsym $mod+Shift+e mode "Exit <<< System:(e) logout, (r) reboot, (s) suspend, (p) poweroff [+sync]. i3: (AltGr+c) reload, (AltGr+r) restart"
 
 # Turn off or suspend screen
-mode "Screen / DMMS <<< Screens:(k)ino, (s)tandby, (p) suspend, (l)ock, (o)ff" {
+mode "Screen / DMMS <<< Screens: (k)ino, (g)ame, (1) screen, (a)utomatic, (r)eset, (s)tandby, (p) suspend, (l)ock, (o)ff" {
         bindsym s exec i3lock && xset dpms force standby; mode "default"
         bindsym p exec i3lock && xset dpms force suspend; mode "default"
         bindsym l exec i3lock && xset dpms force off; mode "default"
         bindsym o exec xset dpms force off; mode "default"
-        bindsym k exec xset -dpms && xset s off && systemctl --user stop redshift; mode "default"
 
+        bindsym k exec xset -dpms && xset s off && systemctl --user stop redshift && xrandr --output DP-0 --primary --auto --output HDMI-1 --off; mode "default"
+        bindsym g exec xrandr --output DP-0 --primary --mode 1920x1080 --output HDMI-1 --auto --right-of DP-0; mode "default"
+        bindsym KP_1 exec xrandr --output DP-0 --primary --auto --output HDMI-1 --off; mode "default"
+        bindsym a exec xrandr --output DP-0 --primary --mode 1920x1080 --output HDMI-1 --off; mode "default"
+
+        bindsym r exec xrandr --output DP-0 --primary --auto --output HDMI-1 --auto --right-of DP-0; mode "default"
         # back to normal: Enter or Escape
         bindsym Return mode "default"
         bindsym Escape mode "default"
 }
-bindsym $mod+Shift+m mode "Screen / DMMS <<< Screens:(k)ino, (s)tandby, (p) suspend, (l)ock, (o)ff"
+bindsym $mod+Shift+m mode "Screen / DMMS <<< Screens: (k)ino, (g)ame, (1) screen, (a)utomatic, (r)eset, (s)tandby, (p) suspend, (l)ock, (o)ff"
 
 # resize window (you can also use the mouse for that)
 mode "resize <<< Resolution:(2) 1920x1080, (4) 3840x2160, (7) 1280x720; Position: (c) center" {
