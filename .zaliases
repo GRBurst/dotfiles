@@ -206,6 +206,8 @@ alias nq='nix-env -q'
 alias ns='nix-shell --command "zsh"'
 alias ne='nix-env -e'
 alias nh='nix-hash --type sha256 --flat --base32'
+alias nqp='nix-store --query --references $(nix-instantiate "<nixpkgs>" -A dev-packages)'
+
 
 # Tools
 alias t="tree -C"
