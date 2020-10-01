@@ -44,7 +44,8 @@
 
   fileSystems = {
     "/media/macos" = {
-        device = "/dev/disk/by-uuid/aa4a3a0d-d16c-42cf-8c25-ec8215579337";
+        # device = "/dev/disk/by-uuid/aa4a3a0d-d16c-42cf-8c25-ec8215579337";
+        device = "/dev/disk/by-uuid/f259ab35-b7f2-473e-b04c-14f83777bd26";
         fsType = "ext4";
         options = [ "defaults" "x-systemd.automount" "noauto" ];
     };
