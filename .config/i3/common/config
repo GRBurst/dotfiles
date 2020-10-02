@@ -164,8 +164,7 @@ bindsym $mod+$AltGr+Left exec idea-community
 #bindsym $mod+$AltGr+c exec pidgin; exec sskype
 bindsym $mod+$Down exec thunderbird; exec firefox; exec pidgin
 
-# assign [instance="Mail" class="Daily"] "1: mail"
-assign [class="Daily"] "1: mail"
+assign [class="(?i)thunderbird"] "1: mail"
 assign [instance="(?i)protonmail-bridge" class="ProtonMail Bridge"] "1: mail"
 assign [class="(?i)firefox"] "2: browser"
 assign [class="(?i)keepassxc"] 7
