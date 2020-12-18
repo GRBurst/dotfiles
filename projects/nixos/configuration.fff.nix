@@ -11,6 +11,7 @@
 {
   imports =
   [
+    # <nixpkgs/nixos/modules/services/hardware/sane_extra_backends/brscan4.nix>
     ./hardware-configuration.nix
     ./woost-configuration.nix
   ];
@@ -119,11 +120,13 @@
     };
     opengl.driSupport32Bit = true;
     opengl.setLdLibraryPath = true;
-    # sane.enable = true;
+    sane.enable = true;
+    # sane.extraBackends = [ pkgs.sane-airscan pkgs.epkowa ];
+    sane.extraBackends = [ pkgs.sane-airscan ];
 
-    sane.brscan4.enable = true;
-    sane.brscan4.netDevices."epson_wf-2860".ip = "192.168.100.50";
-    sane.brscan4.netDevices."epson_wf-2860".model = "WF-2860DWF";
+    # sane.brscan4.enable = true;
+    # sane.brscan4.netDevices."epson_wf-2860".ip = "192.168.100.50";
+    # sane.brscan4.netDevices."epson_wf-2860".model = "WF-2860DWF";
 
     cpu.amd.updateMicrocode = true;
   };
@@ -400,6 +403,7 @@
     # ];
 
     avahi.enable = true;
+    avahi.nssmdns = true;
 
     journald = {
       extraConfig = ''
@@ -534,10 +538,10 @@
     #   enable = true;
     # };
 
-    # saned = {
-    #   enable = true;
-    #   extraConfig = "192.168.1.20";
-    # };
+    saned = {
+      enable = true;
+      extraConfig = "192.168.100.50/24";
+    };
 
   };
 
@@ -603,7 +607,7 @@
 
   users.extraUsers.jelias = {
     isNormalUser = true;
-    extraGroups = ["wheel" "vboxusers" "docker" "Ip" "scanner" "saned" "adbusers" "networkmanager" "wireshark" ];
+    extraGroups = ["wheel" "vboxusers" "docker" "lp" "scanner" "saned" "adbusers" "networkmanager" "wireshark" ];
     useDefaultShell = true;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM+BIE+0anEEYK0fBIEpjedblyGW0UnuYBCDtjZ5NW6P jelias@merkur"
