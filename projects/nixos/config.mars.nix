@@ -191,6 +191,8 @@ in {
         meld
         kdiff3
 
+        nodePackages.purescript-language-server
+
         cmakeCurses
         docker_compose
         entr
@@ -282,7 +284,8 @@ in {
         kdeApplications.kdenlive
         peek # record gif videos || green-recorder / gifcurry / screenToGif
         # kodi
-        linphone # ekiga -> breaks on 2019-12-09
+        # linphone -> breaks 2021-01-06
+        # ekiga -> breaks on 2019-12-09
         qutebrowser
         qtox
         skypeforlinux
