@@ -71,6 +71,7 @@
       powerOnBoot = true;
     };
     opengl.driSupport32Bit = true;
+    opengl.enable = true;
     sane.enable = true;
     cpu.intel.updateMicrocode = true;
   };
