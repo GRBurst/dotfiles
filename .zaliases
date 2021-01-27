@@ -95,6 +95,7 @@ alias drl="docker logs"
 alias drst="docker status"
 alias drex="docker exec -it"
 
+dricl() { docker image rm -f $(docker images -q) }
 drsa() { docker stop $(docker ps -a -q) }
 drsh() { docker exec -it $1 sh }
 drbash() { docker exec -it $1 bash }
@@ -167,6 +168,7 @@ p() { cd ~/projects/"$(ls -t ~/projects | fzf --query="$(echo $@ | tr ' ' '\ ' )
 cdl() { cd "$1"; ls; }
 
 # file listing/interaction
+alias dd='sudo dd status=progress bs=4M conv=fsync'
 alias df='df -h'
 alias cp='cp -i'
 alias cpf='\cp -f'
