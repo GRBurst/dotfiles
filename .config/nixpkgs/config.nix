@@ -8,6 +8,7 @@ in {
   
   permittedInsecurePackages = [
     "openssl-1.0.2u"
+    "adobe-reader-9.5.5-1"
   ];
   allowUnfree = true;
   oraclejdk.accept_license = true;
@@ -191,6 +192,9 @@ in {
         meld
         kdiff3
 
+        purescript
+        nodePackages.purescript-language-server
+
         cmakeCurses
         docker_compose
         entr
@@ -200,15 +204,15 @@ in {
         filezilla
         jetbrains.idea-community
         nodejs-10_x
-        nixops
+        # nixops # breaks 2021-01-14
         nox
 
         # swiProlog
-        vscode
+        vscode # breaks 2021-01-14
 
         brave
         # google-chrome
-        firefox-devedition-bin
+        # firefox-devedition-bin
       ];
 
     };
@@ -282,7 +286,8 @@ in {
         kdeApplications.kdenlive
         peek # record gif videos || green-recorder / gifcurry / screenToGif
         # kodi
-        linphone # ekiga -> breaks on 2019-12-09
+        # linphone -> breaks 2021-01-06
+        # ekiga -> breaks on 2019-12-09
         qutebrowser
         qtox
         skypeforlinux
