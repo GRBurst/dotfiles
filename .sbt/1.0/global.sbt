@@ -38,4 +38,4 @@ triggeredMessage in ThisBuild := Watched.clearWhenTriggered
 reporterConfig := reporterConfig.value.withReverseOrder(true)
 
 // import com.softwaremill.clippy.ClippySbtPlugin._
-clippyColorsEnabled := true
+// clippyColorsEnabled := true
