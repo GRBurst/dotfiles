@@ -121,7 +121,6 @@ in {
         firefox profile-sync-daemon
         libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
         samba cifs-utils
-        sane-frontends
         gcolor3
         gnome3.gedit
         jmtpfs
@@ -276,6 +275,7 @@ in {
         (chromium.override { enablePepperFlash = false; enableWideVine = false;})
         clementine
         evince
+        epson-escpr2 sane-airscan brscan4
         fwupd # bios + firmware updates
         guvcview
         irssi
@@ -283,7 +283,7 @@ in {
         jbidwatcher
         # jdownloader
         josm
-        kdeApplications.kdenlive
+        libsForQt5.kdenlive
         peek # record gif videos || green-recorder / gifcurry / screenToGif
         # kodi
         # linphone -> breaks 2021-01-06
