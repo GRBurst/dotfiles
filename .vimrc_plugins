@@ -109,7 +109,11 @@ Plug 'LnL7/vim-nix' " nixos syntax
 Plug 'LaTeX-Box-Team/LaTeX-Box', {'for': 'tex'} " LaTeX
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'dart-lang/dart-vim-plugin', {'for': 'dart'}
-Plug 'keith/swift.vim' 
+Plug 'keith/swift.vim'
+Plug 'leafgarland/typescript-vim'
+Plug 'peitalin/vim-jsx-typescript'
+Plug 'purescript-contrib/purescript-vim'
+Plug 'dense-analysis/ale'
 
 " Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 " let g:deoplete#enable_at_startup = 1
@@ -250,6 +254,7 @@ let g:goyo_margin_bottom = 3
 " let g:EclimScalaSearchSingleResult = 'edit'
 " let g:EclimMakeLCD = 0
 
+let b:ale_fixers = ['purty']
 
 " commentary
 autocmd FileType sql setlocal commentstring=--\ %s

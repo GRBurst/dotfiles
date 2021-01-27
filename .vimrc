@@ -131,6 +131,8 @@ autocmd vimrc Filetype scala setlocal expandtab tabstop=2 shiftwidth=2 softtabst
 autocmd vimrc BufNewFile,BufRead *.sbt set filetype=scala
 autocmd vimrc BufNewFile,BufRead *.gdb set filetype=sh
 autocmd vimrc BufNewFile,BufRead *.jad set filetype=java
+autocmd vimrc FileType typescript.tsx setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
+autocmd vimrc FileType typescript setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2
 
 " on save, autoformat - also removes trailing spaces
 " au BufWritePre * call AutoformatFixedUndo()

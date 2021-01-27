@@ -54,6 +54,8 @@ SPACESHIP_PROMPT_ORDER=(
   # ember         # Ember.js section
   # kubecontext   # Kubectl context section
   # terraform     # Terraform workspace section
+  ubunix          # Prompt for ubunix
+  nixshell          # Prompt 
   exec_time     # Execution time
   line_sep      # Line break
   battery       # Battery level and status
@@ -64,6 +66,41 @@ SPACESHIP_PROMPT_ORDER=(
 )
 SPACESHIP_CHAR_SYMBOL="❯ "
 SPACESHIP_GIT_STATUS_STASHED=""
+
+# ubunix spaceship prompt
+SPACESHIP_UBUNIX_SHOW="${SPACESHIP_UBUNIX_SHOW=true}"
+SPACESHIP_UBUNIX_PREFIX="${SPACESHIP_UBUNIX_PREFIX="in "}"
+SPACESHIP_UBUNIX_SUFFIX="${SPACESHIP_UBUNIX_SUFFIX="$SPACESHIP_PROMPT_DEFAULT_SUFFIX"}"
+SPACESHIP_UBUNIX_SYMBOL="${SPACESHIP_UBUNIX_SYMBOL="UBUNIX "}"
+spaceship_ubunix() {
+  [[ $SPACESHIP_UBUNIX_SHOW == false ]] && return
+
+  [[ -z $UBUNIX ]] && return
+
+  spaceship::section \
+    "yellow" \
+    "$SPACESHIP_UBUNIX_PREFIX" \
+    "$SPACESHIP_UBUNIX_SYMBOL" \
+    "$SPACESHIP_UBUNIX_SUFFIX"
+}
+
+
+# nix shell spaceship prompt
+SPACESHIP_NIXSHELL_SHOW="${SPACESHIP_NIXSHELL_SHOW=true}"
+SPACESHIP_NIXSHELL_PREFIX="${SPACESHIP_NIXSHELL_PREFIX=""}"
+SPACESHIP_NIXSHELL_SUFFIX="${SPACESHIP_NIXSHELL_SUFFIX="($IN_NIX_SHELL) $SPACESHIP_PROMPT_DEFAULT_SUFFIX"}"
+SPACESHIP_NIXSHELL_SYMBOL="${SPACESHIP_NIXSHELL_SYMBOL="Nix-Shell "}"
+spaceship_nixshell() {
+  [[ $SPACESHIP_NIXSHELL_SHOW == false ]] && return
+
+  [[ -z $IN_NIX_SHELL ]] && return
+
+  spaceship::section \
+    "yellow" \
+    "$SPACESHIP_NIXSHELL_PREFIX" \
+    "$SPACESHIP_NIXSHELL_SYMBOL" \
+    "$SPACESHIP_NIXSHELL_SUFFIX"
+}
 
 # needed for bind2maps
 typeset -A key
@@ -150,4 +187,6 @@ source ~/.zaliases
 # broot
 [ -f $HOME/.config/broot/launcher/bash/br ] && source $HOME/.config/broot/launcher/bash/br
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
+
+[ -f $HOME/local/ubunix/ubunix.sh ] && source $HOME/local/ubunix/ubunix.sh
