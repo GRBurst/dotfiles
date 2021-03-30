@@ -27,7 +27,10 @@ in {
 
     pidgin-with-plugins = pkgs.pidgin-with-plugins.override {
       plugins = [ purple-plugin-pack purple-discord purple-facebook purple-hangouts purple-slack telegram-purple toxprpl pidginotr pidginotr pidgin-skypeweb pidgin-opensteamworks localpkgs.purple-gnome-keyring ];
-      # plugins = [ pidginotr purple-facebook telegram-purple toxprpl pidginotr pidgin-skypeweb pidgin-opensteamworks  ];
+    };
+
+    vscode-liveshare = pkgs.vscode-with-extensions.override {
+      vscodeExtensions = [ pkgs.vscode-extensions.ms-vsliveshare.vsliveshare ];
     };
 
     common-packages = buildEnv {
@@ -179,7 +182,7 @@ in {
 
       paths = [
         scala-packages
-
+        
         atom
         ctags
         gdb
@@ -191,8 +194,8 @@ in {
         meld
         kdiff3
 
-        purescript
-        nodePackages.purescript-language-server
+        # purescript
+        # nodePackages.purescript-language-server
 
         cmakeCurses
         docker_compose
@@ -202,16 +205,15 @@ in {
         gthumb
         filezilla
         jetbrains.idea-community
-        nodejs-10_x
-        # nixops # breaks 2021-01-14
+        # nodejs-10_x
+        nodejs
+        # nixops
         nox
 
         # swiProlog
-        vscode # breaks 2021-01-14
+        vscode-liveshare
 
         brave
-        # google-chrome
-        # firefox-devedition-bin
       ];
 
     };
@@ -226,7 +228,6 @@ in {
         ammonite
         sbt
         scala
-        # scalafmt #-> cannot be build
         visualvm
       ];
 
@@ -272,7 +273,7 @@ in {
         avidemux
         audacity
         brasero
-        (chromium.override { enablePepperFlash = false; enableWideVine = false;})
+        (chromium.override { enableWideVine = false; })
         clementine
         evince
         epson-escpr2 sane-airscan brscan4
@@ -284,6 +285,7 @@ in {
         # jdownloader
         josm
         libsForQt5.kdenlive
+        notify-osd-customizable
         peek # record gif videos || green-recorder / gifcurry / screenToGif
         # kodi
         # linphone -> breaks 2021-01-06
@@ -311,6 +313,7 @@ in {
 
       paths = [
         claws-mail
+        dunst
         mutt
         llpp
         ranger

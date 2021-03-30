@@ -118,6 +118,11 @@
       support32Bit = true;
       package = pkgs.pulseaudioFull;
     };
+    bluetooth = {
+      enable = true;
+      powerOnBoot = true;
+    };
+
     opengl.driSupport32Bit = true;
     opengl.setLdLibraryPath = true;
     sane.enable = true;
@@ -125,15 +130,15 @@
     sane.extraBackends = [ pkgs.sane-airscan ];
 
     # sane.brscan4.enable = true;
-    # sane.brscan4.netDevices."epson_wf-2860".ip = "192.168.100.50";
-    # sane.brscan4.netDevices."epson_wf-2860".model = "WF-2860DWF";
+    # sane.brscan4.netDevices."EPSON2A0007.localdomain".ip = "192.168.100.50";
+    # sane.brscan4.netDevices."EPSON2A0007.localdomain".model = "WF-2860";
 
     cpu.amd.updateMicrocode = true;
   };
 
   networking = {
     networkmanager.enable = true;
-    firewall.enable = true;
+    firewall.enable = false;
     hostName = "fff";
     extraHosts = ''
       134.130.57.2    sylvester
@@ -158,9 +163,9 @@
     # powerUpCommands = "${pkgs.hdparm}/bin/hdparm -Y /dev/disk/by-id/ata-WDC_WD10EZEX-00BN5A0_WD-WCC3F5TTNUHT";
   };
 
+  console.keyMap = "neo";
   i18n = {
     #consoleFont = "Lat2-Terminus16";
-    consoleKeyMap = "neo";
     defaultLocale = "en_US.UTF-8";
   };
 
@@ -317,9 +322,9 @@
   users.defaultUserShell = "/run/current-system/sw/bin/zsh";
 
   security = {
-	pam.services.lightdm.enableGnomeKeyring = true;
-	pam.services.login.enableGnomeKeyring = true;
-	pam.services.i3lock.enableGnomeKeyring = true;
+	# pam.services.lightdm.enableGnomeKeyring = true;
+	# pam.services.login.enableGnomeKeyring = true;
+	# pam.services.i3lock.enableGnomeKeyring = true;
 	# pam.services."pam_gnome_keyring".enableGnomeKeyring = true;
 	# pam.services = [
 	  #   {
@@ -385,7 +390,7 @@
       mountPoint = "/keybase"; # mountpoint important for keybase-gui
     };
 
-    dbus.packages = with pkgs; [ gnome3.dconf gnome2.GConf gnome3.gnome-keyring gcr ];
+    # dbus.packages = with pkgs; [ gnome3.dconf gnome2.GConf gnome3.gnome-keyring gcr ];
 
     openssh = {
       enable = true;
@@ -447,19 +452,20 @@
       # };
 
       displayManager = {
+        autoLogin = {
+          enable = false;
+          user = "jelias";
+        };
         lightdm = {
           enable = true;
-          autoLogin = {
-            enable = false;
-            user = "jelias";
-          };
         };
+        defaultSession = "none+i3";
       };
 
       desktopManager = {
         xterm.enable = false;
         plasma5.enable = false;
-        default = "none";
+        gnome3.enable = true;
       };
 
       windowManager = {
@@ -478,7 +484,6 @@
 		#   enableContribAndExtras = true;
 		# };
         # herbstluftwm.enable = true;
-        default = "i3";
       };
     };
 
@@ -516,10 +521,10 @@
 
     clamav = {
       daemon.enable   = true;
-      daemon.extraConfig = ''
-        TCPAddr   127.0.0.1
-        TCPSocket 3310
-      '';
+      daemon.settings = {
+        TCPAddr = "127.0.0.1";
+        TCPSocket = 3310;
+      };
       updater.enable  = true;
     };
 
@@ -617,6 +622,6 @@
     ];
   };
 
- system.stateVersion = "20.03"; # Did you read the comment?
+ system.stateVersion = "20.09"; # Did you read the comment?
 
 }
