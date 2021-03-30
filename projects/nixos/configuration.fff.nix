@@ -521,10 +521,10 @@
 
     clamav = {
       daemon.enable   = true;
-      daemon.settings = {
-        TCPAddr = "127.0.0.1";
-        TCPSocket = 3310;
-      };
+      daemon.extraConfig = ''
+        TCPAddr   127.0.0.1
+        TCPSocket 3310
+      '';
       updater.enable  = true;
     };
 
