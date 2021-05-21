@@ -138,7 +138,7 @@
 
   networking = {
     networkmanager.enable = true;
-    firewall.enable = false;
+    firewall.enable = true;
     hostName = "fff";
     extraHosts = ''
       134.130.57.2    sylvester
@@ -280,7 +280,7 @@
     # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   programs = {
-	command-not-found.enable = true;
+	command-not-found.enable = false;
 
 	bash.enableCompletion = true;
 
