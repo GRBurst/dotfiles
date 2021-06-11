@@ -188,7 +188,7 @@ in {
         gdb
         git tig gitRepo
         neovim
-        python27Packages.pynvim # ensime
+        # python27Packages.pynvim # ensime
         python37Packages.pynvim
         tmate
         meld
@@ -210,7 +210,9 @@ in {
         # nixops
         nox
 
+
         # swiProlog
+        #vscodium
         vscode-liveshare
 
         brave
@@ -281,7 +283,7 @@ in {
         guvcview
         irssi
         okular
-        jbidwatcher
+        # jbidwatcher
         # jdownloader
         josm
         libsForQt5.kdenlive
