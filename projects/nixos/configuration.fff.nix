@@ -126,8 +126,8 @@
     opengl.driSupport32Bit = true;
     opengl.setLdLibraryPath = true;
     sane.enable = true;
-    # sane.extraBackends = [ pkgs.sane-airscan pkgs.epkowa ];
-    sane.extraBackends = [ pkgs.sane-airscan ];
+    sane.extraBackends = [ pkgs.sane-airscan pkgs.epkowa ];
+    # sane.extraBackends = [ pkgs.sane-airscan ];
 
     # sane.brscan4.enable = true;
     # sane.brscan4.netDevices."EPSON2A0007.localdomain".ip = "192.168.100.50";
@@ -521,10 +521,10 @@
 
     clamav = {
       daemon.enable   = true;
-      daemon.extraConfig = ''
-        TCPAddr   127.0.0.1
-        TCPSocket 3310
-      '';
+      daemon.settings = {
+        TCPAddr = "127.0.0.1";
+        TCPSocket = 3310;
+      };
       updater.enable  = true;
     };
 
