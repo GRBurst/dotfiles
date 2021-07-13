@@ -23,7 +23,7 @@
     };
 
     # kernelPackages = pkgs.linuxPackages_latest;
-    extraModulePackages = [ config.boot.kernelPackages.exfat-nofuse ];
+    # extraModulePackages = [ config.boot.kernelPackages.exfat-nofuse ];
 
     initrd.luks.devices = {
       root = {
@@ -87,7 +87,10 @@
   };
 
   networking = {
-    networkmanager.enable = true;
+    networkmanager = {
+      enable = true;
+      dns = "none";
+    };
     nameservers = [ "1.1.1.1" "1.0.0.1" "2606:4700:4700::1111" "2606:4700:4700::1001" ];
     firewall.enable = true;
     firewall.allowedTCPPorts = [ 12345 ];
@@ -113,17 +116,11 @@
     #powertop.enable = true;
   };
 
-  # console = { # Select internationalisation properties.
-  #   keyMap = "neo";
-  # };
-
-  # i18n.defaultLocale = "en_US.UTF-8";
-
-
-  i18n = { # Select internationalisation properties.
-    consoleKeyMap = "neo";
-    defaultLocale = "en_US.UTF-8";
+  console = { # Select internationalisation properties.
+    keyMap = "neo";
   };
+
+  i18n.defaultLocale = "en_US.UTF-8";
 
   # Set your time zone.
   time.timeZone = "Europe/Berlin";
@@ -152,7 +149,7 @@
 
       BROWSER = "firefox";
 
-      _JAVA_OPTIONS = "-Xms1G -Xmx4G -Xss16M -XX:MaxMetaspaceSize=2G -XX:+CMSClassUnloadingEnabled -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd";
+      _JAVA_OPTIONS = "-Xms1G -Xmx4G -Xss16M -XX:MaxMetaspaceSize=2G -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd";
       # SBT_OPTS="$SBT_OPTS -Xms2G -Xmx8G -Xss4M -XX:+CMSClassUnloadingEnabled";
       #SBT_OPTS="$SBT_OPTS -Xms2G -Xmx8G -Xss4M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC";
       
@@ -277,19 +274,19 @@
 
     tlp = {
       enable = true;
-      extraConfig = ''
-        tlp_DEFAULT_MODE=BAT
-        CPU_SCALING_GOVERNOR_ON_AC=powersave
-        CPU_SCALING_GOVERNOR_ON_BAT=powersave
-        CPU_HWP_ON_AC=balance_performance
-        CPU_HWP_ON_BAT=balance_power
-        CPU_MIN_PERF_ON_AC=0
-        CPU_MAX_PERF_ON_AC=100
-        CPU_MIN_PERF_ON_BAT=0
-        CPU_MAX_PERF_ON_BAT=100
-        CPU_BOOST_ON_AC=1
-        CPU_BOOST_ON_BAT=1
-      '';
+      settings = {
+        tlp_DEFAULT_MODE = "BAT";
+        CPU_SCALING_GOVERNOR_ON_AC = "powersave";
+        CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+        CPU_HWP_ON_AC = "balance_performance";
+        CPU_HWP_ON_BAT = "balance_power";
+        CPU_MIN_PERF_ON_AC = 0;
+        CPU_MAX_PERF_ON_AC = 100;
+        CPU_MIN_PERF_ON_BAT = 0;
+        CPU_MAX_PERF_ON_BAT = 100;
+        CPU_BOOST_ON_AC = 1;
+        CPU_BOOST_ON_BAT = 1;
+      };
     };
 
     keybase.enable = true;
@@ -328,27 +325,28 @@
     xserver = {
       enable = true;
       dpi = 192;
-      videoDrivers = [ "intel" ];
+      videoDrivers = [ "modesetting" ];
+      useGlamor = true;
       layout = "de,de";
       xkbVariant = "neo,basic";
       xkbOptions = "grp:menu_toggle";
 
       libinput = {
         enable = true;
-        scrollMethod = "twofinger";
-        disableWhileTyping = true;
-        tapping = false;
+        touchpad = {
+          scrollMethod = "twofinger";
+          disableWhileTyping = true;
+          tapping = false;
+        };
       };
 
       displayManager = {
-        lightdm = {
+        lightdm.enable = true;
+        autoLogin = {
           enable = true;
-          autoLogin = {
-            enable = true;
-            user = "jelias";
-          };
+          user = "jelias";
         };
-        # defaultSession = "none+i3";
+        defaultSession = "none+i3";
 
         #setupCommands = ''
         #  gnome-keyring-daemon --start --components=pkcs11,secrets,ssh
@@ -356,7 +354,6 @@
       };
 
       desktopManager.xterm.enable  = false;
-      desktopManager.default = "none";
       windowManager = {
         i3 = {
           enable = true;
@@ -367,7 +364,6 @@
             gnome-keyring-daemon --start -d --components=pkcs11,secrets,ssh
           '';
         };
-        default = "i3";
       };
     };
 
@@ -526,16 +522,18 @@
     };
 
     clamav = {
-      daemon.enable   = true;
-      daemon.extraConfig = ''
-        TCPAddr   127.0.0.1
-        TCPSocket 3310
-      '';
+      daemon = {
+        enable   = true;
+        settings = {
+          TCPAddr = "127.0.0.1";
+          TCPSocket = 3310;
+        };
+      };
       updater.enable  = true;
     };
 
     gvfs.enable  = true;
-    gnome3 = {
+    gnome = {
       gnome-keyring.enable = true;
     };
 
@@ -582,7 +580,7 @@
   # systemd.services.delayedHibernation.enable = true;
 
   fonts = {
-    enableFontDir = true;
+    fontDir.enable = true;
     enableGhostscriptFonts = true;
 
     fonts = with pkgs; [
@@ -637,6 +635,6 @@
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
   # should.
-  system.stateVersion = "20.09"; # Did you read the comment?
+  system.stateVersion = "21.05"; # Did you read the comment?
 
 }
