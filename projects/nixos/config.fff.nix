@@ -207,6 +207,7 @@ in {
         jetbrains.idea-community
         # nodejs-10_x
         nodejs
+        nodePackages_latest.npm
         # nixops
         nox
 
