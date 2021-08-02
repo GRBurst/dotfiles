@@ -114,9 +114,9 @@
 
   hardware = {
     pulseaudio = {
-      enable = true;
-      support32Bit = true;
-      package = pkgs.pulseaudioFull;
+      enable = false;
+    #   support32Bit = true;
+    #   package = pkgs.pulseaudioFull;
     };
     bluetooth = {
       enable = true;
@@ -428,6 +428,14 @@
       drivers = [ pkgs.gutenprint pkgs.hplip pkgs.epson-escpr ];
     };
 
+    pipewire = {
+      enable = true;
+      pulse.enable = true;
+      jack.enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+    };
+
     xserver = {
       enable = true;
       dpi = 192;
@@ -465,14 +473,14 @@
       desktopManager = {
         xterm.enable = false;
         plasma5.enable = false;
-        gnome3.enable = true;
+        gnome.enable = true;
       };
 
       windowManager = {
         i3 = {
           enable = true;
-          # extraPackages = with pkgs; [ feh rofi i3status-rust i3lock gnome3.gnome-keyring ];
-          extraPackages = with pkgs; [ feh rofi i3status i3lock gnome3.gnome-keyring ];
+          # extraPackages = with pkgs; [ feh rofi i3status-rust i3lock gnome.gnome-keyring ];
+          extraPackages = with pkgs; [ feh rofi i3status i3lock gnome.gnome-keyring ];
           extraSessionCommands = ''
             xsetroot -bg black
             xsetroot -cursor_name left_ptr
@@ -530,7 +538,7 @@
 
     gvfs.enable  = true;
 
-    gnome3 = {
+    gnome = {
       gnome-keyring.enable = true;
     };
 
@@ -585,7 +593,7 @@
   # };
 
   fonts = {
-    enableFontDir = true;
+    fontDir.enable = true;
     enableGhostscriptFonts = true;
 
     fonts = with pkgs; [

@@ -49,6 +49,7 @@ in {
         binutils
         cryptsetup
         linuxPackages.cpupower
+        dmidecode
         psmisc
         hdparm hd-idle hddtemp
         lm_sensors
@@ -99,11 +100,14 @@ in {
         # Terminal
         termite nix-zsh-completions
         haskellPackages.yeganesh
+        tldr
 
         # Filesystem
         gnome3.nautilus gnome3.gvfs
         ncdu fzf fasd file silver-searcher
         fuse-common
+        autossh sshfs-fuse
+        lsyncd
         bindfs
         pmount
         tree gparted
@@ -121,6 +125,7 @@ in {
 
         # Office
         calibre
+        exif
         firefox profile-sync-daemon
         libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
         samba cifs-utils
@@ -133,7 +138,7 @@ in {
         # typora # breaks on 2020-07-08
         zathura
         texlive.combined.scheme-full
-        thunderbird protonmail-bridge
+        thunderbird protonmail-bridge protonvpn-gui
         # biber # collides texlive full
         pdftk #pdfshuffler
         pdfsandwich
@@ -151,15 +156,19 @@ in {
         pamixer
         pavucontrol
         playerctl
+        ponymix
         spotify
         gnome3.cheese
         xdg_utils
         ffmpeg-full
+        seafile-client
+        seafile-shared
         # (ffmpeg-full.override { nonfreeLicensing = true;})
 
         # Communication
         # pidgin-with-plugins
         signal-desktop
+        tdesktop
 
         # Themes
         breeze-gtk breeze-icons breeze-qt5 
@@ -169,6 +178,9 @@ in {
         gnome3.dconf-editor
         lxqt.lxqt-config
         lxappearance
+
+        # Fonts
+        # localpkgs.bront_fonts
 
       ];
 
@@ -186,7 +198,7 @@ in {
         atom
         ctags
         gdb
-        git tig gitRepo
+        git tig hub gitRepo
         neovim
         # python27Packages.pynvim # ensime
         python37Packages.pynvim
@@ -207,9 +219,9 @@ in {
         jetbrains.idea-community
         # nodejs-10_x
         nodejs
-        nodePackages_latest.npm
-        # nixops
-        nox
+        # nodePackages_latest.npm
+
+        # ruby
 
 
         # swiProlog
@@ -217,6 +229,22 @@ in {
         vscode-liveshare
 
         brave
+      ];
+
+    };
+
+    nix-packages = buildEnv {
+
+      inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
+      extraOutputsToInstall = [ "man" ];
+      name = "nix-packages";
+
+      paths = [
+        # nixops
+        nix-index
+        nix-prefetch-git
+        nox
+        patchelf
       ];
 
     };
@@ -283,6 +311,7 @@ in {
         fwupd # bios + firmware updates
         guvcview
         irssi
+        kvirc
         okular
         # jbidwatcher
         # jdownloader
@@ -335,7 +364,7 @@ in {
         # linux-steam-integration -> broken (2020-05-18)
         discord
         xboxdrv
-        # steam
+        steam
         # steam-run
       ];
 
@@ -355,6 +384,22 @@ in {
 
     };
 
+    work-packages = buildEnv {
+
+      inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
+      extraOutputsToInstall = [ "man" ];
+      name = "work-packages";
+
+      paths = [
+        _1password-gui
+        plantuml
+        slack
+        teams
+        xmlcopyeditor
+      ];
+
+    };
+
     mining-packages = buildEnv {
 
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
@@ -367,6 +412,19 @@ in {
       ];
 
     };
+
+    # [
+    #   ideviceinstaller
+    #   libimobiledevice
+    #   libusbmuxd
+    #   ifuse
+
+    #   usbip-linux
+    #   xbindkeys
+    #   xbindkeys-config
+    #   xnee
+    #   zip
+    # ]
 
     # services.psd = {
     #   enable  = true;
