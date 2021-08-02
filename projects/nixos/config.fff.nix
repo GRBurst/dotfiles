@@ -218,7 +218,7 @@ in {
         filezilla
         jetbrains.idea-community
         # nodejs-10_x
-        nodejs
+        # nodejs
         # nodePackages_latest.npm
 
         # ruby
