@@ -185,7 +185,7 @@ in {
         gdb
         git tig gitRepo
         neovim
-        python27Packages.pynvim # ensime
+        # python27Packages.pynvim # ensime
         python37Packages.pynvim
         tmate
         meld
@@ -272,7 +272,7 @@ in {
         avidemux
         audacity
         brasero
-        (chromium.override { enablePepperFlash = false; enableWideVine = false;})
+        (chromium.override { enableWideVine = false; })
         clementine
         evince
         epson-escpr2 sane-airscan brscan4
@@ -280,7 +280,7 @@ in {
         guvcview
         irssi
         okular
-        jbidwatcher
+        # jbidwatcher
         # jdownloader
         josm
         libsForQt5.kdenlive

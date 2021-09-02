@@ -89,9 +89,9 @@
   networking = {
     networkmanager = {
       enable = true;
-      dns = "none";
+      # dns = "none";
+      # appendNameservers = [ "1.1.1.1" "1.0.0.1" "2606:4700:4700::1111" "2606:4700:4700::1001" ];
     };
-    nameservers = [ "1.1.1.1" "1.0.0.1" "2606:4700:4700::1111" "2606:4700:4700::1001" ];
     firewall.enable = true;
     firewall.allowedTCPPorts = [ 12345 ];
     firewall.allowedUDPPorts = [ 50624 50625 ]; # Firefox WebIDE
