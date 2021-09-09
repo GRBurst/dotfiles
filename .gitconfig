@@ -26,7 +26,7 @@
     # Checkout
     o   = checkout
     ob  = checkout -b
-    oom = checkout master
+    om = "!f() { if git rev-parse --quiet --verify master; then git checkout master; else git checkout main; fi ;}; f"
     #o.  = checkout master
     oom = checkout origin/master
     ot  = "!f() { local tmpCommit=${1:-master} && echo $tmpCommit && mkdir -p /tmp/wust && git --work-tree=/tmp/wust checkout $tmpCommit -- . ; }; f"
@@ -39,12 +39,12 @@
     fuub = "!f() { local curBranch=$(git rev-parse --abbrev-ref HEAD) && git fetch upstream && git merge upstream/$curBranch; }; f" # fetch upstream and merge
 
     # Commit
-    c       = commit -S -s
-    cm      = commit -S -s -m
-    cam     = commit -S -s -a -m
-    amend   = commit -S -s --amend
-    ca      = commit -S -s --amend
-    wip		= "!f() { git commit -S -s -a -m 'wip' && git push; }; f"
+    c       = commit
+    cm      = commit -m
+    cam     = commit -a -m
+    amend   = commit --amend
+    ca      = commit --amend
+    wip		= "!f() { git commit -a -m 'wip' && git push; }; f"
 
     # Move pointer
     prev    = reset --soft HEAD~1
@@ -55,6 +55,7 @@
     ref     = reflog
     lg      = fry one-line-log-colors
     lgg		= log --graph --pretty=format:'%Cred%h %C(reset)%C(dim)%ad%Creset %s%C(yellow)%d%C(reset) %C(blue)<%an> %Cgreen(%cr)%Creset' --abbrev-commit --date=short
+    adog	= log --all --decorate --oneline --graph
     d       = diff
     dr		= "!f() { local curBranch=$(git rev-parse --abbrev-ref HEAD) && git diff origin/$curBranch $curBranch; }; f" # Compare current branch with remote branch
     df      = fry word-based-diff
@@ -96,8 +97,8 @@
     rs  = rebase --skip
     rc  = rebase --continue
     ri  = rebase -i
-    rim  = rebase -i master
-    rbm  = rebase master
+    rim  = "!f() { if git rev-parse --quiet --verify master; then git rebase -i master; else git rebase -i main; fi ;}; f"
+    rbm = "!f() { if git rev-parse --quiet --verify master; then git rebase master; else git rebase main; fi ;}; f"
     #git rebase --onto [newParent] [oldParent] [branchToMove]
     #ro => rebase this branch from parent $1 onto parent $2
     ro = "!f() { git rebase --onto $1 $2 \"$(git rev-parse --abbrev-ref HEAD)\" ;}; f"
@@ -108,8 +109,8 @@
     # Tags
     tdl = "tag -d"
     td  = "!f() { git tag -d $1; git push origin :$1;}; f" # delete local and remote tag
-    tm  = "tag -s -m"
-    t   = "tag -s"
+    tm  = "tag -m"
+    t   = "tag"
 
     # Merge
     m   = merge
@@ -132,7 +133,7 @@
     autosetuprebase = always
 
 ; [difftool "kdiff3"]
-;     path = /home/jelias/.nix-profile/bin/kdiff3
+;     path = ~/.nix-profile/bin/kdiff3
 ;     trustExitCode = false
 
 ; [difftool]
@@ -142,7 +143,7 @@
 ;     tool = kdiff3
 
 [mergetool "kdiff3"]
-    path = /home/jelias/.nix-profile/bin/kdiff3
+    path = ~/.nix-profile/bin/kdiff3
     trustExitCode = false
 
 [mergetool]
@@ -177,9 +178,13 @@
     verbose = true
 	gpgsign = true
 
+[format]
+    signOff = true
+
 [core]
     pager   = less
     editor = nvim
+	hooksPath = ~/.git-templates/hooks
 
 [credential]
     helper = cache
@@ -219,3 +224,17 @@
 [tag]
     verbose = true
 	gpgsign = true
+
+[help]
+	autocorrect = 1
+
+; [trailer "sign"]
+; 	key = "Signed-off-by: "
+; 	ifMissing = add
+; 	ifExists = doNothing
+; 	command = echo \"$(git config user.name) <$(git config user.email)>\"
+
+[includeIf "gitdir:~/projects/HivemindTechnologies/"]
+    path = ~/projects/HivemindTechnologies/.gitconfig
+[init]
+	defaultBranch = main
