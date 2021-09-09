@@ -12,6 +12,10 @@ alias g="git"
 alias got='git ot && cd /tmp/wust'
 alias grsc='git rebase -i $(git-select-commit)^'
 
+# DOTFILES_HIVEMIND_TIG="TIGRC_USER=$HOME/.config/tig/config-dotfiles-hivemind $"
+# alias tigh=
+# alias tig="if grep -i $(pwd) 'hivemind'; then tigh else tig fi"
+
 # Dotfiles
 # which yadm > /dev/null && alias     d='yadm --yadm-repo $HOME/projects/dotfiles         -c core.excludesfile=~/.gitignore-dotfiles'
 # which yadm > /dev/null && alias    dp='yadm --yadm-repo $HOME/projects/dotfiles-private -c core.excludesfile=~/.gitignore-dotfiles-private'
@@ -23,6 +27,7 @@ alias d="$DOTFILES_GIT git -c core.excludesfile=~/.gitignore-dotfiles"
 alias dp="$DOTFILES_PRIVATE_GIT git -c core.excludesfile=~/.gitignore-dotfiles-private"
 alias tigd="$DOTFILES_TIG tig"
 alias tigdp="$DOTFILES_PRIVATE_TIG tig"
+
 alias meldd="$DOTFILES_GIT meld"
 vd() {(cd; eval $DOTFILES_GIT vim -c GitFiles);}
 
@@ -108,8 +113,9 @@ drclean1() {
 drclean() {
     docker stop $(docker ps -a -q )
     docker container rm -f $(docker ps -a -q )
-    docker volume rm -f $(docker volume ls -q )
+    docker image rm -f $(docker images -q )
     docker network rm $(docker network ls -q )
+    docker volume rm -f $(docker volume ls -q )
 }
 drclean?() {
     local numContainer="$(docker container ls -q | wc -l)"
@@ -200,7 +206,7 @@ alias rcp="rsync --append-verify --archive --compress --human-readable --info=pr
 alias ssh-tmate="ssh -o PreferredAuthentications=password -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 alias ssf="ssh -J pluto fff"
 alias ssp="ssh pluto"
-alias ssm="ssh macvm"
+alias ssm="ssh mac"
 
 # Nix
 ni() { nix-env -iA "$@" -f "<nixos-unstable>" }

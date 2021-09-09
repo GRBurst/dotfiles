@@ -18,12 +18,18 @@ export QT_QPA_PLATFORMTHEME="qt5ct"
 export DE=gnome
 export XDG_CURRENT_DESKTOP=gnome
 
+if [ "$UBUNIX" = true ]; then
+    alias android-studio="/opt/android-studio/bin/studio.sh"
+fi
+
 # dottr for git
 export PATH=$HOME/.zgen/dottr/dottr-master/pan.git:$PATH
 
 # add home bin folder to path
 export PATH="$HOME/projects/bin":$PATH
 export PATH="$HOME/local/bin":$PATH
+
+[ "$UBUNIX" = true ] && [ -f $HOME/local/flutter/bin/flutter ] && export PATH="$HOME/local/flutter/bin":$PATH
 
 # add npm to path
 export PATH="$HOME/.node_modules/bin":$PATH
