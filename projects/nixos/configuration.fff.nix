@@ -137,7 +137,14 @@
   };
 
   networking = {
-    networkmanager.enable = true;
+    networkmanager = {
+      enable = true;
+      packages = [
+        pkgs.networkmanager-openconnect
+        pkgs.networkmanagerapplet
+        pkgs.networkmanager_dmenu
+      ];
+    };
     firewall.enable = true;
     hostName = "fff";
     extraHosts = ''
@@ -317,6 +324,11 @@
       caption string '%{= G}[ %{G}%H %{g}][%= %{= w}%?%-Lw%?%{= R}%n*%f %t%?%{= R}(%u)%?%{= w}%+Lw%?%= %{= g}][ %{y}Load: %l %{g}][%{B}%Y-%m-%d %{W}%c:%s %{g}]'
       caption always
     '';
+
+    # sway = {
+    #   enable = true;
+    #   extraPackages = with pkgs; [ swaylock swayidle waybar i3status-rust gnome.gnome-keyring feh ];
+    # };
   };
 
   users.defaultUserShell = "/run/current-system/sw/bin/zsh";
@@ -479,8 +491,8 @@
       windowManager = {
         i3 = {
           enable = true;
-          # extraPackages = with pkgs; [ feh rofi i3status-rust i3lock gnome.gnome-keyring ];
-          extraPackages = with pkgs; [ feh rofi i3status i3lock gnome.gnome-keyring ];
+          extraPackages = with pkgs; [ feh rofi i3status-rust i3lock gnome.gnome-keyring ];
+          # extraPackages = with pkgs; [ feh rofi i3status i3lock gnome.gnome-keyring ];
           extraSessionCommands = ''
             xsetroot -bg black
             xsetroot -cursor_name left_ptr
@@ -605,6 +617,7 @@
       ubuntu_font_family
       symbola # unicode symbols
       vistafonts # Consolas, ...
+      font-awesome
     ];
 
     fontconfig = {

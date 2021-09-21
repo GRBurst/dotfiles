@@ -89,8 +89,6 @@ in {
         netcat
         nmap
         miniserve
-        networkmanagerapplet
-        networkmanager_dmenu
         nload
         speedtest-cli
         traceroute
@@ -125,6 +123,7 @@ in {
 
         # Office
         calibre
+        etesync-dav
         exif
         firefox profile-sync-daemon
         libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
@@ -218,7 +217,7 @@ in {
         filezilla
         jetbrains.idea-community
         # nodejs-10_x
-        # nodejs
+        nodejs
         # nodePackages_latest.npm
 
         # ruby
