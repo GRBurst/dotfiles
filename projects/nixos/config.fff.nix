@@ -4,6 +4,7 @@ with import <nixos-unstable/lib>;
 let
   localpkgs = import ~/projects/nixpkgs/default.nix {};
   unstable  = import <nixos-unstable/nixos> {};
+  stable  = import <nixos-stable/nixos> {};
 in {
   
   permittedInsecurePackages = [
@@ -67,7 +68,7 @@ in {
         pv
         screen
         scrot
-        unzip # zip
+        unzip zip
 
         # x-server
         xcwd
@@ -204,6 +205,7 @@ in {
         tmate
         meld
         kdiff3
+        jq
 
         # purescript
         # nodePackages.purescript-language-server
@@ -393,7 +395,7 @@ in {
         _1password-gui
         plantuml
         slack
-        teams
+        stable.teams
         xmlcopyeditor
       ];
 
