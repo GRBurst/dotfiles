@@ -189,6 +189,7 @@ alias mmv='noglob zmv -W'
 #o() { gio open $@ > /dev/null 2>&1; } # gio not availabe in nixos
 # o() { xdg-open $@ > /dev/null 2>&1; }
 o() { mimeo $@ > /dev/null 2>&1; }
+serve() { miniserve -p 12345 $1 }
 
 # VirtualBox
 # VBoxManage list runningvms | grep -c 1 macOS
@@ -403,7 +404,7 @@ gobile() {
     sudo systemctl stop nixos-upgrade.timer > /dev/null 2>&1
     sudo systemctl stop nixos-upgrade > /dev/null 2>&1
     # nmcli connection up "Mobil Hotspot (MD)"
-    sudo systemctl start ModemManager.service
+    # sudo systemctl start ModemManager.service
 }
 alias hotspot='nmcli connection up "Mobil Hotspot (MD)"'
 

@@ -209,6 +209,8 @@
     seahorse.enable = true;
     gpaste.enable = true;
 
+    java.enable = true; # Global, otherwise JAVA_HOME is not set
+
     # mtr.enable = true;
     screen.screenrc = 
     ''term screen-256color

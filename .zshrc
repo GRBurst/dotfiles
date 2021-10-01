@@ -12,12 +12,12 @@ if ! zgen saved; then
     echo "creating zgen save..."
     zgen oh-my-zsh # oh-my-zsh default settings
 
-    # zgen load mafredri/zsh-async # for pure-prompt
-    # zgen load sindresorhus/pure # prompt
+    zgen load mafredri/zsh-async # for pure-prompt
+    zgen load sindresorhus/pure . main # prompt
     zgen load b4b4r07/zsh-vimode-visual
 
     zgen load dottr/dottr
-    zgen load denysdovhan/spaceship-prompt spaceship master
+    # zgen load denysdovhan/spaceship-prompt spaceship master
 
     # must be last, because it wraps all widgets
     zgen load zsh-users/zsh-syntax-highlighting

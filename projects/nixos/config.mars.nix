@@ -51,7 +51,6 @@ in {
         lm_sensors
         gksu
         gnumake
-        openjdk
         pwgen
         rofi rofi-systemd #dmenu
         btrfs-progs
@@ -78,7 +77,7 @@ in {
         keepass
         keepassx-community
         keybase-gui
-        
+
         # Network
         bind
         wget
@@ -190,6 +189,7 @@ in {
         tmate
         meld
         kdiff3
+        lsyncd
 
         purescript
         nodePackages.purescript-language-server
@@ -202,7 +202,7 @@ in {
         gthumb
         filezilla
         jetbrains.idea-community
-        nodejs-10_x
+        nodejs
         # nixops # breaks 2021-01-14
         nox
 

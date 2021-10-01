@@ -218,12 +218,9 @@ in {
         gthumb
         filezilla
         jetbrains.idea-community
-        # nodejs-10_x
-        nodejs
-        # nodePackages_latest.npm
-
-        # ruby
-
+        nodejs-10_x
+        # nixops # breaks 2021-01-14
+        nox
 
         # swiProlog
         #vscodium
@@ -361,7 +358,7 @@ in {
       name = "gaming-packages";
 
       paths = [
-        runelite
+        # runelite
         # linux-steam-integration -> broken (2020-05-18)
         discord
         xboxdrv

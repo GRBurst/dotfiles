@@ -96,17 +96,19 @@ new_window 1pixel
 new_float 1pixel
 
 # Make the currently focused window a scratchpad
-bindsym $mod+Shift+KP_Subtract move scratchpad
+# bindsym $mod+Shift+KP_Subtract move scratchpad
+bindsym $mod+Shift+u move scratchpad
 
 # Show the first scratchpad window
-bindsym $mod+Shift+KP_Add scratchpad show
+# bindsym $mod+Shift+KP_Add scratchpad show
+bindsym $mod+u scratchpad show
 
 # Show the sup-mail scratchpad window, if any.
 #bindsym $mod+$AltGr+questiondown [title="^Sup ::"] scratchpad show
 
 # Mark as always on top (aot)
-bindsym $mod+u mark awot; floating enable;
-bindsym $mod+Shift+u unmark awot;
+# bindsym $mod+u mark awot; floating enable;
+# bindsym $mod+Shift+u unmark awot;
 
 # Colors
 set $lblue "#37baff"
@@ -138,7 +140,7 @@ bindsym $mod+m exec ponymix --source toggle
 # Helper scripts
 bindsym $mod+b exec --no-startup-id $sp/rename.sh 0
 bindsym $mod+Shift+b exec --no-startup-id $sp/rename.sh
-bindsym --release Print exec --no-startup-id scrot -u 'Screenshot-%Y-%m-%d-%H-%M-%S-$wx$h_scrot.png' -e 'mv $f ~/pictures/screenshots/'
+bindsym --release Print exec --no-startup-id scrot -u 'Screenshot-%Y-%m-%d-%H-%M-%S-$wx$h_scrot.png' -e 'mv $f ~/pictures/private/screenshots/'
 
 #bindsym $mod+Shift+r exec --no-startup-id $sp/update-config.sh
 
