@@ -226,9 +226,9 @@
   users.defaultUserShell = "/run/current-system/sw/bin/zsh";
 
   security = {
-	pam.services.lightdm.enableGnomeKeyring = true;
-	pam.services.login.enableGnomeKeyring = true;
-	pam.services.i3lock.enableGnomeKeyring = true;
+	# pam.services.lightdm.enableGnomeKeyring = true;
+	# pam.services.login.enableGnomeKeyring = true;
+	# pam.services.i3lock.enableGnomeKeyring = true;
 
     # pam.services = [
     #   {
@@ -359,7 +359,7 @@
       windowManager = {
         i3 = {
           enable = true;
-          extraPackages = with pkgs; [ feh rofi i3status i3lock gnome3.gnome-keyring ];
+          extraPackages = with pkgs; [ feh rofi i3status-rust i3lock gnome3.gnome-keyring ];
           extraSessionCommands = ''
             xsetroot -bg black
             xsetroot -cursor_name left_ptr
