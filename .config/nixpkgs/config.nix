@@ -56,7 +56,6 @@ in {
         lm_sensors
         gksu
         gnumake
-        openjdk
         pwgen
         rofi rofi-systemd #dmenu
         btrfs-progs
@@ -83,7 +82,7 @@ in {
         keepass
         keepassx-community
         keybase-gui
-        
+
         # Network
         bind
         wget
