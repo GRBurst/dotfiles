@@ -3,7 +3,7 @@
 cecho "G" "updating system channels"
 sudo nix-channel --update
 
-nixos-rebuild dry-build
+sudo nixos-rebuild dry-build
 if [ $? -ne 0 ]; then 
     exit 1;
 fi
@@ -41,7 +41,7 @@ zsh -c "                                                                        
 
 # System related
 cecho "G" "upgrading installed system packages"
-sudo nixos-rebuild boot
+sudo nixos-rebuild boot |& while read -r line; do echo -n "\r\033[2K$line"; done; printf '\n'
 
 buildstatus=$?
 cecho "$buildstatus" "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"

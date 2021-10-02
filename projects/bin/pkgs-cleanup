@@ -1,5 +1,6 @@
 #!/run/current-system/sw/bin/zsh -ie
 
+(
 # Cleanup and optimize
 cecho "G" "delete previous generations"
 nix-env --delete-generations 30d
@@ -11,5 +12,6 @@ sudo nix-collect-garbage --delete-older-than 30d
 
 cecho "G" "optimize nix-store"
 nix-store --optimize
+) |& while read -r line; do echo -n "\r\033[2K$line"; done; printf '\n'
 
 exit 0

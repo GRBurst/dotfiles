@@ -28,8 +28,11 @@ update-pckg () {
     # slo( 'nix-env -iA "${loc_pkg}" -f "<nixos-unstable>"' )
     # slo( 'nix-env --set-flag priority "${pkg_unstable_prio[${loc_pkg}]}" "${loc_pkg}"' )
     nix-env --set-flag priority "${pkg_unstable_prio[${1}]}" "$1"
-    nix-env -iA "${1}" -f "<nixos-unstable>"
+    # nix-env -iA "${1}" -f "<nixos-unstable>"
+    nix-env -iA "${1}" -f "<nixos-unstable>" |& while read -r line; do echo -n "\r\033[2K$line"; done
+    # nix-env -iA "${1}" -f "<nixos-unstable>"
     nix-env --set-flag priority "${pkg_unstable_prio[${1}]}" "$1"
+    cecho "G" "Finished upgrading ${1}"
 
 
 
@@ -70,23 +73,23 @@ self () {
             ;;
         separate)
             update-pckg "separate packages"
-            nix-env --upgrade '*'
+            nix-env --upgrade '*' |& while read -r line; do echo -n "\r\033[2K$line"; done; printf '\n'
             # slo( 'nix-env --upgrade "*"' )
             ;;
         full)
             # Local packages
             LOC_INSTALLED=(${(f)"$(nix-env -q)"})
             cecho "G" "Updating installed packages";
-            nix-env --upgrade '*'
+            nix-env --upgrade '*' |& while read -r line; do echo -n "\r\033[2K$line"; done; printf '\n'
 
             for loc_pkg in "${LOC_INSTALLED[@]}"
             do
                 if test "${pkg_unstable_prio[${loc_pkg}]+isset}"; then
-                    update-pckg "${loc_pkg}"
+                    update-pckg "${loc_pkg}" |& while read -r line; do echo -n "\r\033[2K$line"; done; printf '\n'
                 elif test "${pkg_nixpkgs_prio[${loc_pkg}]+isset}"; then
                     cecho "G" "upgrading ${loc_pkg} with prio ${pkg_nixpkgs_prio[${loc_pkg}]} on channel <nixpkgs>"
                     nix-env --set-flag priority "${pkg_nixpkgs_prio[${loc_pkg}]}" "${loc_pkg}"
-                    nix-env -iA "${loc_pkg}" -f "<nixpkgs>"
+                    nix-env -iA "${loc_pkg}" -f "<nixpkgs>" |& while read -r line; do echo -n "\r\033[2K$line"; done; printf '\n'
                     nix-env --set-flag priority "${pkg_nixpkgs_prio[${loc_pkg}]}" "${loc_pkg}"
                 fi
             done

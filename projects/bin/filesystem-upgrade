@@ -1,5 +1,6 @@
 #!/run/current-system/sw/bin/zsh -ie
 
+(
 # Filesystem related
 cecho "G" "updating mlocate database..."
 sudo updatedb
@@ -7,5 +8,6 @@ sudo mandb
 
 # sudo btrfs filesystem defragment /
 sync
+) |& while read -r line; do echo -n "\r\033[2K$line"; done; printf '\n'
 
 exit 0
