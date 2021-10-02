@@ -1,3 +1,4 @@
+with (import <nixos-stable> {});
 with (import <nixos-unstable> {});
 with import <nixos-unstable/lib>;
 
@@ -395,7 +396,7 @@ in {
         _1password-gui
         plantuml
         slack
-        stable.teams
+        # stable.teams
         xmlcopyeditor
       ];
 
