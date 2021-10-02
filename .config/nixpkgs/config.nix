@@ -4,6 +4,7 @@ with import <nixos-unstable/lib>;
 let
   localpkgs = import ~/projects/nixpkgs/default.nix {};
   unstable  = import <nixos-unstable/nixos> {};
+  stable  = import <nixos-stable/nixos> {};
 in {
   
   permittedInsecurePackages = [
@@ -27,7 +28,10 @@ in {
 
     pidgin-with-plugins = pkgs.pidgin-with-plugins.override {
       plugins = [ purple-plugin-pack purple-discord purple-facebook purple-hangouts purple-slack telegram-purple toxprpl pidginotr pidginotr pidgin-skypeweb pidgin-opensteamworks localpkgs.purple-gnome-keyring ];
-      # plugins = [ pidginotr purple-facebook telegram-purple toxprpl pidginotr pidgin-skypeweb pidgin-opensteamworks  ];
+    };
+
+    vscode-liveshare = pkgs.vscode-with-extensions.override {
+      vscodeExtensions = [ pkgs.vscode-extensions.ms-vsliveshare.vsliveshare ];
     };
 
     common-packages = buildEnv {
@@ -46,6 +50,7 @@ in {
         binutils
         cryptsetup
         linuxPackages.cpupower
+        dmidecode
         psmisc
         hdparm hd-idle hddtemp
         lm_sensors
@@ -63,7 +68,7 @@ in {
         pv
         screen
         scrot
-        unzip # zip
+        unzip zip
 
         # x-server
         xcwd
@@ -85,22 +90,23 @@ in {
         netcat
         nmap
         miniserve
-        networkmanagerapplet
-        networkmanager_dmenu
         nload
         speedtest-cli
         traceroute
-        whois
+        inetutils
         wireshark
 
         # Terminal
         termite nix-zsh-completions
         haskellPackages.yeganesh
+        tldr
 
         # Filesystem
         gnome3.nautilus gnome3.gvfs
         ncdu fzf fasd file silver-searcher
         fuse-common
+        autossh sshfs-fuse
+        lsyncd
         bindfs
         pmount
         tree gparted
@@ -118,6 +124,8 @@ in {
 
         # Office
         calibre
+        etesync-dav
+        exif
         firefox profile-sync-daemon
         libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
         samba cifs-utils
@@ -130,7 +138,7 @@ in {
         # typora # breaks on 2020-07-08
         zathura
         texlive.combined.scheme-full
-        thunderbird protonmail-bridge
+        thunderbird protonmail-bridge protonvpn-gui
         # biber # collides texlive full
         pdftk #pdfshuffler
         pdfsandwich
@@ -148,15 +156,19 @@ in {
         pamixer
         pavucontrol
         playerctl
+        ponymix
         spotify
         gnome3.cheese
         xdg_utils
         ffmpeg-full
+        seafile-client
+        seafile-shared
         # (ffmpeg-full.override { nonfreeLicensing = true;})
 
         # Communication
         # pidgin-with-plugins
         signal-desktop
+        tdesktop
 
         # Themes
         breeze-gtk breeze-icons breeze-qt5 
@@ -166,6 +178,9 @@ in {
         gnome3.dconf-editor
         lxqt.lxqt-config
         lxappearance
+
+        # Fonts
+        # localpkgs.bront_fonts
 
       ];
 
@@ -179,20 +194,21 @@ in {
 
       paths = [
         scala-packages
-
+        
         atom
         ctags
         gdb
-        git tig gitRepo
+        git tig hub gitRepo
         neovim
-        python27Packages.pynvim # ensime
+        # python27Packages.pynvim # ensime
         python37Packages.pynvim
         tmate
         meld
         kdiff3
+        jq
 
-        purescript
-        nodePackages.purescript-language-server
+        # purescript
+        # nodePackages.purescript-language-server
 
         cmakeCurses
         docker_compose
@@ -202,16 +218,34 @@ in {
         gthumb
         filezilla
         jetbrains.idea-community
-        nodejs-10_x
-        # nixops # breaks 2021-01-14
-        nox
+        # nodejs-10_x
+        nodejs
+        # nodePackages_latest.npm
+
+        # ruby
+
 
         # swiProlog
-        vscode # breaks 2021-01-14
+        #vscodium
+        vscode-liveshare
 
         brave
-        # google-chrome
-        # firefox-devedition-bin
+      ];
+
+    };
+
+    nix-packages = buildEnv {
+
+      inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
+      extraOutputsToInstall = [ "man" ];
+      name = "nix-packages";
+
+      paths = [
+        # nixops
+        nix-index
+        nix-prefetch-git
+        nox
+        patchelf
       ];
 
     };
@@ -226,7 +260,6 @@ in {
         ammonite
         sbt
         scala
-        # scalafmt #-> cannot be build
         visualvm
       ];
 
@@ -272,18 +305,20 @@ in {
         avidemux
         audacity
         brasero
-        (chromium.override { enablePepperFlash = false; enableWideVine = false;})
+        (chromium.override { enableWideVine = false; })
         clementine
         evince
         epson-escpr2 sane-airscan brscan4
         fwupd # bios + firmware updates
         guvcview
         irssi
+        kvirc
         okular
-        jbidwatcher
+        # jbidwatcher
         # jdownloader
         josm
         libsForQt5.kdenlive
+        notify-osd-customizable
         peek # record gif videos || green-recorder / gifcurry / screenToGif
         # kodi
         # linphone -> breaks 2021-01-06
@@ -311,6 +346,7 @@ in {
 
       paths = [
         claws-mail
+        dunst
         mutt
         llpp
         ranger
@@ -329,7 +365,7 @@ in {
         # linux-steam-integration -> broken (2020-05-18)
         discord
         xboxdrv
-        # steam
+        steam
         # steam-run
       ];
 
@@ -377,6 +413,19 @@ in {
       ];
 
     };
+
+    # [
+    #   ideviceinstaller
+    #   libimobiledevice
+    #   libusbmuxd
+    #   ifuse
+
+    #   usbip-linux
+    #   xbindkeys
+    #   xbindkeys-config
+    #   xnee
+    #   zip
+    # ]
 
     # services.psd = {
     #   enable  = true;
