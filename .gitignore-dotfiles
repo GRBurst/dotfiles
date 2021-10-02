@@ -25,6 +25,8 @@
 !/.config/i3/local/example_config
 !/.config/i3status
 /.config/i3status/config
+!/.config/i3status-rust
+!/.config/i3status-rust/*
 !/.config/mpv
 !/.config/networkmanager-dmenu
 !/.config/nixpkgs
