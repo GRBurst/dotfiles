@@ -41,6 +41,7 @@ bindsym $mod+Shift+q kill
 bindsym $mod+o exec --no-startup-id rofi -show run
 bindsym $mod+Shift+o exec --no-startup-id rofi -show combi
 bindsym $mod+s exec --no-startup-id rofi -show ssh
+bindsym $mod+Shift+v exec --no-startup-id ~/local/bin/rofi-vpn/rofi-vpn.sh
 
 
 # Focus should not follow mouse movements
