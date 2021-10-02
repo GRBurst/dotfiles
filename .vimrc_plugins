@@ -26,6 +26,8 @@ Plug 'zirrostig/vim-smart-swap' " handle vim swap files, delete older and identi
 " Plug 'henrik/vim-indexed-search' " show 'Match x of y' when searching (conflicts with incsearch)
 " Plug 'mhinz/vim-signify' " git, mercurial, darcs, bazaar, subversion, cvs, rcs, fossil, accurev, perforce
 " Plug 'kopischke/vim-fetch' " open files at line with filename:32
+Plug 'nvim-lua/plenary.nvim'
+
 
 
 
@@ -81,8 +83,11 @@ Plug 'zirrostig/vim-schlepp' " Move selections / lines
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " file type plugins
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'xolox/vim-easytags', {'on': 'Tags'} | Plug 'xolox/vim-misc', {'on': 'Tags'}
 Plug 'derekwyatt/vim-scala', {'for': 'scala'} " Scala programming language
+" Plug 'scalameta/nvim-metals', {'for': 'scala'}
+Plug 'scalameta/coc-metals', {'do': 'yarn install --frozen-lockfile'}
 Plug 'dag/vim2hs', {'for': 'haskell'}
 Plug 'othree/html5.vim', {'for': 'html'} " HTML
 Plug 'Valloric/MatchTagAlways', {'for': 'html'} " Highlight matching/surrounding html tags
@@ -90,7 +95,7 @@ Plug 'othree/yajs.vim', {'for': 'javascript'} " New JavaScript Standard Ecmascri
 Plug 'othree/javascript-libraries-syntax.vim', {'for': 'javascript'}
 Plug 'tpope/vim-markdown' " markdown
 Plug 'rust-lang/rust.vim', {'for': 'rust'} " Rust programming language by Mozilla
-Plug 'cespare/vim-toml', {'for': 'toml'} " TOML (used for Rust project configuration)
+" Plug 'cespare/vim-toml', {'for': 'toml'} " TOML (used for Rust project configuration)
 Plug 'zah/nim.vim', {'for': 'nim'}
 Plug 'vim-scripts/gnuplot.vim', {'for': 'gnuplot'}
 Plug 'shmup/vim-sql-syntax'
@@ -109,7 +114,6 @@ Plug 'hashivim/vim-terraform'
 " Plug 'gre/play2vim' " play web framework
 " Plug 'vim-scripts/JavaDecompiler.vim' " decompile java .class files on the fly
 Plug 'LaTeX-Box-Team/LaTeX-Box', {'for': 'tex'} " LaTeX
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'dart-lang/dart-vim-plugin', {'for': 'dart'}
 Plug 'keith/swift.vim'
 Plug 'leafgarland/typescript-vim'
@@ -161,7 +165,7 @@ Plug 'fdietze/goodday.vim'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " experimental
 Plug 'rhysd/vim-grammarous' " spell grammar checking
-Plug 'jamessan/vim-gnupg'
+" Plug 'jamessan/vim-gnupg'
 " Plug 'scrooloose/syntastic'
 " Plug 'vim-scripts/LanguageTool' " spell grammar checking
 " Plug 'severin-lemaignan/vim-minimap' " draw a sublime like minimap
