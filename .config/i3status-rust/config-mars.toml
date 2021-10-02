@@ -1,0 +1,90 @@
+
+icons_format = "{icon}"
+
+[theme]
+name = "plain"
+# theme = "slick"
+
+[theme.overrides]
+separator = ""
+
+[icons]
+name = "awesome5"
+[icons.overrides]
+net_up = ""
+net_down = ""
+# net_up = "↑"
+# net_down = "↓"
+
+[[block]]
+block = "disk_space"
+path = "/"
+alias = "/"
+info_type = "available"
+unit = "GB"
+interval = 20
+warning = 20.0
+alert = 10.0
+format = "{icon}{free}"
+
+[[block]]
+block = "memory"
+display_type = "memory"
+format_mem = "{mem_total_used_percents}"
+
+[[block]]
+block = "cpu"
+interval = 1
+format = "{utilization}"
+
+# [[block]]
+# block = "load"
+# interval = 1
+# format = "{1m}"
+
+#[[block]]
+#block = "nvidia_gpu"
+#label = ""
+#show_utilization = false
+#show_memory = true
+#show_temperature = false
+#interval = 1
+
+[[block]]
+block = "sound"
+format = " {volume}"
+
+[[block]]
+block = "sound"
+device_kind = "source"
+format = " {volume}"
+
+[[block]]
+block = "net"
+device = "enp0s31f6"
+format = " {speed_up}⇅{speed_down}"
+# format = "{ip}{graph_up;}{graph_down;}"
+format_alt = " {ip}"
+interval = 5
+hide_inactive = true
+
+[[block]]
+block = "net"
+device = "wlp61s0"
+format = " {signal_strength} {speed_up}⇅{speed_down}"
+format_alt = " {ssid} {ip}"
+interval = 5
+hide_inactive = true
+
+[[block]]
+block = "net"
+device = "wwp0s20f0u6"
+format = " {signal_strength} {speed_up}⇅{speed_down}"
+format_alt = " {ssid} {ip}"
+interval = 5
+hide_inactive = true
+
+[[block]]
+block = "time"
+interval = 5
+format = " %d/%m %R"
