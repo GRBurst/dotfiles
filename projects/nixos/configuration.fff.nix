@@ -620,6 +620,7 @@
       symbola # unicode symbols
       vistafonts # Consolas, ...
       font-awesome
+      # inconsalata
     ];
 
     fontconfig = {

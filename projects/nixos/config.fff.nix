@@ -1,3 +1,4 @@
+with (import <nixos-stable> {});
 with (import <nixos-unstable> {});
 with import <nixos-unstable/lib>;
 
@@ -220,7 +221,7 @@ in {
         gthumb
         filezilla
         jetbrains.idea-community
-        nodejs-10_x
+        nodejs
         # nixops # breaks 2021-01-14
         nox
 
