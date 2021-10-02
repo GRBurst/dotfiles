@@ -32,7 +32,8 @@ Plug 'zirrostig/vim-smart-swap' " handle vim swap files, delete older and identi
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " helpful tools providing new bindings
 Plug 'tpope/vim-commentary' " commenting
-Plug 'terryma/vim-multiple-cursors' " sublime-like multiple cursors
+" Plug 'terryma/vim-multiple-cursors' " sublime-like multiple cursors
+Plug 'mg979/vim-visual-multi' " sublime-like multiple cursors
 Plug 'tpope/vim-surround' " surround text with quotes, parantheses, ...
 Plug 'tpope/vim-speeddating' " ctrl+A/X on dates and time
 Plug 'AndrewRadev/switch.vim' " toggle true/false etc
@@ -96,6 +97,7 @@ Plug 'shmup/vim-sql-syntax'
 Plug 'rhysd/vim-gfm-syntax' " Github flavoured markdown with embedded language support
 Plug 'chrisbra/Colorizer' " color hex codes and color-names
 Plug 'LnL7/vim-nix' " nixos syntax
+Plug 'hashivim/vim-terraform'
 " Plug 'gorodinskiy/vim-coloresque' " Preview colors in css
 " Plug 'lervag/vimtex', {'for': 'tex'} " LaTeX
 " Plug 'vim-latex/vim-latex', {'for': 'tex'} " LaTeX

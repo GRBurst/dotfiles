@@ -213,8 +213,8 @@ nnoremap <Leader>wc g<c-g><CR>
 " multiple cursors
 " TODO: highlight all matches before starting multiple-cursors
 " nmap <C-n> :call HighlightCurrentWord()<CR>:!redraw<CR>:call multiple_cursors#new("n",1)<CR>
-nnoremap <silent> <Enter> :MultipleCursorsFind <C-R>/<CR>
-vnoremap <silent> <Enter> :MultipleCursorsFind <C-R>/<CR>
+" nnoremap <silent> <Enter> :MultipleCursorsFind <C-R>/<CR>
+" vnoremap <silent> <Enter> :MultipleCursorsFind <C-R>/<CR>
 
 " FZF: Fuzzy file finding
 nmap <leader>e :ProjectFiles<CR>
