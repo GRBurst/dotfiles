@@ -588,16 +588,19 @@
     fonts = with pkgs; [
       corefonts
       dejavu_fonts
-      # font-droid # needed for firefox
       google-fonts
-      inconsolata
-      symbola # many unicode symbols
+      liberation_ttf
+      powerline-fonts
       ubuntu_font_family
+      symbola # many unicode symbols
+      vistafonts
+      font-awesome
+      # inconsolata
     ];
 
     fontconfig = {
       includeUserConf = false;
-      defaultFonts.monospace = [ "Inconsolata" "DejaVu Sans Mono" ];
+      defaultFonts.monospace = [ "Roboto Mono" "DejaVu Sans Mono" ];
     };
   };
 
