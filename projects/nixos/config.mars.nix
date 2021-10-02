@@ -56,7 +56,6 @@ in {
         lm_sensors
         gksu
         gnumake
-        openjdk
         pwgen
         rofi rofi-systemd #dmenu
         btrfs-progs
@@ -83,14 +82,16 @@ in {
         keepass
         keepassx-community
         keybase-gui
-        
+
         # Network
         bind
         wget
         netcat
         nmap
         miniserve
-        nload
+        magic-wormhole
+        ngrok
+        nload nethogs
         speedtest-cli
         traceroute
         inetutils
@@ -121,6 +122,7 @@ in {
         shared_mime_info
         desktop_file_utils
         usbutils
+        ripgrep
 
         # Office
         calibre
@@ -282,6 +284,7 @@ in {
 
       paths = [
         # libqmi
+        brillo # control keyboard led
         blueman
         cbatticon
         light
