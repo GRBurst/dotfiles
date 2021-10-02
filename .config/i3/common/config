@@ -225,7 +225,7 @@ mode "Exit <<< System:(e) logout, (r) reboot, (s) suspend, (p) poweroff [+sync].
 bindsym $mod+Shift+e mode "Exit <<< System:(e) logout, (r) reboot, (s) suspend, (p) poweroff [+sync]. i3: (AltGr+c) reload, (AltGr+r) restart"
 
 # Turn off or suspend screen
-mode "Screen / DMMS <<< Screens: (k)ino, (g)ame, (1) screen, (a)utomatic, (r)eset, (s)tandby, (p) suspend, (l)ock, (o)ff" {
+mode "Screen / DMMS <<< Screens: (k)ino, (g)ame, (h)game right, (1) screen, (a)utomatic, (r)eset, (s)tandby, (p) suspend, (l)ock, (o)ff" {
         bindsym s exec i3lock && xset dpms force standby; mode "default"
         bindsym p exec i3lock && xset dpms force suspend; mode "default"
         bindsym l exec i3lock && xset dpms force off; mode "default"
@@ -233,6 +233,7 @@ mode "Screen / DMMS <<< Screens: (k)ino, (g)ame, (1) screen, (a)utomatic, (r)ese
 
         bindsym k exec xset -dpms && xset s off && systemctl --user stop redshift && xrandr --output DP-0 --primary --auto --output HDMI-1 --off; mode "default"
         bindsym g exec xrandr --output DP-0 --primary --mode 1920x1080 --output HDMI-1 --auto --right-of DP-0; mode "default"
+        bindsym h exec xrandr --output DP-0 --auto --primary --output HDMI-1 --mode 1920x1080 --right-of DP-0; mode "default"
         bindsym KP_1 exec xrandr --output DP-0 --primary --auto --output HDMI-1 --off; mode "default"
         bindsym a exec xrandr --output DP-0 --primary --mode 1920x1080 --output HDMI-1 --off; mode "default"
 
@@ -241,7 +242,7 @@ mode "Screen / DMMS <<< Screens: (k)ino, (g)ame, (1) screen, (a)utomatic, (r)ese
         bindsym Return mode "default"
         bindsym Escape mode "default"
 }
-bindsym $mod+Shift+m mode "Screen / DMMS <<< Screens: (k)ino, (g)ame, (1) screen, (a)utomatic, (r)eset, (s)tandby, (p) suspend, (l)ock, (o)ff"
+bindsym $mod+Shift+m mode "Screen / DMMS <<< Screens: (k)ino, (g)ame, (h)game right, (1) screen, (a)utomatic, (r)eset, (s)tandby, (p) suspend, (l)ock, (o)ff"
 
 # resize window (you can also use the mouse for that)
 mode "resize <<< Resolution:(2) 1920x1080, (4) 3840x2160, (7) 1280x720; Position: (c) center" {
@@ -279,7 +280,7 @@ mode "woost <<< Programs: (a) announcekit, (v) video/vokoscreen, (w) restore wor
 
         bindsym a exec --no-startup-id "i3-msg 'workspace 0; append_layout ~/.config/i3/layouts/announcekit.json'"; exec chromium; exec peek; [class="(?i)peek"] move scratchpad; mode "default"
         bindsym v exec --no-startup-id "i3-msg 'workspace 0'"; exec chromium; exec vokoscreen; mode "default"
-        bindsym w exec --no-startup-id "i3-msg 'workspace 7; append_layout ~/.config/i3/layouts/work_left.json; append_layout ~/.config/i3/layouts/work_right.json'"; exec protonmail-bridge; exec thunderbird; exec firefox; exec ~/local/bin/kxo; exec signal-desktop; exec ekiga; exec termite; exec spacefm; mode "default"
+        bindsym w exec --no-startup-id "i3-msg 'workspace 7; append_layout ~/.config/i3/layouts/work_left.json; workspace 12; append_layout ~/.config/i3/layouts/work_right.json'"; exec protonmail-bridge; exec thunderbird; exec firefox; exec kxo; exec signal-desktop; exec slack; exec teams; exec telegram; exec termite; exec zoom; mode "default"
 
         # Make the currently focused window a scratchpad
         bindsym s move scratchpad; mode "default"
