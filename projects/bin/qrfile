@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+self() {
+    local tmpin="${1:-./qrfile}"
+    local tmpout="${2:-/tmp/tmp.png}"
+    qrencode -r $tmpin -o $tmpout $1
+    feh "$tmpout"
+}
+
+self $@

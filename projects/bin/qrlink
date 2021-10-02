@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+self() {
+    local tmpfile="${2:-/tmp/tmp.png}"
+    qrencode -o $tmpfile $1
+    feh "$tmpfile"
+}
+
+self $@
