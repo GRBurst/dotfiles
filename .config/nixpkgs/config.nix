@@ -349,6 +349,22 @@ in {
 
     };
 
+    work-packages = buildEnv {
+
+      inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
+      extraOutputsToInstall = [ "man" ];
+      name = "work-packages";
+
+      paths = [
+        _1password-gui
+        plantuml
+        slack
+        stable.teams
+        xmlcopyeditor
+      ];
+
+    };
+
     mining-packages = buildEnv {
 
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;

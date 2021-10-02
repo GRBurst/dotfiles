@@ -21,6 +21,7 @@ pkg_unstable_prio[nixos-packages]=9
 pkg_unstable_prio[highres-packages]=10
 pkg_unstable_prio[gaming-packages]=11
 pkg_unstable_prio[mining-packages]=12
+pkg_unstable_prio[work-packages]=13
 
 update-pckg () {
     cecho "G" "upgrading ${1} with prio ${pkg_unstable_prio[${1}]} on channel <nixos-unstable>"
@@ -70,6 +71,9 @@ self () {
             ;;
         mining)
             update-pckg "mining-packages"
+            ;;
+        work)
+            update-pckg "work-packages"
             ;;
         separate)
             update-pckg "separate packages"
