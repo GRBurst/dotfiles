@@ -56,7 +56,6 @@ in {
         lm_sensors
         gksu
         gnumake
-        openjdk
         pwgen
         rofi rofi-systemd #dmenu
         btrfs-progs
@@ -83,14 +82,16 @@ in {
         keepass
         keepassx-community
         keybase-gui
-        
+
         # Network
         bind
         wget
         netcat
         nmap
         miniserve
-        nload
+        magic-wormhole
+        ngrok
+        nload nethogs
         speedtest-cli
         traceroute
         inetutils
@@ -121,6 +122,7 @@ in {
         shared_mime_info
         desktop_file_utils
         usbutils
+        ripgrep
 
         # Office
         calibre
@@ -218,12 +220,9 @@ in {
         gthumb
         filezilla
         jetbrains.idea-community
-        # nodejs-10_x
-        nodejs
-        # nodePackages_latest.npm
-
-        # ruby
-
+        nodejs-10_x
+        # nixops # breaks 2021-01-14
+        nox
 
         # swiProlog
         #vscodium
@@ -285,6 +284,7 @@ in {
 
       paths = [
         # libqmi
+        brillo # control keyboard led
         blueman
         cbatticon
         light
@@ -361,7 +361,7 @@ in {
       name = "gaming-packages";
 
       paths = [
-        runelite
+        # runelite
         # linux-steam-integration -> broken (2020-05-18)
         discord
         xboxdrv
@@ -395,7 +395,7 @@ in {
         _1password-gui
         plantuml
         slack
-        stable.teams
+        # stable.teams
         xmlcopyeditor
       ];
 

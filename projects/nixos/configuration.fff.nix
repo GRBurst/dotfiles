@@ -303,8 +303,10 @@
 	  cacheDir = "/tmp/ccache";
 	};
 
-    gpaste.enable = true;
     seahorse.enable = true;
+    gpaste.enable = true;
+
+    java.enable = true;
 
 	# ssh.startAgent = true;
 	gnupg.agent = { 
