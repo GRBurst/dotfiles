@@ -1,7 +1,5 @@
 [[ -e ~/.zprofile ]] && emulate sh -c 'source ~/.zprofile'
 
-source ~/.zprofile
-
 export PURE_GIT_PULL=0 # disable pure-promt git pull when entering git repo
 export DISABLE_AUTO_UPDATE="true" # disable oh-my-zsh auto-update
 export DISABLE_UPDATE_PROMPT="true" # disable oh-my-zsh update prompt
@@ -19,7 +17,7 @@ if ! zgen saved; then
     zgen load b4b4r07/zsh-vimode-visual
 
     zgen load dottr/dottr
-    zgen load denysdovhan/spaceship-prompt spaceship
+    zgen load denysdovhan/spaceship-prompt spaceship master
 
     # must be last, because it wraps all widgets
     zgen load zsh-users/zsh-syntax-highlighting
@@ -165,6 +163,8 @@ bind2maps vicmd viins -- -s '^v' edit-command-line
 autoload bashcompinit && bashcompinit
 
 # history prefix search
+HISTSIZE=10000000
+SAVEHIST=10000000
 autoload -U history-search-end
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
@@ -188,5 +188,6 @@ source ~/.zaliases
 [ -f $HOME/.config/broot/launcher/bash/br ] && source $HOME/.config/broot/launcher/bash/br
 
 [ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
-
 [ -f $HOME/local/ubunix/ubunix.sh ] && source $HOME/local/ubunix/ubunix.sh
+
+autoload -U +X bashcompinit && bashcompinit
