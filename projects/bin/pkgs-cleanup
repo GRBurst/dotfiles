@@ -1,17 +1,19 @@
-#!/run/current-system/sw/bin/zsh -ie
+#!/run/current-system/sw/bin/zsh -i
 
-(
-# Cleanup and optimize
-cecho "G" "delete previous generations"
-nix-env --delete-generations 30d
-sudo nix-env --delete-generations 30d
+self() {
+    # Cleanup and optimize
+    cecho "G" "delete previous generations"
+    nix-env --delete-generations 30d
+    sudo nix-env --delete-generations 30d
 
-cecho "G" "cleanup nix garbage"
-nix-collect-garbage --delete-older-than 30d
-sudo nix-collect-garbage --delete-older-than 30d
+    cecho "G" "cleanup nix garbage"
+    nix-collect-garbage --delete-older-than 30d
+    sudo nix-collect-garbage --delete-older-than 30d
 
-cecho "G" "optimize nix-store"
-nix-store --optimize
-) |& while read -r line; do echo -n "\r\033[2K$line"; done; printf '\n'
+    cecho "G" "optimize nix-store"
+    nix-store --optimize
+}
+
+self "$@" |& while read -r line; do echo -n "\r\033[2K$line"; done; printf '\n'
 
 exit 0

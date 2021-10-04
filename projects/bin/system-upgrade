@@ -1,4 +1,4 @@
-#!/run/current-system/sw/bin/zsh -ie
+#!/run/current-system/sw/bin/zsh -i
 
 cecho "G" "updating system channels"
 sudo nix-channel --update
