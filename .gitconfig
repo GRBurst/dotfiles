@@ -233,8 +233,11 @@
 ; 	ifMissing = add
 ; 	ifExists = doNothing
 ; 	command = echo \"$(git config user.name) <$(git config user.email)>\"
+[init]
+	defaultBranch = main
 
 [includeIf "gitdir:~/projects/HivemindTechnologies/"]
     path = ~/projects/HivemindTechnologies/.gitconfig
-[init]
-	defaultBranch = main
+
+[includeIf "gitdir:~/projects/HivemindTechnologies/payone/"]
+    path = ~/projects/HivemindTechnologies/payone/.gitconfig
