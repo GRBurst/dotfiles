@@ -29,7 +29,7 @@
       };
     };
 
-    kernelParams = [ "processor.max_cstate=5" "rcu_nocbs=0-11" ]; # fix for ryzen freeze?
+    kernelParams = [ "processor.max_cstate=5" "rcu_nocbs=0-11" "idle=nomwait" ]; # fix for ryzen freeze?
 
     # kernelPackages = pkgs.linuxPackages_4_14;
     # kernelPackages = pkgs.linuxPackages_latest;
@@ -289,12 +289,15 @@
   programs = {
 	command-not-found.enable = false;
 
+    noisetorch.enable = true;
+
 	bash.enableCompletion = true;
 
 	zsh = {
 	  enable = true;
 	  enableCompletion = true;
 	};
+    fish.enable = true;
 
 	adb.enable = true;
 
@@ -637,13 +640,18 @@
 
   users.extraUsers.jelias = {
     isNormalUser = true;
-    extraGroups = ["wheel" "vboxusers" "docker" "lp" "scanner" "saned" "adbusers" "networkmanager" "wireshark" ];
+    extraGroups = [ "wheel" "video" "audio" "vboxusers" "docker" "lp" "scanner" "saned" "adbusers" "networkmanager" "wireshark" ];
     useDefaultShell = true;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM+BIE+0anEEYK0fBIEpjedblyGW0UnuYBCDtjZ5NW6P jelias@merkur"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILM3FfAcv98v6F4a9GrJHLzBE7K0FiUKT4rZN9Hd++NE jelias@venus->fff on 2018-01-30"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINxRNNAwtoyhENMbvzzjMb/qRvk9rI3F+C2ORgPc7VGO jelias@mars->fff on 2020-04-06"
     ];
+  };
+  users.extraUsers.dev = {
+    isNormalUser = true;
+    extraGroups = [ "video" "audio" ];
+    shell = pkgs.fish;
   };
 
  system.stateVersion = "20.09"; # Did you read the comment?
