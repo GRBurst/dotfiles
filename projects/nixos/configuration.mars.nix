@@ -254,22 +254,25 @@
     #// TODO: pmount needs /media folder (create it automatically)
     wrappers = {
       pmount = {
-        # setgid = true;
+        setgid = true;
         owner = "root";
         group = "users";
         source = "${pkgs.pmount}/bin/pmount";
       };
       pumount = {
+        setgid = true;
         owner = "root";
         group = "users";
         source = "${pkgs.pmount}/bin/pumount";
       };
       eject = {
+        setgid = true;
         owner = "root";
         group = "users";
         source = "${pkgs.eject}/bin/eject";
       };
       light = {
+        setgid = true;
         owner = "root";
         group = "users";
         source = "${pkgs.light}/bin/light";
