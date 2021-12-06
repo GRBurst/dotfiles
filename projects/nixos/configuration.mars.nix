@@ -177,6 +177,7 @@
   };
 
   nix = {
+    daemonIOSchedPriority = 7;
     maxJobs = 16;
     buildCores = 4;
     gc = {
