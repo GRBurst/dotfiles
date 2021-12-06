@@ -62,11 +62,11 @@
   sound.enable = true;
 
   hardware = {
-    pulseaudio = {
-      enable = true;
-      package = pkgs.pulseaudioFull;
-      support32Bit = true; # This might be needed for Steam games
-    };
+    # pulseaudio = {
+    #   enable = true;
+    #   package = pkgs.pulseaudioFull;
+    #   support32Bit = true; # This might be needed for Steam games
+    # };
     bluetooth = {
       enable = true;
       powerOnBoot = true;
@@ -131,6 +131,7 @@
   environment = {
     systemPackages = with pkgs; [
       vim
+      adapta-gtk-theme adapta-kde-theme
     ];
 
     shellAliases = {
@@ -171,6 +172,7 @@
       #QT_AUTO_SCREEN_SCALE_FACTOR = "1";
       QT_AUTO_SCREEN_SCALE_FACTOR = "0";
       QT_SCALE_FACTOR = "1";
+      QT_STYLE_OVERRIDE="Adapta";
     };
   };
 
@@ -190,6 +192,13 @@
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   programs = {
+
+    noisetorch = {
+      enable = true;
+    };
+
+    qt5ct.enable = true;
+
     command-not-found.enable = true;
 
     bash.enableCompletion = true;
@@ -198,6 +207,7 @@
       enable = true;
       enableCompletion = true;
     };
+    fish.enable = true;
 
     adb.enable = true;
 
@@ -322,6 +332,14 @@
     printing = {
       enable = true;
       drivers = [ pkgs.gutenprint pkgs.hplip pkgs.epson-escpr ];
+    };
+
+    pipewire = {
+      enable = true;
+      pulse.enable = true;
+      alsa.enable = true;
+      alsa.support32Bit = true;
+      jack.enable = true;
     };
 
     xserver = {
@@ -581,6 +599,11 @@
 
   # systemd.services.delayedHibernation.enable = true;
 
+  qt5 = {
+    platformTheme = "gnome";
+    style = "Adapta";
+  };
+
   fonts = {
     fontDir.enable = true;
     enableGhostscriptFonts = true;
@@ -605,10 +628,10 @@
   };
 
   virtualisation = {
-    virtualbox.host = {
-      enable = true;
-      enableExtensionPack = true;
-    };
+    # virtualbox.host = {
+    #   enable = true;
+    #   enableExtensionPack = true;
+    # };
     docker = {
       enable = true;
       enableOnBoot = false;
@@ -619,12 +642,17 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.extraUsers.jelias = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "vboxusers" "docker" "fuse" "scanner" "adbusers" "networkmanager" ];
+    extraGroups = [ "wheel" "video" "audio" "vboxusers" "docker" "fuse" "scanner" "adbusers" "networkmanager" ];
     useDefaultShell = true;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM+BIE+0anEEYK0fBIEpjedblyGW0UnuYBCDtjZ5NW6P jelias@merkur"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAflU8X4g3kboxgFQPAxeadUY97iZoV0IPEwK61lZFW5 jelias@venus->jupiter on 2018-02-22"
     ];
+  };
+  users.extraUsers.dev = {
+    isNormalUser = true;
+    extraGroups = [ "video" "audio" ];
+    shell = pkgs.fish;
   };
 
   # users.extraUsers.dev = {

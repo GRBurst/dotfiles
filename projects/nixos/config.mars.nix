@@ -138,7 +138,7 @@ in {
         libnotify
         qrencode
         simple-scan
-        # typora # breaks on 2020-07-08
+        typora # breaks on 2020-07-08
         zathura
         texlive.combined.scheme-full
         thunderbird protonmail-bridge protonvpn-gui
