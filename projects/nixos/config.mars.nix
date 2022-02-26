@@ -143,13 +143,13 @@ in {
         texlive.combined.scheme-full
         thunderbird protonmail-bridge protonvpn-gui
         # biber # collides texlive full
-        pdftk #pdfshuffler
+        # pdftk #pdfshuffler
         pdfsandwich
         poppler_utils
         xournal
 
         # Media
-        feh imv nitrogen 
+        feh imv nitrogen
         gimp
         inkscape 
         mate.atril
@@ -160,12 +160,12 @@ in {
         pavucontrol
         playerctl
         ponymix
-        spotify
+        # spotify
         gnome3.cheese
         xdg_utils
         ffmpeg-full
-        seafile-client
-        seafile-shared
+        # seafile-client
+        # seafile-shared
         # (ffmpeg-full.override { nonfreeLicensing = true;})
 
         # Communication
