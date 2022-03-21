@@ -30,6 +30,8 @@
 !/.config/mpv
 !/.config/networkmanager-dmenu
 !/.config/nixpkgs
+!/.config/rofi
+!/.config/rofi/*
 !/.config/termite
 !/.config/tig
 !/.config/qutebrowser
