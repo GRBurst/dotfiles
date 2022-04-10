@@ -55,7 +55,6 @@ in {
         psmisc
         hdparm hd-idle hddtemp
         lm_sensors
-        gksu
         gnumake
         pwgen
         rofi rofi-systemd #dmenu
@@ -68,7 +67,7 @@ in {
         pv
         screen
         scrot
-        unzip zip
+        # unzip zip
 
         # x-server
         xcwd
@@ -81,7 +80,7 @@ in {
         gnome3.gnome-keyring gnome3.libgnome-keyring gnome3.seahorse libsecret
         openssl
         keepass
-        keepassx-community
+        keepassxc
         keybase-gui
 
         # Network
@@ -120,13 +119,13 @@ in {
         # gnome3.file-roller # mimeinfo collides with nautilus
         gptfdisk
         spaceFM
-        shared_mime_info
-        desktop_file_utils
+        shared-mime-info
+        desktop-file-utils
         usbutils
         ripgrep
 
         # Office
-        calibre
+        # calibre broken on 2022-04-10
         etesync-dav
         exif
         firefox profile-sync-daemon
@@ -135,7 +134,6 @@ in {
         gcolor3
         gnome3.gedit
         jmtpfs
-        libnotify
         qrencode
         simple-scan
         # typora # breaks on 2020-07-08
@@ -177,7 +175,7 @@ in {
         breeze-gtk breeze-icons breeze-qt5 
         adwaita-qt gnome3.adwaita-icon-theme 
         papirus-icon-theme
-        gnome3.dconf
+        dconf
         gnome3.dconf-editor
         lxqt.lxqt-config
         lxappearance
@@ -214,7 +212,7 @@ in {
         # nodePackages.purescript-language-server
 
         cmakeCurses
-        docker_compose
+        docker-compose
         entr
         ghc
         graphviz
@@ -319,7 +317,8 @@ in {
         # jdownloader
         josm
         libsForQt5.kdenlive
-        notify-osd-customizable
+        libnotify
+        # notify-osd-customizable
         peek # record gif videos || green-recorder / gifcurry / screenToGif
         # kodi
         # linphone -> breaks 2021-01-06
@@ -394,10 +393,10 @@ in {
 
       paths = [
         _1password-gui
-        plantuml
         slack
         # stable.teams
-        xmlcopyeditor
+        # plantuml
+        # xmlcopyeditor
       ];
 
     };
