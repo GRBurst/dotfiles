@@ -73,9 +73,8 @@ in {
         xcwd
         xclip
         unclutter-xfixes 
-        xorg.xdpyinfo xorg.xev xorg.xmodmap xorg.xkill xorg.xwininfo
+        xorg.xdpyinfo xorg.xev xorg.xmodmap xorg.xkill xorg.xwininfo xorg.xhost
         vanilla-dmz # x cursor
-        xhost
 
         # Security
         gnome3.gnome-keyring gnome3.libgnome-keyring gnome3.seahorse libsecret
