@@ -75,6 +75,7 @@ in {
         unclutter-xfixes 
         xorg.xdpyinfo xorg.xev xorg.xmodmap xorg.xkill xorg.xwininfo
         vanilla-dmz # x cursor
+        xhost
 
         # Security
         gnome3.gnome-keyring gnome3.libgnome-keyring gnome3.seahorse libsecret
@@ -107,6 +108,7 @@ in {
         ncdu fzf fasd file silver-searcher
         fuse-common
         autossh sshfs-fuse
+        direnv
         lsyncd
         bindfs
         pmount
@@ -135,6 +137,7 @@ in {
         gnome3.gedit
         jmtpfs
         qrencode
+        qsyncthingtray
         simple-scan
         # typora # breaks on 2020-07-08
         zathura
@@ -142,11 +145,12 @@ in {
         thunderbird protonmail-bridge protonvpn-gui
         # biber # collides texlive full
         pdftk #pdfshuffler
-        pdfsandwich
+        pdfsandwich pdfsam-basic pdfarranger
         poppler_utils
         xournal
 
         # Media
+        blueman
         feh imv nitrogen 
         gimp
         inkscape 
@@ -168,6 +172,7 @@ in {
 
         # Communication
         # pidgin-with-plugins
+        element-desktop
         signal-desktop
         tdesktop
 
@@ -284,7 +289,6 @@ in {
       paths = [
         # libqmi
         brillo # control keyboard led
-        blueman
         cbatticon
         light
         linuxPackages.tp_smapi
@@ -306,6 +310,7 @@ in {
         brasero
         (chromium.override { enableWideVine = false; })
         clementine
+        deadd-notification-center
         evince
         epson-escpr2 sane-airscan brscan4
         fwupd # bios + firmware updates
@@ -363,9 +368,12 @@ in {
       paths = [
         # runelite
         # linux-steam-integration -> broken (2020-05-18)
+        lutris
+        # heroic
         discord
         xboxdrv
         steam
+        # runescape
         # steam-run
       ];
 
@@ -394,7 +402,9 @@ in {
       paths = [
         _1password-gui
         slack
-        # stable.teams
+        teams
+        kafkacat
+        kafkactl
         # plantuml
         # xmlcopyeditor
       ];
