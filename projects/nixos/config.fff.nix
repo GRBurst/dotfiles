@@ -365,6 +365,7 @@ in {
       name = "gaming-packages";
 
       paths = [
+        appimage-run
         # runelite
         # linux-steam-integration -> broken (2020-05-18)
         lutris
@@ -403,7 +404,7 @@ in {
         slack
         teams
         kafkacat
-        kafkactl
+        # kafkactl
         # plantuml
         # xmlcopyeditor
       ];
