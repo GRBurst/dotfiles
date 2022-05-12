@@ -55,7 +55,6 @@ in {
         psmisc
         hdparm hd-idle hddtemp
         lm_sensors
-        gksu
         gnumake
         pwgen
         rofi rofi-systemd #dmenu
@@ -80,8 +79,7 @@ in {
         # Security
         gnome3.gnome-keyring gnome3.libgnome-keyring gnome3.seahorse libsecret
         openssl
-        keepass
-        keepassx-community
+        keepassxc
         keybase-gui
 
         # Network
@@ -120,8 +118,8 @@ in {
         # gnome3.file-roller # mimeinfo collides with nautilus
         gptfdisk
         spaceFM
-        shared_mime_info
-        desktop_file_utils
+        shared-mime-info
+        desktop-file-utils
         usbutils
         ripgrep
 
@@ -177,7 +175,7 @@ in {
         breeze-gtk breeze-icons breeze-qt5 
         adwaita-qt gnome3.adwaita-icon-theme 
         papirus-icon-theme
-        gnome3.dconf
+        dconf
         gnome3.dconf-editor
         lxqt.lxqt-config
         lxappearance
@@ -210,6 +208,7 @@ in {
         kdiff3
         jq
 
+        aws-vault
         # purescript
         # nodePackages.purescript-language-server
 
