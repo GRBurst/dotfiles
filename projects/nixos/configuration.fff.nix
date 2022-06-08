@@ -6,6 +6,7 @@
 #   # sudo nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs-unstable
 #   # sudo nix-channel --update nixpkgs-unstable
 #   unstable = import <nixpkgs-unstable> {};
+
 # in
 
 {
@@ -82,6 +83,9 @@
         unstable = import <nixos-unstable> {
           config = config.nixpkgs.config;
         };
+        # local = (import /home/jelias/projects/nixpkgs);
+        # nur = import (builtins.fetchTarball "https://github.com/nix-community/NUR/archive/master.tar.gz") {
+        #   inherit pkgs;
       };
     # chromium = {
     #   # enablePepperFlash = true;
@@ -139,10 +143,8 @@
   networking = {
     networkmanager = {
       enable = true;
-      packages = [
+      plugins = [
         pkgs.networkmanager-openconnect
-        pkgs.networkmanagerapplet
-        pkgs.networkmanager_dmenu
       ];
     };
     firewall.enable = true;
@@ -248,8 +250,7 @@
 
       BROWSER = "firefox";
 
-      # _JAVA_OPTIONS = "-Xms1G -Xmx8G -Xss16M -XX:MaxMetaspaceSize=2G -XX:+CMSClassUnloadingEnabled -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd";
-      _JAVA_OPTIONS = "-Xms1G -Xmx8G -Xss16M -XX:MaxMetaspaceSize=2G -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd";
+      SBT_OPTS="-J-Xms1G -J-Xmx4G -J-Xss4M -J-XX:+CMSClassUnloadingEnabled -J-XX:+UseConcMarkSweepGC";
 
       AUTOSSH_GATETIME = "0";
 
@@ -266,9 +267,11 @@
 
       AWT_TOOLKIT = "MToolkit";
       GDK_USE_XFT = "1";
+      
 
     };
-    #QT_QPA_PLATFORMTHEME = "qt5ct";
+    # QT_QPA_PLATFORMTHEME = "qt5ct";
+    # _JAVA_OPTIONS = "-Xms1G -Xmx8G -Xss16M -XX:MaxMetaspaceSize=2G -XX:+CMSClassUnloadingEnabled -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd";
     # _JAVA_OPTIONS=" -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
     # SBT_OPTS="-J-Xms1G -J-Xmx4G -J-Xss4M -J-XX:+CMSClassUnloadingEnabled -J-XX:+UseConcMarkSweepGC";
     # _JAVA_OPTIONS = "-Xms1G -Xmx4G -Xss1M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
@@ -317,7 +320,7 @@
 	  enableSSHSupport = true;
 	};
 
-	qt5ct.enable = true;
+	# qt5ct.enable = true;
 	# mtr.enable = true;
 
 	dconf.enable = true;
@@ -355,13 +358,33 @@
 		# ];
 
 		#// TODO: pmount needs /media folder (create it automatically)
-	wrappers = {
-	  pmount.source = "${pkgs.pmount}/bin/pmount";
-	  pumount.source = "${pkgs.pmount}/bin/pumount";
-	  eject.source = "${pkgs.eject}/bin/eject";
-	  # light.source = "${pkgs.light}/bin/light";
-	  # slock.source = "${pkgs.slock}/bin/slock";
-	};
+        wrappers = {
+          pmount = {
+            setgid = true;
+            owner = "root";
+            group = "users";
+            source = "${pkgs.pmount}/bin/pmount";
+          };
+          pumount = {
+            setgid = true;
+            owner = "root";
+            group = "users";
+            source = "${pkgs.pmount}/bin/pumount";
+          };
+          eject = {
+            setgid = true;
+            owner = "root";
+            group = "users";
+            source = "${pkgs.eject}/bin/eject";
+          };
+          light = {
+            setgid = true;
+            owner = "root";
+            group = "users";
+            source = "${pkgs.light}/bin/light";
+          };
+      # slock.source = "${pkgs.slock}/bin/slock";
+    };
 
 	sudo = {
 	  enable = true;
@@ -654,6 +677,6 @@
     shell = pkgs.fish;
   };
 
- system.stateVersion = "20.09"; # Did you read the comment?
+ system.stateVersion = "22.05"; # Did you read the comment?
 
 }

@@ -93,23 +93,29 @@ in {
         ngrok
         nload nethogs
         speedtest-cli
-        traceroute
+        traceroute mtr
         inetutils
         wireshark
+        networkmanagerapplet
+        networkmanager_dmenu
 
         # Terminal
-        termite nix-zsh-completions
+        termite alacritty nix-zsh-completions
         haskellPackages.yeganesh
         tldr
 
         # Filesystem
         gnome3.nautilus gnome3.gvfs
-        ncdu fzf fasd file silver-searcher
+        ncdu du-dust
+        duf # du alternative
+        sd # sed alternative
+        fzf fasd file silver-searcher
         fuse-common
         autossh sshfs-fuse
         direnv
         lsyncd
         bindfs
+        bat # cat alternative
         pmount
         tree gparted
         broot
@@ -125,11 +131,13 @@ in {
         usbutils
         ripgrep
 
+
         # Office
         # calibre broken on 2022-04-10
         etesync-dav
         exif
         firefox profile-sync-daemon
+        # librewolf firefox profile-sync-daemon
         libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
         samba cifs-utils
         gcolor3
@@ -172,6 +180,7 @@ in {
         # Communication
         # pidgin-with-plugins
         element-desktop
+        schildichat-desktop
         signal-desktop
         tdesktop
 
@@ -210,6 +219,7 @@ in {
         tmate
         meld
         kdiff3
+        difftastic
         jq
 
         # purescript
