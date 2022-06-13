@@ -248,9 +248,9 @@
       SUDO_EDITOR = "nvim";
       VISUAL = "nvim";
 
-      BROWSER = "firefox";
+      BROWSER = "librewolf";
 
-      SBT_OPTS="-J-Xms1G -J-Xmx4G -J-Xss4M -J-XX:+CMSClassUnloadingEnabled -J-XX:+UseConcMarkSweepGC";
+      SBT_OPTS="-Xms1G -Xmx4G -Xss16M";
 
       AUTOSSH_GATETIME = "0";
 

@@ -213,7 +213,7 @@ in {
         ctags
         gdb
         git tig hub gitRepo
-        neovim
+        neovim coursier # coursier needed for neovim plugins
         # python27Packages.pynvim # ensime
         python37Packages.pynvim
         tmate
