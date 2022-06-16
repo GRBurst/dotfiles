@@ -12,12 +12,10 @@ if ! zgen saved; then
     echo "creating zgen save..."
     zgen oh-my-zsh # oh-my-zsh default settings
 
-    zgen load mafredri/zsh-async # for pure-prompt
-    zgen load sindresorhus/pure . main # prompt
     zgen load b4b4r07/zsh-vimode-visual
 
     zgen load dottr/dottr
-    # zgen load denysdovhan/spaceship-prompt spaceship master
+    zgen load denysdovhan/spaceship-prompt spaceship master
 
     # must be last, because it wraps all widgets
     zgen load zsh-users/zsh-syntax-highlighting
@@ -136,7 +134,7 @@ fry screencapture
 fry search-select-edit
 fry transcode-video
 fry watchdo
-fry aws-profile-status
+# fry aws-profile-status
 # fry vim-open-files-at-lines
 # fry neo4j-query
 #NEO4J_QUERY_JSON_FORMATTER="underscore print --color --outfmt json"
