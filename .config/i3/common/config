@@ -173,6 +173,9 @@ bindsym $mod+$AltGr+Left exec idea-community
 #bindsym $mod+$AltGr+c exec pidgin; exec sskype
 bindsym $mod+$Down exec thunderbird; exec librewolf; exec pidgin
 
+bindsym $mod+ISO_Next_Group exec setxkbmap de neo
+bindsym $mod+Shift+ISO_Next_Group exec setxkbmap de
+
 assign [class="(?i)thunderbird"] "1: mail"
 assign [instance="(?i)protonmail-bridge" class="ProtonMail Bridge"] "1: mail"
 assign [class="(?i)Navigator"] "2: browser"
