@@ -23,6 +23,8 @@ if ! zgen saved; then
     zgen save
 fi
 
+zvm_after_init_commands+=('source ~/.zshrc.fzf')
+
 SPACESHIP_PROMPT_ORDER=(
   time          # Time stamps section
   user          # Username section
