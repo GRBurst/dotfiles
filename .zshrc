@@ -158,8 +158,6 @@ autoload edit-command-line
 zle -N edit-command-line
 bind2maps vicmd viins -- -s '^v' edit-command-line
 
-autoload bashcompinit && bashcompinit
-
 # history prefix search
 HISTSIZE=10000000
 SAVEHIST=10000000
