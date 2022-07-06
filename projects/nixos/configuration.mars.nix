@@ -223,6 +223,9 @@
     java.enable = true; # Global, otherwise JAVA_HOME is not set
 
     # mtr.enable = true;
+
+    dconf.enable = true;
+
     screen.screenrc = 
     ''term screen-256color
       termcapinfo xterm*|xs|rxvt* ti@:te@
@@ -328,7 +331,7 @@
       #mountPoint = "/keybase"; # mountpoint important for keybase-gui
     };
 
-    dbus.packages = with pkgs; [ gnome3.dconf gnome2.GConf gnome3.gnome-keyring gcr ];
+    # dbus.packages = with pkgs; [ dconf gnome2.GConf gnome3.gnome-keyring gcr ];
 
     openssh = {
       enable = true;
@@ -689,6 +692,6 @@
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
   # should.
-  system.stateVersion = "21.05"; # Did you read the comment?
+  system.stateVersion = "22.05"; # Did you read the comment?
 
 }
