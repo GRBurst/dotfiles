@@ -147,7 +147,7 @@ bindsym --release Print exec --no-startup-id scrot -u 'Screenshot-%Y-%m-%d-%H-%M
 #bindsym $mod+Shift+r exec --no-startup-id $sp/update-config.sh
 
 # Program shortcuts
-bindsym $mod+$AltGr+colon exec firefox
+bindsym $mod+$AltGr+colon exec librewolf
 #bindsym $mod+$AltGr+c exec termite -e finch
 bindsym $mod+$AltGr+Delete exec rofi-choose-container
 bindsym $mod+$AltGr+KP_Separator exec dropbox
@@ -169,13 +169,14 @@ bindsym $mod+$AltGr+questiondown exec signal-desktop
 
 bindsym $mod+$AltGr+Left exec idea-community
 # bindcode $mod+$AltGr+39 exec idea-community
-# bindsym $mod+$AltGr+ exec thunderbird; exec firefox
+# bindsym $mod+$AltGr+ exec thunderbird; exec librewolf
 #bindsym $mod+$AltGr+c exec pidgin; exec sskype
-bindsym $mod+$Down exec thunderbird; exec firefox; exec pidgin
+bindsym $mod+$Down exec thunderbird; exec librewolf; exec pidgin
 
 assign [class="(?i)thunderbird"] "1: mail"
 assign [instance="(?i)protonmail-bridge" class="ProtonMail Bridge"] "1: mail"
-assign [class="(?i)firefox"] "2: browser"
+assign [class="(?i)Navigator"] "2: browser"
+assign [class="(?i)browser"] "2: browser"
 assign [class="(?i)keepassxc"] 7
 assign [class="(?i)signal"] "9: communication"
 assign [class="(?i)ekiga"] "9: communication"

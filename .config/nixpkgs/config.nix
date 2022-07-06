@@ -129,7 +129,8 @@ in {
         calibre
         etesync-dav
         exif
-        firefox profile-sync-daemon
+        # firefox profile-sync-daemon
+        librewolf profile-sync-daemon
         libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
         samba cifs-utils
         gcolor3
