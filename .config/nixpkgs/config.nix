@@ -55,7 +55,6 @@ in {
         psmisc
         hdparm hd-idle hddtemp
         lm_sensors
-        gksu
         gnumake
         pwgen
         rofi rofi-systemd #dmenu
@@ -68,20 +67,20 @@ in {
         pv
         screen
         scrot
-        unzip zip
+        # unzip zip
 
         # x-server
         xcwd
         xclip
         unclutter-xfixes 
-        xorg.xdpyinfo xorg.xev xorg.xmodmap xorg.xkill xorg.xwininfo
+        xorg.xdpyinfo xorg.xev xorg.xmodmap xorg.xkill xorg.xwininfo xorg.xhost
         vanilla-dmz # x cursor
 
         # Security
         gnome3.gnome-keyring gnome3.libgnome-keyring gnome3.seahorse libsecret
         openssl
         keepass
-        keepassx-community
+        keepassxc
         keybase-gui
 
         # Network
@@ -94,22 +93,31 @@ in {
         ngrok
         nload nethogs
         speedtest-cli
-        traceroute
+        traceroute mtr
         inetutils
+        vpn-slice
+        sshuttle # vpn through ssh
         wireshark
+        networkmanagerapplet
+        networkmanager_dmenu
 
         # Terminal
-        termite nix-zsh-completions
+        termite alacritty nix-zsh-completions
         haskellPackages.yeganesh
         tldr
 
         # Filesystem
         gnome3.nautilus gnome3.gvfs
-        ncdu fzf fasd file silver-searcher
+        ncdu du-dust
+        duf # du alternative
+        sd # sed alternative
+        fzf fasd file silver-searcher
         fuse-common
         autossh sshfs-fuse
+        direnv
         lsyncd
         bindfs
+        bat # cat alternative
         pmount
         tree gparted
         broot
@@ -120,13 +128,14 @@ in {
         # gnome3.file-roller # mimeinfo collides with nautilus
         gptfdisk
         spaceFM
-        shared_mime_info
-        desktop_file_utils
+        shared-mime-info
+        desktop-file-utils
         usbutils
         ripgrep
 
+
         # Office
-        calibre
+        # calibre broken on 2022-04-10
         etesync-dav
         exif
         # firefox profile-sync-daemon
@@ -136,20 +145,21 @@ in {
         gcolor3
         gnome3.gedit
         jmtpfs
-        libnotify
         qrencode
+        qsyncthingtray
         simple-scan
         # typora # breaks on 2020-07-08
         zathura
         texlive.combined.scheme-full
-        thunderbird protonmail-bridge protonvpn-gui
+        thunderbird birdtray protonmail-bridge protonvpn-gui
         # biber # collides texlive full
         pdftk #pdfshuffler
-        pdfsandwich
+        pdfsandwich pdfsam-basic pdfarranger
         poppler_utils
         xournal
 
         # Media
+        blueman
         feh imv nitrogen 
         gimp
         inkscape 
@@ -171,6 +181,8 @@ in {
 
         # Communication
         # pidgin-with-plugins
+        element-desktop
+        schildichat-desktop
         signal-desktop
         tdesktop
 
@@ -178,7 +190,7 @@ in {
         breeze-gtk breeze-icons breeze-qt5 
         adwaita-qt gnome3.adwaita-icon-theme 
         papirus-icon-theme
-        gnome3.dconf
+        dconf
         gnome3.dconf-editor
         lxqt.lxqt-config
         lxappearance
@@ -203,19 +215,20 @@ in {
         ctags
         gdb
         git tig hub gitRepo
-        neovim
+        neovim coursier # coursier needed for neovim plugins
         # python27Packages.pynvim # ensime
         python37Packages.pynvim
         tmate
         meld
         kdiff3
+        difftastic
         jq
 
         # purescript
         # nodePackages.purescript-language-server
 
         cmakeCurses
-        docker_compose
+        docker-compose
         entr
         ghc
         graphviz
@@ -287,7 +300,6 @@ in {
       paths = [
         # libqmi
         brillo # control keyboard led
-        blueman
         cbatticon
         light
         linuxPackages.tp_smapi
@@ -309,6 +321,7 @@ in {
         brasero
         (chromium.override { enableWideVine = false; })
         clementine
+        deadd-notification-center
         evince
         epson-escpr2 sane-airscan brscan4
         fwupd # bios + firmware updates
@@ -320,7 +333,9 @@ in {
         # jdownloader
         josm
         libsForQt5.kdenlive
-        notify-osd-customizable
+        libnotify
+        nextcloud-client
+        # notify-osd-customizable
         peek # record gif videos || green-recorder / gifcurry / screenToGif
         # kodi
         # linphone -> breaks 2021-01-06
@@ -335,6 +350,7 @@ in {
         # tor-browser-bundle-bin # -> cannot be build
         vlc
         vokoscreen # keymon -> abandoned
+        jellyfin-media-player
         zoom-us
       ];
 
@@ -363,11 +379,15 @@ in {
       name = "gaming-packages";
 
       paths = [
+        appimage-run
         # runelite
         # linux-steam-integration -> broken (2020-05-18)
+        lutris
+        # heroic
         discord
         xboxdrv
         steam
+        runescape
         # steam-run
       ];
 
@@ -395,10 +415,13 @@ in {
 
       paths = [
         _1password-gui
-        plantuml
         slack
-        # stable.teams
-        xmlcopyeditor
+        teams
+        kafkacat
+        notion-app-enhanced
+        # kafkactl
+        # plantuml
+        # xmlcopyeditor
       ];
 
     };
