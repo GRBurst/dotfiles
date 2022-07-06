@@ -191,3 +191,6 @@ source ~/.zaliases
 autoload -U +X bashcompinit && bashcompinit
 
 eval "$(direnv hook zsh)" # load environment vars depending on directory https://direnv.net/docs/hook.html#zsh
+
+[[ ! -f "/etc/grc.zsh" ]] || source /etc/grc.zsh # colors outputs of commands (https://github.com/garabik/grc)
+
