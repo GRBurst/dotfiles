@@ -69,7 +69,7 @@
 
     # Push and pull
     p   = push
-    pf  = push --force-with-lease
+    pf  = push --force-with-lease --force-if-includes 
     po  = "!git push --set-upstream origin \"$(git rev-parse --abbrev-ref HEAD)\"" # push current branch to origin
     up  = pull
     pl  = pull
