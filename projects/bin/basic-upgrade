@@ -25,8 +25,8 @@ self () {
             # Plugin manager and programs
             usertools-upgrade
 
-            cecho "G" "updating global npm packages"
-            npm -g update
+            # cecho "G" "updating global npm packages"
+            # npm -g update
 
             # cecho "G" "updating git repos"
             # mr update
