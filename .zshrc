@@ -189,3 +189,5 @@ source ~/.zaliases
 [ -f $HOME/local/ubunix/ubunix.sh ] && source $HOME/local/ubunix/ubunix.sh
 
 autoload -U +X bashcompinit && bashcompinit
+
+eval "$(direnv hook zsh)" # load environment vars depending on directory https://direnv.net/docs/hook.html#zsh
