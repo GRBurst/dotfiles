@@ -28,7 +28,8 @@ ws_set_split()
 ws_split()
 {
     local -r action="$1"
-    local term="termite -d $(xcwd) -e zsh"
+    # local term="termite -d $(xcwd) -e zsh"
+    local term="alacritty --working-directory $(xcwd)"
 
     if [[ "$action" == "manual" ]]; then
         if [[ -z "${ws_split[$ws_number]}" ]]; then
