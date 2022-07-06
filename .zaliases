@@ -195,7 +195,7 @@ alias mmv='noglob zmv -W'
 #o() { gio open $@ > /dev/null 2>&1; } # gio not availabe in nixos
 # o() { xdg-open $@ > /dev/null 2>&1; }
 o() { mimeo $@ > /dev/null 2>&1; }
-serve() { miniserve -p 12345 $1 }
+serve() { miniserve -g -z -p 12345 $1 }
 
 # VirtualBox
 # VBoxManage list runningvms | grep -c 1 macOS
