@@ -212,7 +212,7 @@ in {
         scala-packages
         
         atom
-        ctags
+        # ctags
         gdb
         git tig hub gitRepo
         neovim coursier # coursier needed for neovim plugins
@@ -417,9 +417,12 @@ in {
         _1password-gui
         slack
         teams
-        kafkacat
         notion-app-enhanced
-        # kafkactl
+        # awscli2
+        # aws-vault
+        # kafkacat
+        # kafkacat
+        # kubectl
         # plantuml
         # xmlcopyeditor
       ];
