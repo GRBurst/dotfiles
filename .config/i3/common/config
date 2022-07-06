@@ -236,7 +236,8 @@ bindsym $mod+Shift+e mode "Exit <<< System:(e) logout, (r) reboot, (s) suspend, 
 mode "Screen / DMMS <<< Screens: (k)ino, (g)ame, (h)game right, (1) screen, (a)utomatic, (r)eset, (s)tandby, (p) suspend, (l)ock, (o)ff" {
         bindsym s exec i3lock && xset dpms force standby; mode "default"
         bindsym p exec i3lock && xset dpms force suspend; mode "default"
-        bindsym l exec i3lock && xset dpms force off; mode "default"
+        # bindsym l exec i3lock && xset dpms force off; mode "default"
+        bindsym l exec xset dpms force off && xinput --disable $(xinput -list | grep -i mouse | cut -f2 | sed "s/id=//" | head -n 1); exec i3lock --nofork && xinput --enable $(xinput -list | grep -i mouse | cut -f2 | sed "s/id=//" | head -n 1); mode "default"
         bindsym o exec xset dpms force off; mode "default"
 
         bindsym k exec xset -dpms && xset s off && systemctl --user stop redshift && xrandr --output DP-0 --primary --auto --output HDMI-1 --off; mode "default"
