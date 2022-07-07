@@ -95,6 +95,8 @@ in {
         speedtest-cli
         traceroute mtr
         inetutils
+        vpn-slice
+        sshuttle # vpn through ssh
         wireshark
         networkmanagerapplet
         networkmanager_dmenu
@@ -136,8 +138,8 @@ in {
         # calibre broken on 2022-04-10
         etesync-dav
         exif
-        firefox profile-sync-daemon
-        # librewolf firefox profile-sync-daemon
+        # firefox profile-sync-daemon
+        librewolf profile-sync-daemon
         libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
         samba cifs-utils
         gcolor3
@@ -149,7 +151,7 @@ in {
         # typora # breaks on 2020-07-08
         zathura
         texlive.combined.scheme-full
-        thunderbird protonmail-bridge protonvpn-gui
+        thunderbird birdtray protonmail-bridge protonvpn-gui
         # biber # collides texlive full
         pdftk #pdfshuffler
         pdfsandwich pdfsam-basic pdfarranger
@@ -332,6 +334,7 @@ in {
         josm
         libsForQt5.kdenlive
         libnotify
+        nextcloud-client
         # notify-osd-customizable
         peek # record gif videos || green-recorder / gifcurry / screenToGif
         # kodi
@@ -347,6 +350,7 @@ in {
         # tor-browser-bundle-bin # -> cannot be build
         vlc
         vokoscreen # keymon -> abandoned
+        jellyfin-media-player
         zoom-us
       ];
 
@@ -383,7 +387,7 @@ in {
         discord
         xboxdrv
         steam
-        # runescape
+        runescape
         # steam-run
       ];
 
@@ -414,6 +418,7 @@ in {
         slack
         teams
         kafkacat
+        notion-app-enhanced
         # kafkactl
         # plantuml
         # xmlcopyeditor

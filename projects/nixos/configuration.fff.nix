@@ -138,6 +138,8 @@
     # sane.brscan4.netDevices."EPSON2A0007.localdomain".model = "WF-2860";
 
     cpu.amd.updateMicrocode = true;
+    acpilight.enable = true;
+    video.hidpi.enable = true;
   };
 
   networking = {
@@ -184,7 +186,7 @@
   # $ nix-env -qaP | grep wget
   environment = {
     systemPackages = with pkgs; [
-      vim
+      neovim
       # hdparm
       # wirelesstools
       # wget pv htop atop git netcat nmap xorg.xkill psmisc lm_sensors calc tree gparted gksu ntfs3g inotify-tools unzip
@@ -256,8 +258,6 @@
 
       DE = "gnome";
       XDG_CURRENT_DESKTOP = "gnome";
-      QT_AUTO_SCREEN_SCALE_FACTOR = "0";
-      QT_SCALE_FACTOR = "1";
 
       GTK_IM_MODULE = "ibus";
       XMODIFIERS = "@im=ibus";
@@ -268,14 +268,16 @@
       AWT_TOOLKIT = "MToolkit";
       GDK_USE_XFT = "1";
       
-
+      _JAVA_OPTIONS = "-Dsun.java2d.uiScale=2";
+      # QT_AUTO_SCREEN_SCALE_FACTOR = "0";
+      # QT_SCALE_FACTOR = "1";
+      # QT_QPA_PLATFORMTHEME = "qt5ct";
+      # _JAVA_OPTIONS = "-Xms1G -Xmx8G -Xss16M -XX:MaxMetaspaceSize=2G -XX:+CMSClassUnloadingEnabled -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd";
+      # _JAVA_OPTIONS=" -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
+      # SBT_OPTS="-J-Xms1G -J-Xmx4G -J-Xss4M -J-XX:+CMSClassUnloadingEnabled -J-XX:+UseConcMarkSweepGC";
+      # _JAVA_OPTIONS = "-Xms1G -Xmx4G -Xss1M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
+      # SSH_AUTH_SOCK = "%t/keyring/ssh";
     };
-    # QT_QPA_PLATFORMTHEME = "qt5ct";
-    # _JAVA_OPTIONS = "-Xms1G -Xmx8G -Xss16M -XX:MaxMetaspaceSize=2G -XX:+CMSClassUnloadingEnabled -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd";
-    # _JAVA_OPTIONS=" -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
-    # SBT_OPTS="-J-Xms1G -J-Xmx4G -J-Xss4M -J-XX:+CMSClassUnloadingEnabled -J-XX:+UseConcMarkSweepGC";
-    # _JAVA_OPTIONS = "-Xms1G -Xmx4G -Xss1M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
-    #SSH_AUTH_SOCK = "%t/keyring/ssh";
 
   };
 
@@ -325,6 +327,7 @@
 
 	dconf.enable = true;
 
+    light.enable = true;
     screen.screenrc = 
     ''term screen-256color
       termcapinfo xterm*|xs|rxvt* ti@:te@
@@ -463,10 +466,10 @@
     fstrim.enable = true;
     smartd.enable = true;
 
-    printing = {
-      enable = true;
-      drivers = [ pkgs.gutenprint pkgs.hplip pkgs.epson-escpr ];
-    };
+    # printing = {
+    #   enable = true;
+    #   drivers = [ pkgs.gutenprint pkgs.hplip pkgs.epson-escpr ];
+    # };
 
     pipewire = {
       enable = true;
@@ -539,6 +542,7 @@
 
     redshift = {
       enable = true;
+      executable = "/bin/redshift-gtk";
       temperature.day = 5000;
       temperature.night = 3000;
       brightness.day = "0.9";
