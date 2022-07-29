@@ -139,7 +139,8 @@ in {
         etesync-dav
         exif
         # firefox profile-sync-daemon
-        librewolf profile-sync-daemon
+        librewolf # (librewolf.override { wmClass = "browser"; })
+        profile-sync-daemon
         libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
         samba cifs-utils
         gcolor3
@@ -439,37 +440,10 @@ in {
 
     };
 
-    # [
-    #   ideviceinstaller
-    #   libimobiledevice
-    #   libusbmuxd
-    #   ifuse
+  };
 
-    #   usbip-linux
-    #   xbindkeys
-    #   xbindkeys-config
-    #   xnee
-    #   zip
-    # ]
-
-    # services.psd = {
-    #   enable  = true;
-    #   users   = [ "jelias" ];
-    # };
-
-    # firefox = {
-    #   enableGoogleTalkPlugin  = false;
-    #   enableAdobeFlash        = false;
-    #   enableAdobeFlashDRM     = true;
-    #   icedtea                 = true;
-    # };
-
-    # chromium = {
-    #   enablePepperFlash = true;
-    #   enablePepperPDF = true;
-    #   enableWideVine = false;
-    # };
-
+  librewolf = {
+    enableTridactylNative = true;
   };
 
 }
