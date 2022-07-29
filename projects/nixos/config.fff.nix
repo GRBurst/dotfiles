@@ -7,7 +7,7 @@ let
   unstable  = import <nixos-unstable/nixos> {};
   stable  = import <nixos-stable/nixos> {};
 in {
-  
+
   permittedInsecurePackages = [
     "openssl-1.0.2u"
     "adobe-reader-9.5.5-1"
@@ -139,7 +139,8 @@ in {
         etesync-dav
         exif
         # firefox profile-sync-daemon
-        librewolf profile-sync-daemon
+        librewolf # (librewolf.override { wmClass = "browser"; })
+        profile-sync-daemon
         libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
         samba cifs-utils
         gcolor3
@@ -210,11 +211,11 @@ in {
 
       paths = [
         scala-packages
-        
+
         atom
         ctags
         gdb
-        git tig hub gitRepo
+        git tig gh hub gitRepo
         neovim coursier # coursier needed for neovim plugins
         # python27Packages.pynvim # ensime
         python37Packages.pynvim
@@ -439,37 +440,10 @@ in {
 
     };
 
-    # [
-    #   ideviceinstaller
-    #   libimobiledevice
-    #   libusbmuxd
-    #   ifuse
+  };
 
-    #   usbip-linux
-    #   xbindkeys
-    #   xbindkeys-config
-    #   xnee
-    #   zip
-    # ]
-
-    # services.psd = {
-    #   enable  = true;
-    #   users   = [ "jelias" ];
-    # };
-
-    # firefox = {
-    #   enableGoogleTalkPlugin  = false;
-    #   enableAdobeFlash        = false;
-    #   enableAdobeFlashDRM     = true;
-    #   icedtea                 = true;
-    # };
-
-    # chromium = {
-    #   enablePepperFlash = true;
-    #   enablePepperPDF = true;
-    #   enableWideVine = false;
-    # };
-
+  librewolf = {
+    enableTridactylNative = true;
   };
 
 }

@@ -127,8 +127,10 @@
       powerOnBoot = true;
     };
 
-    opengl.driSupport32Bit = true;
-    opengl.setLdLibraryPath = true;
+    opengl = {
+      driSupport32Bit = true;
+      setLdLibraryPath = true;
+    };
     sane.enable = true;
     sane.extraBackends = [ pkgs.sane-airscan pkgs.epkowa ];
     # sane.extraBackends = [ pkgs.sane-airscan ];
