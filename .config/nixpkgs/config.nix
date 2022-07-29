@@ -7,7 +7,7 @@ let
   unstable  = import <nixos-unstable/nixos> {};
   stable  = import <nixos-stable/nixos> {};
 in {
-  
+
   permittedInsecurePackages = [
     "openssl-1.0.2u"
     "adobe-reader-9.5.5-1"
@@ -211,11 +211,11 @@ in {
 
       paths = [
         scala-packages
-        
+
         atom
         ctags
         gdb
-        git tig hub gitRepo
+        git tig gh hub gitRepo
         neovim coursier # coursier needed for neovim plugins
         # python27Packages.pynvim # ensime
         python37Packages.pynvim
