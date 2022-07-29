@@ -1,4 +1,3 @@
-
 icons_format = "{icon}"
 
 [theme]
@@ -9,7 +8,7 @@ name = "plain"
 separator = ""
 
 [icons]
-name = "awesome5"
+name = "awesome6"
 [icons.overrides]
 net_up = ""
 net_down = ""
