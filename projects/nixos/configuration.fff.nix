@@ -429,6 +429,9 @@
     # };
   services = {
 
+    # Nix-shell service (server-client usage)
+    lorri.enable = true;
+
     keybase.enable = true;
     kbfs = {
       enable = true;
