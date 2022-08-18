@@ -422,4 +422,22 @@ alias tv="sudo systemctl start teamviewerd.service && teamviewer"
 alias rhdmi="xrandr --output eDP1 --primary --auto --output HDMI2 --right-of eDP1 --auto"
 alias hdmi="xrandr --output eDP1 --off --output HDMI2 --auto"
 alias edp="xrandr --output eDP1 --primary --auto --output HDMI2 --off"
+
+# AWS
+alias aws-s3-ls='aws s3 ls --recursive $(aws s3 ls | fzf | cut -d " " -f3)'
+fassh() {
+    local instance
+    instance=$(aws ec2 describe-instances --filter Name=instance-state-name,Values=running | jq -r '.Reservations[].Instances[] | [ .InstanceId, (.Tags[] | select(.Key == "Name") | .Value) ] | @tsv' | fzf | cut -f1)
+    if [ -n "$instance" ]; then
+        ssh $instance
+    fi
+}
+fawslogs () {
+    local group
+    group=$(awslogs groups | fzf)
+    if [ -n "$group" ]
+    then
+        awslogs get --watch $group --no-group --no-stream
+    fi
+}
 # vim: ft=sh
