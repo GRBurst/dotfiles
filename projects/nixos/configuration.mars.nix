@@ -318,6 +318,8 @@
     #   SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", RUN+="/run/current-system/sw/bin/touch /tmp/discharging"
     # '';
 
+    lorri.enable = true;
+
     fwupd = {
       enable = true;
     };
