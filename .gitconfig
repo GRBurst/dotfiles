@@ -241,3 +241,9 @@
 
 [includeIf "gitdir:~/projects/HivemindTechnologies/payone/"]
     path = ~/projects/HivemindTechnologies/payone/.gitconfig
+
+[includeIf "gitdir:~/projects/priceloop/"]
+    path = ~/projects/priceloop/.gitconfig
+
+[hub]
+	protocol = git
