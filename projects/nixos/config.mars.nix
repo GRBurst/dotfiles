@@ -89,7 +89,7 @@ in {
         netcat
         nmap
         miniserve
-        magic-wormhole
+        # magic-wormhole # broken since 2022-08-31
         ngrok
         nload nethogs
         speedtest-cli
@@ -218,7 +218,7 @@ in {
         git tig gh hub gitRepo
         neovim coursier # coursier needed for neovim plugins
         # python27Packages.pynvim # ensime
-        python37Packages.pynvim
+        python3Packages.pynvim
         tmate
         meld
         kdiff3
@@ -242,7 +242,7 @@ in {
 
         # swiProlog
         #vscodium
-        vscode-liveshare
+        # vscode-liveshare
 
         brave
       ];
