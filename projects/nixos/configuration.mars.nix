@@ -47,17 +47,17 @@
     };
   };
 
-  fileSystems."/media/ateam/ateam" =
-  { device = "//ateam/ateam";
-    fsType = "cifs";
-    options = [ "uid=jelias" "username=x" "password=" "x-systemd.automount" "noauto" "_netdev" "x-systemd.device-timeout=30" ];
-  };
+  # fileSystems."/media/ateam/ateam" =
+  # { device = "//ateam/ateam";
+  #   fsType = "cifs";
+  #   options = [ "uid=jelias" "username=x" "password=" "x-systemd.automount" "noauto" "_netdev" "x-systemd.device-timeout=30" ];
+  # };
 
-  fileSystems."/media/ateam/upload" =
-    { device = "//ateam/upload";
-      fsType = "cifs";
-      options = [ "uid=jelias" "username=x" "password=" "x-systemd.automount" "noauto" "_netdev" "x-systemd.device-timeout=30" ];
-  };
+  # fileSystems."/media/ateam/upload" =
+  #   { device = "//ateam/upload";
+  #     fsType = "cifs";
+  #     options = [ "uid=jelias" "username=x" "password=" "x-systemd.automount" "noauto" "_netdev" "x-systemd.device-timeout=30" ];
+  # };
 
   sound.enable = true;
 
@@ -100,6 +100,8 @@
   networking = {
     networkmanager = {
       enable = true;
+      wifi.macAddress = "random";
+      appendNameservers = [ "9.9.9.9" "149.112.112.112" "2620:fe::fe" "2620:fe::9" ];
       # dns = "none";
       # appendNameservers = [ "1.1.1.1" "1.0.0.1" "2606:4700:4700::1111" "2606:4700:4700::1001" ];
     };
@@ -108,9 +110,6 @@
     firewall.allowedUDPPorts = [ 50624 50625 ]; # Firefox WebIDE
     hostName = "mars";
     extraHosts = ''
-      134.130.59.240  ateam
-      134.130.57.2    sylvester
-      134.130.57.147  godzilla
       127.0.0.1       *.localhost *.localhost.localdomain
     '';
   };
@@ -179,6 +178,9 @@
       AWT_TOOLKIT = "MToolkit";
       GDK_USE_XFT = "1";
 
+      QT_STYLE_OVERRIDE = "gtk2";
+      QT_QPA_PLATFORMTHEME = "gtk2";
+
       # _JAVA_OPTIONS = "-Dsun.java2d.uiScale=2";
       # QT_AUTO_SCREEN_SCALE_FACTOR = "1";
       # QT_AUTO_SCREEN_SCALE_FACTOR = "0";
@@ -212,7 +214,7 @@
       enable = true;
     };
 
-    qt5ct.enable = true;
+    qt5ct.enable = false;
 
     command-not-found.enable = true;
 
@@ -422,6 +424,7 @@
             xsetroot -bg black
             xsetroot -cursor_name left_ptr
             gnome-keyring-daemon --start -d --components=pkcs11,secrets,ssh
+            feh --bg-scale '/home/jelias/.config/i3/background0.jpg' '/home/jelias/.config/i3/background1.jpg' &
           '';
         };
       };
@@ -596,6 +599,7 @@
     gvfs.enable  = true;
     gnome = {
       gnome-keyring.enable = true;
+      gnome-settings-daemon.enable = false;
     };
 
     upower.enable  = true;

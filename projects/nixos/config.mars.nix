@@ -75,6 +75,8 @@ in {
         unclutter-xfixes 
         xorg.xdpyinfo xorg.xev xorg.xmodmap xorg.xkill xorg.xwininfo xorg.xhost
         vanilla-dmz # x cursor
+        xsettingsd
+        libsForQt5.qtstyleplugins
 
         # Security
         gnome3.gnome-keyring gnome3.libgnome-keyring gnome3.seahorse libsecret
@@ -152,7 +154,7 @@ in {
         # typora # breaks on 2020-07-08
         zathura
         texlive.combined.scheme-full
-        thunderbird birdtray protonmail-bridge protonvpn-gui
+        thunderbird birdtray protonmail-bridge protonvpn-gui protonvpn-cli
         # biber # collides texlive full
         pdftk #pdfshuffler
         pdfsandwich pdfsam-basic pdfarranger
@@ -306,6 +308,7 @@ in {
         linuxPackages.tp_smapi
         linuxPackages.acpi_call
         tlp
+        zbar # read qrcodes
       ];
 
     };
