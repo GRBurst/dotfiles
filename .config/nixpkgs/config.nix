@@ -91,7 +91,7 @@ in {
         netcat
         nmap
         miniserve
-        magic-wormhole
+        # magic-wormhole # broken since 2022-08-31
         ngrok
         nload nethogs
         speedtest-cli
@@ -215,12 +215,12 @@ in {
         scala-packages
 
         atom
-        ctags
+        # ctags
         gdb
         git tig gh hub gitRepo
         neovim coursier # coursier needed for neovim plugins
         # python27Packages.pynvim # ensime
-        python37Packages.pynvim
+        python3Packages.pynvim
         tmate
         meld
         kdiff3
@@ -244,7 +244,7 @@ in {
 
         # swiProlog
         #vscodium
-        vscode-liveshare
+        # vscode-liveshare
 
         brave
       ];
@@ -308,6 +308,7 @@ in {
         linuxPackages.tp_smapi
         linuxPackages.acpi_call
         tlp
+        zbar # read qrcodes
       ];
 
     };
@@ -329,6 +330,7 @@ in {
         epson-escpr2 sane-airscan brscan4
         fwupd # bios + firmware updates
         guvcview
+        gnomeExtensions.jiggle
         irssi
         kvirc
         okular
@@ -420,9 +422,12 @@ in {
         _1password-gui
         slack
         teams
-        kafkacat
         notion-app-enhanced
-        # kafkactl
+        # awscli2
+        # aws-vault
+        # kafkacat
+        # kafkacat
+        # kubectl
         # plantuml
         # xmlcopyeditor
       ];
