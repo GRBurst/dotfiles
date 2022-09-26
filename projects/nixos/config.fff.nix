@@ -75,6 +75,8 @@ in {
         unclutter-xfixes 
         xorg.xdpyinfo xorg.xev xorg.xmodmap xorg.xkill xorg.xwininfo xorg.xhost
         vanilla-dmz # x cursor
+        xsettingsd
+        libsForQt5.qtstyleplugins
 
         # Security
         gnome3.gnome-keyring gnome3.libgnome-keyring gnome3.seahorse libsecret
@@ -89,7 +91,7 @@ in {
         netcat
         nmap
         miniserve
-        magic-wormhole
+        # magic-wormhole # broken since 2022-08-31
         ngrok
         nload nethogs
         speedtest-cli
@@ -152,7 +154,7 @@ in {
         # typora # breaks on 2020-07-08
         zathura
         texlive.combined.scheme-full
-        thunderbird birdtray protonmail-bridge protonvpn-gui
+        thunderbird birdtray protonmail-bridge protonvpn-gui protonvpn-cli
         # biber # collides texlive full
         pdftk #pdfshuffler
         pdfsandwich pdfsam-basic pdfarranger
@@ -213,12 +215,12 @@ in {
         scala-packages
 
         atom
-        ctags
+        # ctags
         gdb
         git tig gh hub gitRepo
         neovim coursier # coursier needed for neovim plugins
         # python27Packages.pynvim # ensime
-        python37Packages.pynvim
+        python3Packages.pynvim
         tmate
         meld
         kdiff3
@@ -242,7 +244,7 @@ in {
 
         # swiProlog
         #vscodium
-        vscode-liveshare
+        # vscode-liveshare
 
         brave
       ];
@@ -306,6 +308,7 @@ in {
         linuxPackages.tp_smapi
         linuxPackages.acpi_call
         tlp
+        zbar # read qrcodes
       ];
 
     };
@@ -327,6 +330,7 @@ in {
         epson-escpr2 sane-airscan brscan4
         fwupd # bios + firmware updates
         guvcview
+        gnomeExtensions.jiggle
         irssi
         kvirc
         okular
@@ -418,9 +422,12 @@ in {
         _1password-gui
         slack
         teams
-        kafkacat
         notion-app-enhanced
-        # kafkactl
+        # awscli2
+        # aws-vault
+        # kafkacat
+        # kafkacat
+        # kubectl
         # plantuml
         # xmlcopyeditor
       ];
