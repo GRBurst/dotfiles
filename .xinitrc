@@ -39,8 +39,8 @@ fi
 # setxkbmap -layout de,de -variant neo,basic -option grp:menu_toggle
 # xsetroot -cursor_name left_ptr
 
-eval $(gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
+# eval $(gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)
 # export GNOME_KEYRING_CONTROL
 # export SSH_AUTH_SOCK
 
-exec i3
+# exec i3
