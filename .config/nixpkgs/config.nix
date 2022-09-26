@@ -75,6 +75,8 @@ in {
         unclutter-xfixes 
         xorg.xdpyinfo xorg.xev xorg.xmodmap xorg.xkill xorg.xwininfo xorg.xhost
         vanilla-dmz # x cursor
+        xsettingsd
+        libsForQt5.qtstyleplugins
 
         # Security
         gnome3.gnome-keyring gnome3.libgnome-keyring gnome3.seahorse libsecret
