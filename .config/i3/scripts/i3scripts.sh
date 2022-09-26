@@ -5,14 +5,15 @@ init()
     [[ -f "$FILE" ]] && source "$FILE"
     activeWorkspace="$(i3-msg -t get_workspaces | grep -P '"name"[^}]*?("focused"):true' -o | sed 's/"name":"\(.*\)","visible":true,"focused":true/\1/g')"
     ws_number=$(echo $activeWorkspace | cut -d ":" -f1)
-    #ws_split[$ws_number]="${ws_split[$ws_number]:-h}"
 }
 
 export ()
 {
-    echo "ws_split[$ws_number]=${ws_split[$ws_number]}" > "$FILE"
-    echo "ws_win_nr[$ws_number]=${ws_win_nr[$ws_number]}" >> "$FILE"
-    #echo "ws_split[$ws_number]=${ws_split[$ws_number]}"
+    if grep -q -s "ws_split\[$ws_number\]" "$FILE"; then
+        sed -E -i "s/ws_split\[$ws_number\]=(.*)/ws_split\[$ws_number\]=${ws_split[$ws_number]}/" "$FILE"
+    else
+        echo "ws_split[$ws_number]=${ws_split[$ws_number]}" >> "$FILE"
+    fi
 }
 
 ws_set_split()
@@ -28,8 +29,9 @@ ws_set_split()
 ws_split()
 {
     local -r action="$1"
+    local folder="$(xcwd)"
     # local term="termite -d $(xcwd) -e zsh"
-    local term="alacritty --working-directory $(xcwd)"
+    local term="alacritty --working-directory \"${folder:-~/}\""
 
     if [[ "$action" == "manual" ]]; then
         if [[ -z "${ws_split[$ws_number]}" ]]; then
@@ -53,9 +55,6 @@ ws_split()
             i3-msg "exec $term;"
         fi
     fi
-
-
-    #echo "ws_split[$ws_number]=${ws_split[$ws_number]}"
 }
 
 # main function, won't live without it
