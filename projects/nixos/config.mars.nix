@@ -330,8 +330,8 @@ in {
         epson-escpr2 sane-airscan brscan4
         fwupd # bios + firmware updates
         guvcview
-        gnomeExtensions.jiggle
-        # irssi
+        # gnomeExtensions.jiggle
+        irssi
         kvirc
         okular
         # jbidwatcher
