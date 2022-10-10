@@ -391,7 +391,7 @@ in {
         # heroic
         discord
         xboxdrv
-        steam
+        # steam
         runescape
         # steam-run
       ];
