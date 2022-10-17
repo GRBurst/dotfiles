@@ -1,5 +1,6 @@
 # First, ignore everything at root
 /*
+/.*
 
 # Whitelist
 !.gitignore-dotfiles
