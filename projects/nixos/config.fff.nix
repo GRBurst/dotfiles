@@ -138,10 +138,11 @@ in {
 
         # Office
         # calibre broken on 2022-04-10
-        etesync-dav
+        # etesync-dav
         exif
         # firefox profile-sync-daemon
-        (librewolf.override { enableTridactylNative = true; wmClass = "browser"; })
+        # (librewolf.override { cfg.enableTridactylNative = true; wmClass = "browser"; })
+        librewolf
         profile-sync-daemon
         libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
         samba cifs-utils
@@ -392,7 +393,7 @@ in {
         discord
         xboxdrv
         # steam
-        runescape
+        # runescape
         # steam-run
       ];
 
