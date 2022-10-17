@@ -330,7 +330,7 @@ in {
         epson-escpr2 sane-airscan brscan4
         fwupd # bios + firmware updates
         guvcview
-        gnomeExtensions.jiggle
+        # gnomeExtensions.jiggle
         irssi
         kvirc
         okular
@@ -391,7 +391,7 @@ in {
         # heroic
         discord
         xboxdrv
-        steam
+        # steam
         runescape
         # steam-run
       ];
@@ -420,9 +420,8 @@ in {
 
       paths = [
         _1password-gui
-        slack
-        teams
-        notion-app-enhanced
+        # teams
+        # notion-app-enhanced
         # awscli2
         # aws-vault
         # kafkacat
