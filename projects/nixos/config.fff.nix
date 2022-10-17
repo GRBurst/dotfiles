@@ -79,7 +79,7 @@ in {
         libsForQt5.qtstyleplugins
 
         # Security
-        gnome3.gnome-keyring gnome3.libgnome-keyring gnome3.seahorse libsecret
+        gnome.gnome-keyring gnome.libgnome-keyring gnome.seahorse libsecret
         openssl
         keepass
         keepassxc
@@ -109,7 +109,7 @@ in {
         tldr
 
         # Filesystem
-        gnome3.nautilus gnome3.gvfs
+        gnome.nautilus gnome.gvfs
         ncdu du-dust
         duf # du alternative
         sd # sed alternative
@@ -127,7 +127,7 @@ in {
         inotify-tools
         smartmontools
         exfat
-        # gnome3.file-roller # mimeinfo collides with nautilus
+        # gnome.file-roller # mimeinfo collides with nautilus
         gptfdisk
         spaceFM
         shared-mime-info
@@ -141,12 +141,12 @@ in {
         etesync-dav
         exif
         # firefox profile-sync-daemon
-        librewolf # (librewolf.override { wmClass = "browser"; })
+        (librewolf.override { enableTridactylNative = true; wmClass = "browser"; })
         profile-sync-daemon
         libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
         samba cifs-utils
         gcolor3
-        gnome3.gedit
+        gnome.gedit
         jmtpfs
         qrencode
         qsyncthingtray
@@ -175,7 +175,7 @@ in {
         playerctl
         ponymix
         spotify
-        gnome3.cheese
+        gnome.cheese
         xdg_utils
         ffmpeg-full
         seafile-client
@@ -191,10 +191,10 @@ in {
 
         # Themes
         breeze-gtk breeze-icons breeze-qt5 
-        adwaita-qt gnome3.adwaita-icon-theme 
+        adwaita-qt gnome.adwaita-icon-theme 
         papirus-icon-theme
         dconf
-        gnome3.dconf-editor
+        gnome.dconf-editor
         lxqt.lxqt-config
         lxappearance
 
@@ -330,7 +330,7 @@ in {
         epson-escpr2 sane-airscan brscan4
         fwupd # bios + firmware updates
         guvcview
-        gnomeExtensions.jiggle
+        # gnomeExtensions.jiggle
         irssi
         kvirc
         okular
@@ -391,7 +391,7 @@ in {
         # heroic
         discord
         xboxdrv
-        steam
+        # steam
         runescape
         # steam-run
       ];
@@ -420,9 +420,8 @@ in {
 
       paths = [
         _1password-gui
-        slack
-        teams
-        notion-app-enhanced
+        # teams
+        # notion-app-enhanced
         # awscli2
         # aws-vault
         # kafkacat
@@ -447,10 +446,6 @@ in {
 
     };
 
-  };
-
-  librewolf = {
-    enableTridactylNative = true;
   };
 
 }

@@ -533,6 +533,7 @@
             xsetroot -bg black
             xsetroot -cursor_name left_ptr
             gnome-keyring-daemon --start -d --components=pkcs11,secrets,ssh
+            feh --bg-scale '/home/jelias/.config/i3/background0.jpg' '/home/jelias/.config/i3/background1.jpg'
           '';
         };
 		# xmonad = {
