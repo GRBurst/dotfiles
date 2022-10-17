@@ -47,7 +47,7 @@ SPACESHIP_PROMPT_ORDER=(
   aws           # Amazon Web Services section
   venv          # virtualenv section
   conda         # conda virtualenv section
-  pyenv         # Pyenv section
+  # pyenv         # Pyenv section
   # dotnet        # .NET section
   # ember         # Ember.js section
   # kubecontext   # Kubectl context section
@@ -193,4 +193,3 @@ autoload -U +X bashcompinit && bashcompinit
 eval "$(direnv hook zsh)" # load environment vars depending on directory https://direnv.net/docs/hook.html#zsh
 
 [[ ! -f "/etc/grc.zsh" ]] || source /etc/grc.zsh # colors outputs of commands (https://github.com/garabik/grc)
-
