@@ -30,8 +30,8 @@ floating_modifier $mod
 
 # start a terminal
 #bindsym $mod+Return exec termite
-bindsym $mod+Return exec --no-startup-id $sp/i3scripts.sh ws_split manual
-bindsym $mod+Shift+Return exec --no-startup-id $sp/i3scripts.sh ws_split auto
+bindsym $mod+Return exec --no-startup-id $sp/i3scripts.sh ws_split auto
+bindsym $mod+Shift+Return exec --no-startup-id $sp/i3scripts.sh ws_split manual
 # bindsym $mod+$AltGr+Return exec termite -e zsh
 bindsym $mod+$AltGr+Return exec alacritty
 
@@ -142,7 +142,7 @@ bindsym $mod+m exec ponymix --source toggle
 # Helper scripts
 bindsym $mod+b exec --no-startup-id $sp/rename.sh 0
 bindsym $mod+Shift+b exec --no-startup-id $sp/rename.sh
-bindsym --release Print exec --no-startup-id scrot -u 'Screenshot-%Y-%m-%d-%H-%M-%S-$wx$h_scrot.png' -e 'mv $f ~/pictures/screenshots/'
+bindsym --release Print exec --no-startup-id scrot -u '%Y-%m-%d-%H-%M-%S-$wx$h.png' -e 'mv $f ~/pictures/private/screenshots/'
 
 #bindsym $mod+Shift+r exec --no-startup-id $sp/update-config.sh
 
@@ -178,7 +178,7 @@ bindsym $mod+Shift+ISO_Next_Group exec setxkbmap de
 
 assign [class="(?i)thunderbird"] "1: mail"
 assign [instance="(?i)protonmail-bridge" class="ProtonMail Bridge"] "1: mail"
-assign [class="(?i)Navigator"] "2: browser"
+assign [class="(?i)navigator"] "2: browser"
 assign [class="(?i)browser"] "2: browser"
 assign [class="(?i)keepassxc"] 7
 assign [class="(?i)signal"] "9: communication"
@@ -285,11 +285,12 @@ mode "resize <<< Resolution:(2) 1920x1080, (4) 3840x2160, (7) 1280x720; Position
 }
 bindsym $mod+Shift+r mode "resize <<< Resolution:(2) 1920x1080, (4) 3840x2160, (7) 1280x720; Position: (c) center"
 
-mode "woost <<< Programs: (a) announcekit, (v) video/vokoscreen, (w) restore work layout, (s/S) move/show scratchpad" {
+mode "work <<< Programs: (w) restore work layout, (s/S) move/show scratchpad" {
 
-        bindsym a exec --no-startup-id "i3-msg 'workspace 0; append_layout ~/.config/i3/layouts/announcekit.json'"; exec chromium; exec peek; [class="(?i)peek"] move scratchpad; mode "default"
-        bindsym v exec --no-startup-id "i3-msg 'workspace 0'"; exec chromium; exec vokoscreen; mode "default"
-        bindsym w exec --no-startup-id "i3-msg 'workspace 7; append_layout ~/.config/i3/layouts/work_left.json; workspace 12; append_layout ~/.config/i3/layouts/work_right.json'"; exec protonmail-bridge; exec thunderbird; exec librewolf; exec kxo; exec signal-desktop; exec slack; exec teams; exec telegram; exec alacritty; exec zoom; mode "default"
+        # bindsym a exec --no-startup-id "i3-msg 'workspace 0; append_layout ~/.config/i3/layouts/announcekit.json'"; exec chromium; exec peek; [class="(?i)peek"] move scratchpad; mode "default"
+        # bindsym v exec --no-startup-id "i3-msg 'workspace 0'"; exec chromium; exec vokoscreen; mode "default"
+
+        bindsym w exec --no-startup-id i3-msg 'workspace "1: mail"; exec protonmail-bridge; exec thunderbird; workspace "2: browser"; exec librewolf; workspace 7; exec ~/local/bin/kxo; workspace "9: communication"; exec signal-desktop; exec librewolf --new-window --kiosk https://priceloop.slack.com; workspace 3; exec alacritty --working-directory ~/projects/priceloop/ogopogo/nocode'; mode "default"
 
         # Make the currently focused window a scratchpad
         bindsym s move scratchpad; mode "default"
@@ -299,7 +300,7 @@ mode "woost <<< Programs: (a) announcekit, (v) video/vokoscreen, (w) restore wor
         bindsym Return mode "default"
         bindsym Escape mode "default"
 }
-bindsym $mod+Shift+w mode "woost <<< Programs: (a) announcekit, (v) video/vokoscreen, (w) restore work layout, (s/S) move/show scratchpad"
+bindsym $mod+Shift+w mode "work <<< Programs: (w) restore work layout, (s/S) move/show scratchpad"
 
 # refocus window (you can also use the mouse for that)
 mode "refocus" {
