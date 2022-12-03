@@ -14,7 +14,7 @@
   [
     # <nixpkgs/nixos/modules/services/hardware/sane_extra_backends/brscan4.nix>
     ./hardware-configuration.nix
-    ./woost-configuration.nix
+    # ./woost-configuration.nix
   ];
 
   boot = {
@@ -123,7 +123,7 @@
     #   package = pkgs.pulseaudioFull;
     };
     bluetooth = {
-      enable = true;
+      enable = false;
       powerOnBoot = true;
     };
 
@@ -147,21 +147,22 @@
   networking = {
     networkmanager = {
       enable = true;
-      plugins = [
-        pkgs.networkmanager-openconnect
+      ethernet.macAddress = "random";
+      appendNameservers = [ "9.9.9.9" "149.112.112.112" "2620:fe::fe" "2620:fe::9" ];
+      plugins = with pkgs; [
+        networkmanager-openconnect
+        networkmanager-openvpn
       ];
     };
+    # enableIPv6 = false;
     firewall.enable = true;
     hostName = "fff";
     extraHosts = ''
-      134.130.57.2    sylvester
-      134.130.57.13   neptun
-      134.130.59.240  ateam
-      127.0.0.1       *.localhost
+      127.0.0.1       *.localhost *.localhost.localdomain
     '';
     # networking.wireless.enable = true;
-    firewall.allowedUDPPorts = [ 137 138 5353 ]; # for mosh: { from = 60000; to = 61000; } 
-    firewall.allowedTCPPorts = [ 139 445 7575 12345 ];
+    firewall.allowedUDPPorts = [ 50624 50625 ]; # Firefox WebIDE
+    firewall.allowedTCPPorts = [ 12345 18080 8082 ]; # dev
   };
 
   location = {
@@ -269,8 +270,11 @@
 
       AWT_TOOLKIT = "MToolkit";
       GDK_USE_XFT = "1";
-      
-      _JAVA_OPTIONS = "-Dsun.java2d.uiScale=2";
+
+      # QT_STYLE_OVERRIDE = "gtk2";
+      # QT_QPA_PLATFORMTHEME = "gtk2";
+
+      # _JAVA_OPTIONS = "-Dsun.java2d.uiScale=2";
       # QT_AUTO_SCREEN_SCALE_FACTOR = "0";
       # QT_SCALE_FACTOR = "1";
       # QT_QPA_PLATFORMTHEME = "qt5ct";
@@ -289,12 +293,12 @@
     options = "--delete-older-than 7d";
   };
   system.autoUpgrade.enable = true;
-  system.autoUpgrade.dates = "23:15";
+  # system.autoUpgrade.dates = "23:15";
 
     # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   programs = {
-	command-not-found.enable = false;
+	command-not-found.enable = true;
 
     noisetorch.enable = true;
 
@@ -667,13 +671,18 @@
 
   # virtualisation.virtualbox.host.enable = true;
   # virtualisation.virtualbox.host.enableExtensionPack = true;
-  virtualisation.docker.enable = true;
+  virtualisation.docker = {
+    enable = true;
+    daemon.settings = {
+      experimental = true;
+    };
+  };
 
   #users.mutableUsers = false;
 
   users.extraUsers.jelias = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "video" "audio" "vboxusers" "docker" "lp" "scanner" "saned" "adbusers" "networkmanager" "wireshark" ];
+    extraGroups = [ "wheel" "video" "audio" "vboxusers" "docker" "fuse" "adbusers" "networkmanager" "wireshark" ];
     useDefaultShell = true;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM+BIE+0anEEYK0fBIEpjedblyGW0UnuYBCDtjZ5NW6P jelias@merkur"

@@ -391,8 +391,9 @@ in {
         lutris
         # heroic
         discord
+        discord-ptb
         xboxdrv
-        # steam
+        steam
         # runescape
         # steam-run
       ];
