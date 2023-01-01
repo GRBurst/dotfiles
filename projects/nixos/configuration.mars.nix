@@ -43,7 +43,7 @@
     kernel.sysctl = {
       "fs.inotify.max_user_watches" = "409600";
       "kernel.sysrq" = 1;
-      "vm.swappiness" = 0;
+      "vm.swappiness" = 1;
     };
   };
 
@@ -102,9 +102,11 @@
       enable = true;
       wifi.macAddress = "random";
       appendNameservers = [ "9.9.9.9" "149.112.112.112" "2620:fe::fe" "2620:fe::9" ];
+      # logLevel = "TRACE";
       # dns = "none";
       # appendNameservers = [ "1.1.1.1" "1.0.0.1" "2606:4700:4700::1111" "2606:4700:4700::1001" ];
     };
+    enableIPv6 = true;
     firewall.enable = true;
     firewall.allowedTCPPorts = [ 12345 ];
     firewall.allowedUDPPorts = [ 50624 50625 ]; # Firefox WebIDE
@@ -213,8 +215,6 @@
     noisetorch = {
       enable = true;
     };
-
-    qt5ct.enable = false;
 
     command-not-found.enable = true;
 
@@ -388,7 +388,6 @@
       enable = true;
       dpi = 192;
       videoDrivers = [ "modesetting" ];
-      useGlamor = true;
       layout = "de,de";
       xkbVariant = "neo,basic";
       xkbOptions = "grp:menu_toggle";
@@ -425,6 +424,7 @@
             xsetroot -cursor_name left_ptr
             gnome-keyring-daemon --start -d --components=pkcs11,secrets,ssh
             feh --bg-scale '/home/jelias/.config/i3/background0.jpg' '/home/jelias/.config/i3/background1.jpg' &
+            deadd-notification-center &
           '';
         };
       };

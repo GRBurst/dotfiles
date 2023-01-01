@@ -420,9 +420,8 @@ in {
 
       paths = [
         _1password-gui
-        slack
-        teams
-        notion-app-enhanced
+        # teams
+        # notion-app-enhanced
         # awscli2
         # aws-vault
         # kafkacat
