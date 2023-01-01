@@ -138,7 +138,7 @@ in {
 
         # Office
         # calibre broken on 2022-04-10
-        etesync-dav
+        # etesync-dav # broken since 2023-01-01
         exif
         # firefox profile-sync-daemon
         librewolf # (librewolf.override { wmClass = "browser"; })
@@ -392,7 +392,7 @@ in {
         discord
         xboxdrv
         # steam
-        runescape
+        # runescape
         # steam-run
       ];
 

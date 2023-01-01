@@ -196,14 +196,16 @@
 
   nix = {
     daemonIOSchedPriority = 7;
-    maxJobs = 16;
-    buildCores = 4;
+    settings = {
+      cores = 4;
+      max-jobs = 16;
+      sandbox = true;
+    };
     gc = {
       automatic = true;
       dates = "monthly";
       options = "--delete-older-than 90d";
     };
-    useSandbox = true;
   };
 
   system.autoUpgrade.enable = true;
