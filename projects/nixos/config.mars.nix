@@ -143,7 +143,7 @@ in {
         # firefox profile-sync-daemon
         librewolf # (librewolf.override { wmClass = "browser"; })
         profile-sync-daemon
-        libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
+        # libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
         samba cifs-utils
         gcolor3
         gnome.gedit
