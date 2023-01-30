@@ -390,6 +390,7 @@ in {
         lutris
         # heroic
         discord
+        discord-ptb
         xboxdrv
         # steam
         # runescape

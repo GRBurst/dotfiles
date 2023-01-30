@@ -108,7 +108,7 @@
     };
     enableIPv6 = true;
     firewall.enable = true;
-    firewall.allowedTCPPorts = [ 12345 ];
+    firewall.allowedTCPPorts = [ 12345 15432 ];
     firewall.allowedUDPPorts = [ 50624 50625 ]; # Firefox WebIDE
     hostName = "mars";
     extraHosts = ''
