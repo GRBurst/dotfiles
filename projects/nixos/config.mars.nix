@@ -143,7 +143,7 @@ in {
         # firefox profile-sync-daemon
         librewolf # (librewolf.override { wmClass = "browser"; })
         profile-sync-daemon
-        # libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
+        libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
         samba cifs-utils
         gcolor3
         gnome.gedit
@@ -156,15 +156,21 @@ in {
         texlive.combined.scheme-full
         thunderbird birdtray protonmail-bridge protonvpn-gui protonvpn-cli
         # biber # collides texlive full
-        pdftk #pdfshuffler
-        pdfsandwich pdfsam-basic pdfarranger
+        # pdftk #pdfshuffler
+        # pdfsandwich pdfsam-basic pdfarranger
         poppler_utils
         xournal
 
         # Media
         blueman
         feh imv nitrogen 
-        gimp
+        (gimp-with-plugins.override { 
+          plugins = with gimpPlugins; [ 
+            fourier
+            resynthesizer
+            # gmic
+          ]; 
+        })
         inkscape 
         mate.atril
         mimeo

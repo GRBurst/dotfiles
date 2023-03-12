@@ -432,9 +432,10 @@
       };
     };
 
-    compton = {
+    picom = {
       enable = true;
-    #   backend = "glx";
+      backend = "glx";
+      vSync = true;
     };
 
     # nginx = {
@@ -675,10 +676,10 @@
   };
 
   virtualisation = {
-    # virtualbox.host = {
-    #   enable = true;
-    #   enableExtensionPack = true;
-    # };
+    virtualbox.host = {
+      enable = true;
+      enableExtensionPack = true;
+    };
     docker = {
       enable = true;
       enableOnBoot = false;
@@ -715,6 +716,6 @@
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
   # should.
-  system.stateVersion = "22.05"; # Did you read the comment?
+  system.stateVersion = "22.11"; # Did you read the comment?
 
 }
