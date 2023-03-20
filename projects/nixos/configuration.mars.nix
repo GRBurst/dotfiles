@@ -22,7 +22,8 @@
       efi.canTouchEfiVariables = true;
     };
 
-    # kernelPackages = pkgs.linuxPackages_latest;
+    # kernelPackages = pkgs.linuxKernel.packages.linux_hardened;
+    kernelPackages = pkgs.linuxPackages_latest;
     # extraModulePackages = [ config.boot.kernelPackages.exfat-nofuse ];
 
     initrd.luks.devices = {
@@ -676,10 +677,10 @@
   };
 
   virtualisation = {
-    virtualbox.host = {
-      enable = true;
-      enableExtensionPack = true;
-    };
+    # virtualbox.host = {
+    #   enable = true;
+    #   enableExtensionPack = true;
+    # };
     docker = {
       enable = true;
       enableOnBoot = false;
