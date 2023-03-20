@@ -68,7 +68,7 @@ in {
         pv
         screen
         scrot
-        speech-dispatcher
+        speechd
         # unzip zip
         zenity
 
