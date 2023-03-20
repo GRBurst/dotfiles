@@ -70,7 +70,7 @@ in {
         scrot
         speechd
         # unzip zip
-        zenity
+        gnome.zenity
 
         # x-server
         xcwd
