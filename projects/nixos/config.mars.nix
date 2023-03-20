@@ -48,6 +48,7 @@ in {
         avahi
         atop htop iotop
         bc calc
+        beep
         binutils
         cryptsetup
         linuxPackages.cpupower
@@ -67,7 +68,9 @@ in {
         pv
         screen
         scrot
+        speech-dispatcher
         # unzip zip
+        zenity
 
         # x-server
         xcwd
@@ -98,6 +101,7 @@ in {
         traceroute mtr
         inetutils
         vpn-slice
+        socat
         sshuttle # vpn through ssh
         wireshark
         networkmanagerapplet
@@ -167,7 +171,7 @@ in {
         (gimp-with-plugins.override { 
           plugins = with gimpPlugins; [ 
             fourier
-            resynthesizer
+            # resynthesizer # broken since 2023-03-20
             # gmic
           ]; 
         })
@@ -232,6 +236,7 @@ in {
         kdiff3
         difftastic
         jq
+        yq-go
 
         # purescript
         # nodePackages.purescript-language-server
@@ -398,8 +403,8 @@ in {
         discord
         discord-ptb
         xboxdrv
-        # steam
-        # runescape
+        steam
+        runescape
         # steam-run
       ];
 
