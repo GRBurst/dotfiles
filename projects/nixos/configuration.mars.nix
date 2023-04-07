@@ -23,7 +23,7 @@
     };
 
     # kernelPackages = pkgs.linuxKernel.packages.linux_hardened;
-    kernelPackages = pkgs.linuxPackages_latest;
+    # kernelPackages = pkgs.linuxPackages_latest;
     # extraModulePackages = [ config.boot.kernelPackages.exfat-nofuse ];
 
     initrd.luks.devices = {
