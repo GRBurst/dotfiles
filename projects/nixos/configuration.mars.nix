@@ -227,7 +227,7 @@
       enable = true;
       enableCompletion = true;
     };
-    fish.enable = true;
+    fish.enable = false;
 
     adb.enable = true;
 

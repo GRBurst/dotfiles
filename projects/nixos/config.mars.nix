@@ -157,8 +157,8 @@ in {
         simple-scan
         # typora # breaks on 2020-07-08
         zathura
-        texlive.combined.scheme-full
         thunderbird birdtray protonmail-bridge protonvpn-gui protonvpn-cli
+        # texlive.combined.scheme-full
         # biber # collides texlive full
         # pdftk #pdfshuffler
         # pdfsandwich pdfsam-basic pdfarranger
