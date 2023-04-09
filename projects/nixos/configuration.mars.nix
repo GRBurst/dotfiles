@@ -145,6 +145,7 @@
     systemPackages = with pkgs; [
       neovim
       adapta-gtk-theme adapta-kde-theme
+      protonvpn-cli
     ];
 
     shellAliases = {
