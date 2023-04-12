@@ -123,7 +123,9 @@
     #   package = pkgs.pulseaudioFull;
     };
     bluetooth = {
-      enable = false;
+      enable = true;
+      # hsphfpd.enable = true;
+      # package = pkgs.bluezFull;
       powerOnBoot = true;
     };
 
@@ -482,6 +484,7 @@
 
     pipewire = {
       enable = true;
+      audio.enable = true;
       pulse.enable = true;
       jack.enable = true;
       alsa.enable = true;
