@@ -192,6 +192,7 @@
   environment = {
     systemPackages = with pkgs; [
       neovim
+      protonvpn-cli
       # hdparm
       # wirelesstools
       # wget pv htop atop git netcat nmap xorg.xkill psmisc lm_sensors calc tree gparted gksu ntfs3g inotify-tools unzip
