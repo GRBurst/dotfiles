@@ -149,7 +149,6 @@
 
     cpu.amd.updateMicrocode = true;
     acpilight.enable = true;
-    video.hidpi.enable = true;
   };
 
   networking = {
@@ -689,7 +688,7 @@
     ];
 
     fontconfig = {
-      includeUserConf = false;
+      includeUserConf = true;
       defaultFonts.monospace = [ "Roboto Mono" "DejaVu Sans Mono" ];
     };
   };
