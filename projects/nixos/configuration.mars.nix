@@ -354,14 +354,14 @@
 
     # dbus.packages = with pkgs; [ dconf gnome2.GConf gnome3.gnome-keyring gcr ];
 
-    openssh = {
-      enable = true;
-      ports = [ 53292 ];
-      settings = {
-        forwardX11 = true;
-        # passwordAuthentication = false;
-      };
-    };
+    # openssh = {
+    #   enable = false;
+    #   ports = [ 53292 ];
+    #   settings = {
+    #     forwardX11 = true;
+    #     # PasswordAuthentication = false;
+    #   };
+    # };
 
     journald = {
       extraConfig = ''
@@ -696,16 +696,16 @@
     isNormalUser = true;
     extraGroups = [ "wheel" "video" "audio" "vboxusers" "docker" "fuse" "scanner" "adbusers" "networkmanager" ];
     useDefaultShell = true;
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM+BIE+0anEEYK0fBIEpjedblyGW0UnuYBCDtjZ5NW6P jelias@merkur"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAflU8X4g3kboxgFQPAxeadUY97iZoV0IPEwK61lZFW5 jelias@venus->jupiter on 2018-02-22"
-    ];
+    # openssh.authorizedKeys.keys = [
+    #   "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM+BIE+0anEEYK0fBIEpjedblyGW0UnuYBCDtjZ5NW6P jelias@merkur"
+    #   "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAflU8X4g3kboxgFQPAxeadUY97iZoV0IPEwK61lZFW5 jelias@venus->jupiter on 2018-02-22"
+    # ];
   };
-  users.extraUsers.dev = {
-    isNormalUser = true;
-    extraGroups = [ "video" "audio" ];
-    shell = pkgs.fish;
-  };
+  # users.extraUsers.dev = {
+  #   isNormalUser = true;
+  #   extraGroups = [ "video" "audio" ];
+  #   shell = pkgs.fish;
+  # };
 
   # users.extraUsers.dev = {
   #   isNormalUser = true;
