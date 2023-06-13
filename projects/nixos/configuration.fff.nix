@@ -54,7 +54,10 @@
   };
   swapDevices =
     [
-      { device = "/swapfile"; randomEncryption = true; }
+      { 
+        device = "/swapfile";
+        size = 16384;
+      }
     ];
 
 
@@ -130,8 +133,11 @@
     };
 
     opengl = {
+      driSupport = true;
       driSupport32Bit = true;
       setLdLibraryPath = true;
+      extraPackages = [ pkgs.amdvlk ];
+      extraPackages32 = [ pkgs.driversi686Linux.amdvlk ];
     };
     sane.enable = true;
     sane.extraBackends = [ pkgs.sane-airscan pkgs.epkowa ];
@@ -163,7 +169,7 @@
       127.0.0.1       *.localhost *.localhost.localdomain
     '';
     # networking.wireless.enable = true;
-    firewall.allowedUDPPorts = [ 50624 50625 ]; # Firefox WebIDE
+    firewall.allowedUDPPorts = [ 12345 50624 50625 ]; # Firefox WebIDE
     firewall.allowedTCPPorts = [ 12345 18080 8082 ]; # dev
   };
 
@@ -173,11 +179,11 @@
     longitude = 6.08;
   };
 
-  powerManagement = {
-    enable = true;
+  # powerManagement = {
+    # enable = true;
     # powertop.enable = true;
     # powerUpCommands = "${pkgs.hdparm}/bin/hdparm -Y /dev/disk/by-id/ata-WDC_WD10EZEX-00BN5A0_WD-WCC3F5TTNUHT";
-  };
+  # };
 
   console.keyMap = "neo";
   i18n = {
@@ -193,7 +199,7 @@
     systemPackages = with pkgs; [
       neovim
       protonvpn-cli
-      # hdparm
+      hdparm
       # wirelesstools
       # wget pv htop atop git netcat nmap xorg.xkill psmisc lm_sensors calc tree gparted gksu ntfs3g inotify-tools unzip
       # ncdu fzf fasd silver-searcher tig ctags xclip tmate pmount scrot nix-zsh-completions haskellPackages.yeganesh
@@ -463,6 +469,10 @@
     #   }
     # ];
 
+    udev.extraRules = ''
+      ACTION=="add", SUBSYSTEM=="block", KERNEL=="sd[a-z]", ENV{ID_SERIAL_SHORT}=="93QN3LMGS", RUN+="${pkgs.hdparm}/bin/hdparm -B 1 -S 6 /dev/%k"
+    '';
+
     avahi.enable = true;
     avahi.nssmdns = true;
 
@@ -476,7 +486,16 @@
     };
 
     fstrim.enable = true;
-    smartd.enable = true;
+    smartd = {
+      enable = true;
+      autodetect = false;
+      devices = [
+        {
+          device = "/dev/disk/by-id/ata-Samsung_SSD_840_EVO_250GB_S1DBNSAF858931R";
+        }
+      ];
+      # config? "DEVICESCAN -n standby,q"
+    };
 
     # printing = {
     #   enable = true;
@@ -490,12 +509,14 @@
       jack.enable = true;
       alsa.enable = true;
       alsa.support32Bit = true;
+      # systemWide = true;
     };
 
     xserver = {
       enable = true;
       dpi = 192;
-      videoDrivers = [ "nvidia" ];
+      videoDrivers = [ "amdgpu" ];
+      # videoDrivers = [ "nvidia" ];
       # screenSection = ''
       #   Option "metamodes" "nvidia-auto-select +0+0 {ForceCompositionPipeline=On}"
       # '';
@@ -556,7 +577,7 @@
 
     redshift = {
       enable = true;
-      executable = "/bin/redshift-gtk";
+      # executable = "/bin/redshift-gtk";
       temperature.day = 5000;
       temperature.night = 3000;
       brightness.day = "0.9";
@@ -686,7 +707,7 @@
 
   users.extraUsers.jelias = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "video" "audio" "vboxusers" "docker" "fuse" "adbusers" "networkmanager" "wireshark" ];
+    extraGroups = [ "wheel" "video" "audio" "vboxusers" "docker" "fuse" "adbusers" "networkmanager" "wireshark" "pipewire" ];
     useDefaultShell = true;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM+BIE+0anEEYK0fBIEpjedblyGW0UnuYBCDtjZ5NW6P jelias@merkur"
@@ -696,7 +717,7 @@
   };
   users.extraUsers.dev = {
     isNormalUser = true;
-    extraGroups = [ "video" "audio" ];
+    extraGroups = [ "video" "audio" "pipewire" ];
     shell = pkgs.fish;
   };
 
