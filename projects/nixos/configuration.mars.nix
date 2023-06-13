@@ -39,7 +39,7 @@
     #   ARRAY /dev/md/nixos:0 metadata=1.2 name=nixos:0 UUID=8b34463c:d38d231e:d6c35510:cd133929
     #   '';
 
-    tmpOnTmpfs = true;
+    tmp.useTmpfs = true;
 
     kernel.sysctl = {
       "fs.inotify.max_user_watches" = "409600";
@@ -74,7 +74,6 @@
     };
     sane.enable = true;
     cpu.intel.updateMicrocode = true;
-    video.hidpi.enable = true;
     opengl = {
       driSupport32Bit = true;
       enable = true;
@@ -228,7 +227,7 @@
       enable = true;
       enableCompletion = true;
     };
-    fish.enable = false;
+    fish.enable = true;
 
     adb.enable = true;
 
@@ -358,7 +357,10 @@
     openssh = {
       enable = true;
       ports = [ 53292 ];
-      passwordAuthentication = false;
+      settings = {
+        forwardX11 = true;
+        # passwordAuthentication = false;
+      };
     };
 
     journald = {
@@ -408,7 +410,7 @@
       displayManager = {
         lightdm.enable = true;
         autoLogin = {
-          enable = true;
+          enable = false;
           user = "jelias";
         };
         defaultSession = "none+i3";
@@ -649,7 +651,7 @@
 
   # systemd.services.delayedHibernation.enable = true;
 
-  qt5 = {
+  qt = {
     platformTheme = "gnome";
     style = "Adapta";
   };
@@ -672,7 +674,7 @@
     ];
 
     fontconfig = {
-      includeUserConf = false;
+      includeUserConf = true;
       defaultFonts.monospace = [ "Roboto Mono" "DejaVu Sans Mono" ];
     };
   };
