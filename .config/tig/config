@@ -35,6 +35,7 @@ bind stage   U status-update
 bind status  U status-update
 bind stage   A !git commit -S -s --amend
 bind stage   C !git commit -S -s
+bind diff    w !git fry word-based-diff
 bind status  w !git fry word-based-diff
 bind status  W !git fry word-based-diff --staged
 bind stage   w !git fry word-based-diff %(file)
