@@ -26,7 +26,7 @@
     # Checkout
     o   = checkout
     ob  = checkout -b
-    om = "!f() { if git rev-parse --quiet --verify master; then git checkout master; else git checkout main; fi ;}; f"
+    om = "!f() { git checkout $(git remote show origin | sed -n '/HEAD branch/s/.*: //p'); }; f"
     #o.  = checkout master
     oom = checkout origin/master
     ot  = "!f() { local tmpCommit=${1:-master} && echo $tmpCommit && mkdir -p /tmp/wust && git --work-tree=/tmp/wust checkout $tmpCommit -- . ; }; f"
@@ -37,6 +37,7 @@
     fumm = "!f() { local curBranch=$(git rev-parse --abbrev-ref HEAD) && git stash save && git fetch upstream && git checkout master && git merge upstream/master && git checkout $curBranch && git stash pop; }; f" # fetch upstream and merge master
     furb = "!f() { local curBranch=$(git rev-parse --abbrev-ref HEAD) && git stash save && git fetch upstream && git checkout master && git merge upstream/master && git checkout $curBranch && git stash pop && git rebase -i master; }; f" # fetch upstream, merge master, rebase branch
     fuub = "!f() { local curBranch=$(git rev-parse --abbrev-ref HEAD) && git fetch upstream && git merge upstream/$curBranch; }; f" # fetch upstream and merge
+    fo   = "!f() { git fetch origin $1:$1; }; f" # delete local and remote branch
 
     # Commit
     c       = commit
@@ -66,6 +67,8 @@
     ds		= show
     dt		= difftool
     dtd		= difftool -d
+    last    = "!f() { git diff HEAD 'HEAD@{$1 ago}'; }; f"
+    latest  = for-each-ref --sort=-committerdate refs/heads/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'
 
     # Push and pull
     p   = push
@@ -188,6 +191,7 @@
 
 [credential]
     helper = cache
+	credentialStore = cache
 
 [diff]
     algorithm       = histogram
