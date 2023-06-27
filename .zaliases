@@ -49,6 +49,7 @@ alias m='make'
 alias mc='make clean'
 alias cg="cargo"
 alias scala='scala -Dscala.color -deprecation -unchecked -explaintypes -language:_'
+alias amm='amm --no-remote-logging'
 alias jsb='underscore print --color --outfmt json' # beautify json, package: npm -g install underscore-cli
 alias nw='cd ~/projects/woost/wust2 && git pull && nix-shell --command "zsh"'
 alias nl='cd ~/projects/woost/listo && git pull && nix-shell --command "zsh"'
@@ -101,7 +102,7 @@ alias drir="docker image rm"
 alias drnr="docker network rm"
 alias drstop="docker stop"
 alias drstart="docker start"
-alias drps="docker ps --format 'table {{ .Names }}\t{{ .Status }}\t{{ .Ports }}'"
+alias drps="docker ps --format 'table {{ .Names }}\t{{ .Status }}\t{{ .Ports }}\t{{ .Networks }}'"
 alias drpsl="docker ps"
 alias drl="docker logs"
 alias drst="docker status"
@@ -111,13 +112,46 @@ dricl() { docker image rm -f $(docker images -q) }
 drsa() { docker stop $(docker ps -a -q) }
 drsh() { docker exec -it $1 sh }
 drbash() { docker exec -it $1 bash }
+drls() {
+    echo "Containers"
+    docker container ls
+    echo -e "\nVolumes"
+    docker volume ls
+    echo -e "\nNetworks"
+    docker network ls
+    echo -e "\nImages"
+    docker image ls
+}
 drclean1() {
+    docker stop $(docker ps -a -f name="$1" -q )
+    docker container rm -f $(docker ps -a -f name="$1" -q )
+    docker network rm $(docker network ls -f name="$1" -q )
+}
+drclean1f() {
     docker stop $(docker ps -a -f name="$1" -q )
     docker container rm -f $(docker ps -a -f name="$1" -q )
     docker volume rm -f $(docker volume ls -f name="$1" -q )
     docker network rm $(docker network ls -f name="$1" -q )
 }
+drclean1ff() {
+    docker stop $(docker ps -a -f name="$1" -q )
+    docker container rm -f $(docker ps -a -f name="$1" -q )
+    docker volume rm -f $(docker volume ls -f name="$1" -q )
+    docker network rm $(docker network ls -f name="$1" -q )
+    docker image rm -f $(docker images ls -f -q | grep -i "$1" )
+}
 drclean() {
+    docker stop $(docker ps -a -q )
+    docker container rm -f $(docker ps -a -q )
+    docker network rm $(docker network ls -q )
+}
+drcleanf() {
+    docker stop $(docker ps -a -q )
+    docker container rm -f $(docker ps -a -q )
+    docker network rm $(docker network ls -q )
+    docker volume rm -f $(docker volume ls -q )
+}
+drcleanff() {
     docker stop $(docker ps -a -q )
     docker container rm -f $(docker ps -a -q )
     docker image rm -f $(docker images -q )
@@ -197,6 +231,10 @@ alias mmv='noglob zmv -W'
 # o() { xdg-open $@ > /dev/null 2>&1; }
 o() { mimeo $@ > /dev/null 2>&1; }
 serve() { miniserve -g -z -p 12345 $1 }
+mmmv() {
+    mmv -n $1 $2 | cut -f4 -d ' ' | xargs mkdir -p
+    mmv "$1/*" "$2/*"
+}
 
 # VirtualBox
 # VBoxManage list runningvms | grep -c 1 macOS
@@ -225,18 +263,62 @@ alias nh='nix-hash --type sha256 --flat --base32'
 alias nqp='nix-store --query --references $(nix-instantiate "<nixpkgs>" -A dev-packages)'
 
 
-# Tools
+# File Tools
 alias t="tree -C"
 alias ta="tree -a"
 alias f="find"
 alias ff="find . -type f -iname "
 alias fd="find . -type d -iname "
-alias fif="find-in-file"
-alias dsize="sudo du -hsx ./* | sort -rh | head -n 40"
+# alias fif="find-in-file"
+
+# FZF
+fif() {
+    RG_PREFIX="rg --column --smart-case --no-heading --files-with-matches --hidden"
+    fzf --bind "change:reload:$RG_PREFIX {q} || true" --ansi --disabled --preview 'rg --color=always --smart-case -C 5 {q} {+}' --preview-window wrap $@
+}
+fiv() {
+    # RG_PREFIX="rg --column --smart-case --line-number --no-heading"
+    RG_PREFIX="rg --column --smart-case --no-heading --files-with-matches --hidden"
+    file="$(fzf --bind "change:reload:$RG_PREFIX {q} || true" --ansi --disabled --preview 'rg --color=always --smart-case -C 5 {q} {+}' --preview-window wrap $@)"
+    vim "$file"
+}
+fivl() {
+    local query file
+    while true; do
+        RG_PREFIX="rg --column --smart-case --no-heading --files-with-matches --hidden"
+        fzf --bind "change:reload:$RG_PREFIX {q} || true" --ansi --disabled --preview 'rg --color=always --smart-case -C 5 {q} {+}' --preview-window wrap --print-query --print0 -q "$query" | read -r query file
+        if [[ -z "$file" ]]; then
+            break
+        fi
+        vim $file || break
+        echo "query: $query"
+        echo "file: $file"
+    done
+}
+fakl() {
+    local query file
+    while true; do
+        users=$(aws --profile ape-prod iam list-users | jq -r ".Users | .[].UserName")
+
+        get_user() {
+            aws --profile ape-prod iam list-access-keys --user-name $1
+        }
+
+        echo $users | fzf --bind "change:reload:(echo $users) || true" --ansi --disabled --preview (get_user {q}) --preview-window wrap 
+        # --print-query --print0 -q "$query" | read -r query file
+        # if [[ -z "$file" ]]; then
+        #     break
+        # fi
+        # vim $file || break
+        # echo "query: $query"
+        # echo "file: $file"
+    done
+}
 
 # FS
 alias blk="lsblk -o NAME,SIZE,FSTYPE,LABEL,UUID,FSSIZE,FSAVAIL,FSUSE%,MOUNTPOINT,RO,RM"
 alias lsblk="blk"
+alias dsize="sudo du -hsx ./* | sort -rh | head -n 40"
 
 # Reverse search links
 rln() {
@@ -293,7 +375,7 @@ nvim_all_command() {
 }
 
 x() {
-    (nohup $@ > /tmp/$1_$2.log) &
+    (nohup $@ > /tmp/$1.log) &
 }
 
 xx() {
@@ -318,7 +400,7 @@ sbt() { (
 }
 
 # i3
-alias i3-update-conf="cat $HOME/.config/i3/common/config > $HOME/.config/i3/config; cat $HOME/.config/i3/local/config* >> $HOME/.config/i3/config; i3-msg reload;"
+alias i3-update-conf="'cat' $HOME/.config/i3/local/config* > $HOME/.config/i3/config; 'cat' $HOME/.config/i3/common/config >> $HOME/.config/i3/config; i3-msg reload;"
 
 
 # Projects
