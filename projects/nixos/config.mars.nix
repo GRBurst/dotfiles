@@ -1,15 +1,15 @@
 with (import <nixos-stable> {});
-with (import <nixos-unstable> {});
-with import <nixos-unstable/lib>;
+with (import <nixpkgs> {});
+with import <nixpkgs/lib>;
 
 let
   localpkgs = import ~/projects/nixpkgs/default.nix {};
-  unstable  = import <nixos-unstable/nixos> {};
+  unstable  = import <nixpkgs/nixos> {};
   stable  = import <nixos-stable/nixos> {};
 in {
 
   permittedInsecurePackages = [
-    "openssl-1.0.2u"
+    # "openssl-1.0.2u"
     "adobe-reader-9.5.5-1"
   ];
   allowUnfree = true;
@@ -20,7 +20,7 @@ in {
   # e.g.: localpkgs.xcwd
 
   # Install a package collection with:
-  # nix-env -iA common-packages -f "<nixos-unstable>"
+  # nix-env -iA common-packages -f "<nixpkgs>"
   # Uninstall all packages with
   # nix-env -e common-packages
   packageOverrides = pkgs: rec {
