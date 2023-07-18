@@ -331,36 +331,36 @@ in {
       name = "highres-packages";
 
       paths = [
-        avidemux
-        audacity
-        brasero
+        # avidemux # video editing -> not using right now
+        # audacity # audio editing -> not using right now
+        # brasero -> not using anymore
         (chromium.override { enableWideVine = false; })
-        clementine
+        # clementine -> not using anymore
         deadd-notification-center
         evince
-        epson-escpr2 sane-airscan brscan4
+        # epson-escpr2 sane-airscan brscan4 -> not using anymore
         fwupd # bios + firmware updates
-        guvcview
+        # guvcview
         # gnomeExtensions.jiggle
         irssi
         kvirc
         okular
         # jbidwatcher
         # jdownloader
-        josm
+        # josm
         libsForQt5.kdenlive
         libnotify
         nextcloud-client
         # notify-osd-customizable
-        peek # record gif videos || green-recorder / gifcurry / screenToGif
+        # peek # record gif videos -> broken on 2023-07-18 || green-recorder / gifcurry / screenToGif
         # kodi
         # linphone -> breaks 2021-01-06
         # ekiga -> breaks on 2019-12-09
-        qutebrowser
-        qtox
-        skypeforlinux
+        # qutebrowser -> not using anymore
+        # qtox -> not using anymore
+        # skypeforlinux -> not using anymore
         shotwell
-        tesseract # open source ocr engine
+        # tesseract # open source ocr engine -> not using anymore
         # texmaker #breaks on 2019-10-22
         texstudio #lyx
         # tor-browser-bundle-bin # -> cannot be build
@@ -404,7 +404,7 @@ in {
         discord-ptb
         xboxdrv
         steam
-        runescape
+        # runescape
         # steam-run
       ];
 
