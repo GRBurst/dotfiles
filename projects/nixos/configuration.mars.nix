@@ -16,6 +16,22 @@
       ./hardware-configuration.nix
     ];
 
+  nix = {
+    daemonIOSchedPriority = 7;
+    settings = {
+      cores = 4;
+      max-jobs = 16;
+      sandbox = true;
+      # Enable Flakes and the new command-line tool
+      experimental-features = [ "nix-command" "flakes" ];
+    };
+    gc = {
+      automatic = true;
+      dates = "monthly";
+      options = "--delete-older-than 90d";
+    };
+  };
+
   boot = {
     loader = {
       systemd-boot.enable = true; # Use the systemd-boot EFI boot loader
@@ -195,20 +211,6 @@
     };
   };
 
-  nix = {
-    daemonIOSchedPriority = 7;
-    settings = {
-      cores = 4;
-      max-jobs = 16;
-      sandbox = true;
-    };
-    gc = {
-      automatic = true;
-      dates = "monthly";
-      options = "--delete-older-than 90d";
-    };
-  };
-
   system.autoUpgrade.enable = true;
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -300,6 +302,12 @@
         group = "users";
         source = "${pkgs.light}/bin/light";
       };
+      beep = {
+        setgid = true;
+        owner = "root";
+        group = "users";
+        source = "${pkgs.beep}/bin/beep";
+      };
       # slock.source = "${pkgs.slock}/bin/slock";
     };
 
@@ -322,6 +330,8 @@
     #   SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", ATTR{capacity}=="[0-5]", RUN+="/run/current-system/sw/bin/systemctl hibernate"
     #   SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", RUN+="/run/current-system/sw/bin/touch /tmp/discharging"
     # '';
+
+    cron.enable = true;
 
     lorri.enable = true;
 

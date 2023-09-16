@@ -1,4 +1,3 @@
-with (import <nixos-stable> {});
 with (import <nixpkgs> {});
 with import <nixpkgs/lib>;
 
@@ -46,7 +45,7 @@ in {
         arandr
         acpi
         avahi
-        atop htop iotop
+        atop htop iotop bottom
         bc calc
         beep
         binutils
@@ -141,7 +140,7 @@ in {
 
 
         # Office
-        # calibre broken on 2022-04-10
+        calibre # broken on 2022-04-10
         # etesync-dav # broken since 2023-01-01
         exif
         # firefox profile-sync-daemon
@@ -224,13 +223,25 @@ in {
       paths = [
         scala-packages
 
-        atom
+        # atom
         # ctags
         gdb
         git tig gh hub gitRepo
-        neovim coursier # coursier needed for neovim plugins
+
+        # EDITOR
+        # neovim coursier # coursier needed for neovim plugins
         # python27Packages.pynvim # ensime
-        python3Packages.pynvim
+        # python3Packages.pynvim
+        # LazyVim
+        neovim clang tree-sitter
+        editorconfig-core-c
+        shfmt shellcheck
+        nixd
+        lua lua-language-server luaPackages.jsregexp stylua
+        fd
+        lazygit
+        unzip
+
         tmate
         meld
         kdiff3
