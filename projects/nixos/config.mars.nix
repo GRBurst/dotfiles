@@ -146,7 +146,7 @@ in {
         # firefox profile-sync-daemon
         librewolf # (librewolf.override { wmClass = "browser"; })
         profile-sync-daemon
-        # libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
+        libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
         samba cifs-utils
         gcolor3
         gnome.gedit
@@ -157,6 +157,8 @@ in {
         # typora # breaks on 2020-07-08
         zathura
         thunderbird birdtray protonmail-bridge protonvpn-gui
+        texlab
+        texlive.combined.scheme-small
         # texlive.combined.scheme-full
         # biber # collides texlive full
         # pdftk #pdfshuffler
