@@ -625,10 +625,13 @@
     acpid.enable = true;
     avahi.enable = true;
 
+    flatpak.enable = true;
     # ipfs = {
     #   enable = true;
     # };
   };
+
+  xdg.portal.enable = true;
 
   # systemd.services.delayedHibernation = {
   #   description = "Delayed hibernation trigger";

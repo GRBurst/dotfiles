@@ -26,9 +26,9 @@ in {
 
     # inherit pkgs;
 
-    pidgin-with-plugins = pkgs.pidgin-with-plugins.override {
-      plugins = [ purple-plugin-pack purple-discord purple-facebook purple-hangouts purple-slack telegram-purple toxprpl pidginotr pidginotr pidgin-skypeweb pidgin-opensteamworks localpkgs.purple-gnome-keyring ];
-    };
+    # pidgin-with-plugins = pkgs.pidgin-with-plugins.override {
+    #   plugins = [ purple-plugin-pack purple-discord purple-facebook purple-hangouts purple-slack telegram-purple toxprpl pidginotr pidginotr pidgin-skypeweb pidgin-opensteamworks localpkgs.purple-gnome-keyring ];
+    # };
 
     vscode-liveshare = pkgs.vscode-with-extensions.override {
       vscodeExtensions = [ pkgs.vscode-extensions.ms-vsliveshare.vsliveshare ];
