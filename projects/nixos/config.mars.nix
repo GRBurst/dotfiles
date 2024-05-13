@@ -149,7 +149,7 @@ in {
         libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
         samba cifs-utils
         gcolor3
-        gnome.gedit
+        gedit
         jmtpfs
         qrencode
         qsyncthingtray
@@ -195,8 +195,7 @@ in {
 
         # Communication
         # pidgin-with-plugins
-        element-desktop
-        schildichat-desktop
+        element-desktop # schildichat-desktop
         signal-desktop
         tdesktop
 
@@ -474,7 +473,7 @@ in {
   };
 
   librewolf = {
-    enableTridactylNative = true;
+    tridactyl-native = true;
   };
 
 }
