@@ -401,34 +401,38 @@
       jack.enable = true;
     };
 
+    libinput = {
+      enable = true;
+      touchpad = {
+        scrollMethod = "twofinger";
+        disableWhileTyping = true;
+        tapping = false;
+      };
+    };
+
+    displayManager = {
+      autoLogin = {
+        enable = false;
+        user = "jelias";
+      };
+      defaultSession = "none+i3";
+
+      #setupCommands = ''
+      #  gnome-keyring-daemon --start --components=pkcs11,secrets,ssh
+      #'';
+    };
+
     xserver = {
       enable = true;
       dpi = 192;
       videoDrivers = [ "modesetting" ];
-      layout = "de,de";
-      xkbVariant = "neo,basic";
-      xkbOptions = "grp:menu_toggle";
-
-      libinput = {
-        enable = true;
-        touchpad = {
-          scrollMethod = "twofinger";
-          disableWhileTyping = true;
-          tapping = false;
-        };
+      xkb = {
+      	layout = "de,de";
+      	variant = "neo,basic";
+      	options = "grp:menu_toggle";
       };
-
       displayManager = {
         lightdm.enable = true;
-        autoLogin = {
-          enable = false;
-          user = "jelias";
-        };
-        defaultSession = "none+i3";
-
-        #setupCommands = ''
-        #  gnome-keyring-daemon --start --components=pkcs11,secrets,ssh
-        #'';
       };
 
       desktopManager.xterm.enable  = false;
@@ -633,6 +637,7 @@
   };
 
   xdg.portal.enable = true;
+  xdg.portal.config.common.default = "*";
 
   # systemd.services.delayedHibernation = {
   #   description = "Delayed hibernation trigger";
@@ -674,7 +679,7 @@
     fontDir.enable = true;
     enableGhostscriptFonts = true;
 
-    fonts = with pkgs; [
+    packages = with pkgs; [
       corefonts
       dejavu_fonts
       google-fonts
