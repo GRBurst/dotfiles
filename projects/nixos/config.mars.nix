@@ -69,7 +69,7 @@ in {
         scrot
         speechd
         # unzip zip
-        gnome.zenity
+        zenity
 
         # x-server
         xcwd
@@ -81,7 +81,7 @@ in {
         libsForQt5.qtstyleplugins
 
         # Security
-        gnome.gnome-keyring gnome.libgnome-keyring gnome.seahorse libsecret
+        gnome-keyring libgnome-keyring seahorse libsecret
         openssl
         keepass
         keepassxc
@@ -112,7 +112,7 @@ in {
         tldr
 
         # Filesystem
-        gnome.nautilus gnome.gvfs
+        nautilus gnome.gvfs
         ncdu du-dust
         duf # du alternative
         sd # sed alternative
@@ -186,7 +186,7 @@ in {
         playerctl
         ponymix
         spotify
-        gnome.cheese
+        cheese
         xdg_utils
         ffmpeg-full
         seafile-client
@@ -201,10 +201,10 @@ in {
 
         # Themes
         breeze-gtk breeze-icons breeze-qt5 
-        adwaita-qt gnome.adwaita-icon-theme 
+        adwaita-qt adwaita-icon-theme 
         papirus-icon-theme
         dconf
-        gnome.dconf-editor
+        dconf-editor
         lxqt.lxqt-config
         lxappearance
 
