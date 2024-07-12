@@ -362,7 +362,7 @@ in {
         # josm
         libsForQt5.kdenlive
         libnotify
-        nextcloud-client
+        # nextcloud-client
         # notify-osd-customizable
         # peek # record gif videos -> broken on 2023-07-18 || green-recorder / gifcurry / screenToGif
         # kodi
