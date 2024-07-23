@@ -5,3 +5,5 @@ set status-show-untracked-files = false
 
 bind stage C !git -c core.excludesfile=~/.gitignore-dotfiles commit -S -s
 bind status C !git -c core.excludesfile=~/.gitignore-dotfiles commit -S -s
+
+# vim: ft=gitconfig

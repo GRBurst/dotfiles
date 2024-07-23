@@ -35,6 +35,7 @@
 !/.config/rofi/*
 !/.config/termite
 !/.config/tig
+!/.config/tig/*
 !/.config/qutebrowser
 /.config/qutebrowser/*
 !/.config/qutebrowser/config.py
