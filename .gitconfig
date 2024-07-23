@@ -240,14 +240,9 @@
 [init]
 	defaultBranch = main
 
-[includeIf "gitdir:~/projects/HivemindTechnologies/"]
-    path = ~/projects/HivemindTechnologies/.gitconfig
-
-[includeIf "gitdir:~/projects/HivemindTechnologies/payone/"]
-    path = ~/projects/HivemindTechnologies/payone/.gitconfig
-
-[includeIf "gitdir:~/projects/priceloop/"]
-    path = ~/projects/priceloop/.gitconfig
+; Include directories and overwrite setting in subfolder
+; [includeIf "gitdir:~/projects/<foobar>/"]
+;     path = ~/projects/foobar/.gitconfig
 
 [hub]
 	protocol = git
