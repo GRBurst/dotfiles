@@ -27,6 +27,8 @@ bind branch  N !git branch -m %(branch) %(prompt)
 # branch     M !git rebase --onto master %(branch)
 bind generic F !git fetch
 bind generic P !git push
+# bind status  C !git commit --no-gpg-sign
+# bind status  A !git commit --no-gpg-sign --amend
 bind status  C !git commit -S -s
 bind status  A !git commit -S -s --amend
 bind stage   u stage-update-line
@@ -35,6 +37,8 @@ bind stage   U status-update
 bind status  U status-update
 bind stage   A !git commit -S -s --amend
 bind stage   C !git commit -S -s
+# bind stage   A !git commit --no-gpg-sign --amend
+# bind stage   C !git commit --no-gpg-sign
 bind diff    w !git fry word-based-diff
 bind status  w !git fry word-based-diff
 bind status  W !git fry word-based-diff --staged
