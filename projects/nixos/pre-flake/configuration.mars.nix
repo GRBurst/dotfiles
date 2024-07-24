@@ -16,6 +16,22 @@
       ./hardware-configuration.nix
     ];
 
+  nix = {
+    daemonIOSchedPriority = 7;
+    settings = {
+      cores = 4;
+      max-jobs = 16;
+      sandbox = true;
+      # Enable Flakes and the new command-line tool
+      experimental-features = [ "nix-command" "flakes" ];
+    };
+    gc = {
+      automatic = true;
+      dates = "monthly";
+      options = "--delete-older-than 90d";
+    };
+  };
+
   boot = {
     loader = {
       systemd-boot.enable = true; # Use the systemd-boot EFI boot loader
@@ -39,7 +55,7 @@
     #   ARRAY /dev/md/nixos:0 metadata=1.2 name=nixos:0 UUID=8b34463c:d38d231e:d6c35510:cd133929
     #   '';
 
-    tmpOnTmpfs = true;
+    tmp.useTmpfs = true;
 
     kernel.sysctl = {
       "fs.inotify.max_user_watches" = "409600";
@@ -74,7 +90,6 @@
     };
     sane.enable = true;
     cpu.intel.updateMicrocode = true;
-    video.hidpi.enable = true;
     opengl = {
       driSupport32Bit = true;
       enable = true;
@@ -196,20 +211,6 @@
     };
   };
 
-  nix = {
-    daemonIOSchedPriority = 7;
-    settings = {
-      cores = 4;
-      max-jobs = 16;
-      sandbox = true;
-    };
-    gc = {
-      automatic = true;
-      dates = "monthly";
-      options = "--delete-older-than 90d";
-    };
-  };
-
   system.autoUpgrade.enable = true;
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -228,7 +229,7 @@
       enable = true;
       enableCompletion = true;
     };
-    fish.enable = false;
+    fish.enable = true;
 
     adb.enable = true;
 
@@ -246,6 +247,7 @@
 
     dconf.enable = true;
 
+    screen.enable = true;
     screen.screenrc = 
     ''term screen-256color
       termcapinfo xterm*|xs|rxvt* ti@:te@
@@ -301,6 +303,12 @@
         group = "users";
         source = "${pkgs.light}/bin/light";
       };
+      beep = {
+        setgid = true;
+        owner = "root";
+        group = "users";
+        source = "${pkgs.beep}/bin/beep";
+      };
       # slock.source = "${pkgs.slock}/bin/slock";
     };
 
@@ -323,6 +331,8 @@
     #   SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", ATTR{capacity}=="[0-5]", RUN+="/run/current-system/sw/bin/systemctl hibernate"
     #   SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", RUN+="/run/current-system/sw/bin/touch /tmp/discharging"
     # '';
+
+    cron.enable = true;
 
     lorri.enable = true;
 
@@ -355,11 +365,14 @@
 
     # dbus.packages = with pkgs; [ dconf gnome2.GConf gnome3.gnome-keyring gcr ];
 
-    openssh = {
-      enable = true;
-      ports = [ 53292 ];
-      passwordAuthentication = false;
-    };
+    # openssh = {
+    #   enable = false;
+    #   ports = [ 53292 ];
+    #   settings = {
+    #     forwardX11 = true;
+    #     # PasswordAuthentication = false;
+    #   };
+    # };
 
     journald = {
       extraConfig = ''
@@ -388,34 +401,38 @@
       jack.enable = true;
     };
 
+    libinput = {
+      enable = true;
+      touchpad = {
+        scrollMethod = "twofinger";
+        disableWhileTyping = true;
+        tapping = false;
+      };
+    };
+
+    displayManager = {
+      autoLogin = {
+        enable = false;
+        user = "jelias";
+      };
+      defaultSession = "none+i3";
+
+      #setupCommands = ''
+      #  gnome-keyring-daemon --start --components=pkcs11,secrets,ssh
+      #'';
+    };
+
     xserver = {
       enable = true;
       dpi = 192;
       videoDrivers = [ "modesetting" ];
-      layout = "de,de";
-      xkbVariant = "neo,basic";
-      xkbOptions = "grp:menu_toggle";
-
-      libinput = {
-        enable = true;
-        touchpad = {
-          scrollMethod = "twofinger";
-          disableWhileTyping = true;
-          tapping = false;
-        };
+      xkb = {
+      	layout = "de,de";
+      	variant = "neo,basic";
+      	options = "grp:menu_toggle";
       };
-
       displayManager = {
         lightdm.enable = true;
-        autoLogin = {
-          enable = true;
-          user = "jelias";
-        };
-        defaultSession = "none+i3";
-
-        #setupCommands = ''
-        #  gnome-keyring-daemon --start --components=pkcs11,secrets,ssh
-        #'';
       };
 
       desktopManager.xterm.enable  = false;
@@ -613,10 +630,14 @@
     acpid.enable = true;
     avahi.enable = true;
 
+    flatpak.enable = true;
     # ipfs = {
     #   enable = true;
     # };
   };
+
+  xdg.portal.enable = true;
+  xdg.portal.config.common.default = "*";
 
   # systemd.services.delayedHibernation = {
   #   description = "Delayed hibernation trigger";
@@ -649,7 +670,7 @@
 
   # systemd.services.delayedHibernation.enable = true;
 
-  qt5 = {
+  qt = {
     platformTheme = "gnome";
     style = "Adapta";
   };
@@ -658,7 +679,7 @@
     fontDir.enable = true;
     enableGhostscriptFonts = true;
 
-    fonts = with pkgs; [
+    packages = with pkgs; [
       corefonts
       dejavu_fonts
       google-fonts
@@ -672,7 +693,7 @@
     ];
 
     fontconfig = {
-      includeUserConf = false;
+      includeUserConf = true;
       defaultFonts.monospace = [ "Roboto Mono" "DejaVu Sans Mono" ];
     };
   };
@@ -694,16 +715,16 @@
     isNormalUser = true;
     extraGroups = [ "wheel" "video" "audio" "vboxusers" "docker" "fuse" "scanner" "adbusers" "networkmanager" ];
     useDefaultShell = true;
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM+BIE+0anEEYK0fBIEpjedblyGW0UnuYBCDtjZ5NW6P jelias@merkur"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAflU8X4g3kboxgFQPAxeadUY97iZoV0IPEwK61lZFW5 jelias@venus->jupiter on 2018-02-22"
-    ];
+    # openssh.authorizedKeys.keys = [
+    #   "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM+BIE+0anEEYK0fBIEpjedblyGW0UnuYBCDtjZ5NW6P jelias@merkur"
+    #   "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAflU8X4g3kboxgFQPAxeadUY97iZoV0IPEwK61lZFW5 jelias@venus->jupiter on 2018-02-22"
+    # ];
   };
-  users.extraUsers.dev = {
-    isNormalUser = true;
-    extraGroups = [ "video" "audio" ];
-    shell = pkgs.fish;
-  };
+  # users.extraUsers.dev = {
+  #   isNormalUser = true;
+  #   extraGroups = [ "video" "audio" ];
+  #   shell = pkgs.fish;
+  # };
 
   # users.extraUsers.dev = {
   #   isNormalUser = true;
@@ -718,6 +739,6 @@
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
   # should.
-  system.stateVersion = "22.11"; # Did you read the comment?
+  system.stateVersion = "24.05"; # Did you read the comment?
 
 }

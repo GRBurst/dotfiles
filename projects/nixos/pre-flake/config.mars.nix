@@ -1,15 +1,14 @@
-with (import <nixos-stable> {});
-with (import <nixos-unstable> {});
-with import <nixos-unstable/lib>;
+with (import <nixpkgs> {});
+with import <nixpkgs/lib>;
 
 let
   localpkgs = import ~/projects/nixpkgs/default.nix {};
-  unstable  = import <nixos-unstable/nixos> {};
+  unstable  = import <nixpkgs/nixos> {};
   stable  = import <nixos-stable/nixos> {};
 in {
 
   permittedInsecurePackages = [
-    "openssl-1.0.2u"
+    # "openssl-1.0.2u"
     "adobe-reader-9.5.5-1"
   ];
   allowUnfree = true;
@@ -20,16 +19,16 @@ in {
   # e.g.: localpkgs.xcwd
 
   # Install a package collection with:
-  # nix-env -iA common-packages -f "<nixos-unstable>"
+  # nix-env -iA common-packages -f "<nixpkgs>"
   # Uninstall all packages with
   # nix-env -e common-packages
   packageOverrides = pkgs: rec {
 
     # inherit pkgs;
 
-    pidgin-with-plugins = pkgs.pidgin-with-plugins.override {
-      plugins = [ purple-plugin-pack purple-discord purple-facebook purple-hangouts purple-slack telegram-purple toxprpl pidginotr pidginotr pidgin-skypeweb pidgin-opensteamworks localpkgs.purple-gnome-keyring ];
-    };
+    # pidgin-with-plugins = pkgs.pidgin-with-plugins.override {
+    #   plugins = [ purple-plugin-pack purple-discord purple-facebook purple-hangouts purple-slack telegram-purple toxprpl pidginotr pidginotr pidgin-skypeweb pidgin-opensteamworks localpkgs.purple-gnome-keyring ];
+    # };
 
     vscode-liveshare = pkgs.vscode-with-extensions.override {
       vscodeExtensions = [ pkgs.vscode-extensions.ms-vsliveshare.vsliveshare ];
@@ -46,7 +45,7 @@ in {
         arandr
         acpi
         avahi
-        atop htop iotop
+        atop htop iotop bottom
         bc calc
         beep
         binutils
@@ -70,7 +69,7 @@ in {
         scrot
         speechd
         # unzip zip
-        gnome.zenity
+        zenity
 
         # x-server
         xcwd
@@ -82,7 +81,7 @@ in {
         libsForQt5.qtstyleplugins
 
         # Security
-        gnome.gnome-keyring gnome.libgnome-keyring gnome.seahorse libsecret
+        gnome-keyring libgnome-keyring seahorse libsecret
         openssl
         keepass
         keepassxc
@@ -113,7 +112,7 @@ in {
         tldr
 
         # Filesystem
-        gnome.nautilus gnome.gvfs
+        nautilus gnome.gvfs
         ncdu du-dust
         duf # du alternative
         sd # sed alternative
@@ -141,16 +140,16 @@ in {
 
 
         # Office
-        # calibre broken on 2022-04-10
+        calibre # broken on 2022-04-10
         # etesync-dav # broken since 2023-01-01
         exif
         # firefox profile-sync-daemon
         librewolf # (librewolf.override { wmClass = "browser"; })
         profile-sync-daemon
-        # libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
+        libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
         samba cifs-utils
         gcolor3
-        gnome.gedit
+        gedit
         jmtpfs
         qrencode
         qsyncthingtray
@@ -158,6 +157,8 @@ in {
         # typora # breaks on 2020-07-08
         zathura
         thunderbird birdtray protonmail-bridge protonvpn-gui
+        texlab
+        texlive.combined.scheme-small
         # texlive.combined.scheme-full
         # biber # collides texlive full
         # pdftk #pdfshuffler
@@ -185,7 +186,7 @@ in {
         playerctl
         ponymix
         spotify
-        gnome.cheese
+        cheese
         xdg_utils
         ffmpeg-full
         seafile-client
@@ -194,17 +195,16 @@ in {
 
         # Communication
         # pidgin-with-plugins
-        element-desktop
-        schildichat-desktop
+        element-desktop # schildichat-desktop
         signal-desktop
         tdesktop
 
         # Themes
         breeze-gtk breeze-icons breeze-qt5 
-        adwaita-qt gnome.adwaita-icon-theme 
+        adwaita-qt adwaita-icon-theme 
         papirus-icon-theme
         dconf
-        gnome.dconf-editor
+        dconf-editor
         lxqt.lxqt-config
         lxappearance
 
@@ -224,13 +224,25 @@ in {
       paths = [
         scala-packages
 
-        atom
+        # atom
         # ctags
         gdb
         git tig gh hub gitRepo
-        neovim coursier # coursier needed for neovim plugins
+
+        # EDITOR
+        # neovim coursier # coursier needed for neovim plugins
         # python27Packages.pynvim # ensime
-        python3Packages.pynvim
+        # python3Packages.pynvim
+        # LazyVim
+        neovim clang tree-sitter
+        editorconfig-core-c
+        shfmt shellcheck
+        nixd
+        lua lua-language-server luaPackages.jsregexp stylua
+        fd
+        lazygit
+        unzip
+
         tmate
         meld
         kdiff3
@@ -331,36 +343,36 @@ in {
       name = "highres-packages";
 
       paths = [
-        avidemux
-        audacity
-        brasero
+        # avidemux # video editing -> not using right now
+        # audacity # audio editing -> not using right now
+        # brasero -> not using anymore
         (chromium.override { enableWideVine = false; })
-        clementine
+        # clementine -> not using anymore
         deadd-notification-center
         evince
-        epson-escpr2 sane-airscan brscan4
+        # epson-escpr2 sane-airscan brscan4 -> not using anymore
         fwupd # bios + firmware updates
-        guvcview
+        # guvcview
         # gnomeExtensions.jiggle
         irssi
         kvirc
         okular
         # jbidwatcher
         # jdownloader
-        josm
+        # josm
         libsForQt5.kdenlive
         libnotify
-        nextcloud-client
+        # nextcloud-client
         # notify-osd-customizable
-        peek # record gif videos || green-recorder / gifcurry / screenToGif
+        # peek # record gif videos -> broken on 2023-07-18 || green-recorder / gifcurry / screenToGif
         # kodi
         # linphone -> breaks 2021-01-06
         # ekiga -> breaks on 2019-12-09
-        qutebrowser
-        qtox
-        skypeforlinux
+        # qutebrowser -> not using anymore
+        # qtox -> not using anymore
+        # skypeforlinux -> not using anymore
         shotwell
-        tesseract # open source ocr engine
+        # tesseract # open source ocr engine -> not using anymore
         # texmaker #breaks on 2019-10-22
         texstudio #lyx
         # tor-browser-bundle-bin # -> cannot be build
@@ -404,7 +416,7 @@ in {
         discord-ptb
         xboxdrv
         steam
-        runescape
+        # runescape
         # steam-run
       ];
 
@@ -461,7 +473,7 @@ in {
   };
 
   librewolf = {
-    enableTridactylNative = true;
+    tridactyl-native = true;
   };
 
 }
