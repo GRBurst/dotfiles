@@ -9,7 +9,6 @@ fi
 
 # Git
 alias g="git"
-alias got="git ot && cd /tmp/wust"
 alias grsc='git rebase -i $(git-select-commit)^'
 alias g-add-label='gh pr edit --add-label $(gh label list --limit 100 --json name -q ".[].name" | fzf)'
 
