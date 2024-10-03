@@ -29,18 +29,38 @@
   outputs = { nixpkgs, nixos-hardware, home-manager, ... } @ inputs: {
     # Please replace my-nixos with your hostname
     nixosConfigurations = {
+
+      andromeda = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = inputs;
+        modules = [
+          nixos-hardware.nixosModules.lenovo-thinkpad-p14s-amd-gen2
+
+          ./hosts/andromeda
+          { nix.settings.trusted-users = [ "pallon" ]; }
+
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+
+            home-manager.users.pallon = import ./home/work.nix;
+            # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
+          }
+        ];
+      };
+
       mars = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-	specialArgs = inputs;
+        specialArgs = inputs;
         modules = [
-	  nixos-hardware.nixosModules.lenovo-thinkpad-t480s
+          nixos-hardware.nixosModules.lenovo-thinkpad-t480s
 
-	  ./hosts/mars
+          ./hosts/mars
+          { nix.settings.trusted-users = [ "jelias" ]; }
 
-          # ./configuration.nix
-
-	  home-manager.nixosModules.home-manager
-	  {
+          home-manager.nixosModules.home-manager
+          {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
 
@@ -52,20 +72,20 @@
 
       earth = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-	specialArgs = inputs;
+        specialArgs = inputs;
         modules = [
           ./configuration.nix
 
-	  home-manager.nixosModules.home-manager
-	  {
+          home-manager.nixosModules.home-manager
+          {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
 
             home-manager.users.jelias = import ./home/home.nix;
-            # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
           }
         ];
       };
+
     };
   };
 }
