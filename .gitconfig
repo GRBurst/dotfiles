@@ -243,6 +243,9 @@
 ; Include directories and overwrite setting in subfolder
 ; [includeIf "gitdir:~/projects/<foobar>/"]
 ;     path = ~/projects/foobar/.gitconfig
+;
+[includeIf "gitdir:~/projects/pallon/"]
+    path = ~/projects/pallon/.gitconfig
 
 [hub]
 	protocol = git
