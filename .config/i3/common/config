@@ -237,7 +237,7 @@ mode "Screen / DMMS <<< Screens: (k)ino, (g)ame, (h)game right, (1) screen, (a)u
         bindsym s exec i3lock && xset dpms force standby; mode "default"
         bindsym p exec i3lock && xset dpms force suspend; mode "default"
         # bindsym l exec i3lock && xset dpms force off; mode "default"
-        bindsym l exec xset dpms force off && xinput disable "$(xinput list | grep -i ".*mouse.*slave.*pointer.*" | cut -f2 | sed "s/id=//" | head -n 1)" && i3lock --nofork && xinput enable "$(xinput list | grep -i ".*mouse.*floating.*slave.*" | cut -f2 | sed "s/id=//" | head -n 1)"; mode "default"
+        bindsym l exec xinput disable "$(xinput list | grep -i ".*mouse.*slave.*pointer.*" | cut -f2 | sed "s/id=//" | head -n 1)"; exec xset dpms force off; exec i3lock --nofork && xinput enable "$(xinput list | grep -i ".*mouse.*floating.*slave.*" | cut -f2 | sed "s/id=//" | head -n 1)"; mode "default"
         bindsym o exec xset dpms force off; mode "default"
 
         bindsym k exec xset -dpms && xset s off && systemctl --user stop redshift && xrandr --output DP-0 --primary --auto --output HDMI-1 --off; mode "default"
