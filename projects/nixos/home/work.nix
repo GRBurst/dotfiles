@@ -4,6 +4,10 @@
   home.username = "pallon";
   home.homeDirectory = "/home/pallon";
 
+  imports = [
+    ../modules/hyprland
+  ];
+
   # set cursor size and dpi for 4k monitor
   # xresources.properties = {
   #   "Xcursor.size" = 64;
@@ -11,6 +15,7 @@
   # };
 
   # basic configuration of git, please change to your own
+  programs.kitty.enable = true;
   programs.git = {
     enable = true;
     userName = "GRBurst";
