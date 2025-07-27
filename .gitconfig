@@ -31,6 +31,13 @@
     oom = checkout origin/master
     ot  = "!f() { local tmpCommit=${1:-master} && echo $tmpCommit && mkdir -p /tmp/wust && git --work-tree=/tmp/wust checkout $tmpCommit -- . ; }; f"
 
+    # Worktree
+    w   = worktree
+    wa  = worktree add
+    ; wa  = "!f() { git worktree add ../$1 ; }; f"
+    wr  = worktree remove
+    wd  = worktree remove
+
     # Fetch
     f   = fetch
     fu  = fetch upstream
