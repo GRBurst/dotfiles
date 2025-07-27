@@ -59,6 +59,8 @@ workspace "9: communication" output $OUT
 
 # i3bar
 bar {
+    # Font declaration needed to use awesome fonts in i3status-rs
+    font pango:DejaVu Sans Mono, Font Awesome 6 Free 12
     output $OUT
     status_command i3status
     strip_workspace_numbers no
