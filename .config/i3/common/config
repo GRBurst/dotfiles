@@ -138,6 +138,8 @@ bindsym XF86AudioLowerVolume exec ponymix decrease 5
 bindsym XF86AudioRaiseVolume exec ponymix increase 5
 bindsym XF86AudioMute exec ponymix toggle
 bindsym $mod+m exec ponymix --source toggle
+bindsym XF86MonBrightnessUp exec light -A 5
+bindsym XF86MonBrightnessDown exec light -U 5
 
 # Helper scripts
 bindsym $mod+b exec --no-startup-id $sp/rename.sh 0
