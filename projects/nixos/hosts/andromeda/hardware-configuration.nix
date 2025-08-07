@@ -10,7 +10,7 @@
 
   boot.initrd.availableKernelModules = [ "nvme" "ehci_pci" "xhci_pci" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
   boot.initrd.kernelModules = [ "dm-snapshot" ];
-  boot.kernelModules = [ "kvm-amd" ];
+  boot.kernelModules = [ "kvm-amd" "sdhci" "sdhci_pci" ];
   boot.extraModulePackages = [ ];
 
   boot.initrd.luks.devices."root" = {
@@ -31,7 +31,7 @@
 
   swapDevices = [{
     device = "/swapfile";
-    size = 64 * 1024; # 64GB
+    size = 16 * 1024; # 16GB
   }];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
