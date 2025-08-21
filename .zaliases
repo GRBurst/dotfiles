@@ -250,9 +250,10 @@ alias ssm="ssh mac"
 # Nix
 ni() { nix-env -iA "$@" -f "<nixos-unstable>" }
 alias nq='nix-env -q'
-alias ns='nix develop --command "zsh"'
-alias nsi='nix develop --impure --command "zsh"'
-alias nsl='nix-shell --command "zsh"'
+alias nd='nix develop --command "zsh"'
+alias ndi='nix develop --impure --command "zsh"'
+alias ns='nix-shell --pure --command "zsh"'
+alias nsi='nix-shell --impure --command "zsh"'
 alias ne='nix-env -e'
 alias nh='nix-hash --type sha256 --flat --base32'
 alias nqp='nix-store --query --references $(nix-instantiate "<nixpkgs>" -A dev-packages)'
