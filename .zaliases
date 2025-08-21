@@ -98,6 +98,8 @@ alias drpsl="docker ps"
 alias drl="docker logs"
 alias drst="docker status"
 alias drex="docker exec -it"
+alias dcup="docker compose up -d"
+alias dcdown="docker compose down"
 
 dricl() { docker image rm -f $(docker images -q) }
 drsa() { docker stop $(docker ps -a -q) }
