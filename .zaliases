@@ -518,4 +518,15 @@ fawslogs () {
         awslogs get --watch $group --no-group --no-stream
     fi
 }
+
+# wrap the ollama command, if the parameter is pull with no other parameters pull all models
+function ollama_update() {
+    echo "pulling all models..."
+    ollama list | awk '$1 !~ /^registry.local/ {print $1}' | while read -r model; do
+      echo "Pulling $model"
+      ollama pull "$model"
+    done
+}
+
+
 # vim: ft=sh
