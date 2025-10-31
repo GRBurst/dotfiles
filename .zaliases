@@ -15,12 +15,12 @@ alias g-add-label='gh pr edit --add-label $(gh label list --limit 100 --json nam
 # DOTFILES_HIVEMIND_TIG="TIGRC_USER=$HOME/.config/tig/config-dotfiles-hivemind $"
 # alias tigh=
 # alias tig="if grep -i $(pwd) 'hivemind'; then tigh else tig fi"
-alias grep="tee >(echo 'using rg (rigrep) instead' >&2) | rg"
-alias cat="tee >(echo 'using bat instead' >&2) | bat"
-alias traceroute="tee >(echo 'you might use mtr instead' >&2) | traceroute"
-alias du="tee >(echo 'using dust (du-dust) instead' >&2) | dust"
-alias sed="tee >(echo 'using sd instead' >&2) | sd"
-alias diff="tee >(echo 'using difftastic instead' >&2) | difftastic"
+alias grep="echo 'use rg (rigrep)'; grep $@"
+alias cat="echo 'use bat instead'; cat $@"
+alias traceroute="echo 'use mtr instead'; traceroute $@"
+alias du="echo 'use dust (du-dust) instead'; du $@"
+alias sed="echo 'use sd instead'; sd $@"
+alias diff="echo 'use difftastic instead'; diff $@"
 
 # Dotfiles
 alias d="$HOME/projects/bin/git-dotfiles"
