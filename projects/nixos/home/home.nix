@@ -51,7 +51,7 @@
         xdg-desktop-portal
         xdg-desktop-portal-gtk
       ];
-      configPackages = [ pkgs.gnome.gnome-session ];
+      configPackages = [ pkgs.gnome-session ];
     };
     mime.enable = true;
   };
@@ -208,7 +208,7 @@
 
         # Terminal
         termite alacritty nix-zsh-completions
-        haskellPackages.yeganesh
+        # haskellPackages.yeganesh
         tldr
         wezterm
 

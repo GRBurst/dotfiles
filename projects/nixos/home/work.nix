@@ -1,25 +1,45 @@
 { config, pkgs, ... }:
 
 {
+
   home.username = "pallon";
   home.homeDirectory = "/home/pallon";
+  home.sessionVariables.NIXOS_OZONE_WL = "1";
 
   imports = [
     ../modules/hyprland
   ];
 
   # set cursor size and dpi for 4k monitor
-  # xresources.properties = {
-  #   "Xcursor.size" = 64;
-  #   "Xft.dpi" = 192;
+  xresources.properties = {
+    # "Xcursor.size" = 64;
+    "Xft.dpi" = 192;
+  };
+  # programs.hyprland = {
+  #   enable = true;
+  #   package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+  #   portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
   # };
-
   # basic configuration of git, please change to your own
+
+
+  programs.direnv = {
+    enable = true;
+    enableZshIntegration = true;
+    nix-direnv.enable = true;
+    config = { }; # don't generate direnv.toml, use the existing one instead
+  };
   programs.kitty.enable = true;
   programs.git = {
     enable = true;
-    userName = "GRBurst";
-    userEmail = "GRBurst@protonmail.com";
+    # userName = "GRBurst";
+    # userEmail = "GRBurst@protonmail.com";
+    settings = {
+      user = {
+        name = "GRBurst";
+        email = "GRBurst@protonmail.com";
+      };
+    };
   };
 
   programs.alacritty = {
@@ -49,24 +69,225 @@
     };
   };
 
+  fonts = {
+    fontconfig.enable = true;
+  };
+
   xdg = {
     portal = {
       enable = true;
       extraPortals = with pkgs; [
-        xdg-desktop-portal
+        # xdg-desktop-portal
         xdg-desktop-portal-gtk
       ];
-      configPackages = [ pkgs.gnome-session ];
+      # configPackages = [ pkgs.gnome-session ];
     };
     mime.enable = true;
   };
+
+  # stylix = {
+  #   enable = false;
+  #   autoEnable = false;
+  #   cursor = {
+  #     name = "Vanilla-DMZ";
+  #     package = pkgs.vanilla-dmz;
+  #     size = 128;
+  #   };
+  #   fonts.sizes.applications = 8;
+  #   fonts.sizes.terminal = 8;
+
+  #   # targets = { dunst.enable = true; };
+  # };
+
   # xdg.mimeApps = {
   #   enable = true;
   #   associations.added = {
-  #     "application/pdf" = ["org.gnome.Evince.desktop"];
+  #     "application/pdf" = ["org.Evince.desktop"];
   #   };
   #   defaultApplications = {
-  #     "application/pdf" = ["org.gnome.Evince.desktop"];
+  #     "application/pdf" = ["org.Evince.desktop"];
+  #   };
+  # };
+
+  # services = {
+  #   wired.enable = true;
+  #   wired.config = pkgs.writeTextFile {
+  #     name = "wired.ron";
+  #     text = ''
+# (
+  #   max_notifications: 5,
+  #   timeout: 4000,
+  #   poll_interval: 16, // 16ms ~= 60hz / 7ms ~= 144hz.
+  #   history_length: 20,
+  #   replacing_enabled: true,
+  #   replacing_resets_timeout: true,
+  #   min_window_width: 300,
+  #   min_window_height: 100,
+
+  #   debug: false,
+  #   debug_color: Color(r: 0.0, g: 1.0, b: 0.0, a: 1.0),
+  #   debug_color_alt: Color(r: 1.0, g: 0.0, b: 0.0, a: 1.0),
+
+  #   layout_blocks: [
+  #       (
+  #           name: "app_root",
+  #           parent: "",
+  #           hook: Hook(parent_anchor: MM, self_anchor: MM),
+  #           offset: Vec2(x: 0, y: 0),
+  #           render_criteria: [AppImage],
+  #           params: NotificationBlock((
+  #                   monitor: 0,
+  #                   border_width: 0,
+  #                   border_rounding: 8,
+  #                   background_color: Color(hex: "#F5F5F5"),
+  #                   border_color: Color(hex: "#00000000"),
+  #                   border_color_low: Color(hex: "#00000000"),
+  #                   border_color_critical: Color(hex: "#FF0000"),
+  #                   border_color_paused: Color(hex: "#00000000"),
+  #                   gap: Vec2(x: 0.0, y: 8.0),
+  #                   notification_hook: Hook(parent_anchor: BM, self_anchor: TM),
+  #           )),
+  #       ),
+
+  #       (
+  #           name: "app_notification",
+  #           parent: "app_root",
+  #           hook: Hook(parent_anchor: TM, self_anchor: TM),
+  #           offset: Vec2(x: 0, y: 0),
+  #           params: ImageBlock((
+  #                   image_type: App,
+  #                   padding: Padding(left: 40, right: 40, top: 40, bottom: 8),
+  #                   rounding: 4.0,
+  #                   scale_width: 152,
+  #                   scale_height: 152,
+  #                   filter_mode: Lanczos3,
+  #           )),
+  #       ),
+
+  #       (
+  #           name: "app_summary",
+  #           parent: "app_notification",
+  #           hook: Hook(parent_anchor: BM, self_anchor: TM),
+  #           offset: Vec2(x: 0, y: 12),
+  #           params: TextBlock((
+  #                   text: "%s",
+  #                   font: "Arial Bold 16",
+  #                   ellipsize: End,
+  #                   color: Color(hex: "#000000"),
+  #                   padding: Padding(left: 0, right: 0, top: 0, bottom: 0),
+  #                   dimensions: (width: (min: -1, max: 185), height: (min: 0, max: 0)),
+  #           )),
+  #       ),
+
+  #       (
+  #           name: "app_body",
+  #           parent: "app_summary",
+  #           hook: Hook(parent_anchor: BM, self_anchor: TM),
+  #           offset: Vec2(x: 0, y: 0),
+  #           params: TextBlock((
+  #                   text: "%b",
+  #                   font: "Arial Bold 16",
+  #                   ellipsize: End,
+  #                   color: Color(hex: "#000000"),
+  #                   padding: Padding(left: 0, right: 0, top: 0, bottom: 24),
+  #                   dimensions: (width: (min: -1, max: 250), height: (min: 0, max: 0)),
+  #           )),
+  #       ),
+
+  #       (
+  #           name: "app_progress",
+  #           parent: "app_notification",
+  #           hook: Hook(parent_anchor: BM, self_anchor: TM),
+  #           offset: Vec2(x: 0, y: 50),
+  #           render_criteria: [Progress],
+  #           params: ProgressBlock((
+  #                   padding: Padding(left: 0, right: 0, top: 0, bottom: 32),
+  #                   border_width: 2,
+  #                   border_rounding: 2,
+  #                   border_color: Color(hex: "#000000"),
+  #                   fill_rounding: 1,
+  #                   background_color: Color(hex: "#00000000"),
+  #                   fill_color: Color(hex: "#000000"),
+  #                   width: -1.0,
+  #                   height: 30.0,
+  #           )),
+  #       ),
+
+  #       (
+  #           name: "status_root",
+  #           parent: "",
+  #           hook: Hook(parent_anchor: TM, self_anchor: TM),
+  #           offset: Vec2(x: 0.0, y: 60),
+  #           // render_anti_criteria: [AppImage],
+  #           render_criteria: [HintImage],
+  #           params: NotificationBlock((
+  #                   monitor: 0,
+  #                   border_width: 0,
+  #                   border_rounding: 8,
+  #                   background_color: Color(hex: "#F5F5F5"),
+  #                   border_color: Color(hex: "#00000000"),
+  #                   border_color_low: Color(hex: "#00000000"),
+  #                   border_color_critical: Color(hex: "#FF0000"),
+  #                   border_color_paused: Color(hex: "#00000000"),
+  #                   gap: Vec2(x: 0.0, y: 8.0),
+  #                   notification_hook: Hook(parent_anchor: BM, self_anchor: TM),
+  #           )),
+  #       ),
+
+  #       (
+  #           name: "status_notification",
+  #           parent: "status_root",
+  #           hook: Hook(parent_anchor: TL, self_anchor: TL),
+  #           offset: Vec2(x: 0, y: 0),
+  #           params: TextBlock((
+  #                   text: "%s",
+  #                   font: "Arial Bold 16",
+  #                   ellipsize: End,
+  #                   color: Color(hex: "#000000"),
+  #                   padding: Padding(left: 8, right: 8, top: 8, bottom: 8),
+  #                   dimensions: (width: (min: 400, max: 400), height: (min: 84, max: 0)),
+  #           )),
+  #       ),
+
+  #       (
+  #           name: "status_body",
+  #           parent: "status_notification",
+  #           hook: Hook(parent_anchor: ML, self_anchor: TL),
+  #           offset: Vec2(x: 0, y: -24),
+  #           params: TextBlock((
+  #                   text: "%b",
+  #                   font: "Arial 14",
+  #                   ellipsize: End,
+  #                   color: Color(hex: "#000000"),
+  #                   padding: Padding(left: 8, right: 8, top: 8, bottom: 8),
+  #                   dimensions: (width: (min: 400, max: 400), height: (min: 0, max: 84)),
+  #           )),
+  #       ),
+
+  #       (
+  #           name: "status_image",
+  #           parent: "status_notification",
+  #           hook: Hook(parent_anchor: TL, self_anchor: TR),
+  #           offset: Vec2(x: 0, y: 0),
+  #           params: ImageBlock((
+  #                   image_type: Hint,
+  #                   padding: Padding(left: 8, right: 0, top: 8, bottom: 8),
+  #                   rounding: 4.0,
+  #                   scale_width: 84,
+  #                   scale_height: 84,
+  #                   filter_mode: Lanczos3,
+  #           )),
+  #       ),
+  #   ],
+
+  #   // https://github.com/Toqozz/wired-notify/wiki/Shortcuts
+  #   shortcuts: ShortcutsConfig (
+  #       notification_interact: 1,
+  #       notification_close: 2,
+  #       notification_action1: 3,
+  #   ),
+# )
+  #   '';
   #   };
   # };
 
@@ -141,12 +362,12 @@
   #   usbutils # lsusb
   # ];
   home.packages = with pkgs; [
-  	#####
-	# COMMON
-	#####
+    #####
+    # COMMON
+    #####
 
         # Linux tools
-        arandr
+        arandr autorandr
         acpi
         avahi
         atop htop iotop btop iftop nmon
@@ -163,7 +384,6 @@
         pwgen
         rofi rofi-systemd #dmenu
         btrfs-progs
-        dbus-map
         lsof
         #mosh
         pciutils
@@ -173,17 +393,19 @@
         scrot flameshot
         speechd
         # unzip zip
-        zenity
+        zenity # zenity
         pistol
 
         # x-server
         xcwd
         xclip
         unclutter-xfixes 
-        xorg.xdpyinfo xorg.xev xorg.xmodmap xorg.xkill xorg.xwininfo xorg.xhost
+        xdpyinfo xev xmodmap xkill xwininfo xhost
         vanilla-dmz # x cursor
         xsettingsd
-        libsForQt5.qtstyleplugins
+        # libsForQt5.qtstyleplugins
+        gnome-control-center
+        xdotool xprintidle
 
         # Security
         gnome-keyring libgnome-keyring seahorse libsecret
@@ -212,44 +434,46 @@
         networkmanager_dmenu
 
         # Terminal
-        termite alacritty nix-zsh-completions
-        haskellPackages.yeganesh
+        termite
+        alacritty alacritty-theme
+        nix-zsh-completions
+        # haskellPackages.yeganesh
         tldr
         wezterm
 
         # Filesystem
         nvme-cli
-        nautilus gnome.gvfs
-        ncdu du-dust
+        nautilus gvfs
+        ncdu dust
         duf # du alternative
         sd # sed alternative
         fzf fasd file silver-searcher
-        fuse-common
+        television
         autossh sshfs-fuse
         direnv
         lsyncd
         bindfs
         bat # cat alternative
-        pmount
         tree gparted
         broot
         ntfs3g
         inotify-tools
         smartmontools
         exfat
-        # gnome.file-roller # mimeinfo collides with nautilus
+        # file-roller # mimeinfo collides with nautilus
         gptfdisk
-        spaceFM
+        # spaceFM  # broken as of 2026-02-11
         shared-mime-info
         desktop-file-utils
         usbutils
         ripgrep
-	trashy
-	yazi
+        trashy
+        yazi
+        rsync rclone
 
 
         # Office
-        # calibre broken on 2022-04-10
+        calibre
         # etesync-dav # broken since 2023-01-01
         exif
         # firefox profile-sync-daemon
@@ -261,7 +485,7 @@
         gedit
         jmtpfs
         qrencode
-        qsyncthingtray
+        syncthingtray # qsyncthingtray -> dep
         simple-scan
         # typora # breaks on 2020-07-08
         zathura
@@ -271,15 +495,15 @@
         # biber # collides texlive full
         # pdftk #pdfshuffler
         # pdfsandwich pdfsam-basic pdfarranger
-        poppler_utils
-        xournal
+        poppler-utils
+        xournalpp
 
         # Media
-        blueman
+        blueman bluez-tools
         feh imv nitrogen 
         (gimp-with-plugins.override { 
           plugins = with gimpPlugins; [ 
-            fourier
+            # fourier
             # resynthesizer # broken since 2023-03-20
             # gmic
           ]; 
@@ -288,7 +512,7 @@
         mate.atril
         mimeo
         mpv
-        imagemagick7
+        imagemagick
         pamixer
         pavucontrol
         playerctl
@@ -300,19 +524,23 @@
         seafile-client
         seafile-shared
         # (ffmpeg-full.override { nonfreeLicensing = true;})
+        openai-whisper
+        megasync
 
         # Communication
         # pidgin-with-plugins
         # element-desktop
         # schildichat-desktop
         signal-desktop
-        wire-desktop
-        tdesktop
+        # wire-desktop #insecure CVE-2024-6775
+        telegram-desktop
+        wasistlos
         # jitsi jitsi-meet
         ausweisapp
 
         # Themes
-        breeze-gtk breeze-icons breeze-qt5 
+        # breeze-gtk breeze-icons breeze-qt5 
+        kdePackages.breeze
         adwaita-qt adwaita-icon-theme 
         papirus-icon-theme
         dconf
@@ -321,12 +549,13 @@
         lxappearance
 
 
-	#####
-	# DEV
-	#####
+    #####
+    # DEV
+    #####
+        qemu qemu_kvm
         # pulsar
         # ctags
-        gdb glib glxinfo
+        gdb glib mesa-demos
         git tig gh hub gitRepo
         # neovim coursier # coursier needed for neovim plugins
         # python27Packages.pynvim # ensime
@@ -338,6 +567,7 @@
         # LazyVim
         neovim clang tree-sitter
         editorconfig-core-c
+        typora
         shfmt shellcheck
         nixd
         lua lua-language-server luaPackages.jsregexp stylua
@@ -353,19 +583,20 @@
         yq-go
         discord-ptb
         devbox
+        opencode
 
         # purescript
         # nodePackages.purescript-language-server
 
         cmakeCurses
         docker-compose
-        oxker
+        oxker cruise lazydocker
         entr
-        ghc
+        # ghc
         graphviz
         gthumb
         filezilla
-        jetbrains.idea-community
+        jetbrains.idea-oss
         nodejs
         # nixops # breaks 2021-01-14
 
@@ -380,12 +611,12 @@
 
         brave
         aichat
-        steam-run-free
+        steam-run # steam-run-free
 
 
-	#####
-	## LAPTOP
-	#####
+    #####
+    ## LAPTOP
+    #####
         # libqmi
         brillo # control keyboard led
         cbatticon
@@ -401,29 +632,32 @@
     amdgpu_top
     nvtopPackages.amd
 
-	#####
-	## HIGHRES
-	#####
+    #####
+    ## HIGHRES
+    #####
 
+        protonmail-desktop
+        proton-pass
         # avidemux broken
         audacity
         brasero
         (chromium.override { enableWideVine = false; })
         brave
         clementine
-        deadd-notification-center
+        # deadd-notification-center
         evince
         epson-escpr2 sane-airscan brscan4
         fwupd # bios + firmware updates
-        guvcview
+        # guvcview # broken: 2025-11-21
         # gnomeExtensions.jiggle
+        gnomeExtensions.random-wallpaper
         irssi
         kvirc
-        okular
+        kdePackages.okular
         # jbidwatcher
         # jdownloader
         josm
-        libsForQt5.kdenlive
+        kdePackages.kdenlive
         libnotify
         nextcloud-client
         # notify-osd-customizable
@@ -440,13 +674,35 @@
         texstudio #lyx
         # tor-browser-bundle-bin # -> cannot be build
         vlc
-        vokoscreen # keymon -> abandoned
-        jellyfin-media-player
+        vokoscreen-ng # keymon -> abandoned
+        # jellyfin-media-player -> based on vulnerable qt5webengine
         zoom-us
         teams-for-linux
         discord
+        (bolt-launcher.override { enableRS3 = true; })
 
-  ];
+        # New
+        kondo
+        eww waybar ironbar # ashell hybrid
+        swww
+        wofi yofi anyrun
+        satty # watershot
+        jay
+
+        hyprpaper
+        hyprpicker
+        hyprlock
+        hypridle
+        hyprcursor
+        hyprsunset
+
+        ### AI
+        aider-chat
+        yek
+
+        # time tracking
+        timewarrior
+      ];
 
 
   # This value determines the home Manager release that your

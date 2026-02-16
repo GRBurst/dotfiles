@@ -49,15 +49,18 @@
     graphics = {
       enable = true;
       enable32Bit = true;
-      extraPackages = with pkgs; [
-        amdvlk
-      ];
-      extraPackages32 = with pkgs.driversi686Linux; [ amdvlk ];
+      # extraPackages = with pkgs; [
+      #   amdvlk
+      # ];
+      # extraPackages32 = with pkgs.driversi686Linux; [ amdvlk ];
     };
   };
 
   nixpkgs.config = {
     allowUnfree = true;
+    permittedInsecurePackages = [
+      "openssl-1.1.1w"
+    ];
   };
 
   networking = {
@@ -72,7 +75,7 @@
     };
     enableIPv6 = true;
     firewall.enable = true;
-    firewall.allowedTCPPorts = [ 12345 15432 53292 ];
+    firewall.allowedTCPPorts = [ 12345 15432 53292 3000 8000 4848 5000 ];
     firewall.allowedUDPPorts = [ 50624 50625 ]; # Firefox WebIDE
     hostName = "andromeda";
     extraHosts = ''
@@ -99,7 +102,7 @@
   i18n.defaultLocale = "en_US.UTF-8";
 
   # Set your time zone.
-  time.timeZone = "Europe/Berlin";
+  # time.timeZone = "Europe/Berlin";
 
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
@@ -111,10 +114,12 @@
       wget
       curl
 
-      protonvpn-cli protonvpn-gui protonmail-bridge
+      protonvpn-gui protonmail-bridge proton-vpn-cli
       tailscale
       hdparm
       adapta-gtk-theme adapta-kde-theme
+
+      # qemu qemu_kvm
     ];
 
     shellAliases = {
@@ -193,7 +198,7 @@
     };
     fish.enable = true;
 
-    adb.enable = true;
+    # adb.enable = true;
 
     # ssh.startAgent = true;
     gnupg.agent = { 
@@ -425,8 +430,8 @@
     # };
 
     redshift = {
-      enable = false;
-      executable = "/bin/redshift-gtk";
+      enable = true;
+      # executable = "/bin/redshift-gtk";
       temperature.day = 5000;
       temperature.night = 3000;
       brightness.day = "1.0";
@@ -527,7 +532,13 @@
     ollama.enable = true;
     qdrant.enable = true;
 
-    open-webui.enable = true;
+    open-webui = {
+      enable = true;
+      port = 48480;
+    };
+
+    openntpd.enable = true;
+    automatic-timezoned.enable = true;
   };
 
   xdg.portal.enable = true;
@@ -549,10 +560,11 @@
       google-fonts
       liberation_ttf
       powerline-fonts
-      ubuntu_font_family
+      ubuntu-classic
       symbola # many unicode symbols
-      vistafonts
+      vista-fonts
       font-awesome
+      font-awesome_6
       gsettings-desktop-schemas
       nerd-fonts.symbols-only
       # inconsolata
@@ -591,13 +603,31 @@
   };
 
   virtualisation = {
-    # virtualbox.host = {
-    #   enable = true;
-    #   enableExtensionPack = true;
-    # };
+    virtualbox.host = {
+      enable = false;
+      enableExtensionPack = true;
+    };
+    libvirtd = {
+      enable = true;
+    };
     docker = {
       enable = true;
       enableOnBoot = false;
+      daemon.settings = {
+        "insecure-registries" = [
+          "127.0.0.1:5000"
+          "gitlab-ci-local-registry:5000"
+        ];
+      };
+      # daemon.settings = {
+      #   "insecure-registries" = [
+      #     "localhost:5000"
+      #     "127.0.0.1:5000"
+      #     "host.docker.internal:5000"
+      #     "local-registry:5000"
+      #     "gitlab-ci-local-registry:5000"
+      #   ];
+      # };
     };
   };
 
