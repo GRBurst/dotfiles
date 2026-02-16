@@ -164,7 +164,7 @@
     rofi
     rofi-systemd #dmenu
     btrfs-progs
-    dbus-map
+    # dbus-map
     lsof
     #mosh
     pciutils
@@ -236,14 +236,14 @@
     nautilus
     gnome.gvfs
     ncdu
-    du-dust
+    # du-dust
     duf # du alternative
     sd # sed alternative
     fzf
     fasd
     file
     silver-searcher
-    fuse-common
+    # fuse-common
     autossh
     sshfs-fuse
     direnv
@@ -287,7 +287,7 @@
     gedit
     jmtpfs
     qrencode
-    qsyncthingtray
+    syncthingtray
     simple-scan
     # typora # breaks on 2020-07-08
     zathura
@@ -298,8 +298,8 @@
     # biber # collides texlive full
     # pdftk #pdfshuffler
     # pdfsandwich pdfsam-basic pdfarranger
-    poppler_utils
-    xournal
+    poppler-utils
+    # xournal
 
     # Media
     blueman
@@ -317,7 +317,7 @@
     mate.atril
     mimeo
     mpv
-    imagemagick7
+    imagemagick
     pamixer
     pavucontrol
     playerctl
@@ -336,7 +336,7 @@
     # schildichat-desktop
     signal-desktop
     wire-desktop
-    tdesktop
+    telegram-desktop
     jitsi
     jitsi-meet
     ausweisapp

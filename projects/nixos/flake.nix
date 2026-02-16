@@ -108,43 +108,43 @@
         ];
       };
 
-      mars = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = inputs;
-        modules = [
-          nixos-hardware.nixosModules.lenovo-thinkpad-t480s
+      # mars = nixpkgs.lib.nixosSystem {
+      #   system = "x86_64-linux";
+      #   specialArgs = inputs;
+      #   modules = [
+      #     nixos-hardware.nixosModules.lenovo-thinkpad-t480s
 
-          ./hosts/mars
-          {nix.settings.trusted-users = ["jelias"];}
+      #     ./hosts/mars
+      #     {nix.settings.trusted-users = ["jelias"];}
 
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.jelias = import ./home/home.nix;
-              # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
-            };
-          }
-        ];
-      };
+      #     home-manager.nixosModules.home-manager
+      #     {
+      #       home-manager = {
+      #         useGlobalPkgs = true;
+      #         useUserPackages = true;
+      #         users.jelias = import ./home/home.nix;
+      #         # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
+      #       };
+      #     }
+      #   ];
+      # };
 
-      earth = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        specialArgs = inputs;
-        modules = [
-          ./configuration.nix
+      # earth = nixpkgs.lib.nixosSystem {
+      #   system = "x86_64-linux";
+      #   specialArgs = inputs;
+      #   modules = [
+      #     ./configuration.nix
 
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              users.jelias = import ./home/home.nix;
-            };
-          }
-        ];
-      };
+      #     home-manager.nixosModules.home-manager
+      #     {
+      #       home-manager = {
+      #         useGlobalPkgs = true;
+      #         useUserPackages = true;
+      #         users.jelias = import ./home/home.nix;
+      #       };
+      #     }
+      #   ];
+      # };
     };
   };
 }
