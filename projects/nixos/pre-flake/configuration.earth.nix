@@ -1,18 +1,15 @@
 # Edit this configuration file to define what should be installed on
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
-
-{ config, lib, pkgs, ... }:
-
-{
-  imports =
-    [ # Include the results of the hexposeardware scan.
+{pkgs, ...}: {
+  imports = [
+    # Include the results of the hexposeardware scan.
     ./hardware-configuration.nix
   ];
 
-# Use the systemd-boot EFI boot loader.
+  # Use the systemd-boot EFI boot loader.
   boot = {
-    loader = { 
+    loader = {
       systemd-boot.enable = true;
       # systemd-boot.enable = lib.mkForce false;
       efi.canTouchEfiVariables = true;
@@ -31,7 +28,6 @@
     # };
   };
 
-
   security.tpm2 = {
     enable = true;
     pkcs11.enable = true;
@@ -39,8 +35,8 @@
   };
 
   nix.settings = {
-    trusted-users = [ "jelias" ];
-    experimental-features = [ "nix-command" "flakes" ];
+    trusted-users = ["jelias"];
+    experimental-features = ["nix-command" "flakes"];
   };
   nixpkgs.config.allowUnfree = true;
 
@@ -62,12 +58,11 @@
     acpilight.enable = true;
   };
 
-
   networking = {
     networkmanager = {
       enable = true;
       ethernet.macAddress = "random";
-      appendNameservers = [ "9.9.9.9" "149.112.112.112" "2620:fe::fe" "2620:fe::9" ];
+      appendNameservers = ["9.9.9.9" "149.112.112.112" "2620:fe::fe" "2620:fe::9"];
       plugins = with pkgs; [
         networkmanager-openconnect
         networkmanager-openvpn
@@ -80,16 +75,16 @@
       127.0.0.1       *.localhost *.localhost.localdomain
     '';
     # networking.wireless.enable = true;
-    firewall.allowedUDPPorts = [ 
-      8472  # k3s, flannel: required if using multi-node for inter-node networking
+    firewall.allowedUDPPorts = [
+      8472 # k3s, flannel: required if using multi-node for inter-node networking
       12345 # General Purpose
       50624 # Firefox WebIDE
       50625 # Firefox WebIDE
-    ]; 
-    firewall.allowedTCPPorts = [ 
-      6443  # k3s: required so that pods can reach the API server (running on port 6443 by default)
+    ];
+    firewall.allowedTCPPorts = [
+      6443 # k3s: required so that pods can reach the API server (running on port 6443 by default)
       12345 # General Purpose
-      8080  # Dev General Purpose
+      8080 # Dev General Purpose
     ];
   };
 
@@ -109,12 +104,15 @@
 
   environment = {
     systemPackages = with pkgs; [
-      neovim vim
+      neovim
+      vim
       git
       wget
       curl
 
-      protonvpn-cli protonvpn-gui protonmail-bridge
+      protonvpn-cli
+      protonvpn-gui
+      protonmail-bridge
       hdparm
     ];
     shellAliases = {
@@ -130,8 +128,7 @@
 
       BROWSER = "librewolf";
 
-      SBT_OPTS="-Xms1G -Xmx4G -Xss16M";
-
+      SBT_OPTS = "-Xms1G -Xmx4G -Xss16M";
     };
   };
 
@@ -144,7 +141,6 @@
   system.autoUpgrade.enable = true;
 
   programs = {
-
     command-not-found.enable = true;
     ausweisapp = {
       enable = true;
@@ -169,14 +165,14 @@
     firefox = {
       enable = true;
       package = pkgs.librewolf;
-      nativeMessagingHosts.packages = [ pkgs.tridactyl-native ];
+      nativeMessagingHosts.packages = [pkgs.tridactyl-native];
     };
     java.enable = true;
 
     # ssh.startAgent = true;
-    gnupg.agent = { 
-    enable = true;
-    enableSSHSupport = true;
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
     };
 
     # qt5ct.enable = true;
@@ -187,17 +183,16 @@
     light.enable = true;
     screen = {
       enable = true;
-      screenrc =
-      ''term screen-256color
-                termcapinfo xterm*|xs|rxvt* ti@:te@
-                startup_message off
-                caption string '%{= G}[ %{G}%H %{g}][%= %{= w}%?%-Lw%?%{= R}%n*%f %t%?%{= R}(%u)%?%{= w}%+Lw%?%= %{= g}][ %{y}Load: %l %{g}][%{B}%Y-%m-%d %{W}%c:%s %{g}]'
-                caption always
+      screenrc = ''
+        term screen-256color
+        termcapinfo xterm*|xs|rxvt* ti@:te@
+        startup_message off
+        caption string '%{= G}[ %{G}%H %{g}][%= %{= w}%?%-Lw%?%{= R}%n*%f %t%?%{= R}(%u)%?%{= w}%+Lw%?%= %{= g}][ %{y}Load: %l %{g}][%{B}%Y-%m-%d %{W}%c:%s %{g}]'
+        caption always
       '';
     };
 
     steam.enable = true;
-
   };
 
   security = {
@@ -232,22 +227,20 @@
 
   users.users.jelias = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "video" "audio" "vboxusers" "docker" "fuse" "adbusers" "networkmanager" "wireshark" "pipewire" "tss" ];
+    extraGroups = ["wheel" "video" "audio" "vboxusers" "docker" "fuse" "adbusers" "networkmanager" "wireshark" "pipewire" "tss"];
     useDefaultShell = true;
-    openssh.authorizedKeys.keys = [ ];
+    openssh.authorizedKeys.keys = [];
   };
 
   services = {
-
     openssh = {
       enable = true;
-      ports = [ 53292 ];
+      ports = [53292];
       settings = {
         X11Forwarding = true;
         PasswordAuthentication = false;
       };
     };
-
 
     # resolved = {
     #   enable = true;
@@ -265,10 +258,10 @@
 
     journald = {
       extraConfig = ''
-            Storage=persistent
-            Compress=yes
-            SystemMaxUse=128M
-            RuntimeMaxUse=8M
+        Storage=persistent
+        Compress=yes
+        SystemMaxUse=128M
+        RuntimeMaxUse=8M
       '';
     };
 
@@ -276,11 +269,11 @@
     smartd = {
       enable = true;
       autodetect = true;
-    # devices = [
-    #   {
-    #     device = "/dev/disk/by-id/ata-Samsung_SSD_840_EVO_250GB_S1DBNSAF858931R";
-    #   }
-    # ];
+      # devices = [
+      #   {
+      #     device = "/dev/disk/by-id/ata-Samsung_SSD_840_EVO_250GB_S1DBNSAF858931R";
+      #   }
+      # ];
     };
 
     pipewire = {
@@ -295,7 +288,7 @@
     xserver = {
       enable = true;
       dpi = 192;
-      videoDrivers = [ "nvidia" ];
+      videoDrivers = ["nvidia"];
       # screenSection = ''
       #   Option "metamodes" "nvidia-auto-select +0+0 {ForceCompositionPipeline=On}"
       # '';
@@ -306,8 +299,11 @@
       };
 
       xrandrHeads = [
-        { output = "DP-0"; primary = true; }
-        { output = "HDMI-1"; }
+        {
+          output = "DP-0";
+          primary = true;
+        }
+        {output = "HDMI-1";}
       ];
 
       desktopManager = {
@@ -325,7 +321,7 @@
       windowManager = {
         i3 = {
           enable = true;
-          extraPackages = with pkgs; [ feh rofi i3status-rust i3lock gnome-keyring ];
+          extraPackages = with pkgs; [feh rofi i3status-rust i3lock gnome-keyring];
           extraSessionCommands = ''
             xsetroot -bg black
             xsetroot -cursor_name left_ptr
@@ -343,7 +339,6 @@
       };
       defaultSession = "none+i3";
     };
-
 
     compton.enable = true;
 
@@ -376,26 +371,25 @@
     };
 
     clamav = {
-      daemon.enable   = true;
+      daemon.enable = true;
       daemon.settings = {
         TCPAddr = "127.0.0.1";
         TCPSocket = 3310;
       };
-      updater.enable  = true;
+      updater.enable = true;
     };
 
-    gvfs.enable  = true;
+    gvfs.enable = true;
 
     gnome = {
       gnome-keyring.enable = true;
     };
     usbmuxd.enable = true;
-    upower.enable  = true;
+    upower.enable = true;
     udisks2.enable = true;
     flatpak.enable = true;
 
     # acpid.enable = true;
-
   };
 
   fonts = {
@@ -412,20 +406,18 @@
       symbola # unicode symbols
       vistafonts # Consolas, ...
       font-awesome
-# inconsalata
-      ];
+      # inconsalata
+    ];
 
-      fontconfig = {
-        includeUserConf = true;
-        defaultFonts.monospace = [ "Roboto Mono" "DejaVu Sans Mono" ];
-      };
+    fontconfig = {
+      includeUserConf = true;
+      defaultFonts.monospace = ["Roboto Mono" "DejaVu Sans Mono"];
     };
+  };
 
-    virtualisation.docker = {
-      enable = true;
-    };
+  virtualisation.docker = {
+    enable = true;
+  };
 
-    system.stateVersion = "24.05"; # Did you read the comment?
-
+  system.stateVersion = "24.05"; # Did you read the comment?
 }
-

@@ -2,8 +2,8 @@
   description = "NixOS configuration of GRBurst";
 
   nixConfig = {
-    experimental-features = [ "nix-command" "flakes" ];
-    extra-substituters = [ 
+    experimental-features = ["nix-command" "flakes"];
+    extra-substituters = [
       # Nix community's cache server
       "https://nix-community.cachix.org"
       "https://hyprland.cachix.org"
@@ -46,15 +46,21 @@
   };
 
   # outputs = { nixpkgs, nixos-hardware, home-manager, hyprland, hy3, wired, nix-snapd, ... } @ inputs: {
-  outputs = { nixpkgs, nixos-hardware, home-manager, wired, nix-snapd, stylix, ... } @ inputs: {
+  outputs = {
+    nixpkgs,
+    nixos-hardware,
+    home-manager,
+    nix-snapd,
+    stylix,
+    ...
+  } @ inputs: let
+    system = "x86_64-linux";
+  in {
+    formatter.${system} = nixpkgs.legacyPackages.${system}.alejandra;
     # Please replace my-nixos with your hostname
     nixosConfigurations = {
-
-      andromeda = let
-        system = "x86_64-linux";
-      in
-      nixpkgs.lib.nixosSystem {
-        system = system;
+      andromeda = nixpkgs.lib.nixosSystem {
+        inherit system;
         specialArgs = inputs;
         modules = [
           nixos-hardware.nixosModules.lenovo-thinkpad-p14s-amd-gen2
@@ -64,23 +70,23 @@
             nixpkgs.overlays = [
               inputs.wired.overlays.default
             ];
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.sharedModules = [
-              inputs.wired.homeManagerModules.default
-            ];
-
-            home-manager.users.pallon = import ./home/work.nix;
-            # hyprland.homeManagerModules.default
-            # imports = [
-            #   ./modules/hyprland
-            # ];
-            # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
-
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              sharedModules = [
+                inputs.wired.homeManagerModules.default
+              ];
+              users.pallon = import ./home/work.nix;
+              # hyprland.homeManagerModules.default
+              # imports = [
+              #   ./modules/hyprland
+              # ];
+              # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
+            };
           }
 
           {
-            nix.settings.trusted-users = [ "pallon" ];
+            nix.settings.trusted-users = ["pallon"];
             programs.hyprland = {
               enable = true;
               xwayland.enable = true;
@@ -109,15 +115,16 @@
           nixos-hardware.nixosModules.lenovo-thinkpad-t480s
 
           ./hosts/mars
-          { nix.settings.trusted-users = [ "jelias" ]; }
+          {nix.settings.trusted-users = ["jelias"];}
 
           home-manager.nixosModules.home-manager
           {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-
-            home-manager.users.jelias = import ./home/home.nix;
-            # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.jelias = import ./home/home.nix;
+              # Optionally, use home-manager.extraSpecialArgs to pass arguments to home.nix
+            };
           }
         ];
       };
@@ -130,14 +137,14 @@
 
           home-manager.nixosModules.home-manager
           {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-
-            home-manager.users.jelias = import ./home/home.nix;
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              users.jelias = import ./home/home.nix;
+            };
           }
         ];
       };
-
     };
   };
 }

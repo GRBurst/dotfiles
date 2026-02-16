@@ -1,11 +1,7 @@
 with (import <nixpkgs> {});
-with import <nixpkgs/lib>;
-
-let
-  localpkgs = import ~/projects/nixpkgs/default.nix {};
-  nixpkgs   = import <nixpkgs/nixos> {};
+with import <nixpkgs/lib>; let
+  nixpkgs = import <nixpkgs/nixos> {};
 in {
-
   allowUnfree = true;
 
   # Install local packages with localpkgs.X,
@@ -16,32 +12,43 @@ in {
   # Uninstall all packages with
   # nix-env -e common-packages
   packageOverrides = pkgs: rec {
-
     # inherit pkgs;
 
     pidgin-with-plugins = pkgs.pidgin-with-plugins.override {
-      plugins = [ pidginotr purple-facebook telegram-purple toxprpl pidginotr pidgin-skypeweb pidgin-opensteamworks ]; #localpkgs.purple-gnome-keyring ];
+      plugins = [pidginotr purple-facebook telegram-purple toxprpl pidginotr pidgin-skypeweb pidgin-opensteamworks]; #localpkgs.purple-gnome-keyring ];
     };
 
     common-packages = buildEnv {
-
       name = "common-packages";
 
       paths = [
         # Linux tools
         binutils
-        atop htop iotop
+        atop
+        htop
+        iotop
         arandr
-        wget netcat nmap
+        wget
+        netcat
+        nmap
         psmisc
-        hdparm hd-idle hddtemp
-        pv xclip xorg.xkill unclutter-xfixes
-        lm_sensors calc gksu
+        hdparm
+        hd-idle
+        hddtemp
+        pv
+        xclip
+        xorg.xkill
+        unclutter-xfixes
+        lm_sensors
+        calc
+        gksu
         haskellPackages.yeganesh
         gnumake
-        nitrogen scrot
+        nitrogen
+        scrot
         networkmanagerapplet
-        dmenu rofi
+        dmenu
+        rofi
         btrfs-progs
         dbus-map
         lsof
@@ -59,30 +66,50 @@ in {
         vanilla-dmz
 
         # Security
-        gnome3.gnome_keyring gnome3.seahorse libsecret
+        gnome3.gnome_keyring
+        gnome3.seahorse
+        libsecret
         openssl
 
         # Terminal
-        termite nix-zsh-completions
+        termite
+        nix-zsh-completions
 
         # Filesystem
-        gnome3.nautilus gnome3.gvfs
-        ncdu fzf fasd file silver-searcher
+        gnome3.nautilus
+        gnome3.gvfs
+        ncdu
+        fzf
+        fasd
+        file
+        silver-searcher
         pmount
-        tree gparted
-        ntfs3g inotify-tools smartmontools
+        tree
+        gparted
+        ntfs3g
+        inotify-tools
+        smartmontools
         exfat
         file
         gnome3.file-roller
         gptfdisk
-        spaceFM	shared_mime_info desktop_file_utils
+        spaceFM
+        shared_mime_info
+        desktop_file_utils
         usbutils
 
         # Office
         firefox
         # profile-sync-daemon
-        libreoffice-fresh hunspell hunspellDicts.en-us aspell aspellDicts.de languagetool mythes
-        samba cifs-utils
+        libreoffice-fresh
+        hunspell
+        hunspellDicts.en-us
+        aspell
+        aspellDicts.de
+        languagetool
+        mythes
+        samba
+        cifs-utils
         sane-frontends
         gnome3.gedit
         filezilla
@@ -99,7 +126,8 @@ in {
 
         # Programming
         ctags
-        git tig
+        git
+        tig
         neovim
         python27Packages.neovim # ensime
         python35Packages.neovim
@@ -109,10 +137,12 @@ in {
 
         # Media
         gimp
-        inkscape 
+        inkscape
         mate.atril
         mimeo
-        mpv imv feh
+        mpv
+        imv
+        feh
         imagemagick7
         pamixer
         pavucontrol
@@ -130,15 +160,12 @@ in {
         pidgin-with-plugins
         qtox
         signal-desktop
-
       ];
-
     };
 
     dev-packages = buildEnv {
-
       inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
+      extraOutputsToInstall = ["man"];
       name = "dev-packages";
 
       paths = [
@@ -148,33 +175,30 @@ in {
         entr
         graphviz
         gthumb
-        irssi irssi_otr
+        irssi
+        irssi_otr
         jetbrains.idea-community
         nodejs-9_x
         scalafmt
         swiProlog
         wireshark
       ];
-
     };
 
     scala-packages = buildEnv {
-
       inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
+      extraOutputsToInstall = ["man"];
       name = "scala-packages";
 
       paths = [
         sbt
         scala
       ];
-
     };
 
     highres-packages = buildEnv {
-
       inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
+      extraOutputsToInstall = ["man"];
       name = "highres-packages";
 
       paths = [
@@ -193,21 +217,24 @@ in {
         qutebrowser
         screen
         shotwell
-        texmaker texstudio #lyx
+        texmaker
+        texstudio #lyx
         tor-browser-bundle-bin
         thunderbird
         vlc
         vokoscreen
         # (localpkgs.xmr-stak.override {cudaSupport = true;})
-        (xmr-stak.override {cudaSupport = true; openclSupport = false; devDonationLevel = "0.0";})
+        (xmr-stak.override {
+          cudaSupport = true;
+          openclSupport = false;
+          devDonationLevel = "0.0";
+        })
       ];
-
     };
 
     lowres-packages = buildEnv {
-
       inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
+      extraOutputsToInstall = ["man"];
       name = "lowres-packages";
 
       paths = [
@@ -217,11 +244,9 @@ in {
         llpp
         ranger
       ];
-
     };
 
     test-packages = buildEnv {
-
       inherit (nixpkgs.config.system.path) pathsToLink ignoreCollisions postBuild;
       name = "test-packages";
 
@@ -233,7 +258,6 @@ in {
         # localpkgs.iri
         # localpkgs.purple-gnome-keyring
       ];
-
     };
 
     # services.psd = {
@@ -248,11 +272,9 @@ in {
     #   icedtea                 = true;
     # };
 
-   # chromium = {
-   #   enablePepperPDF = true;
-   #   enableWideVine = false;
-   # };
-
+    # chromium = {
+    #   enablePepperPDF = true;
+    #   enableWideVine = false;
+    # };
   };
-
 }

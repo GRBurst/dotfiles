@@ -1,20 +1,17 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-
-{ config, pkgs, lib, ... }:
-
-{
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+{pkgs, ...}: {
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+  ];
 
   nix = {
     daemonIOSchedPriority = 7;
     settings = {
       sandbox = true;
-      experimental-features = [ "nix-command" "flakes" ];
+      experimental-features = ["nix-command" "flakes"];
     };
     gc = {
       automatic = true;
@@ -36,7 +33,7 @@
       "kernel.sysrq" = 1;
       "vm.swappiness" = 1;
     };
-    kernelParams = [ "usbcore.autosuspend=-1" ];
+    kernelParams = ["usbcore.autosuspend=-1"];
   };
 
   hardware = {
@@ -67,16 +64,18 @@
     networkmanager = {
       enable = true;
       wifi.macAddress = "random";
-      appendNameservers = [ "9.9.9.9" "149.112.112.112" "2620:fe::fe" "2620:fe::9" ];
+      appendNameservers = ["9.9.9.9" "149.112.112.112" "2620:fe::fe" "2620:fe::9"];
       plugins = with pkgs; [
         networkmanager-openconnect
         networkmanager-openvpn
       ];
     };
     enableIPv6 = true;
-    firewall.enable = true;
-    firewall.allowedTCPPorts = [ 12345 15432 53292 3000 8000 4848 5000 ];
-    firewall.allowedUDPPorts = [ 50624 50625 ]; # Firefox WebIDE
+    firewall = {
+      enable = true;
+      allowedTCPPorts = [12345 15432 53292 3000 8000 4848 5000];
+      allowedUDPPorts = [50624 50625]; # Firefox WebIDE
+    };
     hostName = "andromeda";
     extraHosts = ''
       127.0.0.1       *.localhost *.localhost.localdomain
@@ -95,7 +94,8 @@
     powertop.enable = true;
   };
 
-  console = { # Select internationalisation properties.
+  console = {
+    # Select internationalisation properties.
     keyMap = "neo";
   };
 
@@ -109,15 +109,19 @@
   # These are installed system-wide
   environment = {
     systemPackages = with pkgs; [
-      neovim vim
+      neovim
+      vim
       git
       wget
       curl
 
-      protonvpn-gui protonmail-bridge proton-vpn-cli
+      protonvpn-gui
+      protonmail-bridge
+      proton-vpn-cli
       tailscale
       hdparm
-      adapta-gtk-theme adapta-kde-theme
+      adapta-gtk-theme
+      adapta-kde-theme
 
       # qemu qemu_kvm
     ];
@@ -140,7 +144,7 @@
 
       # _JAVA_OPTIONS = "-Xms1G -Xmx4G -Xss16M -XX:MaxMetaspaceSize=2G -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd";
       #SBT_OPTS="$SBT_OPTS -Xms2G -Xmx8G -Xss4M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC";
-      SBT_OPTS="-Xms1G -Xmx4G -Xss16M";
+      SBT_OPTS = "-Xms1G -Xmx4G -Xss16M";
 
       AUTOSSH_GATETIME = "0";
 
@@ -177,7 +181,6 @@
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   programs = {
-
     appimage.enable = true;
 
     # hyprland = {
@@ -201,7 +204,7 @@
     # adb.enable = true;
 
     # ssh.startAgent = true;
-    gnupg.agent = { 
+    gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
     };
@@ -217,8 +220,8 @@
     dconf.enable = true;
 
     screen.enable = true;
-    screen.screenrc = 
-    ''term screen-256color
+    screen.screenrc = ''
+      term screen-256color
       termcapinfo xterm*|xs|rxvt* ti@:te@
       startup_message off
       caption string '%{= G}[ %{G}%H %{g}][%= %{= w}%?%-Lw%?%{= R}%n*%f %t%?%{= R}(%u)%?%{= w}%+Lw%?%= %{= g}][ %{y}Load: %l %{g}][%{B}%Y-%m-%d %{W}%c:%s %{g}]'
@@ -228,7 +231,6 @@
     light.enable = true;
 
     nix-ld.enable = true;
-
   };
 
   users.defaultUserShell = "/run/current-system/sw/bin/zsh";
@@ -274,13 +276,11 @@
     };
   };
 
-
   # List services that you want to enable:
   services = {
-
     openssh = {
       enable = true;
-      ports = [ 53292 ];
+      ports = [53292];
     };
 
     tailscale = {
@@ -345,7 +345,6 @@
       };
     };
 
-
     journald = {
       extraConfig = ''
         Storage=persist
@@ -401,18 +400,18 @@
     xserver = {
       enable = true;
       dpi = 192;
-      videoDrivers = [ "modesetting" ];
+      videoDrivers = ["modesetting"];
       xkb = {
-      	layout = "de,de";
-      	variant = "neo,basic";
-      	options = "grp:menu_toggle";
+        layout = "de,de";
+        variant = "neo,basic";
+        options = "grp:menu_toggle";
       };
 
-      desktopManager.xterm.enable  = false;
+      desktopManager.xterm.enable = false;
       windowManager = {
         i3 = {
           enable = true;
-          extraPackages = with pkgs; [ feh rofi i3status-rust i3lock gnome-keyring ];
+          extraPackages = with pkgs; [feh rofi i3status-rust i3lock gnome-keyring];
           extraSessionCommands = ''
             xsetroot -bg black
             xsetroot -cursor_name left_ptr
@@ -461,16 +460,16 @@
 
     clamav = {
       daemon = {
-        enable   = true;
+        enable = true;
         settings = {
           TCPAddr = "127.0.0.1";
           TCPSocket = 3310;
         };
       };
-      updater.enable  = true;
+      updater.enable = true;
     };
 
-    gvfs.enable  = true;
+    gvfs.enable = true;
     gnome = {
       core-os-services.enable = true;
       core-shell.enable = true;
@@ -478,7 +477,7 @@
       gnome-settings-daemon.enable = true;
     };
 
-    upower.enable  = true;
+    upower.enable = true;
     udisks2.enable = true;
 
     acpid.enable = true;
@@ -572,7 +571,7 @@
 
     fontconfig = {
       includeUserConf = false;
-      defaultFonts.monospace = [ "Roboto Mono" "DejaVu Sans Mono" ];
+      defaultFonts.monospace = ["Roboto Mono" "DejaVu Sans Mono"];
     };
   };
 
@@ -599,7 +598,7 @@
       base0E = "c099ff"; # magenta
       base0F = "4fd6be"; # teal
     };
-    targets = { console.enable = true; };
+    targets = {console.enable = true;};
   };
 
   virtualisation = {
@@ -631,22 +630,19 @@
     };
   };
 
-
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.pallon = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "video" "audio" "vboxusers" "docker" "fuse" "adbusers" "networkmanager" ];
+    extraGroups = ["wheel" "video" "audio" "vboxusers" "docker" "fuse" "adbusers" "networkmanager"];
     useDefaultShell = true;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDeEb4AnnxoSa1OJS1Byr6GvxeTiino4nLgxhEi3nb3k jelias@mars->earth on 2024-09-03"
     ];
   };
 
-
   # This value determines the NixOS release with which your system is to be
   # compatible, in order to avoid breaking some software such as database
   # servers. You should change this only after NixOS release notes say you
   # should.
   system.stateVersion = "24.05"; # Did you read the comment?
-
 }

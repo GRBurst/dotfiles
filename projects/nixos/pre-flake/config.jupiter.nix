@@ -1,11 +1,7 @@
 with (import <nixos-unstable> {});
-with import <nixos-unstable/lib>;
-
-let
-  localpkgs = import ~/projects/nixpkgs/default.nix {};
-  unstable  = import <nixos-unstable/nixos> {};
+with import <nixos-unstable/lib>; let
+  unstable = import <nixos-unstable/nixos> {};
 in {
-
   allowUnfree = true;
   oraclejdk.accept_license = true;
 
@@ -17,18 +13,16 @@ in {
   # Uninstall all packages with
   # nix-env -e common-packages
   packageOverrides = pkgs: rec {
-
     # inherit pkgs;
 
     pidgin-with-plugins = pkgs.pidgin-with-plugins.override {
-      plugins = [ pidginotr purple-facebook telegram-purple toxprpl pidginotr pidgin-skypeweb pidgin-opensteamworks ];
+      plugins = [pidginotr purple-facebook telegram-purple toxprpl pidginotr pidgin-skypeweb pidgin-opensteamworks];
       # plugins = [ pidginotr purple-facebook telegram-purple toxprpl pidginotr pidgin-skypeweb pidgin-opensteamworks localpkgs.purple-gnome-keyring ];
     };
 
     common-packages = buildEnv {
-
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
+      extraOutputsToInstall = ["man"];
       name = "common-packages";
 
       paths = [
@@ -36,22 +30,36 @@ in {
         arandr
         acpi
         avahi
-        atop htop iotop
+        atop
+        htop
+        iotop
         bc
         bind
         binutils
         linuxPackages.cpupower
-        wget netcat nmap
+        wget
+        netcat
+        nmap
         psmisc
-        hdparm hd-idle hddtemp
-        pv xclip xorg.xkill unclutter-xfixes xorg.xwininfo
-        lm_sensors calc gksu
+        hdparm
+        hd-idle
+        hddtemp
+        pv
+        xclip
+        xorg.xkill
+        unclutter-xfixes
+        xorg.xwininfo
+        lm_sensors
+        calc
+        gksu
         haskellPackages.yeganesh
         gnumake
-        nitrogen scrot
+        nitrogen
+        scrot
         networkmanagerapplet
         pwgen
-        rofi rofi-systemd #dmenu
+        rofi
+        rofi-systemd #dmenu
         btrfs-progs
         dbus-map
         lsof
@@ -72,22 +80,34 @@ in {
         wireshark
 
         # Security
-        gnome3.gnome-keyring gnome3.libgnome-keyring gnome3.seahorse libsecret
+        gnome3.gnome-keyring
+        gnome3.libgnome-keyring
+        gnome3.seahorse
+        libsecret
         openssl
         keepass
         keepassx-community
         keybase-gui
 
         # Terminal
-        termite nix-zsh-completions
+        termite
+        nix-zsh-completions
 
         # Filesystem
-        gnome3.nautilus gnome3.gvfs
-        ncdu fzf fasd file silver-searcher
+        gnome3.nautilus
+        gnome3.gvfs
+        ncdu
+        fzf
+        fasd
+        file
+        silver-searcher
         fuse-common
         pmount
-        tree gparted
-        ntfs3g inotify-tools smartmontools
+        tree
+        gparted
+        ntfs3g
+        inotify-tools
+        smartmontools
         exfat
         file
         # gnome3.file-roller # mimeinfo collides with nautilus
@@ -103,8 +123,14 @@ in {
         calibre
         firefox
         profile-sync-daemon
-        libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
-        samba cifs-utils
+        libreoffice-still
+        hunspell
+        hunspellDicts.en-us
+        hunspellDicts.de-de
+        languagetool
+        mythes
+        samba
+        cifs-utils
         sane-frontends
         gcolor3
         gnome3.gedit
@@ -127,10 +153,12 @@ in {
         avidemux
         audacity
         gimp
-        inkscape 
+        inkscape
         mate.atril
         mimeo
-        mpv imv feh
+        mpv
+        imv
+        feh
         imagemagick7
         pamixer
         pavucontrol
@@ -148,22 +176,22 @@ in {
         irssi
 
         # Themes
-        breeze-gtk breeze-icons breeze-qt5 
-        adwaita-qt gnome3.adwaita-icon-theme 
+        breeze-gtk
+        breeze-icons
+        breeze-qt5
+        adwaita-qt
+        gnome3.adwaita-icon-theme
         papirus-icon-theme
         gnome3.dconf
         gnome3.dconf-editor
         lxqt.lxqt-config
         lxappearance
-
       ];
-
     };
 
     dev-packages = buildEnv {
-
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
+      extraOutputsToInstall = ["man"];
       name = "dev-packages";
 
       paths = [
@@ -171,7 +199,9 @@ in {
 
         ctags
         gdb
-        git tig gitRepo
+        git
+        tig
+        gitRepo
         neovim
         python27Packages.pynvim # ensime
         python37Packages.pynvim
@@ -198,13 +228,11 @@ in {
         google-chrome
         firefox-devedition-bin
       ];
-
     };
 
     scala-packages = buildEnv {
-
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
+      extraOutputsToInstall = ["man"];
       name = "scala-packages";
 
       paths = [
@@ -214,25 +242,21 @@ in {
         # scalafmt #-> cannot be build
         visualvm
       ];
-
     };
 
     ssd-packages = buildEnv {
-
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
+      extraOutputsToInstall = ["man"];
       name = "ssd-packages";
 
       paths = [
         nvme-cli
       ];
-
     };
 
     laptop-packages = buildEnv {
-
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
+      extraOutputsToInstall = ["man"];
       name = "laptop-packages";
 
       paths = [
@@ -244,18 +268,19 @@ in {
         linuxPackages.acpi_call
         tlp
       ];
-
     };
 
     highres-packages = buildEnv {
-
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
+      extraOutputsToInstall = ["man"];
       name = "highres-packages";
 
       paths = [
         brasero
-        (chromium.override { enablePepperFlash = false; enableWideVine = false;})
+        (chromium.override {
+          enablePepperFlash = false;
+          enableWideVine = false;
+        })
         clementine
         cryptsetup
         evince
@@ -283,13 +308,11 @@ in {
         vokoscreen # keymon -> abandoned
         zoom-us
       ];
-
     };
 
     lowres-packages = buildEnv {
-
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
+      extraOutputsToInstall = ["man"];
       name = "lowres-packages";
 
       paths = [
@@ -298,13 +321,11 @@ in {
         llpp
         ranger
       ];
-
     };
 
     gaming-packages = buildEnv {
-
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
+      extraOutputsToInstall = ["man"];
       name = "gaming-packages";
 
       paths = [
@@ -314,11 +335,9 @@ in {
         # steam
         # steam-run
       ];
-
     };
 
     test-packages = buildEnv {
-
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
       name = "test-packages";
 
@@ -328,20 +347,21 @@ in {
         # localpkgs.iri
         # localpkgs.purple-gnome-keyring
       ];
-
     };
 
     mining-packages = buildEnv {
-
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
+      extraOutputsToInstall = ["man"];
       name = "mining-packages";
 
       paths = [
         # (localpkgs.xmr-stak.override {cudaSupport = true;})
-        (xmr-stak.override {cudaSupport = true; openclSupport = false; devDonationLevel = "0.0";})
+        (xmr-stak.override {
+          cudaSupport = true;
+          openclSupport = false;
+          devDonationLevel = "0.0";
+        })
       ];
-
     };
 
     # services.psd = {
@@ -361,7 +381,5 @@ in {
     #   enablePepperPDF = true;
     #   enableWideVine = false;
     # };
-
   };
-
 }

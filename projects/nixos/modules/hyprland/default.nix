@@ -1,17 +1,14 @@
-{ inputs, config, pkgs, ... }:
-
-let
+{pkgs, ...}: let
   configFiles = [
     ./hypr.conf
     ./plugins.conf
     ./keybindings.conf
   ];
   config = builtins.concatStringsSep "\n" (map builtins.readFile configFiles);
-in
-{
+in {
   wayland.windowManager.hyprland = {
     enable = true;
-    plugins = with pkgs.hyprlandPlugins; [ hy3 ];
+    plugins = with pkgs.hyprlandPlugins; [hy3];
     extraConfig = config;
   };
   /*

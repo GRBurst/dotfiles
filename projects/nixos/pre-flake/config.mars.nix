@@ -1,12 +1,7 @@
 with (import <nixpkgs> {});
-with import <nixpkgs/lib>;
-
-let
-  localpkgs = import ~/projects/nixpkgs/default.nix {};
-  unstable  = import <nixpkgs/nixos> {};
-  stable  = import <nixos-stable/nixos> {};
+with import <nixpkgs/lib>; let
+  unstable = import <nixpkgs/nixos> {};
 in {
-
   permittedInsecurePackages = [
     # "openssl-1.0.2u"
     "adobe-reader-9.5.5-1"
@@ -23,7 +18,6 @@ in {
   # Uninstall all packages with
   # nix-env -e common-packages
   packageOverrides = pkgs: rec {
-
     # inherit pkgs;
 
     # pidgin-with-plugins = pkgs.pidgin-with-plugins.override {
@@ -31,13 +25,12 @@ in {
     # };
 
     vscode-liveshare = pkgs.vscode-with-extensions.override {
-      vscodeExtensions = [ pkgs.vscode-extensions.ms-vsliveshare.vsliveshare ];
+      vscodeExtensions = [pkgs.vscode-extensions.ms-vsliveshare.vsliveshare];
     };
 
     common-packages = buildEnv {
-
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
+      extraOutputsToInstall = ["man"];
       name = "common-packages";
 
       paths = [
@@ -45,19 +38,26 @@ in {
         arandr
         acpi
         avahi
-        atop htop iotop bottom
-        bc calc
+        atop
+        htop
+        iotop
+        bottom
+        bc
+        calc
         beep
         binutils
         cryptsetup
         linuxPackages.cpupower
         dmidecode
         psmisc
-        hdparm hd-idle hddtemp
+        hdparm
+        hd-idle
+        hddtemp
         lm_sensors
         gnumake
         pwgen
-        rofi rofi-systemd #dmenu
+        rofi
+        rofi-systemd #dmenu
         btrfs-progs
         dbus-map
         lsof
@@ -74,14 +74,22 @@ in {
         # x-server
         xcwd
         xclip
-        unclutter-xfixes 
-        xorg.xdpyinfo xorg.xev xorg.xmodmap xorg.xkill xorg.xwininfo xorg.xhost
+        unclutter-xfixes
+        xorg.xdpyinfo
+        xorg.xev
+        xorg.xmodmap
+        xorg.xkill
+        xorg.xwininfo
+        xorg.xhost
         vanilla-dmz # x cursor
         xsettingsd
         libsForQt5.qtstyleplugins
 
         # Security
-        gnome-keyring libgnome-keyring seahorse libsecret
+        gnome-keyring
+        libgnome-keyring
+        seahorse
+        libsecret
         openssl
         keepass
         keepassxc
@@ -95,9 +103,11 @@ in {
         miniserve
         # magic-wormhole # broken since 2022-08-31
         ngrok
-        nload nethogs
+        nload
+        nethogs
         speedtest-cli
-        traceroute mtr
+        traceroute
+        mtr
         inetutils
         vpn-slice
         socat
@@ -107,24 +117,33 @@ in {
         networkmanager_dmenu
 
         # Terminal
-        termite alacritty nix-zsh-completions
+        termite
+        alacritty
+        nix-zsh-completions
         haskellPackages.yeganesh
         tldr
 
         # Filesystem
-        nautilus gnome.gvfs
-        ncdu du-dust
+        nautilus
+        gnome.gvfs
+        ncdu
+        du-dust
         duf # du alternative
         sd # sed alternative
-        fzf fasd file silver-searcher
+        fzf
+        fasd
+        file
+        silver-searcher
         fuse-common
-        autossh sshfs-fuse
+        autossh
+        sshfs-fuse
         direnv
         lsyncd
         bindfs
         bat # cat alternative
         pmount
-        tree gparted
+        tree
+        gparted
         broot
         ntfs3g
         inotify-tools
@@ -138,7 +157,6 @@ in {
         usbutils
         ripgrep
 
-
         # Office
         calibre # broken on 2022-04-10
         # etesync-dav # broken since 2023-01-01
@@ -146,8 +164,14 @@ in {
         # firefox profile-sync-daemon
         librewolf # (librewolf.override { wmClass = "browser"; })
         profile-sync-daemon
-        libreoffice-still hunspell hunspellDicts.en-us hunspellDicts.de-de languagetool mythes
-        samba cifs-utils
+        libreoffice-still
+        hunspell
+        hunspellDicts.en-us
+        hunspellDicts.de-de
+        languagetool
+        mythes
+        samba
+        cifs-utils
         gcolor3
         gedit
         jmtpfs
@@ -156,7 +180,10 @@ in {
         simple-scan
         # typora # breaks on 2020-07-08
         zathura
-        thunderbird birdtray protonmail-bridge protonvpn-gui
+        thunderbird
+        birdtray
+        protonmail-bridge
+        protonvpn-gui
         texlab
         texlive.combined.scheme-small
         # texlive.combined.scheme-full
@@ -168,15 +195,17 @@ in {
 
         # Media
         blueman
-        feh imv nitrogen 
-        (gimp-with-plugins.override { 
-          plugins = with gimpPlugins; [ 
+        feh
+        imv
+        nitrogen
+        (gimp-with-plugins.override {
+          plugins = with gimpPlugins; [
             fourier
             # resynthesizer # broken since 2023-03-20
             # gmic
-          ]; 
+          ];
         })
-        inkscape 
+        inkscape
         mate.atril
         mimeo
         mpv
@@ -200,8 +229,11 @@ in {
         tdesktop
 
         # Themes
-        breeze-gtk breeze-icons breeze-qt5 
-        adwaita-qt adwaita-icon-theme 
+        breeze-gtk
+        breeze-icons
+        breeze-qt5
+        adwaita-qt
+        adwaita-icon-theme
         papirus-icon-theme
         dconf
         dconf-editor
@@ -210,15 +242,12 @@ in {
 
         # Fonts
         # localpkgs.bront_fonts
-
       ];
-
     };
 
     dev-packages = buildEnv {
-
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
+      extraOutputsToInstall = ["man"];
       name = "dev-packages";
 
       paths = [
@@ -227,18 +256,28 @@ in {
         # atom
         # ctags
         gdb
-        git tig gh hub gitRepo
+        git
+        tig
+        gh
+        hub
+        gitRepo
 
         # EDITOR
         # neovim coursier # coursier needed for neovim plugins
         # python27Packages.pynvim # ensime
         # python3Packages.pynvim
         # LazyVim
-        neovim clang tree-sitter
+        neovim
+        clang
+        tree-sitter
         editorconfig-core-c
-        shfmt shellcheck
+        shfmt
+        shellcheck
         nixd
-        lua lua-language-server luaPackages.jsregexp stylua
+        lua
+        lua-language-server
+        luaPackages.jsregexp
+        stylua
         fd
         lazygit
         unzip
@@ -271,13 +310,11 @@ in {
 
         brave
       ];
-
     };
 
     nix-packages = buildEnv {
-
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
+      extraOutputsToInstall = ["man"];
       name = "nix-packages";
 
       paths = [
@@ -287,13 +324,11 @@ in {
         nox
         patchelf
       ];
-
     };
 
     scala-packages = buildEnv {
-
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
+      extraOutputsToInstall = ["man"];
       name = "scala-packages";
 
       paths = [
@@ -302,25 +337,21 @@ in {
         scala
         visualvm
       ];
-
     };
 
     ssd-packages = buildEnv {
-
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
+      extraOutputsToInstall = ["man"];
       name = "ssd-packages";
 
       paths = [
         nvme-cli
       ];
-
     };
 
     laptop-packages = buildEnv {
-
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
+      extraOutputsToInstall = ["man"];
       name = "laptop-packages";
 
       paths = [
@@ -333,20 +364,18 @@ in {
         tlp
         zbar # read qrcodes
       ];
-
     };
 
     highres-packages = buildEnv {
-
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
+      extraOutputsToInstall = ["man"];
       name = "highres-packages";
 
       paths = [
         # avidemux # video editing -> not using right now
         # audacity # audio editing -> not using right now
         # brasero -> not using anymore
-        (chromium.override { enableWideVine = false; })
+        (chromium.override {enableWideVine = false;})
         # clementine -> not using anymore
         deadd-notification-center
         evince
@@ -381,13 +410,11 @@ in {
         jellyfin-media-player
         zoom-us
       ];
-
     };
 
     lowres-packages = buildEnv {
-
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
+      extraOutputsToInstall = ["man"];
       name = "lowres-packages";
 
       paths = [
@@ -397,13 +424,11 @@ in {
         llpp
         ranger
       ];
-
     };
 
     gaming-packages = buildEnv {
-
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
+      extraOutputsToInstall = ["man"];
       name = "gaming-packages";
 
       paths = [
@@ -419,11 +444,9 @@ in {
         # runescape
         # steam-run
       ];
-
     };
 
     test-packages = buildEnv {
-
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
       name = "test-packages";
 
@@ -433,13 +456,11 @@ in {
         # localpkgs.iri
         # localpkgs.purple-gnome-keyring
       ];
-
     };
 
     work-packages = buildEnv {
-
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
+      extraOutputsToInstall = ["man"];
       name = "work-packages";
 
       paths = [
@@ -454,26 +475,25 @@ in {
         # plantuml
         # xmlcopyeditor
       ];
-
     };
 
     mining-packages = buildEnv {
-
       inherit (unstable.config.system.path) pathsToLink ignoreCollisions postBuild;
-      extraOutputsToInstall = [ "man" ];
+      extraOutputsToInstall = ["man"];
       name = "mining-packages";
 
       paths = [
         # (localpkgs.xmr-stak.override {cudaSupport = true;})
-        (xmr-stak.override {cudaSupport = true; openclSupport = false; devDonationLevel = "0.0";})
+        (xmr-stak.override {
+          cudaSupport = true;
+          openclSupport = false;
+          devDonationLevel = "0.0";
+        })
       ];
-
     };
-
   };
 
   librewolf = {
     tridactyl-native = true;
   };
-
 }

@@ -1,36 +1,33 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
+{pkgs, ...}: {
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+    ./woost-configuration.nix
+  ];
 
-{ config, pkgs, lib, ... }:
+  fileSystems."/media/data" = {
+    device = "/dev/disk/by-uuid/bd09798f-1676-47a0-b113-b735d4e811f5";
+    fsType = "ext4";
+    label = "data";
+    options = ["x-systemd.automount" "noauto" "x-systemd.idle-timeout=15min"];
+  };
 
-{
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      ./woost-configuration.nix
-    ];
+  fileSystems."/media/windows" = {
+    device = "/dev/disk/by-uuid/B4AE3C45AE3BFE84";
+    fsType = "ntfs-3g";
+    label = "windows";
+    options = ["uid=jelias" "gid=users" "dmask=022" "fmask=133" "x-systemd.automount" "noauto" "x-systemd.idle-timeout=1min"];
+  };
 
-  fileSystems."/media/data" =
-    { device = "/dev/disk/by-uuid/bd09798f-1676-47a0-b113-b735d4e811f5";
-      fsType = "ext4";
-      label = "data";
-      options = [ "x-systemd.automount" "noauto"  "x-systemd.idle-timeout=15min"];
-    };
-
-  fileSystems."/media/windows" =
-    { device = "/dev/disk/by-uuid/B4AE3C45AE3BFE84";
-      fsType = "ntfs-3g";
-      label = "windows";
-      options = [ "uid=jelias" "gid=users" "dmask=022" "fmask=133" "x-systemd.automount" "noauto" "x-systemd.idle-timeout=1min" ];
-    };
-
-  fileSystems."/media/ntfs" =
-    { device = "/dev/disk/by-uuid/1AF86B704887DADD";
-      fsType = "ntfs-3g";
-      label = "ntfs";
-      options = [ "uid=jelias" "gid=users" "dmask=022" "fmask=133" "x-systemd.automount" "noauto" "x-systemd.idle-timeout=1min" ];
-    };
+  fileSystems."/media/ntfs" = {
+    device = "/dev/disk/by-uuid/1AF86B704887DADD";
+    fsType = "ntfs-3g";
+    label = "ntfs";
+    options = ["uid=jelias" "gid=users" "dmask=022" "fmask=133" "x-systemd.automount" "noauto" "x-systemd.idle-timeout=1min"];
+  };
 
   # fileSystems."/media/ateam/ateam" =
   #   { device = "//ateam/ateam";
@@ -65,7 +62,7 @@
     initrd.mdadmConf = ''
       DEVICE partitions
       ARRAY /dev/md/nixos:0 metadata=1.2 name=nixos:0 UUID=8b34463c:d38d231e:d6c35510:cd133929
-      '';
+    '';
 
     tmpOnTmpfs = true;
 
@@ -102,8 +99,8 @@
       134.130.57.2    sylvester
       134.130.57.147  godzilla
     '';
-    firewall.allowedTCPPorts = [ 139 445 12345 ];
-    firewall.allowedUDPPorts = [ 137 138 5353 ];
+    firewall.allowedTCPPorts = [139 445 12345];
+    firewall.allowedUDPPorts = [137 138 5353];
     firewall.enable = true;
     #dhcpcd.enable = false;
     #interfaces.enp7s0.ipv4.addresses = [ { address = "192.168.1.50"; prefixLength = 24; } ];
@@ -117,10 +114,11 @@
 
   powerManagement = {
     enable = true;
-  # powertop.enable = true;
+    # powertop.enable = true;
   };
 
-  i18n = { # Select internationalisation properties.
+  i18n = {
+    # Select internationalisation properties.
     consoleKeyMap = "neo";
     defaultLocale = "en_US.UTF-8";
   };
@@ -164,16 +162,15 @@
       QT_IM_MODULE = "ibus";
 
       _JAVA_AWT_WM_NONREPARENTING = "1";
-     
+
       AWT_TOOLKIT = "MToolkit";
       GDK_USE_XFT = "1";
-
     };
-      #QT_QPA_PLATFORMTHEME = "qt5ct";
-      # _JAVA_OPTIONS=" -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
-      # SBT_OPTS="-J-Xms1G -J-Xmx4G -J-Xss4M -J-XX:+CMSClassUnloadingEnabled -J-XX:+UseConcMarkSweepGC";
-      # _JAVA_OPTIONS = "-Xms1G -Xmx4G -Xss1M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
-      #SSH_AUTH_SOCK = "%t/keyring/ssh";
+    #QT_QPA_PLATFORMTHEME = "qt5ct";
+    # _JAVA_OPTIONS=" -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
+    # SBT_OPTS="-J-Xms1G -J-Xmx4G -J-Xss4M -J-XX:+CMSClassUnloadingEnabled -J-XX:+UseConcMarkSweepGC";
+    # _JAVA_OPTIONS = "-Xms1G -Xmx4G -Xss1M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
+    #SSH_AUTH_SOCK = "%t/keyring/ssh";
   };
 
   nix = {
@@ -208,7 +205,7 @@
     };
 
     # ssh.startAgent = true;
-    gnupg.agent = { 
+    gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
     };
@@ -255,10 +252,8 @@
     };
   };
 
-
   # List services that you want to enable:
   services = {
-
     # Do this only on laptop
     # udev.extraRules = ''
     #   SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", ATTR{capacity}=="[0-7]", RUN+="${pgks.systemd}/bin/systemctl hibernate"
@@ -270,11 +265,11 @@
       # mountPoint = "/keybase"; # mountpoint important for keybase-gui
     };
 
-    dbus.packages = with pkgs; [ gnome3.dconf gnome2.GConf gnome3.gnome-keyring gcr ];
+    dbus.packages = with pkgs; [gnome3.dconf gnome2.GConf gnome3.gnome-keyring gcr];
 
     openssh = {
       enable = true;
-      ports = [ 53292 ];
+      ports = [53292];
       passwordAuthentication = false;
       forwardX11 = true;
     };
@@ -300,7 +295,7 @@
 
     timesyncd = {
       enable = true;
-      servers = [ "ntp1.rwth-aachen.de" "ntp2.rwth-aachen.de" ];
+      servers = ["ntp1.rwth-aachen.de" "ntp2.rwth-aachen.de"];
     };
 
     fstrim.enable = true;
@@ -308,7 +303,7 @@
 
     printing = {
       enable = true;
-      drivers = [ pkgs.gutenprint pkgs.hplip pkgs.epson-escpr ];
+      drivers = [pkgs.gutenprint pkgs.hplip pkgs.epson-escpr];
     };
 
     xserver = {
@@ -316,7 +311,7 @@
       # dpi = 192;
       dpi = 96;
       # videoDrivers = [ "nvidia" ];
-      videoDrivers = [ "nouveau" ];
+      videoDrivers = ["nouveau"];
       layout = "de,de";
       xkbVariant = "neo,basic";
       xkbOptions = "grp:menu_toggle";
@@ -346,7 +341,7 @@
       windowManager = {
         i3 = {
           enable = true;
-          extraPackages = with pkgs; [ feh rofi i3status i3lock gnome3.gnome-keyring ];
+          extraPackages = with pkgs; [feh rofi i3status i3lock gnome3.gnome-keyring];
           extraSessionCommands = ''
             xsetroot -bg black
             xsetroot -cursor_name left_ptr
@@ -389,21 +384,21 @@
     };
 
     clamav = {
-      daemon.enable   = true;
+      daemon.enable = true;
       daemon.extraConfig = ''
         TCPAddr   127.0.0.1
         TCPSocket 3310
       '';
-      updater.enable  = true;
+      updater.enable = true;
     };
 
-    gvfs.enable  = true;
+    gvfs.enable = true;
 
     gnome3 = {
       gnome-keyring.enable = true;
     };
 
-    upower.enable  = true;
+    upower.enable = true;
     udisks2.enable = true;
 
     # acpid.enable = true;
@@ -473,7 +468,7 @@
 
     fontconfig = {
       includeUserConf = false;
-      defaultFonts.monospace = [ "Inconsolata" "DejaVu Sans Mono" ];
+      defaultFonts.monospace = ["Inconsolata" "DejaVu Sans Mono"];
     };
   };
 
@@ -486,7 +481,7 @@
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.extraUsers.jelias = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "vboxusers" "docker" "scanner" "adbusers" "networkmanager" "wireshark" ];
+    extraGroups = ["wheel" "vboxusers" "docker" "scanner" "adbusers" "networkmanager" "wireshark"];
     useDefaultShell = true;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM+BIE+0anEEYK0fBIEpjedblyGW0UnuYBCDtjZ5NW6P jelias@merkur"
@@ -498,7 +493,7 @@
 
   users.extraUsers.dev = {
     isNormalUser = true;
-    extraGroups = [ "vboxusers" "docker" "adbusers" "networkmanager" ];
+    extraGroups = ["vboxusers" "docker" "adbusers" "networkmanager"];
     useDefaultShell = true;
     openssh.authorizedKeys.keys = [
       "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDU3dAvm/F8DksvT2fQ1804/ScajO20OxadixGD8lAPINLbCj7mRpLJmgnVjdJSSHQpaJXsDHjLul4Z4nuvgcOG2cjtI+/Z2d1AC+j5IDTJNs6yGgyzkRalPYWXKpzrOa/yQcVpJyGsliKyPuyc9puLJIQ0vvosVAUxN6TLMfnrgdtnZMsuQecToJ8AgyEgsGedOnYC2/1ELUJEdh2v2LMr2saWJW/HTptTotbS8Fwz+QWZPAxXWlEbH5r5LEma3xpn/7oiE4JKr7DL7bE4jWVgW0yrOZL0EAVm771oigqcS/ekTqLutVoFmcH0ysInsWKjnuT02+PIjDJdGODwlE5P felix@beef"
@@ -510,5 +505,4 @@
   # servers. You should change this only after NixOS release notes say you
   # should.
   system.stateVersion = "19.09"; # Did you read the comment?
-
 }

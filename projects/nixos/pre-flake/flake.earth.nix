@@ -2,7 +2,7 @@
   description = "NixOS configuration";
 
   nixConfig = {
-    experimental-features = [ "nix-command" "flakes" ];
+    experimental-features = ["nix-command" "flakes"];
 
     extra-substituters = [
       # Nix community's cache server
@@ -27,7 +27,12 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, lanzaboote, home-manager, ... }: {
+  outputs = inputs @ {
+    nixpkgs,
+    lanzaboote,
+    home-manager,
+    ...
+  }: {
     nixosConfigurations = {
       earth = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -40,7 +45,7 @@
           lanzaboote.nixosModules.lanzaboote
 
           ./configuration.nix
-          
+
           # make home-manager as a module of nixos
           # so that home-manager configuration will be deployed automatically when executing `nixos-rebuild switch`
           home-manager.nixosModules.home-manager

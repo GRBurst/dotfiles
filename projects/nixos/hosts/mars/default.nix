@@ -1,19 +1,16 @@
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
-
-{ config, pkgs, lib, ... }:
-
+{pkgs, ...}:
 # let
 #   phpSocket = "/tmp/php-cgi.socket";
 #   webserverDir = "/var/www/webserver";
 # in
-
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+  ];
 
   nix = {
     daemonIOSchedPriority = 7;
@@ -22,7 +19,7 @@
       max-jobs = 16;
       sandbox = true;
       # Enable Flakes and the new command-line tool
-      experimental-features = [ "nix-command" "flakes" ];
+      experimental-features = ["nix-command" "flakes"];
     };
     gc = {
       automatic = true;
@@ -93,11 +90,11 @@
       extraPackages = with pkgs; [
         mesa.drivers
         intel-media-driver # LIBVA_DRIVER_NAME=iHD
-        vaapiIntel         # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
+        vaapiIntel # LIBVA_DRIVER_NAME=i965 (older but works better for Firefox/Chromium)
         vaapiVdpau
         libvdpau-va-gl
       ];
-      extraPackages32 = with pkgs.pkgsi686Linux; [ vaapiIntel ];
+      extraPackages32 = with pkgs.pkgsi686Linux; [vaapiIntel];
     };
   };
 
@@ -109,15 +106,17 @@
     networkmanager = {
       enable = true;
       wifi.macAddress = "random";
-      appendNameservers = [ "9.9.9.9" "149.112.112.112" "2620:fe::fe" "2620:fe::9" ];
+      appendNameservers = ["9.9.9.9" "149.112.112.112" "2620:fe::fe" "2620:fe::9"];
       # logLevel = "TRACE";
       # dns = "none";
       # appendNameservers = [ "1.1.1.1" "1.0.0.1" "2606:4700:4700::1111" "2606:4700:4700::1001" ];
     };
     enableIPv6 = true;
-    firewall.enable = true;
-    firewall.allowedTCPPorts = [ 12345 15432 ];
-    firewall.allowedUDPPorts = [ 50624 50625 ]; # Firefox WebIDE
+    firewall = {
+      enable = true;
+      allowedTCPPorts = [12345 15432];
+      allowedUDPPorts = [50624 50625]; # Firefox WebIDE
+    };
     hostName = "mars";
     extraHosts = ''
       127.0.0.1       *.localhost *.localhost.localdomain
@@ -136,7 +135,8 @@
     #powertop.enable = true;
   };
 
-  console = { # Select internationalisation properties.
+  console = {
+    # Select internationalisation properties.
     keyMap = "neo";
   };
 
@@ -150,14 +150,18 @@
   # These are installed system-wide
   environment = {
     systemPackages = with pkgs; [
-      neovim vim
+      neovim
+      vim
       git
       wget
       curl
 
-      protonvpn-cli protonvpn-gui protonmail-bridge
+      protonvpn-cli
+      protonvpn-gui
+      protonmail-bridge
       hdparm
-      adapta-gtk-theme adapta-kde-theme
+      adapta-gtk-theme
+      adapta-kde-theme
     ];
 
     shellAliases = {
@@ -178,7 +182,7 @@
 
       # _JAVA_OPTIONS = "-Xms1G -Xmx4G -Xss16M -XX:MaxMetaspaceSize=2G -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd";
       #SBT_OPTS="$SBT_OPTS -Xms2G -Xmx8G -Xss4M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC";
-      SBT_OPTS="-Xms1G -Xmx4G -Xss16M";
+      SBT_OPTS = "-Xms1G -Xmx4G -Xss16M";
 
       AUTOSSH_GATETIME = "0";
 
@@ -213,7 +217,6 @@
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   programs = {
-
     noisetorch = {
       enable = true;
     };
@@ -231,7 +234,7 @@
     adb.enable = true;
 
     # ssh.startAgent = true;
-    gnupg.agent = { 
+    gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
     };
@@ -245,8 +248,8 @@
     dconf.enable = true;
 
     screen.enable = true;
-    screen.screenrc = 
-    ''term screen-256color
+    screen.screenrc = ''
+      term screen-256color
       termcapinfo xterm*|xs|rxvt* ti@:te@
       startup_message off
       caption string '%{= G}[ %{G}%H %{g}][%= %{= w}%?%-Lw%?%{= R}%n*%f %t%?%{= R}(%u)%?%{= w}%+Lw%?%= %{= g}][ %{y}Load: %l %{g}][%{B}%Y-%m-%d %{W}%c:%s %{g}]'
@@ -259,9 +262,9 @@
   users.defaultUserShell = "/run/current-system/sw/bin/zsh";
 
   security = {
-	# pam.services.lightdm.enableGnomeKeyring = true;
-	# pam.services.login.enableGnomeKeyring = true;
-	# pam.services.i3lock.enableGnomeKeyring = true;
+    # pam.services.lightdm.enableGnomeKeyring = true;
+    # pam.services.login.enableGnomeKeyring = true;
+    # pam.services.i3lock.enableGnomeKeyring = true;
 
     # pam.services = [
     #   {
@@ -315,10 +318,8 @@
     };
   };
 
-
   # List services that you want to enable:
   services = {
-
     # # Testing
     # amdgpu-fan = {
     #   enable = true;
@@ -387,7 +388,7 @@
 
     printing = {
       enable = true;
-      drivers = [ pkgs.gutenprint pkgs.hplip pkgs.epson-escpr ];
+      drivers = [pkgs.gutenprint pkgs.hplip pkgs.epson-escpr];
     };
 
     pipewire = {
@@ -422,21 +423,21 @@
     xserver = {
       enable = true;
       dpi = 192;
-      videoDrivers = [ "modesetting" ];
+      videoDrivers = ["modesetting"];
       xkb = {
-      	layout = "de,de";
-      	variant = "neo,basic";
-      	options = "grp:menu_toggle";
+        layout = "de,de";
+        variant = "neo,basic";
+        options = "grp:menu_toggle";
       };
       displayManager = {
         lightdm.enable = true;
       };
 
-      desktopManager.xterm.enable  = false;
+      desktopManager.xterm.enable = false;
       windowManager = {
         i3 = {
           enable = true;
-          extraPackages = with pkgs; [ feh rofi i3status-rust i3lock gnome-keyring ];
+          extraPackages = with pkgs; [feh rofi i3status-rust i3lock gnome-keyring];
           extraSessionCommands = ''
             xsetroot -bg black
             xsetroot -cursor_name left_ptr
@@ -537,7 +538,7 @@
     #      pm = dynamic
     #      pm.max_children = 4
     #      pm.start_servers = 2
-    #      pm.min_spare_servers = 1 
+    #      pm.min_spare_servers = 1
     #      pm.max_spare_servers = 4
     #      pm.max_requests = 32
     #      php_admin_value[error_log] = 'stderr'
@@ -606,22 +607,22 @@
 
     clamav = {
       daemon = {
-        enable   = true;
+        enable = true;
         settings = {
           TCPAddr = "127.0.0.1";
           TCPSocket = 3310;
         };
       };
-      updater.enable  = true;
+      updater.enable = true;
     };
 
-    gvfs.enable  = true;
+    gvfs.enable = true;
     gnome = {
       gnome-keyring.enable = true;
       gnome-settings-daemon.enable = false;
     };
 
-    upower.enable  = true;
+    upower.enable = true;
     udisks2.enable = true;
 
     acpid.enable = true;
@@ -691,7 +692,7 @@
 
     fontconfig = {
       includeUserConf = true;
-      defaultFonts.monospace = [ "Roboto Mono" "DejaVu Sans Mono" ];
+      defaultFonts.monospace = ["Roboto Mono" "DejaVu Sans Mono"];
     };
   };
 
@@ -706,11 +707,10 @@
     };
   };
 
-
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.extraUsers.jelias = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "video" "audio" "vboxusers" "docker" "fuse" "scanner" "adbusers" "networkmanager" ];
+    extraGroups = ["wheel" "video" "audio" "vboxusers" "docker" "fuse" "scanner" "adbusers" "networkmanager"];
     useDefaultShell = true;
     # openssh.authorizedKeys.keys = [
     #   "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM+BIE+0anEEYK0fBIEpjedblyGW0UnuYBCDtjZ5NW6P jelias@merkur"
@@ -737,5 +737,4 @@
   # servers. You should change this only after NixOS release notes say you
   # should.
   system.stateVersion = "24.05"; # Did you read the comment?
-
 }

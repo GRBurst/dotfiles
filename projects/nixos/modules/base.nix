@@ -1,6 +1,8 @@
-{ config, pkgs, hostname, ... }:
-
 {
+  pkgs,
+  hostname,
+  ...
+}: {
   imports = [
     # ./<module>.nix
   ];
@@ -33,7 +35,7 @@
       extraPackages = with pkgs; [
         amdvlk
       ];
-      extraPackages32 = with pkgs.driversi686Linux; [ amdvlk ];
+      extraPackages32 = with pkgs.driversi686Linux; [amdvlk];
     };
   };
 
@@ -42,12 +44,14 @@
       enable = true;
       wifi.macAddress = "random";
       # quad9 dns server, https://www.quad9.net/
-      appendNameservers = [ "9.9.9.9" "149.112.112.112" "2620:fe::fe" "2620:fe::9" ];
+      appendNameservers = ["9.9.9.9" "149.112.112.112" "2620:fe::fe" "2620:fe::9"];
     };
     enableIPv6 = true;
-    firewall.enable = true;
-    firewall.allowedTCPPorts = [ 12345 15432 53292 ];
-    firewall.allowedUDPPorts = [ 50624 50625 ]; # Firefox WebIDE
+    firewall = {
+      enable = true;
+      allowedTCPPorts = [12345 15432 53292];
+      allowedUDPPorts = [50624 50625]; # Firefox WebIDE
+    };
     hostName = hostname;
     extraHosts = ''
       127.0.0.1       *.localhost *.localhost.localdomain
@@ -58,7 +62,7 @@
     daemonIOSchedPriority = 7;
     settings = {
       sandbox = true;
-      experimental-features = [ "nix-command" "flakes" ];
+      experimental-features = ["nix-command" "flakes"];
     };
     gc = {
       automatic = true;
@@ -76,7 +80,6 @@
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   programs = {
-
     noisetorch = {
       enable = true;
     };
@@ -94,7 +97,7 @@
     adb.enable = true;
 
     # ssh.startAgent = true;
-    gnupg.agent = { 
+    gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
     };
@@ -108,8 +111,8 @@
     dconf.enable = true;
 
     screen.enable = true;
-    screen.screenrc = 
-    ''term screen-256color
+    screen.screenrc = ''
+      term screen-256color
       termcapinfo xterm*|xs|rxvt* ti@:te@
       startup_message off
       caption string '%{= G}[ %{G}%H %{g}][%= %{= w}%?%-Lw%?%{= R}%n*%f %t%?%{= R}(%u)%?%{= w}%+Lw%?%= %{= g}][ %{y}Load: %l %{g}][%{B}%Y-%m-%d %{W}%c:%s %{g}]'
@@ -119,7 +122,7 @@
     light.enable = true;
 
     # ssh.startAgent = true;
-    gnupg.agent = { 
+    gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
     };
@@ -169,13 +172,11 @@
     };
   };
 
-
   # List services that you want to enable:
   services = {
-
     openssh = {
       enable = true;
-      ports = [ 53292 ];
+      ports = [53292];
     };
 
     cron.enable = true;
@@ -202,7 +203,6 @@
         CPU_BOOST_ON_BAT = 1;
       };
     };
-
 
     journald = {
       extraConfig = ''
@@ -253,21 +253,21 @@
     xserver = {
       enable = true;
       dpi = 192;
-      videoDrivers = [ "modesetting" ];
+      videoDrivers = ["modesetting"];
       xkb = {
-      	layout = "de,de";
-      	variant = "neo,basic";
-      	options = "grp:menu_toggle";
+        layout = "de,de";
+        variant = "neo,basic";
+        options = "grp:menu_toggle";
       };
       displayManager = {
         lightdm.enable = true;
       };
 
-      desktopManager.xterm.enable  = false;
+      desktopManager.xterm.enable = false;
       windowManager = {
         i3 = {
           enable = true;
-          extraPackages = with pkgs; [ feh rofi i3status-rust i3lock gnome-keyring ];
+          extraPackages = with pkgs; [feh rofi i3status-rust i3lock gnome-keyring];
           extraSessionCommands = ''
             xsetroot -bg black
             xsetroot -cursor_name left_ptr
@@ -316,22 +316,22 @@
 
     clamav = {
       daemon = {
-        enable   = true;
+        enable = true;
         settings = {
           TCPAddr = "127.0.0.1";
           TCPSocket = 3310;
         };
       };
-      updater.enable  = true;
+      updater.enable = true;
     };
 
-    gvfs.enable  = true;
+    gvfs.enable = true;
     gnome = {
       gnome-keyring.enable = true;
       gnome-settings-daemon.enable = false;
     };
 
-    upower.enable  = true;
+    upower.enable = true;
     udisks2.enable = true;
 
     acpid.enable = true;
@@ -351,7 +351,8 @@
     #powertop.enable = true;
   };
 
-  console = { # Select internationalisation properties.
+  console = {
+    # Select internationalisation properties.
     keyMap = "neo";
   };
 
@@ -387,7 +388,7 @@
 
     fontconfig = {
       includeUserConf = true;
-      defaultFonts.monospace = [ "Roboto Mono" "DejaVu Sans Mono" ];
+      defaultFonts.monospace = ["Roboto Mono" "DejaVu Sans Mono"];
     };
   };
 

@@ -1,17 +1,17 @@
-{ config, pkgs, lib, options, ... }:
-
+{
+  config,
+  pkgs,
+  ...
+}:
 # let
 #   # from: https://gist.github.com/LnL7/e645b9075933417e7fd8f93207787581
 #   # Import unstable channel.
 #   # sudo nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs-unstable
 #   # sudo nix-channel --update nixpkgs-unstable
 #   unstable = import <nixpkgs-unstable> {};
-
 # in
-
 {
-  imports =
-  [
+  imports = [
     # <nixpkgs/nixos/modules/services/hardware/sane_extra_backends/brscan4.nix>
     ./hardware-configuration.nix
     # ./woost-configuration.nix
@@ -30,7 +30,7 @@
       };
     };
 
-    kernelParams = [ "processor.max_cstate=5" "rcu_nocbs=0-11" "idle=nomwait" ]; # fix for ryzen freeze?
+    kernelParams = ["processor.max_cstate=5" "rcu_nocbs=0-11" "idle=nomwait"]; # fix for ryzen freeze?
 
     # kernelPackages = pkgs.linuxPackages_4_14;
     # kernelPackages = pkgs.linuxPackages_latest;
@@ -46,43 +46,41 @@
 
   fileSystems = {
     "/media/macos" = {
-        # device = "/dev/disk/by-uuid/aa4a3a0d-d16c-42cf-8c25-ec8215579337";
-        device = "/dev/disk/by-uuid/f259ab35-b7f2-473e-b04c-14f83777bd26";
-        fsType = "ext4";
-        options = [ "defaults" "x-systemd.automount" "noauto" ];
+      # device = "/dev/disk/by-uuid/aa4a3a0d-d16c-42cf-8c25-ec8215579337";
+      device = "/dev/disk/by-uuid/f259ab35-b7f2-473e-b04c-14f83777bd26";
+      fsType = "ext4";
+      options = ["defaults" "x-systemd.automount" "noauto"];
     };
   };
-  swapDevices =
-    [
-      { 
-        device = "/swapfile";
-        size = 16384;
-      }
-    ];
-
+  swapDevices = [
+    {
+      device = "/swapfile";
+      size = 16384;
+    }
+  ];
 
   # fileSystems = {
-    # "/media/ateam" = {
-    #     device = "//ateam/ateam";
-    #     fsType = "cifs";
-    #     options = [ "uid=felix" "ro" "username=x" "password=" "x-systemd.automount" "noauto" "x-systemd.idle-timeout=1800" "x-systemd.device-timeout=60" ];
-    # };
-    # "/media/ateamUpload" = {
-    #     device = "//ateam/upload";
-    #     fsType = "cifs";
-    #     options = [ "uid=felix" "username=x" "password=" "x-systemd.automount" "noauto" "x-systemd.idle-timeout=1800" "x-systemd.device-timeout=60" ];
-    # };
-    # "/media/trommel" = {
-    #     device = "/dev/disk/by-uuid/452fb057-8990-4ce8-91dc-a97b26175447";
-    #     fsType = "ext4";
-    #     options = [ "defaults" "x-systemd.automount" "noauto" ];
-    # };
+  # "/media/ateam" = {
+  #     device = "//ateam/ateam";
+  #     fsType = "cifs";
+  #     options = [ "uid=felix" "ro" "username=x" "password=" "x-systemd.automount" "noauto" "x-systemd.idle-timeout=1800" "x-systemd.device-timeout=60" ];
+  # };
+  # "/media/ateamUpload" = {
+  #     device = "//ateam/upload";
+  #     fsType = "cifs";
+  #     options = [ "uid=felix" "username=x" "password=" "x-systemd.automount" "noauto" "x-systemd.idle-timeout=1800" "x-systemd.device-timeout=60" ];
+  # };
+  # "/media/trommel" = {
+  #     device = "/dev/disk/by-uuid/452fb057-8990-4ce8-91dc-a97b26175447";
+  #     fsType = "ext4";
+  #     options = [ "defaults" "x-systemd.automount" "noauto" ];
+  # };
   # };
 
   nixpkgs = {
     config = {
       allowUnfree = true;
-      packageOverrides = pkgs: {
+      packageOverrides = _pkgs: {
         unstable = import <nixos-unstable> {
           config = config.nixpkgs.config;
         };
@@ -90,16 +88,16 @@
         # nur = import (builtins.fetchTarball "https://github.com/nix-community/NUR/archive/master.tar.gz") {
         #   inherit pkgs;
       };
-    # chromium = {
-    #   # enablePepperFlash = true;
-    #   enableWideVine = false;
-    # };
-    # #  --param l1-cache-line-size=64 --param l2-cache-size=8192 -mtune=nehalem
-    # # stdenv.userHook = ''
-    # #   NIX_CFLAGS_COMPILE+="-march=native"
-    # # '';
+      # chromium = {
+      #   # enablePepperFlash = true;
+      #   enableWideVine = false;
+      # };
+      # #  --param l1-cache-line-size=64 --param l2-cache-size=8192 -mtune=nehalem
+      # # stdenv.userHook = ''
+      # #   NIX_CFLAGS_COMPILE+="-march=native"
+      # # '';
 
-    # programs.qt5ct.enable = true;
+      # programs.qt5ct.enable = true;
     };
     # overlays = [
     #   (import /home/jelias/projects/nixpkgs)
@@ -112,8 +110,6 @@
   #   ] ++ options.nix.nixPath.default;
   # };
 
-
-
   # nix.extraOptions = ''
   #   auto-optimise-store = true
   #   build-fallback = true
@@ -122,8 +118,8 @@
   hardware = {
     pulseaudio = {
       enable = false;
-    #   support32Bit = true;
-    #   package = pkgs.pulseaudioFull;
+      #   support32Bit = true;
+      #   package = pkgs.pulseaudioFull;
     };
     bluetooth = {
       enable = true;
@@ -136,11 +132,11 @@
       driSupport = true;
       driSupport32Bit = true;
       setLdLibraryPath = true;
-      extraPackages = [ pkgs.amdvlk ];
-      extraPackages32 = [ pkgs.driversi686Linux.amdvlk ];
+      extraPackages = [pkgs.amdvlk];
+      extraPackages32 = [pkgs.driversi686Linux.amdvlk];
     };
     sane.enable = true;
-    sane.extraBackends = [ pkgs.sane-airscan pkgs.epkowa ];
+    sane.extraBackends = [pkgs.sane-airscan pkgs.epkowa];
     # sane.extraBackends = [ pkgs.sane-airscan ];
 
     # sane.brscan4.enable = true;
@@ -155,7 +151,7 @@
     networkmanager = {
       enable = true;
       ethernet.macAddress = "random";
-      appendNameservers = [ "9.9.9.9" "149.112.112.112" "2620:fe::fe" "2620:fe::9" ];
+      appendNameservers = ["9.9.9.9" "149.112.112.112" "2620:fe::fe" "2620:fe::9"];
       plugins = with pkgs; [
         networkmanager-openconnect
         networkmanager-openvpn
@@ -168,8 +164,8 @@
       127.0.0.1       *.localhost *.localhost.localdomain
     '';
     # networking.wireless.enable = true;
-    firewall.allowedUDPPorts = [ 12345 50624 50625 ]; # Firefox WebIDE
-    firewall.allowedTCPPorts = [ 12345 18080 8082 ]; # dev
+    firewall.allowedUDPPorts = [12345 50624 50625]; # Firefox WebIDE
+    firewall.allowedTCPPorts = [12345 18080 8082]; # dev
   };
 
   location = {
@@ -179,9 +175,9 @@
   };
 
   # powerManagement = {
-    # enable = true;
-    # powertop.enable = true;
-    # powerUpCommands = "${pkgs.hdparm}/bin/hdparm -Y /dev/disk/by-id/ata-WDC_WD10EZEX-00BN5A0_WD-WCC3F5TTNUHT";
+  # enable = true;
+  # powertop.enable = true;
+  # powerUpCommands = "${pkgs.hdparm}/bin/hdparm -Y /dev/disk/by-id/ata-WDC_WD10EZEX-00BN5A0_WD-WCC3F5TTNUHT";
   # };
 
   console.keyMap = "neo";
@@ -242,7 +238,7 @@
       # gnome3.nautilus gnome3.gvfs gnome3.file-roller
       # gnome3.gnome_keyring gnome3.seahorse libsecret
 
-      # # numix-gtk-theme 
+      # # numix-gtk-theme
       # gnome3.adwaita-icon-theme
       # paper-icon-theme
       # vanilla-dmz
@@ -263,7 +259,7 @@
 
       BROWSER = "librewolf";
 
-      SBT_OPTS="-Xms1G -Xmx4G -Xss16M";
+      SBT_OPTS = "-Xms1G -Xmx4G -Xss16M";
 
       AUTOSSH_GATETIME = "0";
 
@@ -292,7 +288,6 @@
       # _JAVA_OPTIONS = "-Xms1G -Xmx4G -Xss1M -XX:+CMSClassUnloadingEnabled -XX:+UseConcMarkSweepGC -XX:+UseCompressedOops -Dawt.useSystemAAFontSettings=lcd -Xbootclasspath/p:$HOME/local/jars/neo2-awt-hack-0.4-java8oracle.jar";
       # SSH_AUTH_SOCK = "%t/keyring/ssh";
     };
-
   };
 
   nix.gc = {
@@ -303,47 +298,47 @@
   system.autoUpgrade.enable = true;
   # system.autoUpgrade.dates = "23:15";
 
-    # Some programs need SUID wrappers, can be configured further or are
+  # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   programs = {
-	command-not-found.enable = true;
+    command-not-found.enable = true;
 
     noisetorch.enable = true;
 
-	bash.enableCompletion = true;
+    bash.enableCompletion = true;
 
-	zsh = {
-	  enable = true;
-	  enableCompletion = true;
-	};
+    zsh = {
+      enable = true;
+      enableCompletion = true;
+    };
     fish.enable = true;
 
-	adb.enable = true;
+    adb.enable = true;
 
-	ccache = {
-	  enable = true;
-	  cacheDir = "/tmp/ccache";
-	};
+    ccache = {
+      enable = true;
+      cacheDir = "/tmp/ccache";
+    };
 
     seahorse.enable = true;
     gpaste.enable = true;
 
     java.enable = true;
 
-	# ssh.startAgent = true;
-	gnupg.agent = { 
-	  enable = true;
-	  enableSSHSupport = true;
-	};
+    # ssh.startAgent = true;
+    gnupg.agent = {
+      enable = true;
+      enableSSHSupport = true;
+    };
 
-	# qt5ct.enable = true;
-	# mtr.enable = true;
+    # qt5ct.enable = true;
+    # mtr.enable = true;
 
-	dconf.enable = true;
+    dconf.enable = true;
 
     light.enable = true;
-    screen.screenrc = 
-    ''term screen-256color
+    screen.screenrc = ''
+      term screen-256color
       termcapinfo xterm*|xs|rxvt* ti@:te@
       startup_message off
       caption string '%{= G}[ %{G}%H %{g}][%= %{= w}%?%-Lw%?%{= R}%n*%f %t%?%{= R}(%u)%?%{= w}%+Lw%?%= %{= g}][ %{y}Load: %l %{g}][%{B}%Y-%m-%d %{W}%c:%s %{g}]'
@@ -359,88 +354,87 @@
   users.defaultUserShell = "/run/current-system/sw/bin/zsh";
 
   security = {
-	# pam.services.lightdm.enableGnomeKeyring = true;
-	# pam.services.login.enableGnomeKeyring = true;
-	# pam.services.i3lock.enableGnomeKeyring = true;
-	# pam.services."pam_gnome_keyring".enableGnomeKeyring = true;
-	# pam.services = [
-	  #   {
-		#      name = "gnome_keyring";
-		#      text = ''
-		#        auth     optional    pam_gnome_keyring.so
-		#        session  optional    pam_gnome_keyring.so auto_start
-		#        password optional    pam_gnome_keyring.so
-		#      '';
-		#    }
-		# ];
+    # pam.services.lightdm.enableGnomeKeyring = true;
+    # pam.services.login.enableGnomeKeyring = true;
+    # pam.services.i3lock.enableGnomeKeyring = true;
+    # pam.services."pam_gnome_keyring".enableGnomeKeyring = true;
+    # pam.services = [
+    #   {
+    #      name = "gnome_keyring";
+    #      text = ''
+    #        auth     optional    pam_gnome_keyring.so
+    #        session  optional    pam_gnome_keyring.so auto_start
+    #        password optional    pam_gnome_keyring.so
+    #      '';
+    #    }
+    # ];
 
-		#// TODO: pmount needs /media folder (create it automatically)
-        wrappers = {
-          pmount = {
-            setgid = true;
-            owner = "root";
-            group = "users";
-            source = "${pkgs.pmount}/bin/pmount";
-          };
-          pumount = {
-            setgid = true;
-            owner = "root";
-            group = "users";
-            source = "${pkgs.pmount}/bin/pumount";
-          };
-          eject = {
-            setgid = true;
-            owner = "root";
-            group = "users";
-            source = "${pkgs.eject}/bin/eject";
-          };
-          light = {
-            setgid = true;
-            owner = "root";
-            group = "users";
-            source = "${pkgs.light}/bin/light";
-          };
+    #// TODO: pmount needs /media folder (create it automatically)
+    wrappers = {
+      pmount = {
+        setgid = true;
+        owner = "root";
+        group = "users";
+        source = "${pkgs.pmount}/bin/pmount";
+      };
+      pumount = {
+        setgid = true;
+        owner = "root";
+        group = "users";
+        source = "${pkgs.pmount}/bin/pumount";
+      };
+      eject = {
+        setgid = true;
+        owner = "root";
+        group = "users";
+        source = "${pkgs.eject}/bin/eject";
+      };
+      light = {
+        setgid = true;
+        owner = "root";
+        group = "users";
+        source = "${pkgs.light}/bin/light";
+      };
       # slock.source = "${pkgs.slock}/bin/slock";
     };
 
-	sudo = {
-	  enable = true;
-	  wheelNeedsPassword = true;
-	};
+    sudo = {
+      enable = true;
+      wheelNeedsPassword = true;
+    };
   };
 
-    # xserver = {
-    #   enable = true;
-    #   videoDrivers = [ "nvidia" ];
-    #   screenSection = ''
-    #     Option "metamodes" "nvidia-auto-select +0+0 {ForceCompositionPipeline=On}"
-    #   '';
-    #   layout = "de,de,us";
-    #   xkbVariant = "neo,basic,basic";
-    #   xkbOptions = "grp:menu_toggle";
+  # xserver = {
+  #   enable = true;
+  #   videoDrivers = [ "nvidia" ];
+  #   screenSection = ''
+  #     Option "metamodes" "nvidia-auto-select +0+0 {ForceCompositionPipeline=On}"
+  #   '';
+  #   layout = "de,de,us";
+  #   xkbVariant = "neo,basic,basic";
+  #   xkbOptions = "grp:menu_toggle";
 
-    #   displayManager = {
-    #     lightdm = {
-    #       enable = true;
-    #       autoLogin = {
-    #         enable = true;
-    #         user = "felix";
-    #       };
-    #     };
-    #   };
-    #   desktopManager.xterm.enable = false;
-    #   desktopManager.default      = "none";
-    #   windowManager.default       = "xmonad";
-    #   windowManager.xmonad = {
-    #     enable = true;
-    #     enableContribAndExtras = true;
-    #   };
-    #   windowManager.herbstluftwm.enable = true;
-    #   desktopManager.plasma5.enable = false;
-    #   windowManager.i3.enable = true;
-    # };
+  #   displayManager = {
+  #     lightdm = {
+  #       enable = true;
+  #       autoLogin = {
+  #         enable = true;
+  #         user = "felix";
+  #       };
+  #     };
+  #   };
+  #   desktopManager.xterm.enable = false;
+  #   desktopManager.default      = "none";
+  #   windowManager.default       = "xmonad";
+  #   windowManager.xmonad = {
+  #     enable = true;
+  #     enableContribAndExtras = true;
+  #   };
+  #   windowManager.herbstluftwm.enable = true;
+  #   desktopManager.plasma5.enable = false;
+  #   windowManager.i3.enable = true;
+  # };
   services = {
-
     # Nix-shell service (server-client usage)
     lorri.enable = true;
 
@@ -454,7 +448,7 @@
 
     openssh = {
       enable = true;
-      ports = [ 53292 ];
+      ports = [53292];
       passwordAuthentication = false;
       forwardX11 = true;
     };
@@ -514,7 +508,7 @@
     xserver = {
       enable = true;
       dpi = 192;
-      videoDrivers = [ "amdgpu" ];
+      videoDrivers = ["amdgpu"];
       # videoDrivers = [ "nvidia" ];
       # screenSection = ''
       #   Option "metamodes" "nvidia-auto-select +0+0 {ForceCompositionPipeline=On}"
@@ -524,8 +518,11 @@
       xkbOptions = "grp:menu_toggle";
 
       xrandrHeads = [
-        { output = "DP-0"; primary = true; }
-        { output = "HDMI-1"; }
+        {
+          output = "DP-0";
+          primary = true;
+        }
+        {output = "HDMI-1";}
       ];
 
       # libinput = {
@@ -555,7 +552,7 @@
       windowManager = {
         i3 = {
           enable = true;
-          extraPackages = with pkgs; [ feh rofi i3status-rust i3lock gnome.gnome-keyring ];
+          extraPackages = with pkgs; [feh rofi i3status-rust i3lock gnome.gnome-keyring];
           # extraPackages = with pkgs; [ feh rofi i3status i3lock gnome.gnome-keyring ];
           extraSessionCommands = ''
             xsetroot -bg black
@@ -564,10 +561,10 @@
             feh --bg-scale '/home/jelias/.config/i3/background0.jpg' '/home/jelias/.config/i3/background1.jpg'
           '';
         };
-		# xmonad = {
-		#   enable = true;
-		#   enableContribAndExtras = true;
-		# };
+        # xmonad = {
+        #   enable = true;
+        #   enableContribAndExtras = true;
+        # };
         # herbstluftwm.enable = true;
       };
     };
@@ -606,22 +603,22 @@
     };
 
     clamav = {
-      daemon.enable   = true;
+      daemon.enable = true;
       daemon.settings = {
         TCPAddr = "127.0.0.1";
         TCPSocket = 3310;
       };
-      updater.enable  = true;
+      updater.enable = true;
     };
 
-    gvfs.enable  = true;
+    gvfs.enable = true;
 
     gnome = {
       gnome-keyring.enable = true;
     };
 
     usbmuxd.enable = true;
-    upower.enable  = true;
+    upower.enable = true;
     udisks2.enable = true;
 
     # acpid.enable = true;
@@ -634,40 +631,39 @@
       enable = true;
       extraConfig = "192.168.100.50/24";
     };
-
   };
 
   # systemd.user = {
-    # https://vdirsyncer.pimutils.org/en/stable/tutorials/systemd-timer.html
-    # services.vdirsyncer = {
-    #   description = "Synchronize calendars and contacts";
-    #   serviceConfig = {
-    #     Type = "oneshot";
-    #     ExecStart = "${pkgs.vdirsyncer}/bin/vdirsyncer sync";
-    #   };
-    # };
-    # timers.vdirsyncer = {
-    #   description = "Synchronize vdirs";
-    #   wantedBy = [ "timers.target" ];
+  # https://vdirsyncer.pimutils.org/en/stable/tutorials/systemd-timer.html
+  # services.vdirsyncer = {
+  #   description = "Synchronize calendars and contacts";
+  #   serviceConfig = {
+  #     Type = "oneshot";
+  #     ExecStart = "${pkgs.vdirsyncer}/bin/vdirsyncer sync";
+  #   };
+  # };
+  # timers.vdirsyncer = {
+  #   description = "Synchronize vdirs";
+  #   wantedBy = [ "timers.target" ];
 
-    #   timerConfig = {
-    #      OnBootSec = "2m";
-    #      OnUnitInactiveSec = "30m";
-    #      Unit = "vdirsyncer.service";
-    #   };
+  #   timerConfig = {
+  #      OnBootSec = "2m";
+  #      OnUnitInactiveSec = "30m";
+  #      Unit = "vdirsyncer.service";
+  #   };
 
-    #   wants = [ "network-online.target" ];
-    #   after = [ "network-online.target" ];
-    # };
+  #   wants = [ "network-online.target" ];
+  #   after = [ "network-online.target" ];
+  # };
 
-    # services.localnpm = {
-    #   description = "Local npm cache";
-    #   serviceConfig = {
-    #     Type = "simple";
-    #     ExecStart = "${pkgs.nodejs}/bin/node /home/felix/.node_modules/bin/local-npm -d /home/felix/.cache/local-npm";
-    #   };
-    #   wantedBy = [ "multi-user.target" ];
-    # };
+  # services.localnpm = {
+  #   description = "Local npm cache";
+  #   serviceConfig = {
+  #     Type = "simple";
+  #     ExecStart = "${pkgs.nodejs}/bin/node /home/felix/.node_modules/bin/local-npm -d /home/felix/.cache/local-npm";
+  #   };
+  #   wantedBy = [ "multi-user.target" ];
+  # };
   # };
 
   fonts = {
@@ -689,7 +685,7 @@
 
     fontconfig = {
       includeUserConf = true;
-      defaultFonts.monospace = [ "Roboto Mono" "DejaVu Sans Mono" ];
+      defaultFonts.monospace = ["Roboto Mono" "DejaVu Sans Mono"];
     };
   };
 
@@ -706,7 +702,7 @@
 
   users.extraUsers.jelias = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "video" "audio" "vboxusers" "docker" "fuse" "adbusers" "networkmanager" "wireshark" "pipewire" ];
+    extraGroups = ["wheel" "video" "audio" "vboxusers" "docker" "fuse" "adbusers" "networkmanager" "wireshark" "pipewire"];
     useDefaultShell = true;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM+BIE+0anEEYK0fBIEpjedblyGW0UnuYBCDtjZ5NW6P jelias@merkur"
@@ -716,10 +712,9 @@
   };
   users.extraUsers.dev = {
     isNormalUser = true;
-    extraGroups = [ "video" "audio" "pipewire" ];
+    extraGroups = ["video" "audio" "pipewire"];
     shell = pkgs.fish;
   };
 
- system.stateVersion = "22.11"; # Did you read the comment?
-
+  system.stateVersion = "22.11"; # Did you read the comment?
 }
