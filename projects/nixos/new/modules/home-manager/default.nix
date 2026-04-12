@@ -1,0 +1,17 @@
+{
+  imports = [
+    ./bundles/desktop.nix
+    ./bundles/dev.nix
+    ./bundles/extras.nix
+    ./bundles/general.nix
+    ./bundles/laptop.nix
+    ./bundles/media.nix
+    ./features/alacritty.nix
+    ./features/env.nix
+    ./features/git.nix
+    ./features/kitty.nix
+    ./features/misc.nix
+    ./features/wired.nix
+    ./features/zsh.nix
+  ];
+}
