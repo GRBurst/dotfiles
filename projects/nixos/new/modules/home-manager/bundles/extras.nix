@@ -83,13 +83,20 @@ in {
       tesseract texstudio vlc vokoscreen-ng bolt-launcher
       
       # --- Wayland / Hyprland specific ---
-      kondo eww waybar ironbar swww wofi yofi anyrun satty jay
+      kondo eww waybar ironbar awww wofi yofi anyrun satty jay
       hyprpaper hyprpicker hyprlock hypridle hyprcursor hyprsunset
       
       # --- Misc ---
       aider-chat yek timewarrior
       kdePackages.breeze adwaita-qt adwaita-icon-theme papirus-icon-theme
       dconf-editor lxqt.lxqt-config lxappearance
+
+      # --- Misc ---
+      lmstudio
+      claude-code-bin claude-monitor
+      codex
+      opencode
+
     ];
   };
 }
