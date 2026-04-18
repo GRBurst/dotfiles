@@ -6,7 +6,7 @@ in {
   config = lib.mkIf cfg.enable {
     # System-wide Packages
     environment.systemPackages = with pkgs; [
-      protonvpn-gui
+      proton-vpn
       protonmail-bridge
       proton-vpn-cli
       hdparm
