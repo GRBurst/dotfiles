@@ -15,12 +15,12 @@ alias g-add-label='gh pr edit --add-label $(gh label list --limit 100 --json nam
 # DOTFILES_HIVEMIND_TIG="TIGRC_USER=$HOME/.config/tig/config-dotfiles-hivemind $"
 # alias tigh=
 # alias tig="if grep -i $(pwd) 'hivemind'; then tigh else tig fi"
-alias grep="echo 'use rg (rigrep)'; grep $@"
-alias cat="echo 'use bat instead'; cat $@"
-alias traceroute="echo 'use mtr instead'; traceroute $@"
-alias du="echo 'use dust (du-dust) instead'; du $@"
-alias sed="echo 'use sd instead'; sd $@"
-alias diff="echo 'use difftastic instead'; diff $@"
+# alias grep="echo 'use rg (rigrep)'; grep $@"
+# alias cat="echo 'use bat instead'; cat $@"
+# alias traceroute="echo 'use mtr instead'; traceroute $@"
+# alias du="echo 'use dust (du-dust) instead'; du $@"
+# alias sed="echo 'use sd instead'; sd $@"
+# alias diff="echo 'use difftastic instead'; diff $@"
 
 # Dotfiles
 alias d="$HOME/projects/bin/git-dotfiles"
@@ -100,6 +100,7 @@ alias drst="docker status"
 alias drex="docker exec -it"
 alias dcup="docker compose up -d"
 alias dcdown="docker compose down"
+alias drsys="docker system df -v"
 
 dricl() { docker image rm -f $(docker images -q) }
 drsa() { docker stop $(docker ps -a -q) }
@@ -123,15 +124,14 @@ drclean1() {
 drclean1f() {
     docker stop $(docker ps -a -f name="$1" -q )
     docker container rm -f $(docker ps -a -f name="$1" -q )
-    docker volume rm -f $(docker volume ls -f name="$1" -q )
     docker network rm $(docker network ls -f name="$1" -q )
+    docker image rm -f $(docker images ls -f -q | grep -i "$1" )
 }
 drclean1ff() {
     docker stop $(docker ps -a -f name="$1" -q )
     docker container rm -f $(docker ps -a -f name="$1" -q )
-    docker volume rm -f $(docker volume ls -f name="$1" -q )
     docker network rm $(docker network ls -f name="$1" -q )
-    docker image rm -f $(docker images ls -f -q | grep -i "$1" )
+    docker volume rm -f $(docker volume ls -f name="$1" -q )
 }
 drclean() {
     docker stop $(docker ps -a -q )
@@ -142,13 +142,13 @@ drcleanf() {
     docker stop $(docker ps -a -q )
     docker container rm -f $(docker ps -a -q )
     docker network rm $(docker network ls -q )
-    docker volume rm -f $(docker volume ls -q )
+    docker image rm -f $(docker images -q )
 }
 drcleanff() {
     docker stop $(docker ps -a -q )
     docker container rm -f $(docker ps -a -q )
-    docker image rm -f $(docker images -q )
     docker network rm $(docker network ls -q )
+    docker image rm -f $(docker images -q )
     docker volume rm -f $(docker volume ls -q )
 }
 drclean?() {
@@ -241,11 +241,16 @@ if [ "$IS_MAC" = true ]; then
 fi
 
 # SSH
-alias rcp="rsync --append-verify --archive --compress --human-readable --info=progress2 --partial --sparse"
+alias rcp="rsync --filter=':- .gitignore' --exclude '.git' --append-verify --archive --compress --human-readable --info=progress2 --partial --sparse"
+
 alias ssh-tmate="ssh -o PreferredAuthentications=password -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
 alias ssf="ssh -J pluto fff"
-alias ssp="ssh pluto"
+alias ssp="ssh pluto $@"
 alias ssm="ssh mac"
+alias plutovpn="sshuttle -r pluto 0/0"
+
+# Tailscale
+alias tailswitch='tailscale switch $(tailscale switch --list | fzf | cut -d ' ' -f1) && sudo tailscale up --operator=$USER'
 
 # Nix
 ni() { nix-env -iA "$@" -f "<nixos-unstable>" }
@@ -286,7 +291,7 @@ fivl() {
         if [[ -z "$file" ]]; then
             break
         fi
-        vim $file || break
+        vim "$file" || break
         echo "query: $query"
         echo "file: $file"
     done

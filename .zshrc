@@ -186,14 +186,21 @@ source ~/.zaliases
 [ -f $HOME/.config/broot/launcher/bash/br ] && source $HOME/.config/broot/launcher/bash/br
 
 [ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh
-[ -f $HOME/local/ubunix/ubunix.sh ] && source $HOME/local/ubunix/ubunix.sh
+[ -f $HOME/local/bin/ubunix/ubunix.sh ] && source $HOME/local/bin/ubunix/ubunix.sh
 
 autoload -U +X bashcompinit && bashcompinit
 
 eval "$(direnv hook zsh)" # load environment vars depending on directory https://direnv.net/docs/hook.html#zsh
+eval "$(devbox global shellenv)"
 
 [[ ! -f "/etc/grc.zsh" ]] || source /etc/grc.zsh # colors outputs of commands (https://github.com/garabik/grc)
 
 if command -v aws &> /dev/null; then
     complete -C "$(which aws_completer)" aws
+fi
+
+if [[ "$UBUNIX" == "true" ]]; then
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 fi

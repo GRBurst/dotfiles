@@ -26,8 +26,10 @@ fi
 export PATH=$HOME/.zgen/dottr/dottr-master/pan.git:$PATH
 
 # add home bin folder to path
-export PATH="$HOME/projects/bin":$PATH
-export PATH="$HOME/local/bin":$PATH
+export PATH="$HOME/projects/bin:$PATH"
+export PATH="$HOME/local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+
 
 [ "$UBUNIX" = true ] && [ -f $HOME/local/flutter/bin/flutter ] && export PATH="$HOME/local/flutter/bin":$PATH
 
