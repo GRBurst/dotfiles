@@ -96,6 +96,8 @@ in {
       claude-code-bin claude-monitor
       codex
       opencode
+      antigravity
+      gemini-cli-bin
 
     ];
   };

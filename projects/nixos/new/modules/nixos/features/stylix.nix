@@ -35,7 +35,7 @@ in {
 
       fonts = {
         monospace = {
-          package = pkgs.nerd-fonts.jetbrains-mono;
+          package = pkgs.nerd-fonts.noto;
           name = "JetBrainsMono Nerd Font Mono";
         };
         sansSerif = {

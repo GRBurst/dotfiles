@@ -212,6 +212,9 @@ in {
 
         nload = "nload -u h";
 
+        # Misc
+        i3-update-conf = "cat $HOME/.config/i3/local/config* > $HOME/.config/i3/config; cat $HOME/.config/i3/common/config >> $HOME/.config/i3/config; i3-msg reload;";
+
       };
       dotDir = "${config.xdg.configHome}/zsh";
 
