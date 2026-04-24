@@ -1,5 +1,11 @@
-{ config, lib, pkgs, inputs, ... }:
-let cfg = config.my.nixos.features.stylix;
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}: let
+  cfg = config.my.nixos.features.stylix;
 in {
   options.my.nixos.features.stylix.enable = lib.mkEnableOption "Stylix Theming";
 
@@ -7,7 +13,7 @@ in {
     stylix = {
       enable = true;
       autoEnable = false;
-      
+
       # Target specific apps
       targets = {
         console.enable = true;

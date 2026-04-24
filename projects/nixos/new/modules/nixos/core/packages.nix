@@ -1,5 +1,10 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.my.nixos.core.packages;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  cfg = config.my.nixos.core.packages;
 in {
   options.my.nixos.core.packages.enable = lib.mkEnableOption "Extra System Packages & Services";
 
@@ -36,6 +41,5 @@ in {
     services.flatpak.enable = true;
     services.snap.enable = true; # Requires nix-snapd module
     services.autorandr.enable = true;
-    services.avahi.enable = true;
   };
 }

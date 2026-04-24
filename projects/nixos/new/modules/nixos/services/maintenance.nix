@@ -1,5 +1,10 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.my.nixos.services.maintenance;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  cfg = config.my.nixos.services.maintenance;
 in {
   options.my.nixos.services.maintenance.enable = lib.mkEnableOption "Maintenance Services";
 
@@ -8,7 +13,10 @@ in {
     services.lorri.enable = true;
     services.fwupd.enable = true;
     services.fstrim.enable = true;
-    services.locate = { enable = true; interval = "22:00"; };
+    services.locate = {
+      enable = true;
+      interval = "22:00";
+    };
     services.psd.enable = true; # Profile Sync Daemon
     services.gvfs.enable = true;
     services.udisks2.enable = true;
@@ -16,10 +24,10 @@ in {
     services.upower.enable = true;
     services.openntpd.enable = true;
     services.automatic-timezoned.enable = true;
-    
+
     # Journald optimization
     services.journald.extraConfig = ''
-      Storage=persist
+      Storage=persistent
       Compress=yes
       SystemMaxUse=128M
       RuntimeMaxUse=8M

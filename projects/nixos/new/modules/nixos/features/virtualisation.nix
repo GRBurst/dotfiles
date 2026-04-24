@@ -1,5 +1,10 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.my.nixos.features.virtualisation;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  cfg = config.my.nixos.features.virtualisation;
 in {
   options.my.nixos.features.virtualisation.enable = lib.mkEnableOption "Virtualization Stack";
 
@@ -8,7 +13,7 @@ in {
       enable = true;
       enableOnBoot = false;
       daemon.settings = {
-        "insecure-registries" = [ "127.0.0.1:5000" "gitlab-ci-local-registry:5000" ];
+        "insecure-registries" = ["127.0.0.1:5000" "gitlab-ci-local-registry:5000"];
       };
     };
 

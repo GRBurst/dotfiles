@@ -1,5 +1,10 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.my.hm.features.misc;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  cfg = config.my.hm.features.misc;
 in {
   options.my.hm.features.misc.enable = lib.mkEnableOption "Misc User Configs";
 

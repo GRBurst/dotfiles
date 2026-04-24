@@ -1,5 +1,9 @@
-{ config, lib, ... }:
-let cfg = config.my.hm.features.kitty;
+{
+  config,
+  lib,
+  ...
+}: let
+  cfg = config.my.hm.features.kitty;
 in {
   options.my.hm.features.kitty.enable = lib.mkEnableOption "Kitty Terminal";
 

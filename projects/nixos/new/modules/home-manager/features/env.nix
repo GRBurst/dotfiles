@@ -1,5 +1,9 @@
-{ config, lib, ... }:
-let cfg = config.my.hm.features.env;
+{
+  config,
+  lib,
+  ...
+}: let
+  cfg = config.my.hm.features.env;
 in {
   options.my.hm.features.env.enable = lib.mkEnableOption "Environment Variables";
 

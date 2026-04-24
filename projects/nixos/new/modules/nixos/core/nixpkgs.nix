@@ -1,5 +1,10 @@
-{ config, lib, pkgs, inputs, ... }:
 {
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}: {
   nixpkgs.config.allowUnfree = true;
 
   # nixpkgs.overlays = [
@@ -8,5 +13,5 @@
 
   system.autoUpgrade.enable = true;
 
-  environment.systemPackages = [ pkgs.alejandra ];
+  environment.systemPackages = [pkgs.alejandra];
 }

@@ -1,6 +1,7 @@
 {
   imports = [
     ./core/audio.nix
+    ./core/caches.nix
     ./core/input.nix
     ./core/laptop.nix
     ./core/networking.nix
@@ -9,16 +10,27 @@
     ./core/system.nix
     ./core/user.nix
     ./features/ai.nix
+    ./features/ausweisapp.nix
+    ./features/coolercontrol.nix
     ./features/desktop/addons.nix
+    ./features/desktop/compositor.nix
+    ./features/desktop/displayManager.nix
+    ./features/desktop/gnome.nix
     ./features/desktop/hyprland.nix
     ./features/desktop/i3.nix
+    ./features/desktop/xserver.nix
+    ./features/firefox.nix
     ./features/fonts.nix
+    ./features/nvidia.nix
     ./features/security.nix
+    ./features/steam.nix
     ./features/stylix.nix
+    ./features/tpm2.nix
     ./features/virtualisation.nix
     # ./features/wired.nix
     ./services/maintenance.nix
     ./services/printing.nix
+    ./services/smartd.nix
     ./services/ssh.nix
     ./services/syncthing.nix
   ];

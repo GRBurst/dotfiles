@@ -6,10 +6,12 @@
     extra-substituters = [
       "https://nix-community.cachix.org"
       "https://hyprland.cachix.org"
+      "https://cuda-maintainers.cachix.org"
     ];
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
+      "cuda-maintainers.cachix.org-1:0dq3bujKpuEPMCX6U4WylrUDZ9JyUG0VpVZa7CNfq5E="
     ];
   };
 
@@ -49,25 +51,53 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
   };
 
-  outputs = inputs@{ self, flake-parts, ... }: flake-parts.lib.mkFlake { inherit inputs; } {
-    systems = [ "x86_64-linux" ];
+  outputs = inputs @ {
+    self,
+    flake-parts,
+    ...
+  }:
+    flake-parts.lib.mkFlake {inherit inputs;} {
+      systems = ["x86_64-linux"];
 
-    flake = {
-      formatter.x86_64-linux = inputs.nixpkgs.legacyPackages.x86_64-linux.alejandra;
-      nixosConfigurations = {
-        andromeda = inputs.nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
-          specialArgs = { inherit inputs; };
-          modules = [
-            inputs.stylix.nixosModules.stylix
-            ./hosts/andromeda
-            inputs.nix-snapd.nixosModules.default
-            inputs.nix-index-database.nixosModules.nix-index
-            inputs.home-manager.nixosModules.home-manager
-            ./modules/nixos
-          ];
+      perSystem = {
+        pkgs,
+        system,
+        ...
+      }: {
+        checks = import ./checks/eval-assertions.nix {
+          inherit self pkgs;
+          lib = inputs.nixpkgs.lib;
+        };
+      };
+
+      flake = {
+        formatter.x86_64-linux = inputs.nixpkgs.legacyPackages.x86_64-linux.alejandra;
+        nixosConfigurations = {
+          andromeda = inputs.nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            specialArgs = {inherit inputs;};
+            modules = [
+              inputs.stylix.nixosModules.stylix
+              ./hosts/andromeda
+              inputs.nix-snapd.nixosModules.default
+              inputs.nix-index-database.nixosModules.nix-index
+              inputs.home-manager.nixosModules.home-manager
+              ./modules/nixos
+            ];
+          };
+          earth = inputs.nixpkgs.lib.nixosSystem {
+            system = "x86_64-linux";
+            specialArgs = {inherit inputs;};
+            modules = [
+              inputs.stylix.nixosModules.stylix
+              ./hosts/earth
+              inputs.nix-snapd.nixosModules.default
+              inputs.nix-index-database.nixosModules.nix-index
+              inputs.home-manager.nixosModules.home-manager
+              ./modules/nixos
+            ];
+          };
         };
       };
     };
-  };
 }

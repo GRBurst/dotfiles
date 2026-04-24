@@ -1,5 +1,10 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.my.hm.features.wired;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  cfg = config.my.hm.features.wired;
 in {
   options.my.hm.features.wired.enable = lib.mkEnableOption "Wired Notification Daemon";
 

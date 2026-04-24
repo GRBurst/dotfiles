@@ -1,5 +1,10 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.my.nixos.features.desktop.hyprland;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  cfg = config.my.nixos.features.desktop.hyprland;
 in {
   options.my.nixos.features.desktop.hyprland.enable = lib.mkEnableOption "Hyprland";
 
@@ -14,11 +19,11 @@ in {
       enable = true;
       config.common.default = "*";
     };
-    
+
     services.xserver.xkb = {
-        layout = "de,de";
-        variant = "neo,basic";
-        options = "grp:menu_toggle";
+      layout = "de,de";
+      variant = "neo,basic";
+      options = "grp:menu_toggle";
     };
 
     # environment.sessionVariables = {

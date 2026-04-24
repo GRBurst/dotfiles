@@ -1,7 +1,24 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.my.nixos.core.system;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  cfg = config.my.nixos.core.system;
 in {
-  options.my.nixos.core.system.enable = lib.mkEnableOption "System Tweaks & Maintenance";
+  options.my.nixos.core.system = {
+    enable = lib.mkEnableOption "System Tweaks & Maintenance";
+    commandLookup = lib.mkOption {
+      type = lib.types.enum ["none" "command-not-found" "nix-index"];
+      default = "none";
+      description = "Which missing-command helper to enable. They are mutually exclusive.";
+    };
+    bashCompletion = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = "Enable programs.bash.completion.";
+    };
+  };
 
   config = lib.mkIf cfg.enable {
     # Nix Settings
@@ -9,7 +26,7 @@ in {
       daemonIOSchedPriority = 7;
       settings = {
         sandbox = true;
-        experimental-features = [ "nix-command" "flakes" ];
+        experimental-features = ["nix-command" "flakes"];
       };
       gc = {
         automatic = true;
@@ -33,11 +50,30 @@ in {
 
     # Security Wrappers (PMount, Light, Beep)
     security.wrappers = {
-      pmount = { setgid = true; owner = "root"; group = "users"; source = "${pkgs.pmount}/bin/pmount"; };
-      pumount = { setgid = true; owner = "root"; group = "users"; source = "${pkgs.pmount}/bin/pumount"; };
-      eject = { setgid = true; owner = "root"; group = "users"; source = "${pkgs.eject}/bin/eject"; };
-      # light = { setgid = true; owner = "root"; group = "users"; source = "${pkgs.light}/bin/light"; };
-      beep = { setgid = true; owner = "root"; group = "users"; source = "${pkgs.beep}/bin/beep"; };
+      pmount = {
+        setgid = true;
+        owner = "root";
+        group = "users";
+        source = "${pkgs.pmount}/bin/pmount";
+      };
+      pumount = {
+        setgid = true;
+        owner = "root";
+        group = "users";
+        source = "${pkgs.pmount}/bin/pumount";
+      };
+      eject = {
+        setgid = true;
+        owner = "root";
+        group = "users";
+        source = "${pkgs.eject}/bin/eject";
+      };
+      beep = {
+        setgid = true;
+        owner = "root";
+        group = "users";
+        source = "${pkgs.beep}/bin/beep";
+      };
     };
 
     # Power Management (Powertop)
@@ -49,8 +85,10 @@ in {
 
     programs = {
       fish.enable = true;
-      # command-not-found.enable = true;  # mutually nix-index
       nix-ld.enable = true;
+      command-not-found.enable = cfg.commandLookup == "command-not-found";
+      nix-index.enable = cfg.commandLookup == "nix-index";
+      bash.completion.enable = cfg.bashCompletion;
     };
   };
 }

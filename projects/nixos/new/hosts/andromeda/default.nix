@@ -1,12 +1,16 @@
-{ pkgs, inputs, ... }: {
+{
+  pkgs,
+  inputs,
+  ...
+}: {
   imports = [
     ./hardware-configuration.nix
     ./../../modules/nixos/core/nixpkgs.nix
     inputs.nixos-hardware.nixosModules.lenovo-thinkpad-p14s-amd-gen2
   ];
 
-  networking.hostName = "andromeda"; 
-  system.stateVersion = "25.11"; 
+  networking.hostName = "andromeda";
+  system.stateVersion = "25.11";
 
   console.keyMap = "neo";
 
@@ -15,7 +19,7 @@
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    kernelParams = [ "usbcore.autosuspend=-1" ];
+    kernelParams = ["usbcore.autosuspend=-1"];
     initrd.systemd.enable = true;
   };
 
@@ -51,18 +55,42 @@
   my.nixos = {
     core = {
       audio.enable = true;
+      caches.enable = true;
       input.enable = true;
       laptop.enable = true;
       networking.enable = true;
       packages.enable = true;
       system.enable = true;
-      user.enable = true;
+      user.users.pallon = {
+        enable = true;
+        isPrimary = true;
+        trusted = true;
+        extraGroups = ["wheel" "video" "audio" "vboxusers" "docker" "fuse" "adbusers" "networkmanager"];
+        authorizedKeys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDeEb4AnnxoSa1OJS1Byr6GvxeTiino4nLgxhEi3nb3k jelias@mars->earth on 2024-09-03"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINeE9P89x92Ru53ts6tn0WYo+RuB/vwJl02b3++91Wqg localphone"
+        ];
+      };
     };
     features = {
       ai.enable = true;
-      desktop.addons.enable = true;
-      desktop.hyprland.enable = true;
-      desktop.i3.enable = true;
+      desktop = {
+        addons.enable = true;
+        hyprland.enable = true;
+        i3.enable = true;
+        xserver = {
+          enable = true;
+          dpi = 192;
+          videoDrivers = ["modesetting"];
+          xkb = {
+            layout = "de,de";
+            variant = "neo,basic";
+            options = "grp:menu_toggle";
+          };
+        };
+        displayManager = "sddm";
+        defaultSession = "none+i3";
+      };
       fonts.enable = true;
       security.enable = true;
       stylix.enable = true;
@@ -81,12 +109,12 @@
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    sharedModules = [ inputs.wired.homeManagerModules.default ];
+    sharedModules = [inputs.wired.homeManagerModules.default];
     users.pallon = {
-      imports = [ ../../homes/pallon ];
+      imports = [../../homes/pallon];
       my.hm.features.env.enable = true;
       # my.hm.features.wired.enable = true;
     };
-    extraSpecialArgs = { inherit inputs; };
+    extraSpecialArgs = {inherit inputs;};
   };
 }

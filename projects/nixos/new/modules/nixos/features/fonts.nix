@@ -1,5 +1,10 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.my.nixos.features.fonts;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  cfg = config.my.nixos.features.fonts;
 in {
   options.my.nixos.features.fonts.enable = lib.mkEnableOption "Fonts";
 

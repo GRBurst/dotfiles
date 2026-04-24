@@ -1,5 +1,10 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.my.hm.features.zsh;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  cfg = config.my.hm.features.zsh;
 in {
   options.my.hm.features.zsh.enable = lib.mkEnableOption "ZSH & Aliases";
 
@@ -12,7 +17,7 @@ in {
 
     programs.direnv = {
       enable = true;
-      enableZshIntegration  = true;
+      enableZshIntegration = true;
     };
     programs.fzf = {
       enable = true;
@@ -43,7 +48,7 @@ in {
         #   with builtins; fromTOML (readFile "${pkgs.starship}/share/starship/presets/nerd-font-symbols.toml")
         # )
         # // {
-          {
+        {
           git_status.stashed = ""; # disable stash indicator
           gcloud.disabled = true;
           python.disabled = true;
@@ -59,7 +64,6 @@ in {
           cpp.disabled = true;
         };
     };
-
 
     programs.zsh = {
       enable = true;
@@ -85,7 +89,6 @@ in {
       shellAliases = {
         # General
         rm = "rm -I";
-
 
         cdd = "cd ~/downloads";
         cdp = "cd ~/projects";
@@ -158,7 +161,7 @@ in {
 
         # vim configs
         vim = "nvim";
-        vn = "vim /etc/nixos/configuration.nix";
+        vn = "nvim /etc/nixos/configuration.nix";
         vi3 = "nvim ~/.config/i3/common/config";
         vnpc = "nvim ~/.config/nixpkgs/config.nix";
         vssh = "nvim ~/.ssh/config";
@@ -214,23 +217,22 @@ in {
 
         # Misc
         i3-update-conf = "cat $HOME/.config/i3/local/config* > $HOME/.config/i3/config; cat $HOME/.config/i3/common/config >> $HOME/.config/i3/config; i3-msg reload;";
-
       };
       dotDir = "${config.xdg.configHome}/zsh";
 
       setOptions = [
-        "NONOMATCH"                 # avoid the zsh "no matches found" / allows typing sbt ~compile
-        "INTERACTIVECOMMENTS"       # allow comments in interactive shell
-        "HASH_LIST_ALL"             # rehash command path and completions on completion attempt
-        "BANG_HIST"                 # Treat the '!' character specially during expansion.
-        "INC_APPEND_HISTORY"        # Write to the history file immediately, not when the shell exits.
-        "SHARE_HISTORY"             # Share history between all sessions
-        "HIST_EXPIRE_DUPS_FIRST"    # Expire duplicate entries first when trimming history.
-        "HIST_IGNORE_DUPS"          # Don't record an entry that was just recorded again.
-        "HIST_FIND_NO_DUPS"         # Do not display a line previously found.
-        "HIST_IGNORE_SPACE"         # Don't record an entry starting with a space.
-        "HIST_REDUCE_BLANKS"        # Remove superfluous blanks before recording entry.
-        "HIST_VERIFY"               # Don't execute immediately upon history expansion.
+        "NONOMATCH" # avoid the zsh "no matches found" / allows typing sbt ~compile
+        "INTERACTIVECOMMENTS" # allow comments in interactive shell
+        "HASH_LIST_ALL" # rehash command path and completions on completion attempt
+        "BANG_HIST" # Treat the '!' character specially during expansion.
+        "INC_APPEND_HISTORY" # Write to the history file immediately, not when the shell exits.
+        "SHARE_HISTORY" # Share history between all sessions
+        "HIST_EXPIRE_DUPS_FIRST" # Expire duplicate entries first when trimming history.
+        "HIST_IGNORE_DUPS" # Don't record an entry that was just recorded again.
+        "HIST_FIND_NO_DUPS" # Do not display a line previously found.
+        "HIST_IGNORE_SPACE" # Don't record an entry starting with a space.
+        "HIST_REDUCE_BLANKS" # Remove superfluous blanks before recording entry.
+        "HIST_VERIFY" # Don't execute immediately upon history expansion.
       ];
 
       initContent = ''
@@ -456,7 +458,7 @@ in {
                     aws --profile ape-prod iam list-access-keys --user-name $1
                 }
 
-                echo $users | fzf --bind "change:reload:(echo $users) || true" --ansi --disabled --preview (get_user {q}) --preview-window wrap 
+                echo $users | fzf --bind "change:reload:(echo $users) || true" --ansi --disabled --preview (get_user {q}) --preview-window wrap
                 # --print-query --print0 -q "$query" | read -r query file
                 # if [[ -z "$file" ]]; then
                 #     break
@@ -606,8 +608,6 @@ in {
           };
         }
       ];
-
     };
-
   };
 }

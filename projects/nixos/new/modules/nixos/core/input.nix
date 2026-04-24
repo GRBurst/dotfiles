@@ -1,5 +1,9 @@
-{ config, lib, ... }:
-let cfg = config.my.nixos.core.input;
+{
+  config,
+  lib,
+  ...
+}: let
+  cfg = config.my.nixos.core.input;
 in {
   options.my.nixos.core.input.enable = lib.mkEnableOption "Input Devices";
 

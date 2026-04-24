@@ -1,28 +1,29 @@
-{
-  config,
-  pkgs,
-  ...
-}: {
+{pkgs, ...}: {
   imports = [
     ../../modules/home-manager
   ];
 
-  home.username = "pallon";
-  home.homeDirectory = "/home/pallon";
-  home.stateVersion = "25.11";
+  home.username = "jelias";
+  home.homeDirectory = "/home/jelias";
+  home.stateVersion = "24.11";
 
-  # -- Enable User Bundles --
   my.hm = {
     bundles = {
       desktop.enable = true;
       dev.enable = true;
-      extras.enable = true;
+      extras = {
+        enable = true;
+        gpuMonitor = "nvidia";
+      };
       general.enable = true;
-      laptop.enable = true;
       media.enable = true;
     };
     features = {
-      alacritty.enable = true;
+      alacritty = {
+        enable = true;
+        scrollingMultiplier = 5;
+        saveSelectionToClipboard = true;
+      };
       env.enable = true;
       git = {
         enable = true;
@@ -30,6 +31,7 @@
         email = "GRBurst@protonmail.com";
       };
       misc.enable = true;
+      shellAliases.enable = true;
       zsh.enable = true;
       kitty.enable = true;
     };
@@ -44,11 +46,14 @@
     VISUAL = "nvim";
 
     BROWSER = "librewolf";
-    NIXOS_OZONE_WL = "1";
   };
+
   home.sessionPath = [
+    "$HOME/bin:$PATH"
     "$HOME/projects/bin:$PATH"
     "$HOME/local/bin:$PATH"
     "$HOME/.local/bin:$PATH"
   ];
+
+  xdg.portal.configPackages = [pkgs.gnome-session];
 }
