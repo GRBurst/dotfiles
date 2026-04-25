@@ -123,7 +123,7 @@
           ];
         };
       };
-      # firefox.enable = true;    # defaults to pkgs.librewolf (uncached); re-enable after cache warms
+      firefox.enable = true;    # defaults to pkgs.librewolf (uncached); re-enable after cache warms
       fonts.enable = true;
       nvidia.enable = true;
       security = {

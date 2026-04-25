@@ -10,7 +10,7 @@ in {
     enable = lib.mkEnableOption "Firefox (or a compatible package)";
     package = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.librewolf;
+      default = pkgs.librewolf-bin;
       description = "Browser package to install as the system firefox.";
     };
     nativeMessagingHosts = lib.mkOption {

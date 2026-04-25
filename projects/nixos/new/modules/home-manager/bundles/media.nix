@@ -21,13 +21,13 @@ in {
       # produce a unique drv hash. Keep disabled until a personal cache warms them.
       # (librewolf.override {wmClass = "browser";})
       # (chromium.override {enableWideVine = false;})
-      # librewolf
-      # chromium
+      # librewolf-bin
+      chromium
       brave
       signal-desktop
       discord
       telegram-desktop
-      # thunderbird      # disabled: heavy build currently uncached on nixpkgs-unstable
+      thunderbird-bin
 
       audacity
       brasero
