@@ -10,7 +10,7 @@
   ];
 
   networking.hostName = "earth";
-  system.stateVersion = "25.05";
+  system.stateVersion = "25.11";
   time.timeZone = lib.mkForce "Europe/Berlin";
   services.automatic-timezoned.enable = lib.mkForce false;
   console.keyMap = "neo";
