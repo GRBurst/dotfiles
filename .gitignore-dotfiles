@@ -17,6 +17,9 @@
 !/.config/user-dirs.*
 
 # .config dirs
+!/.config/aichat
+/.config/aichat/sessions
+!/.config/opencode
 !/.config/pgcli/config.conf
 !/.config/fontconfig
 !/.config/git
@@ -67,7 +70,6 @@
 !.ideavimrc
 !.vimrc*
 !.Xresources
-!.zshrc*
-!.zaliases
-!.zprofile
-!.zshenv
+.zsh*
+.zaliases
+.zprofile
