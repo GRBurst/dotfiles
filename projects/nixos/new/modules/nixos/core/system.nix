@@ -78,11 +78,10 @@ in {
       };
     };
 
-    # Power Management (Powertop)
+    # Power Management
     powerManagement = {
       enable = true;
-      cpuFreqGovernor = "performance";
-      powertop.enable = true;
+      cpuFreqGovernor = "powersave";
     };
 
     programs = {
