@@ -64,7 +64,7 @@
       packages.enable = true;
       system = {
         enable = true;
-        commandLookup = "command-not-found";
+        commandLookup = "none";
       };
       user.users.jelias = {
         enable = true;
@@ -157,7 +157,10 @@
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    sharedModules = [inputs.wired.homeManagerModules.default];
+    sharedModules = [
+      inputs.wired.homeManagerModules.default
+      inputs.nix-index-database.homeModules.nix-index
+    ];
     users.jelias = {
       imports = [../../homes/jelias];
       my.hm.features.env.enable = true;

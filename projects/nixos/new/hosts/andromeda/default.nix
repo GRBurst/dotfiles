@@ -60,7 +60,10 @@
       laptop.enable = true;
       networking.enable = true;
       packages.enable = true;
-      system.enable = true;
+      system = {
+        enable = true;
+        commandLookup = "none";
+      };
       user.users.pallon = {
         enable = true;
         isPrimary = true;
@@ -69,6 +72,7 @@
         authorizedKeys = [
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDeEb4AnnxoSa1OJS1Byr6GvxeTiino4nLgxhEi3nb3k jelias@mars->earth on 2024-09-03"
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINeE9P89x92Ru53ts6tn0WYo+RuB/vwJl02b3++91Wqg localphone"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDVjFtnb4ZAITM+fsju2v+bjADy5pECM+U+BDHoZZHYu jelias@earth->andromeda on 2026-04-23"
         ];
       };
     };
@@ -91,6 +95,7 @@
         displayManager = "sddm";
         defaultSession = "none+i3";
       };
+      firefox.enable = true;
       fonts.enable = true;
       security.enable = true;
       stylix.enable = true;
@@ -109,7 +114,10 @@
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    sharedModules = [inputs.wired.homeManagerModules.default];
+    sharedModules = [
+      inputs.wired.homeManagerModules.default
+      inputs.nix-index-database.homeModules.nix-index
+    ];
     users.pallon = {
       imports = [../../homes/pallon];
       my.hm.features.env.enable = true;

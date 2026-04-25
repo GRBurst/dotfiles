@@ -257,7 +257,6 @@ in {
       filezilla
       jetbrains.idea-oss
       nodejs
-      nix-index
       nix-prefetch-git
       nox
       patchelf
