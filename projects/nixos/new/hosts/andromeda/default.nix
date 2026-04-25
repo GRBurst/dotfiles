@@ -117,6 +117,7 @@
     sharedModules = [
       inputs.wired.homeManagerModules.default
       inputs.nix-index-database.homeModules.nix-index
+      inputs.nvf.homeManagerModules.default
     ];
     users.pallon = {
       imports = [../../homes/pallon];

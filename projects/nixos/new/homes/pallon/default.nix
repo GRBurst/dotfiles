@@ -30,6 +30,7 @@
         email = "GRBurst@protonmail.com";
       };
       misc.enable = true;
+      nvf.enable = true;
       zsh.enable = true;
       kitty.enable = true;
     };

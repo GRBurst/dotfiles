@@ -12,7 +12,7 @@ in {
     home.packages = with pkgs; [
       git
       lazygit
-      neovim
+      # neovim  # provided by nvf (my.hm.features.nvf)
       # gcc
       clang
       gnumake

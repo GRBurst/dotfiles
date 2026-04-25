@@ -30,6 +30,7 @@
         name = "GRBurst";
         email = "GRBurst@protonmail.com";
       };
+      nvf.enable = true;
       misc.enable = true;
       shellAliases.enable = true;
       zsh.enable = true;

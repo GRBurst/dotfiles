@@ -160,6 +160,7 @@
     sharedModules = [
       inputs.wired.homeManagerModules.default
       inputs.nix-index-database.homeModules.nix-index
+      inputs.nvf.homeManagerModules.default
     ];
     users.jelias = {
       imports = [../../homes/jelias];

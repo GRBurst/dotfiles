@@ -11,6 +11,7 @@
     ./features/git.nix
     ./features/kitty.nix
     ./features/misc.nix
+    ./features/nvf.nix
     ./features/shellAliases.nix
     ./features/wired.nix
     ./features/zsh.nix
