@@ -10,8 +10,9 @@
     ./features/dictate.nix
     ./features/env.nix
     ./features/git.nix
-    ./features/i3
+    ./features/gnome.nix
     ./features/hyprland.nix
+    ./features/i3
     ./features/kitty.nix
     ./features/misc.nix
     ./features/nvf.nix

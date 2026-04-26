@@ -60,6 +60,7 @@
           }
         ];
       };
+      gnome.enable = true;
       misc.enable = true;
       nvf.enable = true;
       waybar = {
