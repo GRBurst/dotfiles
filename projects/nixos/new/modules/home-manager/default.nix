@@ -11,10 +11,12 @@
     ./features/env.nix
     ./features/git.nix
     ./features/i3
+    ./features/hyprland.nix
     ./features/kitty.nix
     ./features/misc.nix
     ./features/nvf.nix
     ./features/shellAliases.nix
+    ./features/waybar.nix
     ./features/wired.nix
     ./features/zsh.nix
   ];

@@ -9,7 +9,11 @@
 
   my.hm = {
     bundles = {
-      desktop.enable = true;
+      desktop = {
+        enable = true;
+        wayland = true;
+        x11 = true;
+      };
       dev.enable = true;
       extras = {
         enable = true;
@@ -25,6 +29,24 @@
         saveSelectionToClipboard = true;
       };
       env.enable = true;
+      hyprland = {
+        enable = true;
+        nvidia = true;
+        monitors = [
+          {
+            name = "DP-2";
+            resolution = "3840x2160";
+            position = "0x0";
+            scale = 2.0;
+          }
+          {
+            name = "DP-4";
+            resolution = "3840x2160";
+            position = "1920x0";
+            scale = 2.0;
+          }
+        ];
+      };
       git = {
         enable = true;
         name = "GRBurst";
@@ -33,6 +55,7 @@
       nvf.enable = true;
       misc.enable = true;
       shellAliases.enable = true;
+      waybar.enable = true;
       zsh.enable = true;
       kitty.enable = true;
     };
@@ -55,6 +78,4 @@
     "$HOME/local/bin:$PATH"
     "$HOME/.local/bin:$PATH"
   ];
-
-  xdg.portal.configPackages = [pkgs.gnome-session];
 }

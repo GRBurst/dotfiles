@@ -24,10 +24,9 @@ in {
       XMODIFIERS = "@im=ibus";
       QT_IM_MODULE = "ibus";
 
-      GDK_USE_XFT = "1";
-      QT_STYLE_OVERRIDE = "gtk2";
-      QT_QPA_PLATFORMTHEME = "gtk2";
+      QT_QPA_PLATFORMTHEME = "gnome";
       XCURSOR_SIZE = "64";
+      NIXOS_OZONE_WL = "1";
     };
     programs.direnv = {
       enable = true;

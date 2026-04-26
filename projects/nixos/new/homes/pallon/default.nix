@@ -14,7 +14,11 @@
   # -- Enable User Bundles --
   my.hm = {
     bundles = {
-      desktop.enable = true;
+      desktop = {
+        enable = true;
+        wayland = true;
+        x11 = true;
+      };
       dev.enable = true;
       extras.enable = true;
       general.enable = true;
@@ -24,6 +28,18 @@
     features = {
       alacritty.enable = true;
       env.enable = true;
+      hyprland = {
+        enable = true;
+        nvidia = false;
+        monitors = [
+          {
+            name = "eDP-1";
+            resolution = "1920x1080";
+            position = "0x0";
+            scale = 1.0;
+          }
+        ];
+      };
       git = {
         enable = true;
         name = "GRBurst";
@@ -46,6 +62,10 @@
       };
       misc.enable = true;
       nvf.enable = true;
+      waybar = {
+        enable = true;
+        battery = true;
+      };
       zsh.enable = true;
       kitty.enable = true;
     };
@@ -60,7 +80,6 @@
     VISUAL = "nvim";
 
     BROWSER = "librewolf";
-    NIXOS_OZONE_WL = "1";
   };
   home.sessionPath = [
     "$HOME/projects/bin:$PATH"
