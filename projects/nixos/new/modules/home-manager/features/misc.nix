@@ -18,7 +18,13 @@ in {
       mime.enable = true;
       portal = {
         enable = true;
-        config.common.default = "*";
+        config = {
+          common.default = "*";
+          hyprland = {
+            default = ["hyprland" "gtk"];
+            "org.freedesktop.impl.portal.Secret" = ["gnome-keyring"];
+          };
+        };
         extraPortals = with pkgs; [
           xdg-desktop-portal-gtk
         ];

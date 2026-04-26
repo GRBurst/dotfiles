@@ -35,7 +35,7 @@ in {
       services.xserver.displayManager.lightdm.enable = true;
     })
     (lib.mkIf (cfg.displayManager == "gdm") {
-      services.xserver.displayManager.gdm.enable = true;
+      services.displayManager.gdm.enable = true;
     })
     (lib.mkIf (cfg.displayManager != "none") {
       assertions = [

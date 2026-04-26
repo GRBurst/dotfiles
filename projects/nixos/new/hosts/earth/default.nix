@@ -100,10 +100,11 @@
       desktop = {
         addons.enable = true;
         compositor = "compton";
-        displayManager = "lightdm";
-        defaultSession = "none+i3";
+        displayManager = "gdm";
+        defaultSession = null;
         autoLogin = false;
         gnome.enable = true;
+        hyprland.enable = true;
         i3.enable = true;
         xserver = {
           enable = true;
@@ -123,7 +124,7 @@
           ];
         };
       };
-      firefox.enable = true;    # defaults to pkgs.librewolf (uncached); re-enable after cache warms
+      firefox.enable = true; # defaults to pkgs.librewolf (uncached); re-enable after cache warms
       fonts.enable = true;
       nvidia.enable = true;
       security = {
