@@ -87,8 +87,16 @@ in {
           force_default_wallpaper = 0;
         };
 
+        binds = {
+          workspace_back_and_forth = true;
+        };
+
         decoration = {
           rounding = 4;
+        };
+
+        cursor = lib.optionalAttrs cfg.nvidia {
+          no_hardware_cursors = true;
         };
 
         # --- Environment variables ---
@@ -107,7 +115,6 @@ in {
             "XDG_SESSION_TYPE,wayland"
             "GBM_BACKEND,nvidia-drm"
             "__GLX_VENDOR_LIBRARY_NAME,nvidia"
-            "WLR_NO_HARDWARE_CURSORS,1"
             "NVD_BACKEND,direct"
           ];
 
@@ -134,6 +141,7 @@ in {
           "$mod, O, exec, rofi -show drun -show-icons"
           "$mod SHIFT, O, exec, rofi -show combi"
           "$mod, S, exec, rofi -show ssh"
+          "$mod SHIFT, V, exec, ~/local/bin/rofi-vpn/rofi-vpn.sh"
 
           # Focus (NEO: n=left, r=down, g=up, t=right)
           "$mod, N, movefocus, l"
@@ -150,9 +158,12 @@ in {
           # Layout
           "$mod, F, fullscreen, 0"
           "$mod SHIFT, Space, togglefloating,"
+          "$mod, Space, cyclenext, floating"
           "$mod, H, layoutmsg, preselect l"
           "$mod, V, layoutmsg, preselect d"
-          "$mod, P, pseudo,"
+          "$mod SHIFT, P, pseudo,"
+          "$mod SHIFT, T, togglegroup,"
+          "$mod SHIFT, H, togglesplit,"
 
           # Scratchpad (special workspace)
           "$mod, U, togglespecialworkspace, scratchpad"
@@ -171,19 +182,37 @@ in {
           ", XF86MonBrightnessUp, exec, brightnessctl set +5%"
           ", XF86MonBrightnessDown, exec, brightnessctl set 5%-"
 
-          # Keyboard layout toggle
-          "$mod, X, exec, hyprctl switchxkblayout all next"
+          # Keyboard layout switching (explicit, matching i3)
+          "$mod, X, exec, hyprctl switchxkblayout all 0"
+          "$mod SHIFT, X, exec, hyprctl switchxkblayout all 1"
 
           # Lock screen
           "$mod SHIFT, L, exec, hyprlock"
 
-          # Browser (colon key position)
-          "$mod, code:51, exec, librewolf"
+          # Program shortcuts (MOD3 = AltGr in NEO layout, matching i3)
+          "$mod MOD3, colon, exec, librewolf"
+          "$mod MOD3, Delete, exec, rofi-choose-container"
+          "$mod MOD3, KP_Separator, exec, dropbox"
+          "$mod MOD3, KP_9, exec, spacefm"
+          "$mod MOD3, KP_8, exec, pidgin"
+          "$mod MOD3, KP_1, exec, thunderbird"
+          "$mod MOD3, KP_4, exec, nmcli_dmenu"
+          "$mod MOD3, KP_6, exec, steam"
+          "$mod MOD3, BackSpace, exec, VirtualBox"
+          "$mod MOD3, questiondown, exec, signal-desktop"
+          "$mod MOD3, exclamdown, exec, ~/local/bin/kxo"
+          "$mod MOD3 SHIFT, exclamdown, exec, ~/local/bin/kd"
+          "$mod MOD3, End, exec, spotify-blockify"
+          "$mod MOD3, period, exec, skype"
+          "$mod MOD3, KP_5, exec, ~/local/bin/RuneScape"
+          "$mod MOD3, Left, exec, idea-community"
 
-          # Exit / logout menu
-          "$mod SHIFT, E, exec, wlogout"
-
-          # Enter resize submap
+          # Submaps (modes, matching i3)
+          "$mod SHIFT, E, submap, exit"
+          "$mod SHIFT, M, submap, screen"
+          "$mod SHIFT, W, submap, work"
+          "$mod SHIFT, F, submap, refocus"
+          "$mod SHIFT, D, submap, redesign"
           "$mod SHIFT, R, submap, resize"
 
           # Workspaces 1-10
@@ -238,11 +267,11 @@ in {
         ];
 
         # Window rules (from i3 assigns)
-        windowrulev2 = [
-          "workspace 1, class:^(thunderbird)$"
-          "workspace 2, class:^(librewolf|firefox|Navigator)$"
-          "workspace 7, class:^(KeePassXC)$"
-          "workspace 9, class:^(Signal|signal)$"
+        windowrule = [
+          "match:class ^(thunderbird)$, workspace 1"
+          "match:class ^(librewolf|firefox|Navigator)$, workspace 2"
+          "match:class ^(KeePassXC)$, workspace 7"
+          "match:class ^(Signal|signal)$, workspace 9"
         ];
 
         # Workspace → monitor binding (multi-monitor)
@@ -254,9 +283,70 @@ in {
           ++ (lib.genList (i: "${toString (i + 11)}, monitor:${m2}${lib.optionalString (i == 0) ", default:true"}") 9));
       };
 
-      # Submaps (resize mode — equivalent of i3 resize mode)
+      # Submaps (matching i3 modes)
       extraConfig =
         ''
+          # --- Exit submap (i3: $mod+Shift+E) ---
+          submap = exit
+          bind = SUPER, R, exec, systemctl reboot
+          bind = SUPER, S, exec, systemctl suspend
+          bind = SUPER, P, exec, systemctl poweroff
+          bind = SUPER, E, exec, hyprctl dispatch exit
+          bind = , R, exec, systemctl reboot
+          bind = , S, exec, systemctl suspend
+          bind = , P, exec, systemctl poweroff
+          bind = , E, exec, hyprctl dispatch exit
+          bind = , Return, submap, reset
+          bind = , Escape, submap, reset
+          submap = reset
+
+          # --- Screen/DPMS submap (i3: $mod+Shift+M) ---
+          submap = screen
+          bind = , S, exec, hyprlock & sleep 1 && hyprctl dispatch dpms off
+          bind = , P, exec, hyprlock & sleep 1 && systemctl suspend
+          bind = , L, exec, hyprlock & sleep 1 && hyprctl dispatch dpms off
+          bind = , O, exec, hyprctl dispatch dpms off
+          bind = , K, exec, hyprctl dispatch dpms on
+          bind = , R, exec, hyprctl dispatch dpms on
+          bind = , Return, submap, reset
+          bind = , Escape, submap, reset
+          submap = reset
+
+          # --- Work submap (i3: $mod+Shift+W) ---
+          submap = work
+          bind = , W, exec, hyprctl dispatch workspace 1 && thunderbird & librewolf & signal-desktop & sleep 0.5 && hyprctl dispatch workspace 3 && alacritty &
+          bind = , S, movetoworkspacesilent, special:scratchpad
+          bind = SHIFT, S, togglespecialworkspace, scratchpad
+          bind = , Return, submap, reset
+          bind = , Escape, submap, reset
+          submap = reset
+
+          # --- Refocus submap (i3: $mod+Shift+F) ---
+          submap = refocus
+          bind = MOD3, Left, movefocus, l
+          bind = MOD3, Down, movefocus, d
+          bind = MOD3, Up, movefocus, u
+          bind = MOD3, Right, movefocus, r
+          bind = SHIFT MOD3, Left, movewindow, l
+          bind = SHIFT MOD3, Down, movewindow, d
+          bind = SHIFT MOD3, Up, movewindow, u
+          bind = SHIFT MOD3, Right, movewindow, r
+          bind = , Return, submap, reset
+          bind = , Escape, submap, reset
+          bind = , Q, submap, reset
+          submap = reset
+
+          # --- Redesign submap (i3: $mod+Shift+D) ---
+          submap = redesign
+          bind = SUPER, N, exec, hyprctl keyword general:border_size 0
+          bind = SUPER, Y, exec, hyprctl keyword general:border_size 1
+          bind = SUPER, B, exec, hyprctl keyword general:border_size 3
+          bind = , Return, submap, reset
+          bind = , Escape, submap, reset
+          bind = , Q, submap, reset
+          submap = reset
+
+          # --- Resize submap (i3: $mod+Shift+R) ---
           submap = resize
           binde = , N, resizeactive, -20 0
           binde = , T, resizeactive, 20 0

@@ -45,6 +45,7 @@
         name = "GRBurst";
         email = "GRBurst@protonmail.com";
       };
+      gnome.enable = true;
       misc.enable = true;
       nvf.enable = true;
       waybar = {

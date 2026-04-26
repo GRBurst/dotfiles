@@ -9,6 +9,7 @@
     ./features/alacritty.nix
     ./features/env.nix
     ./features/git.nix
+    ./features/gnome.nix
     ./features/hyprland.nix
     ./features/kitty.nix
     ./features/misc.nix

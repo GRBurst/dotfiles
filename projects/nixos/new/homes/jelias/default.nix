@@ -52,6 +52,7 @@
         name = "GRBurst";
         email = "GRBurst@protonmail.com";
       };
+      gnome.enable = true;
       nvf.enable = true;
       misc.enable = true;
       shellAliases.enable = true;
