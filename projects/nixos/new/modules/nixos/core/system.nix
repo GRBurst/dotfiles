@@ -46,8 +46,8 @@ in {
     # Insecure Packages (Required for OpenSSL 1.1.1w)
     nixpkgs.config.permittedInsecurePackages = [
       "openssl-1.1.1w"
-      "librewolf-bin-149.0-1"
-      "librewolf-bin-unwrapped-149.0-1"
+      "librewolf-bin-149.0.2-2"
+      "librewolf-bin-unwrapped-149.0.2-2"
     ];
 
     # Security Wrappers (PMount, Light, Beep)
