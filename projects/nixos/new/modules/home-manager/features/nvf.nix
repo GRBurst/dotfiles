@@ -82,7 +82,7 @@ in {
             enableExtraDiagnostics = true;
 
             nix.enable = true;
-            ts.enable = true;
+            typescript.enable = true;
             json.enable = true;
             python.enable = true;
             bash.enable = true;
