@@ -1,9 +1,11 @@
 {
   config,
   lib,
+  osConfig,
   ...
 }: let
   cfg = config.my.hm.features.alacritty;
+  fontCfg = osConfig.my.nixos.features.fonts;
 in {
   options.my.hm.features.alacritty = {
     enable = lib.mkEnableOption "Alacritty Terminal";
@@ -31,6 +33,10 @@ in {
         env.TERM = cfg.terminal;
         scrolling.multiplier = cfg.scrollingMultiplier;
         selection.save_to_clipboard = cfg.saveSelectionToClipboard;
+        font = {
+          normal.family = fontCfg.families.monospace.name;
+          size = fontCfg.sizes.terminal;
+        };
       };
     };
   };

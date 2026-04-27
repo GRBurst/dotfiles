@@ -39,18 +39,20 @@ in {
         base0F = "4fd6be"; # teal
       };
 
-      fonts = {
+      fonts = let
+        f = config.my.nixos.features.fonts.families;
+      in {
         monospace = {
-          package = pkgs.nerd-fonts.noto;
-          name = "JetBrainsMono Nerd Font Mono";
+          package = f.monospace.package;
+          name = f.monospace.name;
         };
         sansSerif = {
-          package = pkgs.dejavu_fonts;
-          name = "DejaVu Sans";
+          package = f.sansSerif.package;
+          name = f.sansSerif.name;
         };
         serif = {
-          package = pkgs.dejavu_fonts;
-          name = "DejaVu Serif";
+          package = f.serif.package;
+          name = f.serif.name;
         };
       };
     };

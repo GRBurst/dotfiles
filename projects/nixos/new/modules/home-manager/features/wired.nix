@@ -2,9 +2,13 @@
   config,
   lib,
   pkgs,
+  osConfig,
   ...
 }: let
   cfg = config.my.hm.features.wired;
+  fontCfg = osConfig.my.nixos.features.fonts;
+  titleFont = "${fontCfg.families.sansSerif.name} Bold ${toString fontCfg.sizes.notification.title}";
+  bodyFont = "${fontCfg.families.sansSerif.name} ${toString fontCfg.sizes.notification.body}";
 in {
   options.my.hm.features.wired.enable = lib.mkEnableOption "Wired Notification Daemon";
 
@@ -75,7 +79,7 @@ in {
               offset: Vec2(x: 0, y: 12),
               params: TextBlock((
                 text: "%s",
-                font: "Arial Bold 16",
+                font: "${titleFont}",
                 ellipsize: End,
                 color: Color(hex: "#000000"),
                 padding: Padding(left: 0, right: 0, top: 0, bottom: 0),
@@ -90,7 +94,7 @@ in {
               offset: Vec2(x: 0, y: 0),
               params: TextBlock((
                 text: "%b",
-                font: "Arial Bold 16",
+                font: "${titleFont}",
                 ellipsize: End,
                 color: Color(hex: "#000000"),
                 padding: Padding(left: 0, right: 0, top: 0, bottom: 24),
@@ -144,7 +148,7 @@ in {
               offset: Vec2(x: 0, y: 0),
               params: TextBlock((
                 text: "%s",
-                font: "Arial Bold 16",
+                font: "${titleFont}",
                 ellipsize: End,
                 color: Color(hex: "#000000"),
                 padding: Padding(left: 8, right: 8, top: 8, bottom: 8),
@@ -159,7 +163,7 @@ in {
               offset: Vec2(x: 0, y: -24),
               params: TextBlock((
                 text: "%b",
-                font: "Arial 14",
+                font: "${bodyFont}",
                 ellipsize: End,
                 color: Color(hex: "#000000"),
                 padding: Padding(left: 8, right: 8, top: 8, bottom: 8),
