@@ -134,8 +134,7 @@
             then secondary
             else primary;
         in ''
-          printf 'set $OUT ${primary}\n' > "$HOME/.config/i3/outputs"
-          printf 'set $OUT2 ${sec}\n' >> "$HOME/.config/i3/outputs"
+          "$HOME/.config/i3/scripts/write-display-config.sh" "${primary}" "${sec}"
           i3-msg reload
         '';
       in {

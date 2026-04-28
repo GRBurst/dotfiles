@@ -6,36 +6,63 @@
 }: let
   cfg = config.my.hm.features.i3;
 
-  mkI3PostswitchHook = {
-    primary,
-    secondary ? null,
-  }: let
-    secondaryLine =
-      if secondary != null
-      then ''printf 'set $OUT2 ${secondary}\n' >> "$HOME/.config/i3/outputs"''
-      else ''printf 'set $OUT2 ${primary}\n' >> "$HOME/.config/i3/outputs"'';
-  in ''
-    printf 'set $OUT ${primary}\n' > "$HOME/.config/i3/outputs"
-    ${secondaryLine}
-    i3-msg reload
-  '';
-
   startupExecs =
     lib.concatMapStringsSep "\n"
     (cmd: "exec --no-startup-id ${cmd}")
     (cfg.commonStartupCommands ++ cfg.localStartupCommands);
 
-  secondaryWsConfig = lib.optionalString cfg.enableSecondaryWorkspaces ''
+  mkDisplayConfig = {
+    primary,
+    secondary ? null,
+  }: let
+    secondaryOutput =
+      if secondary != null
+      then secondary
+      else primary;
+  in ''
+    # Workspace output assignments
+    workspace "1: mail" output ${primary}
+    workspace "2: browser" output ${primary}
+    workspace 3 output ${primary}
+    workspace 4 output ${primary}
+    workspace 5 output ${primary}
+    workspace 6 output ${primary}
+    workspace 7 output ${primary}
+    workspace 8 output ${primary}
+    workspace "9: communication" output ${primary}
 
-    workspace "11: terminal" output $OUT2
-    workspace 12 output $OUT2
-    workspace 13 output $OUT2
-    workspace 14 output $OUT2
-    workspace 15 output $OUT2
-    workspace 16 output $OUT2
-    workspace 17 output $OUT2
-    workspace 18 output $OUT2
-    workspace "19: communication" output $OUT2
+    ${lib.optionalString cfg.enableSecondaryWorkspaces ''
+      workspace "11: terminal" output ${secondaryOutput}
+      workspace 12 output ${secondaryOutput}
+      workspace 13 output ${secondaryOutput}
+      workspace 14 output ${secondaryOutput}
+      workspace 15 output ${secondaryOutput}
+      workspace 16 output ${secondaryOutput}
+      workspace 17 output ${secondaryOutput}
+      workspace 18 output ${secondaryOutput}
+      workspace "19: communication" output ${secondaryOutput}
+    ''}
+
+    bar {
+        font ${cfg.barFont}
+        output ${primary}
+        ${lib.optionalString cfg.enableSecondaryWorkspaces "output ${secondaryOutput}"}
+        status_command ${pkgs.i3status-rust}/bin/i3status-rs $HOME/.config/i3status-rust/config.toml
+        strip_workspace_numbers no
+        colors {
+            background #000000
+            statusline #ffffff
+            separator #666666
+
+            focused_workspace  $lblue   #285577 #ffffff
+            active_workspace   #333333  #5f676a #ffffff
+            inactive_workspace #333333  #222222 #888888
+            urgent_workspace   #2f343a  #900000 #ffffff
+        }
+    }
+  '';
+
+  secondaryWsConfig = lib.optionalString cfg.enableSecondaryWorkspaces ''
 
     # switch to workspace (secondary)
     bindsym $mod+F1 workspace number 11: terminal; [con_mark="awot"] move workspace current;
@@ -58,27 +85,6 @@
     bindsym $mod+Shift+F7 move container to workspace number 17
     bindsym $mod+Shift+F8 move container to workspace number 18
     bindsym $mod+Shift+F9 move container to workspace number 19: communication
-  '';
-
-  barConfig = ''
-
-    bar {
-        font ${cfg.barFont}
-        output $OUT
-        ${lib.optionalString cfg.enableSecondaryWorkspaces "output $OUT2"}
-        status_command ${pkgs.i3status-rust}/bin/i3status-rs $HOME/.config/i3status-rust/config.toml
-        strip_workspace_numbers no
-        colors {
-            background #000000
-            statusline #ffffff
-            separator #666666
-
-            focused_workspace  $lblue   #285577 #ffffff
-            active_workspace   #333333  #5f676a #ffffff
-            inactive_workspace #333333  #222222 #888888
-            urgent_workspace   #2f343a  #900000 #ffffff
-        }
-    }
   '';
 
   i3scriptsContent = ''
@@ -442,29 +448,12 @@
     bindsym $mod+Shift+d mode "redesign"
   '';
 
-  workspaceConfig = ''
-
-    # Workspace output assignments
-    workspace "1: mail" output $OUT
-    workspace "2: browser" output $OUT
-    workspace 3 output $OUT
-    workspace 4 output $OUT
-    workspace 5 output $OUT
-    workspace 6 output $OUT
-    workspace 7 output $OUT
-    workspace 8 output $OUT
-    workspace "9: communication" output $OUT
-  '';
-
   i3Config = ''
-    include ~/.config/i3/outputs
-
     ${startupExecs}
 
     ${commonConfig}
-    ${workspaceConfig}
     ${secondaryWsConfig}
-    ${barConfig}
+    include ~/.config/i3/display-config
     ${cfg.extraConfig}
   '';
 in {
@@ -522,13 +511,6 @@ in {
       description = "Additional i3 config lines.";
     };
 
-    mkPostswitchHook = lib.mkOption {
-      type = lib.types.unspecified;
-      default = mkI3PostswitchHook;
-      readOnly = true;
-      internal = true;
-      description = "Helper function to generate autorandr postswitch hooks. Use inline definition in host config to avoid circular deps.";
-    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -538,6 +520,32 @@ in {
 
     xdg.configFile."i3/scripts/i3scripts.sh" = {
       text = i3scriptsContent;
+      executable = true;
+    };
+    xdg.configFile."i3/scripts/write-display-config.sh" = let
+      displayTemplate = mkDisplayConfig {
+        primary = "__PRIMARY__";
+        secondary = "__SECONDARY__";
+      };
+    in {
+      text = ''
+        #!/usr/bin/env bash
+        set -eu
+
+        primary="$1"
+        secondary="''${2:-$1}"
+        target="$HOME/.config/i3/display-config"
+        mkdir -p "$(dirname "$target")"
+        tmp="$(mktemp)"
+        cat > "$tmp" <<'EOF'
+        ${displayTemplate}
+        EOF
+        sed \
+          -e "s/__PRIMARY__/$primary/g" \
+          -e "s/__SECONDARY__/$secondary/g" \
+          "$tmp" > "$target"
+        rm -f "$tmp"
+      '';
       executable = true;
     };
     xdg.configFile."i3/scripts/rename.sh" = {
@@ -553,16 +561,20 @@ in {
     xdg.configFile."i3/layouts/work_right.json".source = ./layouts/work_right.json;
     xdg.configFile."i3/layouts/announcekit.json".source = ./layouts/announcekit.json;
 
-    home.activation.createI3Outputs = lib.hm.dag.entryAfter ["writeBoundary"] (let
+    home.activation.createI3DisplayConfig = lib.hm.dag.entryAfter ["writeBoundary"] (let
       secondary =
         if cfg.defaultOutputs.secondary != null
         then cfg.defaultOutputs.secondary
         else cfg.defaultOutputs.primary;
+      defaultDisplayConfig = mkDisplayConfig {
+        primary = cfg.defaultOutputs.primary;
+        secondary = secondary;
+      };
     in ''
-      outputsFile="$HOME/.config/i3/outputs"
-      if [ ! -f "$outputsFile" ]; then
-        mkdir -p "$(dirname "$outputsFile")"
-        printf 'set $OUT ${cfg.defaultOutputs.primary}\nset $OUT2 ${secondary}\n' > "$outputsFile"
+      displayConfig="$HOME/.config/i3/display-config"
+      if [ ! -f "$displayConfig" ]; then
+        mkdir -p "$(dirname "$displayConfig")"
+        printf '%s\n' ${lib.escapeShellArg defaultDisplayConfig} > "$displayConfig"
       fi
     '');
   };
