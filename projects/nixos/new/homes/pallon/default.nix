@@ -47,6 +47,7 @@
       };
       i3 = {
         enable = true;
+        altTerminalCommand = "alacritty --working-directory ~/projects/pallon/webapp/frontend";
         commonStartupCommands = ["nm-applet" "protonmail-bridge -n"];
         localStartupCommands = ["cbatticon" "blueman-applet"];
         statusBar.networkDevices = [

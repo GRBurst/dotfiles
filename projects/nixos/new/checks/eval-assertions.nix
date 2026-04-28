@@ -4,6 +4,7 @@
   lib,
   inputs,
 }: let
+  cfgs = self.nixosConfigurations;
   andromedaSystem = self.nixosConfigurations.andromeda;
   earthSystem = self.nixosConfigurations.earth;
   andromeda = andromedaSystem.config;
@@ -34,8 +35,12 @@
   };
 
   pallonHome = andromeda.home-manager.users.pallon;
+  jeliasHome = earth.home-manager.users.jelias;
   i3ConfigText = pallonHome.xdg.configFile."i3/config".text;
   i3ConfigFiles = builtins.attrValues pallonHome.xdg.configFile;
+  earthFiles = jeliasHome.xdg.configFile or {};
+  earthI3ConfigText = earthFiles."i3/config".text or "";
+  earthI3StatusText = earthFiles."i3status-rust/config.toml".text or "";
   autorandrProfiles = pallonHome.programs.autorandr.profiles;
 
   enabledOutputs = profile:
@@ -67,7 +72,301 @@
         assertions}
       touch "$out"
     '';
+
+  mkCheck = name: cond: msg:
+    mkAssertionCheck "check-${name}" [
+      {
+        condition = cond;
+        message = msg;
+      }
+    ];
 in {
+  andromeda-syncthing-user =
+    mkCheck "andromeda-syncthing-user"
+    (cfgs.andromeda.config.services.syncthing.user == "pallon")
+    "andromeda syncthing user must be pallon (backwards-compat)";
+
+  earth-syncthing-user =
+    mkCheck "earth-syncthing-user"
+    (cfgs.earth.config.services.syncthing.user == "jelias")
+    "earth syncthing user must be jelias";
+
+  earth-video-nvidia =
+    mkCheck "earth-video-nvidia"
+    (lib.elem "nvidia" cfgs.earth.config.services.xserver.videoDrivers)
+    "earth must use nvidia videoDriver";
+
+  earth-dm-gdm =
+    mkCheck "earth-dm-gdm"
+    cfgs.earth.config.services.displayManager.gdm.enable
+    "earth must use gdm";
+
+  andromeda-dm-sddm =
+    mkCheck "andromeda-dm-sddm"
+    cfgs.andromeda.config.services.displayManager.sddm.enable
+    "andromeda must still use sddm";
+
+  earth-firewall-k3s = let
+    ports = cfgs.earth.config.networking.firewall.allowedTCPPorts;
+  in
+    mkCheck "earth-firewall-k3s"
+    (lib.elem 6443 ports && lib.elem 8080 ports)
+    "earth firewall must open 6443 + 8080";
+
+  earth-user-primary =
+    mkCheck "earth-user-primary"
+    (cfgs.earth.config.my.nixos.core.user.primary == "jelias")
+    "earth primary user must be jelias";
+
+  andromeda-user-primary =
+    mkCheck "andromeda-user-primary"
+    (cfgs.andromeda.config.my.nixos.core.user.primary == "pallon")
+    "andromeda primary user must be pallon";
+
+  earth-ssh-x11forwarding =
+    mkCheck "earth-ssh-x11forwarding"
+    (cfgs.earth.config.services.openssh.settings.X11Forwarding == true)
+    "earth sshd must enable X11Forwarding";
+
+  earth-ssh-passwordauth-off =
+    mkCheck "earth-ssh-passwordauth-off"
+    (cfgs.earth.config.services.openssh.settings.PasswordAuthentication == false)
+    "earth sshd must disable password authentication";
+
+  andromeda-ssh-passwordauth-default =
+    mkCheck "andromeda-ssh-passwordauth-default"
+    (cfgs.andromeda.config.services.openssh.settings.PasswordAuthentication == true)
+    "andromeda sshd must keep its current password-auth default unchanged";
+
+  earth-clamav-tcp =
+    mkCheck "earth-clamav-tcp"
+    (cfgs.earth.config.services.clamav.daemon.settings.TCPSocket == 3310)
+    "earth clamav daemon must listen on TCP 3310";
+
+  earth-pulseaudio-off =
+    mkCheck "earth-pulseaudio-off"
+    (cfgs.earth.config.services.pulseaudio.enable == false)
+    "earth must have pulseaudio disabled (pipewire-only)";
+
+  andromeda-pulseaudio-off =
+    mkCheck "andromeda-pulseaudio-off"
+    (cfgs.andromeda.config.services.pulseaudio.enable == false)
+    "andromeda must have pulseaudio disabled (pipewire-only)";
+
+  earth-bash-completion =
+    mkCheck "earth-bash-completion"
+    (cfgs.earth.config.programs.bash.completion.enable == true)
+    "earth must enable bash completion";
+
+  earth-firewall-udp-12345 =
+    mkCheck "earth-firewall-udp-12345"
+    (lib.elem 12345 cfgs.earth.config.networking.firewall.allowedUDPPorts)
+    "earth firewall must open UDP 12345";
+
+  earth-hm-alias-vn =
+    mkCheck "earth-hm-alias-vn"
+    (cfgs.earth.config.home-manager.users.jelias.home.shellAliases.vn
+      == "nvim /etc/nixos/configuration.nix")
+    "earth home must expose shellAlias vn=nvim /etc/nixos/configuration.nix";
+
+  earth-alacritty-term =
+    mkCheck "earth-alacritty-term"
+    (cfgs.earth.config.home-manager.users.jelias.programs.alacritty.settings.env.TERM
+      == "xterm-256color")
+    "earth alacritty must set env.TERM=xterm-256color";
+
+  earth-alacritty-scrolling =
+    mkCheck "earth-alacritty-scrolling"
+    (cfgs.earth.config.home-manager.users.jelias.programs.alacritty.settings.scrolling.multiplier
+      == 5)
+    "earth alacritty must set scrolling.multiplier=5";
+
+  earth-alacritty-clipboard =
+    mkCheck "earth-alacritty-clipboard"
+    (cfgs.earth.config.home-manager.users.jelias.programs.alacritty.settings.selection.save_to_clipboard
+      == true)
+    "earth alacritty must save selection to clipboard";
+
+  earth-gpu-monitor-nvidia =
+    mkCheck "earth-gpu-monitor-nvidia"
+    (cfgs.earth.config.home-manager.users.jelias.my.hm.bundles.extras.gpuMonitor == "nvidia")
+    "earth home must set gpuMonitor = \"nvidia\"";
+
+  andromeda-gpu-monitor-amd =
+    mkCheck "andromeda-gpu-monitor-amd"
+    (cfgs.andromeda.config.home-manager.users.pallon.my.hm.bundles.extras.gpuMonitor == "amd")
+    "andromeda home must default gpuMonitor to \"amd\"";
+
+  earth-hyprland-enabled =
+    mkCheck "earth-hyprland-enabled"
+    cfgs.earth.config.programs.hyprland.enable
+    "earth must enable hyprland";
+
+  andromeda-hyprland-enabled =
+    mkCheck "andromeda-hyprland-enabled"
+    cfgs.andromeda.config.programs.hyprland.enable
+    "andromeda must enable hyprland";
+
+  earth-hyprland-xwayland =
+    mkCheck "earth-hyprland-xwayland"
+    cfgs.earth.config.programs.hyprland.xwayland.enable
+    "earth hyprland must enable xwayland";
+
+  earth-hyprland-uwsm =
+    mkCheck "earth-hyprland-uwsm"
+    cfgs.earth.config.programs.hyprland.withUWSM
+    "earth hyprland must use UWSM";
+
+  earth-hyprlock-pam =
+    mkCheck "earth-hyprlock-pam"
+    (cfgs.earth.config.security.pam.services ? hyprlock)
+    "earth must have hyprlock PAM service";
+
+  andromeda-hyprlock-pam =
+    mkCheck "andromeda-hyprlock-pam"
+    (cfgs.andromeda.config.security.pam.services ? hyprlock)
+    "andromeda must have hyprlock PAM service";
+
+  earth-gnome-enabled =
+    mkCheck "earth-gnome-enabled"
+    cfgs.earth.config.services.desktopManager.gnome.enable
+    "earth must enable gnome desktop";
+
+  earth-dconf-enabled =
+    mkCheck "earth-dconf-enabled"
+    cfgs.earth.config.programs.dconf.enable
+    "earth must enable dconf";
+
+  earth-hm-hyprland-enabled =
+    mkCheck "earth-hm-hyprland-enabled"
+    cfgs.earth.config.home-manager.users.jelias.wayland.windowManager.hyprland.enable
+    "earth jelias must enable HM hyprland";
+
+  andromeda-hm-hyprland-enabled =
+    mkCheck "andromeda-hm-hyprland-enabled"
+    cfgs.andromeda.config.home-manager.users.pallon.wayland.windowManager.hyprland.enable
+    "andromeda pallon must enable HM hyprland";
+
+  earth-hm-waybar-enabled =
+    mkCheck "earth-hm-waybar-enabled"
+    cfgs.earth.config.home-manager.users.jelias.programs.waybar.enable
+    "earth jelias must enable waybar";
+
+  andromeda-hm-waybar-enabled =
+    mkCheck "andromeda-hm-waybar-enabled"
+    cfgs.andromeda.config.home-manager.users.pallon.programs.waybar.enable
+    "andromeda pallon must enable waybar";
+
+  hyprland-no-windowrulev2 =
+    mkCheck "hyprland-no-windowrulev2"
+    (! (builtins.hasAttr "windowrulev2"
+      cfgs.earth.config.home-manager.users.jelias.wayland.windowManager.hyprland.settings))
+    "Hyprland must not use deprecated windowrulev2";
+
+  hyprland-has-windowrule =
+    mkCheck "hyprland-has-windowrule"
+    (builtins.hasAttr "windowrule"
+      cfgs.earth.config.home-manager.users.jelias.wayland.windowManager.hyprland.settings)
+    "Hyprland must use windowrule (not windowrulev2)";
+
+  hyprland-no-wlr-no-hw-cursors =
+    mkCheck "hyprland-no-wlr-no-hw-cursors"
+    (let
+      envList = cfgs.earth.config.home-manager.users.jelias.wayland.windowManager.hyprland.settings.env or [];
+    in
+      ! (builtins.any (e: builtins.match "WLR_NO_HARDWARE_CURSORS.*" e != null) envList))
+    "Must not set WLR_NO_HARDWARE_CURSORS env (deprecated)";
+
+  hyprland-cursor-no-hw-cursors-nvidia =
+    mkCheck "hyprland-cursor-no-hw-cursors-nvidia"
+    ((cfgs.earth.config.home-manager.users.jelias.wayland.windowManager.hyprland.settings.cursor.no_hardware_cursors or false) == true)
+    "NVIDIA host must set cursor.no_hardware_cursors";
+
+  hyprland-bind-workspace-back-and-forth =
+    mkCheck "hyprland-bind-workspace-back-and-forth"
+    ((cfgs.earth.config.home-manager.users.jelias.wayland.windowManager.hyprland.settings.binds.workspace_back_and_forth or false) == true)
+    "Hyprland must enable workspace_back_and_forth";
+
+  hyprland-has-togglesplit =
+    mkCheck "hyprland-has-togglesplit"
+    (builtins.any (b: builtins.match ".*togglesplit.*" b != null)
+      cfgs.earth.config.home-manager.users.jelias.wayland.windowManager.hyprland.settings.bind)
+    "Hyprland must have togglesplit binding";
+
+  hyprland-has-togglegroup =
+    mkCheck "hyprland-has-togglegroup"
+    (builtins.any (b: builtins.match ".*togglegroup.*" b != null)
+      cfgs.earth.config.home-manager.users.jelias.wayland.windowManager.hyprland.settings.bind)
+    "Hyprland must have togglegroup binding (tabbed)";
+
+  hyprland-has-exit-submap =
+    mkCheck "hyprland-has-exit-submap"
+    (lib.hasInfix "submap = exit"
+      cfgs.earth.config.home-manager.users.jelias.wayland.windowManager.hyprland.extraConfig)
+    "Hyprland must have exit submap";
+
+  hyprland-has-screen-submap =
+    mkCheck "hyprland-has-screen-submap"
+    (lib.hasInfix "submap = screen"
+      cfgs.earth.config.home-manager.users.jelias.wayland.windowManager.hyprland.extraConfig)
+    "Hyprland must have screen submap";
+
+  hyprland-has-work-submap =
+    mkCheck "hyprland-has-work-submap"
+    (lib.hasInfix "submap = work"
+      cfgs.earth.config.home-manager.users.jelias.wayland.windowManager.hyprland.extraConfig)
+    "Hyprland must have work submap";
+
+  hyprland-has-refocus-submap =
+    mkCheck "hyprland-has-refocus-submap"
+    (lib.hasInfix "submap = refocus"
+      cfgs.earth.config.home-manager.users.jelias.wayland.windowManager.hyprland.extraConfig)
+    "Hyprland must have refocus submap";
+
+  hyprland-has-redesign-submap =
+    mkCheck "hyprland-has-redesign-submap"
+    (lib.hasInfix "submap = redesign"
+      cfgs.earth.config.home-manager.users.jelias.wayland.windowManager.hyprland.extraConfig)
+    "Hyprland must have redesign submap";
+
+  hyprland-bind-exit-submap =
+    mkCheck "hyprland-bind-exit-submap"
+    (builtins.any (b: builtins.match ".*SHIFT.*E.*submap.*exit.*" b != null)
+      cfgs.earth.config.home-manager.users.jelias.wayland.windowManager.hyprland.settings.bind)
+    "Hyprland must bind $mod+Shift+E to exit submap";
+
+  hyprland-bind-screen-submap =
+    mkCheck "hyprland-bind-screen-submap"
+    (builtins.any (b: builtins.match ".*SHIFT.*M.*submap.*screen.*" b != null)
+      cfgs.earth.config.home-manager.users.jelias.wayland.windowManager.hyprland.settings.bind)
+    "Hyprland must bind $mod+Shift+M to screen submap";
+
+  hyprland-has-mod3-shortcuts =
+    mkCheck "hyprland-has-mod3-shortcuts"
+    (builtins.any (b: builtins.match ".*MOD3.*exec.*" b != null)
+      cfgs.earth.config.home-manager.users.jelias.wayland.windowManager.hyprland.settings.bind)
+    "Hyprland must have MOD3 (AltGr/NEO) program shortcuts";
+
+  earth-hm-gnome-dconf-enabled =
+    mkCheck "earth-hm-gnome-dconf-enabled"
+    cfgs.earth.config.home-manager.users.jelias.my.hm.features.gnome.enable
+    "jelias on earth must have GNOME dconf keybindings enabled";
+
+  andromeda-hm-gnome-dconf-enabled =
+    mkCheck "andromeda-hm-gnome-dconf-enabled"
+    cfgs.andromeda.config.home-manager.users.pallon.my.hm.features.gnome.enable
+    "pallon on andromeda must have GNOME dconf keybindings enabled";
+
+  earth-i3-still-enabled =
+    mkCheck "earth-i3-still-enabled"
+    cfgs.earth.config.services.xserver.windowManager.i3.enable
+    "earth must still have i3 enabled";
+
+  andromeda-i3-still-enabled =
+    mkCheck "andromeda-i3-still-enabled"
+    cfgs.andromeda.config.services.xserver.windowManager.i3.enable
+    "andromeda must still have i3 enabled";
+
   nvf-config = mkAssertionCheck "nvf-config" [
     {
       condition = andromeda.home-manager.users.pallon.my.hm.features.nvf.enable == true;
@@ -284,6 +583,141 @@ in {
       message = "andromeda: i3status-rust must be in pallon home.packages";
     }
   ];
+
+  earth-i3-config = mkAssertionCheck "earth-i3-config" [
+    {
+      condition = jeliasHome.my.hm.features.i3.enable == true;
+      message = "earth: i3 feature must be enabled for jelias";
+    }
+    {
+      condition = earthFiles ? "i3/config";
+      message = "earth: i3 config must be deployed for jelias";
+    }
+    {
+      condition = earthFiles ? "i3status-rust/config.toml";
+      message = "earth: i3status-rust config must be deployed for jelias";
+    }
+    {
+      condition =
+        builtins.all
+        (cmd: lib.hasInfix "exec --no-startup-id ${cmd}" earthI3ConfigText)
+        [
+          "ETESYNC_URL=https://scal.metacosmos.space etesync-dav"
+          "syncthingtray"
+          "nm-applet"
+          "protonvpn-app"
+          "protonmail-bridge -n"
+          "pasystray"
+        ];
+      message = "earth: i3 config must contain expected startup commands";
+    }
+    {
+      condition = lib.hasInfix ''workspace "1: mail" output primary'' earthI3ConfigText;
+      message = "earth: i3 config must assign workspace 1 to primary";
+    }
+    {
+      condition = lib.hasInfix ''workspace "11: terminal" output nonprimary primary'' earthI3ConfigText;
+      message = "earth: i3 config must assign workspace 11 to nonprimary primary";
+    }
+    {
+      condition = lib.hasInfix "xrandr --output DP-2" earthI3ConfigText;
+      message = "earth: i3 config must use DP-2 in xrandr commands";
+    }
+    {
+      condition = lib.hasInfix "--output DP-4" earthI3ConfigText;
+      message = "earth: i3 config must use DP-4 in xrandr commands";
+    }
+    {
+      condition = !(lib.hasInfix "$OUT" earthI3ConfigText);
+      message = "earth: i3 config must not contain obsolete $OUT variables";
+    }
+    {
+      condition = !(lib.hasInfix "$OUT2" earthI3ConfigText);
+      message = "earth: i3 config must not contain obsolete $OUT2 variables";
+    }
+    {
+      condition = !(lib.hasInfix "qsyncthingtray" earthI3ConfigText);
+      message = "earth: i3 config must use syncthingtray, not qsyncthingtray";
+    }
+    {
+      condition = !(lib.hasInfix "include ~/.config/i3" earthI3ConfigText);
+      message = "earth: i3 config must not include unmanaged ~/.config/i3 snippets";
+    }
+    {
+      condition = andromeda.services.xserver.windowManager.i3.enable == true;
+      message = "andromeda: system i3 must remain enabled";
+    }
+    {
+      condition = pallonHome.my.hm.features.i3.enable == true;
+      message = "andromeda: pallon Home Manager i3 must remain enabled";
+    }
+    {
+      condition = lib.hasInfix "alacritty --working-directory ~/projects/pallon/webapp/frontend" i3ConfigText;
+      message = "andromeda: pallon alternate terminal binding must be preserved";
+    }
+  ];
+
+  earth-i3-statusbar = mkAssertionCheck "earth-i3-statusbar" [
+    {
+      condition = lib.hasInfix ''theme = "slick"'' earthI3StatusText;
+      message = "earth: i3status-rust must use slick theme";
+    }
+    {
+      condition = lib.hasInfix ''gpu = "🎮"'' earthI3StatusText;
+      message = "earth: i3status-rust must override the GPU icon";
+    }
+    {
+      condition = lib.hasInfix ''block = "nvidia_gpu"'' earthI3StatusText;
+      message = "earth: i3status-rust must include nvidia_gpu block";
+    }
+    {
+      condition = lib.hasInfix ''format = " $icon$clocks $power $memory"'' earthI3StatusText;
+      message = "earth: nvidia_gpu block must use the migrated format";
+    }
+    {
+      condition = lib.hasInfix "[[block.click]]" earthI3StatusText && lib.hasInfix ''cmd = "pavucontrol"'' earthI3StatusText;
+      message = "earth: sound block must open pavucontrol on click";
+    }
+    {
+      condition = lib.hasInfix ''device = "enp8s0"'' earthI3StatusText;
+      message = "earth: i3status-rust must include enp8s0";
+    }
+    {
+      condition = !(lib.hasInfix ''device = "wlp7s0"'' earthI3StatusText);
+      message = "earth: i3status-rust must not include wlp7s0";
+    }
+    {
+      condition = lib.hasInfix ''format = "{$graph_down}⮃{$graph_up}"'' earthI3StatusText;
+      message = "earth: net block must use graph format";
+    }
+    {
+      condition = lib.hasInfix "%d/%m %R" earthI3StatusText;
+      message = "earth: time block must use migrated date/time format";
+    }
+    {
+      condition = !(lib.hasInfix "network_speed_" earthI3StatusText);
+      message = "earth: i3status-rust must not render unsupported network_speed fields";
+    }
+    {
+      condition = !(lib.hasInfix "timezone =" earthI3StatusText);
+      message = "earth: i3status-rust must omit timezone when unset";
+    }
+    {
+      condition = lib.hasInfix ''device = "enp2s0f0"'' pallonHome.xdg.configFile."i3status-rust/config.toml".text;
+      message = "andromeda: i3status-rust must still include ethernet device";
+    }
+    {
+      condition = lib.hasInfix ''device = "wlp3s0"'' pallonHome.xdg.configFile."i3status-rust/config.toml".text;
+      message = "andromeda: i3status-rust must still include wifi device";
+    }
+  ];
+
+  earth-i3-syntax = pkgs.runCommand "earth-i3-syntax" {} ''
+    export XDG_RUNTIME_DIR="$TMPDIR"
+    configFile=${pkgs.writeText "earth-i3-config" earthI3ConfigText}
+    ${pkgs.i3}/bin/i3 -C -c "$configFile"
+    touch "$out"
+  '';
 
   i3-autorandr = mkAssertionCheck "i3-autorandr" [
     {

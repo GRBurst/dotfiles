@@ -6,6 +6,10 @@
 }: let
   cfg = config.my.hm.features.i3;
   types = lib.types;
+  primaryOutput = cfg.display.primaryOutput;
+  secondaryOutput = cfg.display.secondaryOutput;
+
+  defaultWorkRestoreCommand = ''i3-msg 'workspace "1: mail"; exec protonmail-bridge; exec thunderbird; workspace "2: browser"; exec librewolf; workspace 7; exec ~/local/bin/kxo; workspace "9: communication"; exec signal-desktop; exec librewolf --new-window --kiosk https://priceloop.slack.com; workspace 3; exec alacritty --working-directory ~/projects/priceloop/ogopogo/nocode' '';
 
   defaultPrimaryWorkspaces = [
     {
@@ -278,27 +282,27 @@
         }
         {
           key = "k";
-          command = ''exec xset -dpms && xset s off && systemctl --user stop redshift && xrandr --output DP-0 --primary --auto --output HDMI-1 --off; mode "default"'';
+          command = ''exec xset -dpms && xset s off && systemctl --user stop redshift && xrandr --output ${primaryOutput} --primary --auto --output ${secondaryOutput} --off; mode "default"'';
         }
         {
           key = "g";
-          command = ''exec xrandr --output DP-0 --primary --mode 1920x1080 --output HDMI-1 --auto --right-of DP-0; mode "default"'';
+          command = ''exec xrandr --output ${primaryOutput} --primary --mode 1920x1080 --output ${secondaryOutput} --auto --right-of ${primaryOutput}; mode "default"'';
         }
         {
           key = "h";
-          command = ''exec xrandr --output DP-0 --auto --primary --output HDMI-1 --mode 1920x1080 --right-of DP-0; mode "default"'';
+          command = ''exec xrandr --output ${primaryOutput} --auto --primary --output ${secondaryOutput} --mode 1920x1080 --right-of ${primaryOutput}; mode "default"'';
         }
         {
           key = "KP_1";
-          command = ''exec xrandr --output DP-0 --primary --auto --output HDMI-1 --off; mode "default"'';
+          command = ''exec xrandr --output ${primaryOutput} --primary --auto --output ${secondaryOutput} --off; mode "default"'';
         }
         {
           key = "a";
-          command = ''exec xrandr --output DP-0 --primary --mode 1920x1080 --output HDMI-1 --off; mode "default"'';
+          command = ''exec xrandr --output ${primaryOutput} --primary --mode 1920x1080 --output ${secondaryOutput} --off; mode "default"'';
         }
         {
           key = "r";
-          command = ''exec xrandr --output DP-0 --primary --auto --output HDMI-1 --auto --right-of DP-0; mode "default"'';
+          command = ''exec xrandr --output ${primaryOutput} --primary --auto --output ${secondaryOutput} --auto --right-of ${primaryOutput}; mode "default"'';
         }
         {
           key = "Return";
@@ -382,7 +386,7 @@
       bindings = [
         {
           key = "w";
-          command = ''exec --no-startup-id i3-msg 'workspace "1: mail"; exec protonmail-bridge; exec thunderbird; workspace "2: browser"; exec librewolf; workspace 7; exec ~/local/bin/kxo; workspace "9: communication"; exec signal-desktop; exec librewolf --new-window --kiosk https://priceloop.slack.com; workspace 3; exec alacritty --working-directory ~/projects/priceloop/ogopogo/nocode'; mode "default"'';
+          command = "__WORK_RESTORE_COMMAND__";
         }
         {
           key = "s";
@@ -531,9 +535,16 @@
     (assignment: ''assign [${assignment.criteria}] ${assignment.target}'')
     cfg.assignments;
 
+  renderModeBinding = binding: let
+    command =
+      if binding.command == "__WORK_RESTORE_COMMAND__"
+      then ''exec --no-startup-id ${cfg.workRestoreCommand}; mode "default"''
+      else binding.command;
+  in "        bindsym ${binding.key} ${command}";
+
   renderMode = mode: ''
     mode "${mode.name}" {
-    ${lib.concatMapStringsSep "\n" (binding: "        bindsym ${binding.key} ${binding.command}") mode.bindings}
+    ${lib.concatMapStringsSep "\n" renderModeBinding mode.bindings}
     }
     bindsym ${mode.enterKey} mode "${mode.name}"
   '';
@@ -690,7 +701,7 @@
     # start a terminal
     bindsym $mod+Return exec --no-startup-id $sp/i3scripts.sh ws_split auto
     bindsym $mod+Shift+Return exec --no-startup-id $sp/i3scripts.sh ws_split manual
-    bindsym $mod+$AltGr+Return exec alacritty --working-directory ~/projects/pallon/webapp/frontend
+    bindsym $mod+$AltGr+Return exec ${cfg.altTerminalCommand}
 
     # kill focused window
     bindsym $mod+Shift+q kill
@@ -832,6 +843,37 @@ in {
       type = types.str;
       default = "alacritty";
       description = "Terminal emulator for i3scripts.sh.";
+    };
+
+    altTerminalCommand = lib.mkOption {
+      type = types.str;
+      default = "alacritty";
+      description = "Command launched by the $mod+$AltGr+Return binding.";
+    };
+
+    workRestoreCommand = lib.mkOption {
+      type = types.str;
+      default = defaultWorkRestoreCommand;
+      description = "Command launched by the work restore mode binding.";
+    };
+
+    display = {
+      primaryOutput = lib.mkOption {
+        type = types.str;
+        default = "DP-0";
+        description = "Primary output name used in xrandr screen mode commands.";
+      };
+      secondaryOutput = lib.mkOption {
+        type = types.str;
+        default = "HDMI-1";
+        description = "Secondary output name used in xrandr screen mode commands.";
+      };
+    };
+
+    extraPackages = lib.mkOption {
+      type = types.listOf types.package;
+      default = [];
+      description = "Additional packages installed with the i3 Home Manager feature.";
     };
 
     enableSecondaryWorkspaces = lib.mkOption {
@@ -981,7 +1023,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [pkgs.i3status-rust];
+    home.packages = [pkgs.i3status-rust] ++ cfg.extraPackages;
 
     xdg.configFile."i3/config".text = i3Config;
 

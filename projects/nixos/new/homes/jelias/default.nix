@@ -52,6 +52,58 @@
         name = "GRBurst";
         email = "GRBurst@protonmail.com";
       };
+      i3 = {
+        enable = true;
+        commonStartupCommands = [
+          "ETESYNC_URL=https://scal.metacosmos.space etesync-dav"
+          "syncthingtray"
+          "nm-applet"
+          "protonvpn-app"
+          "protonmail-bridge -n"
+          "pasystray"
+        ];
+        display = {
+          primaryOutput = "DP-2";
+          secondaryOutput = "DP-4";
+        };
+        extraPackages = with pkgs; [
+          brightnessctl
+          pasystray
+          pavucontrol
+          syncthingtray
+        ];
+        statusBar = {
+          iconOverrides.gpu = "🎮";
+          disk = {
+            format = "$icon$free.eng(w:2)";
+            formatAlt = "$icon$available.eng(w:2)/$total.eng(w:2)";
+            iconOverrides.disk_drive = "🏠";
+          };
+          memory = {
+            format = " $icon$mem_avail.eng(prefix:Gi)";
+            formatAlt = " $icon$swap_used_percents.eng(w:2)";
+          };
+          cpu.format = " $icon$utilization";
+          gpu = "nvidia";
+          gpuFormat = " $icon$clocks $power $memory";
+          gpuInterval = null;
+          sound = {
+            sinkFormat = " $icon{$volume|}";
+            sourceFormat = " $icon{$volume|}";
+            clickCommand = "pavucontrol";
+          };
+          networkDevices = [
+            {
+              device = "enp8s0";
+              type = "wired";
+              format = "{$graph_down}⮃{$graph_up}";
+              formatAlt = " $ip";
+            }
+          ];
+          timeFormat = "%d/%m %R";
+          timezone = null;
+        };
+      };
       gnome.enable = true;
       nvf.enable = true;
       misc.enable = true;
