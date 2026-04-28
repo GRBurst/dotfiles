@@ -173,20 +173,36 @@ in {
       message = "andromeda: i3 feature must be enabled for pallon";
     }
     {
-      condition = lib.hasInfix "include ~/.config/i3/outputs" andromeda.home-manager.users.pallon.xdg.configFile."i3/config".text;
-      message = "andromeda: i3 config must include outputs file";
+      condition = lib.hasInfix "include ~/.config/i3/display-config" andromeda.home-manager.users.pallon.xdg.configFile."i3/config".text;
+      message = "andromeda: i3 config must include display-config file";
+    }
+    {
+      condition = !(lib.hasInfix "include ~/.config/i3/outputs" andromeda.home-manager.users.pallon.xdg.configFile."i3/config".text);
+      message = "andromeda: i3 config must not include stale outputs file";
     }
     {
       condition = lib.hasInfix "set $mod Mod4" andromeda.home-manager.users.pallon.xdg.configFile."i3/config".text;
       message = "andromeda: i3 config must define $mod";
     }
     {
-      condition = lib.hasInfix ''workspace "1: mail" output $OUT'' andromeda.home-manager.users.pallon.xdg.configFile."i3/config".text;
-      message = "andromeda: i3 config must assign workspace 1 to $OUT";
+      condition = !(lib.hasInfix ''workspace "1: mail" output $OUT'' andromeda.home-manager.users.pallon.xdg.configFile."i3/config".text);
+      message = "andromeda: i3 config must not assign workspace 1 to $OUT";
     }
     {
-      condition = lib.hasInfix ''workspace "11: terminal" output $OUT2'' andromeda.home-manager.users.pallon.xdg.configFile."i3/config".text;
-      message = "andromeda: i3 config must assign workspace 11 to $OUT2";
+      condition = !(lib.hasInfix ''workspace "11: terminal" output $OUT2'' andromeda.home-manager.users.pallon.xdg.configFile."i3/config".text);
+      message = "andromeda: i3 config must not assign workspace 11 to $OUT2";
+    }
+    {
+      condition = lib.hasInfix ''workspace "1: mail" output primary'' andromeda.home-manager.users.pallon.home.activation.createI3DisplayConfig.data;
+      message = "andromeda: i3 fallback display config must assign workspace 1 to primary";
+    }
+    {
+      condition = lib.hasInfix "bar {" andromeda.home-manager.users.pallon.home.activation.createI3DisplayConfig.data;
+      message = "andromeda: i3 fallback display config must include bar";
+    }
+    {
+      condition = lib.hasInfix "output primary" andromeda.home-manager.users.pallon.home.activation.createI3DisplayConfig.data;
+      message = "andromeda: i3 fallback display config must use primary output alias";
     }
     {
       condition = lib.hasInfix "exec --no-startup-id nm-applet" andromeda.home-manager.users.pallon.xdg.configFile."i3/config".text;
@@ -197,12 +213,16 @@ in {
       message = "andromeda: i3 config must contain cbatticon startup";
     }
     {
-      condition = lib.hasInfix "i3status-rs" andromeda.home-manager.users.pallon.xdg.configFile."i3/config".text;
-      message = "andromeda: i3 config must reference i3status-rs";
+      condition = lib.hasInfix "i3status-rs" andromeda.home-manager.users.pallon.home.activation.createI3DisplayConfig.data;
+      message = "andromeda: i3 fallback display config must reference i3status-rs";
     }
     {
       condition = andromeda.home-manager.users.pallon.xdg.configFile."i3/scripts/i3scripts.sh".executable == true;
       message = "andromeda: i3scripts.sh must be executable";
+    }
+    {
+      condition = andromeda.home-manager.users.pallon.xdg.configFile."i3/scripts/write-display-config.sh".executable == true;
+      message = "andromeda: write-display-config.sh must be executable";
     }
     {
       condition = andromeda.home-manager.users.pallon.xdg.configFile ? "i3status-rust/config.toml";
@@ -246,8 +266,19 @@ in {
       message = "andromeda: autorandr must have docked profile";
     }
     {
-      condition = lib.hasInfix "i3/outputs" andromeda.home-manager.users.pallon.programs.autorandr.profiles.docked.hooks.postswitch;
-      message = "andromeda: docked postswitch must write to i3/outputs";
+      condition =
+        builtins.all
+        (profile: lib.hasInfix "write-display-config.sh" profile.hooks.postswitch)
+        (builtins.attrValues andromeda.home-manager.users.pallon.programs.autorandr.profiles);
+      message = "andromeda: autorandr postswitch hooks must call write-display-config.sh";
+    }
+    {
+      condition = lib.hasInfix "/bin/i3-msg reload" andromeda.home-manager.users.pallon.programs.autorandr.profiles.docked.hooks.postswitch;
+      message = "andromeda: docked postswitch must reload i3";
+    }
+    {
+      condition = lib.hasInfix ''"DP-4" "DP-3"'' andromeda.home-manager.users.pallon.programs.autorandr.profiles.docked.hooks.postswitch;
+      message = "andromeda: docked postswitch must write concrete output names";
     }
     {
       condition = lib.hasInfix "i3-msg reload" andromeda.home-manager.users.pallon.programs.autorandr.profiles.laptop.hooks.postswitch;

@@ -5,11 +5,553 @@
   ...
 }: let
   cfg = config.my.hm.features.i3;
+  types = lib.types;
+
+  defaultPrimaryWorkspaces = [
+    {
+      number = 1;
+      name = "mail";
+      key = "1";
+    }
+    {
+      number = 2;
+      name = "browser";
+      key = "2";
+    }
+    {
+      number = 3;
+      key = "3";
+    }
+    {
+      number = 4;
+      key = "4";
+    }
+    {
+      number = 5;
+      key = "5";
+    }
+    {
+      number = 6;
+      key = "6";
+    }
+    {
+      number = 7;
+      key = "7";
+    }
+    {
+      number = 8;
+      key = "8";
+    }
+    {
+      number = 9;
+      name = "communication";
+      key = "9";
+    }
+    {
+      number = 0;
+      key = "0";
+      assignOutput = false;
+    }
+  ];
+
+  defaultSecondaryWorkspaces = [
+    {
+      number = 11;
+      name = "terminal";
+      key = "F1";
+    }
+    {
+      number = 12;
+      key = "F2";
+    }
+    {
+      number = 13;
+      key = "F3";
+    }
+    {
+      number = 14;
+      key = "F4";
+    }
+    {
+      number = 15;
+      key = "F5";
+    }
+    {
+      number = 16;
+      key = "F6";
+    }
+    {
+      number = 17;
+      key = "F7";
+    }
+    {
+      number = 18;
+      key = "F8";
+    }
+    {
+      number = 19;
+      name = "communication";
+      key = "F9";
+    }
+  ];
+
+  defaultProgramShortcuts = [
+    {
+      key = "$mod+$AltGr+colon";
+      command = "librewolf";
+    }
+    {
+      key = "$mod+$AltGr+Delete";
+      command = "rofi-choose-container";
+    }
+    {
+      key = "$mod+$AltGr+KP_Separator";
+      command = "dropbox";
+    }
+    {
+      key = "$mod+$AltGr+KP_9";
+      command = "spacefm";
+    }
+    {
+      key = "$mod+$AltGr+KP_8";
+      command = "pidgin";
+    }
+    {
+      key = "$mod+$AltGr+exclamdown";
+      command = "~/local/bin/kxo";
+    }
+    {
+      key = "$mod+$AltGr+Shift+exclamdown";
+      command = "~/local/bin/kd";
+    }
+    {
+      key = "$mod+$AltGr+KP_1";
+      command = "protonmail-bridge; exec thunderbird;";
+    }
+    {
+      key = "$mod+$AltGr+KP_4";
+      command = "nmcli_dmenu";
+    }
+    {
+      key = "$mod+$AltGr+KP_5";
+      command = "RuneScape";
+    }
+    {
+      key = "$mod+$AltGr+End";
+      command = "spotify-blockify";
+    }
+    {
+      key = "$mod+$AltGr+KP_6";
+      command = "steam";
+    }
+    {
+      key = "$mod+$AltGr+BackSpace";
+      command = "VirtualBox";
+    }
+    {
+      key = "$mod+$AltGr+period";
+      command = "skype";
+    }
+    {
+      key = "$mod+$AltGr+questiondown";
+      command = "signal-desktop";
+    }
+    {
+      key = "$mod+$AltGr+Left";
+      command = "idea-community";
+    }
+    {
+      key = "$mod+$Down";
+      command = "thunderbird; exec librewolf; exec pidgin";
+    }
+  ];
+
+  defaultAssignments = [
+    {
+      criteria = ''class="(?i)thunderbird"'';
+      target = ''"1: mail"'';
+    }
+    {
+      criteria = ''instance="(?i)protonmail-bridge" class="ProtonMail Bridge"'';
+      target = ''"1: mail"'';
+    }
+    {
+      criteria = ''class="(?i)navigator"'';
+      target = ''"2: browser"'';
+    }
+    {
+      criteria = ''class="(?i)browser"'';
+      target = ''"2: browser"'';
+    }
+    {
+      criteria = ''class="(?i)keepassxc"'';
+      target = "7";
+    }
+    {
+      criteria = ''class="(?i)signal"'';
+      target = ''"9: communication"'';
+    }
+    {
+      criteria = ''class="(?i)ekiga"'';
+      target = ''"9: communication"'';
+    }
+    {
+      criteria = ''class="(?i)pidgin"'';
+      target = ''"9: communication"'';
+    }
+  ];
+
+  defaultModes = [
+    {
+      name = "Exit <<< System:(e) logout, (r) reboot, (s) suspend, (p) poweroff [+sync]. i3: (AltGr+c) reload, (AltGr+r) restart";
+      enterKey = "$mod+Shift+e";
+      bindings = [
+        {
+          key = "$mod+r";
+          command = "exec unmount-container-sync && systemctl reboot";
+        }
+        {
+          key = "$mod+s";
+          command = "exec unmount-container-sync && systemctl suspend";
+        }
+        {
+          key = "$mod+p";
+          command = "exec unmount-container-sync && systemctl poweroff";
+        }
+        {
+          key = "$mod+e";
+          command = ''exec unmount-container-sync; exit'';
+        }
+        {
+          key = "r";
+          command = "exec systemctl reboot";
+        }
+        {
+          key = "s";
+          command = "exec systemctl suspend";
+        }
+        {
+          key = "p";
+          command = "exec systemctl poweroff";
+        }
+        {
+          key = "e";
+          command = "exit";
+        }
+        {
+          key = "$AltGr+Delete";
+          command = ''reload; mode "default"'';
+        }
+        {
+          key = "$AltGr+KP_5";
+          command = "restart";
+        }
+        {
+          key = "Return";
+          command = ''mode "default"'';
+        }
+        {
+          key = "Escape";
+          command = ''mode "default"'';
+        }
+      ];
+    }
+    {
+      name = "Screen / DMMS <<< Screens: (k)ino, (g)ame, (h)game right, (1) screen, (a)utomatic, (r)eset, (s)tandby, (p) suspend, (l)ock, (o)ff";
+      enterKey = "$mod+Shift+m";
+      bindings = [
+        {
+          key = "s";
+          command = ''exec i3lock && xset dpms force standby; mode "default"'';
+        }
+        {
+          key = "p";
+          command = ''exec i3lock && xset dpms force suspend; mode "default"'';
+        }
+        {
+          key = "l";
+          command = ''exec xinput disable "$(xinput list | grep -i ".*mouse.*slave.*pointer.*" | cut -f2 | sed "s/id=//" | head -n 1)"; exec xset dpms force off; exec i3lock --nofork && xinput enable "$(xinput list | grep -i ".*mouse.*floating.*slave.*" | cut -f2 | sed "s/id=//" | head -n 1)"; mode "default"'';
+        }
+        {
+          key = "o";
+          command = ''exec xset dpms force off; mode "default"'';
+        }
+        {
+          key = "k";
+          command = ''exec xset -dpms && xset s off && systemctl --user stop redshift && xrandr --output DP-0 --primary --auto --output HDMI-1 --off; mode "default"'';
+        }
+        {
+          key = "g";
+          command = ''exec xrandr --output DP-0 --primary --mode 1920x1080 --output HDMI-1 --auto --right-of DP-0; mode "default"'';
+        }
+        {
+          key = "h";
+          command = ''exec xrandr --output DP-0 --auto --primary --output HDMI-1 --mode 1920x1080 --right-of DP-0; mode "default"'';
+        }
+        {
+          key = "KP_1";
+          command = ''exec xrandr --output DP-0 --primary --auto --output HDMI-1 --off; mode "default"'';
+        }
+        {
+          key = "a";
+          command = ''exec xrandr --output DP-0 --primary --mode 1920x1080 --output HDMI-1 --off; mode "default"'';
+        }
+        {
+          key = "r";
+          command = ''exec xrandr --output DP-0 --primary --auto --output HDMI-1 --auto --right-of DP-0; mode "default"'';
+        }
+        {
+          key = "Return";
+          command = ''mode "default"'';
+        }
+        {
+          key = "Escape";
+          command = ''mode "default"'';
+        }
+      ];
+    }
+    {
+      name = "resize <<< Resolution:(1) 1080p, (2) 2160p, (4) 480p, (7) 720p; Position: (c) center";
+      enterKey = "$mod+Shift+r";
+      bindings = [
+        {
+          key = "i";
+          command = "resize shrink width 10 px or 10 ppt";
+        }
+        {
+          key = "e";
+          command = "resize grow width 10 px or 10 ppt";
+        }
+        {
+          key = "l";
+          command = "resize grow height 10 px or 10 ppt";
+        }
+        {
+          key = "a";
+          command = "resize shrink height 10 px or 10 ppt";
+        }
+        {
+          key = "Left";
+          command = "resize shrink width 1 px or 1 ppt";
+        }
+        {
+          key = "Down";
+          command = "resize grow height 1 px or 1 ppt";
+        }
+        {
+          key = "Up";
+          command = "resize shrink height 1 px or 1 ppt";
+        }
+        {
+          key = "Right";
+          command = "resize grow width 1 px or 1 ppt";
+        }
+        {
+          key = "1";
+          command = ''resize set 1920 1080; move position center; mode "default"'';
+        }
+        {
+          key = "2";
+          command = ''resize set 3840 2160; move position center; mode "default"'';
+        }
+        {
+          key = "4";
+          command = ''resize set 768 480; move position center; mode "default"'';
+        }
+        {
+          key = "7";
+          command = ''resize set 1280 720; move position center; mode "default"'';
+        }
+        {
+          key = "c";
+          command = ''move position center; mode "default"'';
+        }
+        {
+          key = "Return";
+          command = ''mode "default"'';
+        }
+        {
+          key = "Escape";
+          command = ''mode "default"'';
+        }
+      ];
+    }
+    {
+      name = "work <<< Programs: (w) restore work layout, (s/S) move/show scratchpad";
+      enterKey = "$mod+Shift+w";
+      bindings = [
+        {
+          key = "w";
+          command = ''exec --no-startup-id i3-msg 'workspace "1: mail"; exec protonmail-bridge; exec thunderbird; workspace "2: browser"; exec librewolf; workspace 7; exec ~/local/bin/kxo; workspace "9: communication"; exec signal-desktop; exec librewolf --new-window --kiosk https://priceloop.slack.com; workspace 3; exec alacritty --working-directory ~/projects/priceloop/ogopogo/nocode'; mode "default"'';
+        }
+        {
+          key = "s";
+          command = ''move scratchpad; mode "default"'';
+        }
+        {
+          key = "Shift+S";
+          command = ''scratchpad show; mode "default"'';
+        }
+        {
+          key = "Return";
+          command = ''mode "default"'';
+        }
+        {
+          key = "Escape";
+          command = ''mode "default"'';
+        }
+      ];
+    }
+    {
+      name = "refocus";
+      enterKey = "$mod+Shift+f";
+      bindings = [
+        {
+          key = "$MLeft";
+          command = "focus left";
+        }
+        {
+          key = "$MDown";
+          command = "focus down";
+        }
+        {
+          key = "$MUp";
+          command = "focus up";
+        }
+        {
+          key = "$MRight";
+          command = "focus right";
+        }
+        {
+          key = "p";
+          command = "focus parent";
+        }
+        {
+          key = "c";
+          command = "focus child";
+        }
+        {
+          key = "Shift+$MLeft";
+          command = "move left";
+        }
+        {
+          key = "Shift+$MDown";
+          command = "move down";
+        }
+        {
+          key = "Shift+$MUp";
+          command = "move up";
+        }
+        {
+          key = "Shift+$MRight";
+          command = "move right";
+        }
+        {
+          key = "Return";
+          command = ''mode "default"'';
+        }
+        {
+          key = "Escape";
+          command = ''mode "default"'';
+        }
+        {
+          key = "q";
+          command = ''mode "default"'';
+        }
+      ];
+    }
+    {
+      name = "redesign";
+      enterKey = "$mod+Shift+d";
+      bindings = [
+        {
+          key = "$mod+n";
+          command = "border none";
+        }
+        {
+          key = "$mod+y";
+          command = "border 1px";
+        }
+        {
+          key = "$mod+b";
+          command = "border normal";
+        }
+        {
+          key = "Return";
+          command = ''mode "default"'';
+        }
+        {
+          key = "Escape";
+          command = ''mode "default"'';
+        }
+        {
+          key = "q";
+          command = ''mode "default"'';
+        }
+      ];
+    }
+  ];
 
   startupExecs =
     lib.concatMapStringsSep "\n"
     (cmd: "exec --no-startup-id ${cmd}")
     (cfg.commonStartupCommands ++ cfg.localStartupCommands);
+
+  mkWorkspaceName = ws:
+    if ws.name == null
+    then toString ws.number
+    else ''"${toString ws.number}: ${ws.name}"'';
+
+  mkWorkspaceNumberArg = ws:
+    if ws.name == null
+    then toString ws.number
+    else "${toString ws.number}: ${ws.name}";
+
+  renderWorkspaceOutputs = workspaces: output:
+    lib.concatMapStringsSep "\n"
+    (ws: ''workspace ${mkWorkspaceName ws} output ${output}'')
+    (lib.filter (ws: ws.assignOutput) workspaces);
+
+  renderWorkspaceSwitchBindings = workspaces:
+    lib.concatMapStringsSep "\n"
+    (ws: ''bindsym $mod+${ws.key} workspace number ${mkWorkspaceNumberArg ws}; [con_mark="awot"] move workspace current;'')
+    workspaces;
+
+  renderWorkspaceMoveBindings = workspaces:
+    lib.concatMapStringsSep "\n"
+    (ws: ''bindsym $mod+Shift+${ws.key} move container to workspace number ${mkWorkspaceNumberArg ws}'')
+    workspaces;
+
+  renderProgramShortcut = shortcut: "bindsym ${shortcut.key} exec ${lib.optionalString shortcut.noStartupId "--no-startup-id "}${shortcut.command}";
+
+  renderProgramShortcuts = lib.concatMapStringsSep "\n" renderProgramShortcut cfg.programShortcuts;
+
+  renderAssignments =
+    lib.concatMapStringsSep "\n"
+    (assignment: ''assign [${assignment.criteria}] ${assignment.target}'')
+    cfg.assignments;
+
+  renderMode = mode: ''
+    mode "${mode.name}" {
+    ${lib.concatMapStringsSep "\n" (binding: "        bindsym ${binding.key} ${binding.command}") mode.bindings}
+    }
+    bindsym ${mode.enterKey} mode "${mode.name}"
+  '';
+
+  renderModes = lib.concatMapStringsSep "\n" renderMode cfg.modes;
+
+  renderBarColors = ''
+    colors {
+        background #000000
+        statusline #ffffff
+        separator #666666
+
+        focused_workspace  $lblue   #285577 #ffffff
+        active_workspace   #333333  #5f676a #ffffff
+        inactive_workspace #333333  #222222 #888888
+        urgent_workspace   #2f343a  #900000 #ffffff
+    }
+  '';
 
   mkDisplayConfig = {
     primary,
@@ -21,26 +563,10 @@
       else primary;
   in ''
     # Workspace output assignments
-    workspace "1: mail" output ${primary}
-    workspace "2: browser" output ${primary}
-    workspace 3 output ${primary}
-    workspace 4 output ${primary}
-    workspace 5 output ${primary}
-    workspace 6 output ${primary}
-    workspace 7 output ${primary}
-    workspace 8 output ${primary}
-    workspace "9: communication" output ${primary}
+    ${renderWorkspaceOutputs cfg.workspaces.primary primary}
 
     ${lib.optionalString cfg.enableSecondaryWorkspaces ''
-      workspace "11: terminal" output ${secondaryOutput}
-      workspace 12 output ${secondaryOutput}
-      workspace 13 output ${secondaryOutput}
-      workspace 14 output ${secondaryOutput}
-      workspace 15 output ${secondaryOutput}
-      workspace 16 output ${secondaryOutput}
-      workspace 17 output ${secondaryOutput}
-      workspace 18 output ${secondaryOutput}
-      workspace "19: communication" output ${secondaryOutput}
+      ${renderWorkspaceOutputs cfg.workspaces.secondary secondaryOutput}
     ''}
 
     bar {
@@ -49,42 +575,17 @@
         ${lib.optionalString cfg.enableSecondaryWorkspaces "output ${secondaryOutput}"}
         status_command ${pkgs.i3status-rust}/bin/i3status-rs $HOME/.config/i3status-rust/config.toml
         strip_workspace_numbers no
-        colors {
-            background #000000
-            statusline #ffffff
-            separator #666666
-
-            focused_workspace  $lblue   #285577 #ffffff
-            active_workspace   #333333  #5f676a #ffffff
-            inactive_workspace #333333  #222222 #888888
-            urgent_workspace   #2f343a  #900000 #ffffff
-        }
+        ${renderBarColors}
     }
   '';
 
   secondaryWsConfig = lib.optionalString cfg.enableSecondaryWorkspaces ''
 
     # switch to workspace (secondary)
-    bindsym $mod+F1 workspace number 11: terminal; [con_mark="awot"] move workspace current;
-    bindsym $mod+F2 workspace number 12; [con_mark="awot"] move workspace current;
-    bindsym $mod+F3 workspace number 13; [con_mark="awot"] move workspace current;
-    bindsym $mod+F4 workspace number 14; [con_mark="awot"] move workspace current;
-    bindsym $mod+F5 workspace number 15; [con_mark="awot"] move workspace current;
-    bindsym $mod+F6 workspace number 16; [con_mark="awot"] move workspace current;
-    bindsym $mod+F7 workspace number 17; [con_mark="awot"] move workspace current;
-    bindsym $mod+F8 workspace number 18; [con_mark="awot"] move workspace current;
-    bindsym $mod+F9 workspace number 19: communication; [con_mark="awot"] move workspace current;
+    ${renderWorkspaceSwitchBindings cfg.workspaces.secondary}
 
     # move focused container to workspace (secondary)
-    bindsym $mod+Shift+F1 move container to workspace number 11: terminal
-    bindsym $mod+Shift+F2 move container to workspace number 12
-    bindsym $mod+Shift+F3 move container to workspace number 13
-    bindsym $mod+Shift+F4 move container to workspace number 14
-    bindsym $mod+Shift+F5 move container to workspace number 15
-    bindsym $mod+Shift+F6 move container to workspace number 16
-    bindsym $mod+Shift+F7 move container to workspace number 17
-    bindsym $mod+Shift+F8 move container to workspace number 18
-    bindsym $mod+Shift+F9 move container to workspace number 19: communication
+    ${renderWorkspaceMoveBindings cfg.workspaces.secondary}
   '';
 
   i3scriptsContent = ''
@@ -288,164 +789,21 @@
     bindsym --release Print exec --no-startup-id flameshot gui
 
     # Program shortcuts
-    bindsym $mod+$AltGr+colon exec librewolf
-    bindsym $mod+$AltGr+Delete exec rofi-choose-container
-    bindsym $mod+$AltGr+KP_Separator exec dropbox
-    bindsym $mod+$AltGr+KP_9 exec spacefm
-    bindsym $mod+$AltGr+KP_8 exec pidgin
-    bindsym $mod+$AltGr+exclamdown exec ~/local/bin/kxo
-    bindsym $mod+$AltGr+Shift+exclamdown exec ~/local/bin/kd
-    bindsym $mod+$AltGr+KP_1 exec protonmail-bridge; exec thunderbird;
-    bindsym $mod+$AltGr+KP_4 exec nmcli_dmenu
-    bindsym $mod+$AltGr+KP_5 exec RuneScape
-    bindsym $mod+$AltGr+End exec spotify-blockify
-    bindsym $mod+$AltGr+KP_6 exec steam
-    bindsym $mod+$AltGr+BackSpace exec VirtualBox
-    bindsym $mod+$AltGr+period exec skype
-    bindsym $mod+$AltGr+questiondown exec signal-desktop
-
-    bindsym $mod+$AltGr+Left exec idea-community
-    bindsym $mod+$Down exec thunderbird; exec librewolf; exec pidgin
+    ${renderProgramShortcuts}
 
     bindsym $mod+ISO_Next_Group exec setxkbmap de neo
     bindsym $mod+Shift+ISO_Next_Group exec setxkbmap de
 
-    assign [class="(?i)thunderbird"] "1: mail"
-    assign [instance="(?i)protonmail-bridge" class="ProtonMail Bridge"] "1: mail"
-    assign [class="(?i)navigator"] "2: browser"
-    assign [class="(?i)browser"] "2: browser"
-    assign [class="(?i)keepassxc"] 7
-    assign [class="(?i)signal"] "9: communication"
-    assign [class="(?i)ekiga"] "9: communication"
-    assign [class="(?i)pidgin"] "9: communication"
+    ${renderAssignments}
 
     # switch to workspace
-    bindsym $mod+1 workspace number 1: mail; [con_mark="awot"] move workspace current;
-    bindsym $mod+2 workspace number 2: browser; [con_mark="awot"] move workspace current;
-    bindsym $mod+3 workspace number 3; [con_mark="awot"] move workspace current;
-    bindsym $mod+4 workspace number 4; [con_mark="awot"] move workspace current;
-    bindsym $mod+5 workspace number 5; [con_mark="awot"] move workspace current;
-    bindsym $mod+6 workspace number 6; [con_mark="awot"] move workspace current;
-    bindsym $mod+7 workspace number 7; [con_mark="awot"] move workspace current;
-    bindsym $mod+8 workspace number 8; [con_mark="awot"] move workspace current;
-    bindsym $mod+9 workspace number 9: communication; [con_mark="awot"] move workspace current;
-    bindsym $mod+0 workspace number 0; [con_mark="awot"] move workspace current;
+    ${renderWorkspaceSwitchBindings cfg.workspaces.primary}
 
     # move focused container to workspace
-    bindsym $mod+Shift+1 move container to workspace number 1: mail
-    bindsym $mod+Shift+2 move container to workspace number 2: browser
-    bindsym $mod+Shift+3 move container to workspace number 3
-    bindsym $mod+Shift+4 move container to workspace number 4
-    bindsym $mod+Shift+5 move container to workspace number 5
-    bindsym $mod+Shift+6 move container to workspace number 6
-    bindsym $mod+Shift+7 move container to workspace number 7
-    bindsym $mod+Shift+8 move container to workspace number 8
-    bindsym $mod+Shift+9 move container to workspace number 9: communication
-    bindsym $mod+Shift+0 move container to workspace number 0
+    ${renderWorkspaceMoveBindings cfg.workspaces.primary}
 
     # Define different modes
-    mode "Exit <<< System:(e) logout, (r) reboot, (s) suspend, (p) poweroff [+sync]. i3: (AltGr+c) reload, (AltGr+r) restart" {
-            bindsym $mod+r exec unmount-container-sync && systemctl reboot
-            bindsym $mod+s exec unmount-container-sync && systemctl suspend
-            bindsym $mod+p exec unmount-container-sync && systemctl poweroff
-            bindsym $mod+e exec unmount-container-sync; exit
-
-            bindsym r exec systemctl reboot
-            bindsym s exec systemctl suspend
-            bindsym p exec systemctl poweroff
-            bindsym e exit
-            bindsym $AltGr+Delete reload; mode "default"
-            bindsym $AltGr+KP_5 restart
-
-            bindsym Return mode "default"
-            bindsym Escape mode "default"
-    }
-    bindsym $mod+Shift+e mode "Exit <<< System:(e) logout, (r) reboot, (s) suspend, (p) poweroff [+sync]. i3: (AltGr+c) reload, (AltGr+r) restart"
-
-    mode "Screen / DMMS <<< Screens: (k)ino, (g)ame, (h)game right, (1) screen, (a)utomatic, (r)eset, (s)tandby, (p) suspend, (l)ock, (o)ff" {
-            bindsym s exec i3lock && xset dpms force standby; mode "default"
-            bindsym p exec i3lock && xset dpms force suspend; mode "default"
-            bindsym l exec xinput disable "$(xinput list | grep -i ".*mouse.*slave.*pointer.*" | cut -f2 | sed "s/id=//" | head -n 1)"; exec xset dpms force off; exec i3lock --nofork && xinput enable "$(xinput list | grep -i ".*mouse.*floating.*slave.*" | cut -f2 | sed "s/id=//" | head -n 1)"; mode "default"
-            bindsym o exec xset dpms force off; mode "default"
-
-            bindsym k exec xset -dpms && xset s off && systemctl --user stop redshift && xrandr --output DP-0 --primary --auto --output HDMI-1 --off; mode "default"
-            bindsym g exec xrandr --output DP-0 --primary --mode 1920x1080 --output HDMI-1 --auto --right-of DP-0; mode "default"
-            bindsym h exec xrandr --output DP-0 --auto --primary --output HDMI-1 --mode 1920x1080 --right-of DP-0; mode "default"
-            bindsym KP_1 exec xrandr --output DP-0 --primary --auto --output HDMI-1 --off; mode "default"
-            bindsym a exec xrandr --output DP-0 --primary --mode 1920x1080 --output HDMI-1 --off; mode "default"
-
-            bindsym r exec xrandr --output DP-0 --primary --auto --output HDMI-1 --auto --right-of DP-0; mode "default"
-            bindsym Return mode "default"
-            bindsym Escape mode "default"
-    }
-    bindsym $mod+Shift+m mode "Screen / DMMS <<< Screens: (k)ino, (g)ame, (h)game right, (1) screen, (a)utomatic, (r)eset, (s)tandby, (p) suspend, (l)ock, (o)ff"
-
-    mode "resize <<< Resolution:(1) 1080p, (2) 2160p, (4) 480p, (7) 720p; Position: (c) center" {
-            bindsym i resize shrink width 10 px or 10 ppt
-            bindsym e resize grow width 10 px or 10 ppt
-            bindsym l resize grow height 10 px or 10 ppt
-            bindsym a resize shrink height 10 px or 10 ppt
-
-            bindsym Left resize shrink width 1 px or 1 ppt
-            bindsym Down resize grow height 1 px or 1 ppt
-            bindsym Up resize shrink height 1 px or 1 ppt
-            bindsym Right resize grow width 1 px or 1 ppt
-
-            bindsym 1 resize set 1920 1080; move position center; mode "default"
-            bindsym 2 resize set 3840 2160; move position center; mode "default"
-            bindsym 4 resize set 768 480; move position center; mode "default"
-            bindsym 7 resize set 1280 720; move position center; mode "default"
-
-            bindsym c move position center; mode "default"
-
-            bindsym Return mode "default"
-            bindsym Escape mode "default"
-    }
-    bindsym $mod+Shift+r mode "resize <<< Resolution:(1) 1080p, (2) 2160p, (4) 480p, (7) 720p; Position: (c) center"
-
-    mode "work <<< Programs: (w) restore work layout, (s/S) move/show scratchpad" {
-
-            bindsym w exec --no-startup-id i3-msg 'workspace "1: mail"; exec protonmail-bridge; exec thunderbird; workspace "2: browser"; exec librewolf; workspace 7; exec ~/local/bin/kxo; workspace "9: communication"; exec signal-desktop; exec librewolf --new-window --kiosk https://priceloop.slack.com; workspace 3; exec alacritty --working-directory ~/projects/priceloop/ogopogo/nocode'; mode "default"
-
-            bindsym s move scratchpad; mode "default"
-            bindsym Shift+S scratchpad show; mode "default"
-
-            bindsym Return mode "default"
-            bindsym Escape mode "default"
-    }
-    bindsym $mod+Shift+w mode "work <<< Programs: (w) restore work layout, (s/S) move/show scratchpad"
-
-    mode "refocus" {
-            bindsym $MLeft focus left
-            bindsym $MDown focus down
-            bindsym $MUp focus up
-            bindsym $MRight focus right
-
-            bindsym p focus parent
-            bindsym c focus child
-
-            bindsym Shift+$MLeft move left
-            bindsym Shift+$MDown move down
-            bindsym Shift+$MUp move up
-            bindsym Shift+$MRight move right
-
-            bindsym Return mode "default"
-            bindsym Escape mode "default"
-            bindsym q mode "default"
-    }
-    bindsym $mod+Shift+f mode "refocus"
-
-    mode "redesign" {
-
-        bindsym $mod+n border none
-        bindsym $mod+y border 1px
-        bindsym $mod+b border normal
-
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-        bindsym q mode "default"
-    }
-    bindsym $mod+Shift+d mode "redesign"
+    ${renderModes}
   '';
 
   i3Config = ''
@@ -462,55 +820,181 @@ in {
   options.my.hm.features.i3 = {
     enable = lib.mkEnableOption "i3 window manager configuration";
 
-    defaultOutputs = {
-      primary = lib.mkOption {
-        type = lib.types.str;
-        default = "eDP-1";
-        description = "Default primary output for $OUT variable.";
+    display = {
+      fallbackPrimary = lib.mkOption {
+        type = types.str;
+        default = "primary";
+        description = "Fallback primary output alias used before autorandr writes concrete outputs.";
       };
-      secondary = lib.mkOption {
-        type = lib.types.nullOr lib.types.str;
+      fallbackSecondary = lib.mkOption {
+        type = types.nullOr types.str;
         default = null;
-        description = "Default secondary output for $OUT2. null defaults to primary.";
+        description = "Fallback secondary output alias. null defaults to fallbackPrimary.";
       };
     };
 
     commonStartupCommands = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
+      type = types.listOf types.str;
       default = [];
       description = "Shared startup commands (exec --no-startup-id).";
     };
 
     localStartupCommands = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
+      type = types.listOf types.str;
       default = [];
       description = "Host-specific startup commands.";
     };
 
     terminal = lib.mkOption {
-      type = lib.types.str;
+      type = types.str;
       default = "alacritty";
       description = "Terminal emulator for i3scripts.sh.";
     };
 
     enableSecondaryWorkspaces = lib.mkOption {
-      type = lib.types.bool;
+      type = types.bool;
       default = true;
       description = "Generate F-key bindings for workspaces 11-19 on secondary output.";
     };
 
     barFont = lib.mkOption {
-      type = lib.types.str;
+      type = types.str;
       default = "pango:Droid Sans Mono, Font Awesome 7 Free, 12";
       description = "Font declaration for the i3 bar.";
     };
 
+    workspaces = {
+      primary = lib.mkOption {
+        type = types.listOf (types.submodule {
+          options = {
+            number = lib.mkOption {
+              type = types.int;
+              description = "Workspace number.";
+            };
+            name = lib.mkOption {
+              type = types.nullOr types.str;
+              default = null;
+              description = "Optional workspace label.";
+            };
+            key = lib.mkOption {
+              type = types.str;
+              description = "Key used with $mod and $mod+Shift for this workspace.";
+            };
+            assignOutput = lib.mkOption {
+              type = types.bool;
+              default = true;
+              description = "Whether the display fragment assigns this workspace to an output.";
+            };
+          };
+        });
+        default = defaultPrimaryWorkspaces;
+        description = "Primary workspace bindings and output assignments.";
+      };
+      secondary = lib.mkOption {
+        type = types.listOf (types.submodule {
+          options = {
+            number = lib.mkOption {
+              type = types.int;
+              description = "Workspace number.";
+            };
+            name = lib.mkOption {
+              type = types.nullOr types.str;
+              default = null;
+              description = "Optional workspace label.";
+            };
+            key = lib.mkOption {
+              type = types.str;
+              description = "Key used with $mod and $mod+Shift for this workspace.";
+            };
+            assignOutput = lib.mkOption {
+              type = types.bool;
+              default = true;
+              description = "Whether the display fragment assigns this workspace to an output.";
+            };
+          };
+        });
+        default = defaultSecondaryWorkspaces;
+        description = "Secondary workspace bindings and output assignments.";
+      };
+    };
+
+    programShortcuts = lib.mkOption {
+      type = types.listOf (types.submodule {
+        options = {
+          key = lib.mkOption {
+            type = types.str;
+            description = "Key sequence used in the bindsym.";
+          };
+          command = lib.mkOption {
+            type = types.str;
+            description = "Command after exec.";
+          };
+          noStartupId = lib.mkOption {
+            type = types.bool;
+            default = false;
+            description = "Add --no-startup-id to the exec binding.";
+          };
+        };
+      });
+      default = defaultProgramShortcuts;
+      description = "Program launch keybindings.";
+    };
+
+    assignments = lib.mkOption {
+      type = types.listOf (types.submodule {
+        options = {
+          criteria = lib.mkOption {
+            type = types.str;
+            description = "i3 criteria without surrounding brackets.";
+          };
+          target = lib.mkOption {
+            type = types.str;
+            description = "Workspace target expression.";
+          };
+        };
+      });
+      default = defaultAssignments;
+      description = "Window assignment rules.";
+    };
+
+    modes = lib.mkOption {
+      type = types.listOf (types.submodule {
+        options = {
+          name = lib.mkOption {
+            type = types.str;
+            description = "i3 mode name.";
+          };
+          enterKey = lib.mkOption {
+            type = types.str;
+            description = "Key sequence that enters the mode.";
+          };
+          bindings = lib.mkOption {
+            type = types.listOf (types.submodule {
+              options = {
+                key = lib.mkOption {
+                  type = types.str;
+                  description = "Key sequence within the mode.";
+                };
+                command = lib.mkOption {
+                  type = types.str;
+                  description = "i3 command for this binding.";
+                };
+              };
+            });
+            default = [];
+            description = "Mode-local bindings.";
+          };
+        };
+      });
+      default = defaultModes;
+      description = "Named i3 modes.";
+    };
+
     extraConfig = lib.mkOption {
-      type = lib.types.lines;
+      type = types.lines;
       default = "";
       description = "Additional i3 config lines.";
     };
-
   };
 
   config = lib.mkIf cfg.enable {
@@ -563,19 +1047,17 @@ in {
 
     home.activation.createI3DisplayConfig = lib.hm.dag.entryAfter ["writeBoundary"] (let
       secondary =
-        if cfg.defaultOutputs.secondary != null
-        then cfg.defaultOutputs.secondary
-        else cfg.defaultOutputs.primary;
+        if cfg.display.fallbackSecondary != null
+        then cfg.display.fallbackSecondary
+        else cfg.display.fallbackPrimary;
       defaultDisplayConfig = mkDisplayConfig {
-        primary = cfg.defaultOutputs.primary;
+        primary = cfg.display.fallbackPrimary;
         secondary = secondary;
       };
     in ''
       displayConfig="$HOME/.config/i3/display-config"
-      if [ ! -f "$displayConfig" ]; then
-        mkdir -p "$(dirname "$displayConfig")"
-        printf '%s\n' ${lib.escapeShellArg defaultDisplayConfig} > "$displayConfig"
-      fi
+      mkdir -p "$(dirname "$displayConfig")"
+      printf '%s\n' ${lib.escapeShellArg defaultDisplayConfig} > "$displayConfig"
     '');
   };
 }

@@ -135,7 +135,7 @@
             else primary;
         in ''
           "$HOME/.config/i3/scripts/write-display-config.sh" "${primary}" "${sec}"
-          i3-msg reload
+          ${pkgs.i3}/bin/i3-msg reload
         '';
       in {
         enable = true;

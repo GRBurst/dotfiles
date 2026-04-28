@@ -31,7 +31,6 @@
       };
       i3 = {
         enable = true;
-        defaultOutputs.primary = "eDP-1";
         commonStartupCommands = ["nm-applet" "protonmail-bridge -n"];
         localStartupCommands = ["cbatticon" "blueman-applet"];
         statusBar.networkDevices = [
