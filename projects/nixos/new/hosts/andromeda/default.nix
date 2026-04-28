@@ -125,16 +125,7 @@
       # my.hm.features.wired.enable = true;
 
       programs.autorandr = let
-        mkHook = {
-          primary,
-          secondary ? null,
-        }: let
-          sec =
-            if secondary != null
-            then secondary
-            else primary;
-        in ''
-          "$HOME/.config/i3/scripts/write-display-config.sh" "${primary}" "${sec}"
+        mkHook = ''
           ${pkgs.i3}/bin/i3-msg reload
         '';
       in {
@@ -154,7 +145,7 @@
                 gamma = "1.0:0.667:0.455";
               };
             };
-            hooks.postswitch = mkHook {primary = "eDP-1";};
+            hooks.postswitch = mkHook;
           };
 
           docked = {
@@ -181,10 +172,7 @@
               };
               "eDP-1".enable = false;
             };
-            hooks.postswitch = mkHook {
-              primary = "DP-4";
-              secondary = "DP-3";
-            };
+            hooks.postswitch = mkHook;
           };
 
           docked2 = {
@@ -211,10 +199,7 @@
               };
               "eDP-1".enable = false;
             };
-            hooks.postswitch = mkHook {
-              primary = "DP-6";
-              secondary = "DP-5";
-            };
+            hooks.postswitch = mkHook;
           };
 
           docked-alternative = {
@@ -241,10 +226,7 @@
               };
               "eDP-1".enable = false;
             };
-            hooks.postswitch = mkHook {
-              primary = "DP-6";
-              secondary = "DP-5";
-            };
+            hooks.postswitch = mkHook;
           };
 
           docked-single = {
@@ -269,10 +251,7 @@
                 gamma = "1.0:0.833:0.769";
               };
             };
-            hooks.postswitch = mkHook {
-              primary = "eDP-1";
-              secondary = "DP-4";
-            };
+            hooks.postswitch = mkHook;
           };
 
           pallon-office = {
@@ -295,10 +274,7 @@
                 rate = "60.00";
               };
             };
-            hooks.postswitch = mkHook {
-              primary = "eDP-1";
-              secondary = "DP-2";
-            };
+            hooks.postswitch = mkHook;
           };
 
           florian = {
@@ -323,10 +299,7 @@
                 gamma = "1.0:0.833:0.769";
               };
             };
-            hooks.postswitch = mkHook {
-              primary = "eDP-1";
-              secondary = "DP-1";
-            };
+            hooks.postswitch = mkHook;
           };
         };
       };

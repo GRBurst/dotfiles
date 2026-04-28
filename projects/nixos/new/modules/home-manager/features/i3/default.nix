@@ -507,9 +507,9 @@
     then toString ws.number
     else "${toString ws.number}: ${ws.name}";
 
-  renderWorkspaceOutputs = workspaces: output:
+  renderWorkspaceOutputs = workspaces: outputExpr:
     lib.concatMapStringsSep "\n"
-    (ws: ''workspace ${mkWorkspaceName ws} output ${output}'')
+    (ws: ''workspace ${mkWorkspaceName ws} output ${outputExpr}'')
     (lib.filter (ws: ws.assignOutput) workspaces);
 
   renderWorkspaceSwitchBindings = workspaces:
@@ -553,30 +553,26 @@
     }
   '';
 
-  mkDisplayConfig = {
-    primary,
-    secondary ? null,
-  }: let
-    secondaryOutput =
-      if secondary != null
-      then secondary
-      else primary;
-  in ''
-    # Workspace output assignments
-    ${renderWorkspaceOutputs cfg.workspaces.primary primary}
-
-    ${lib.optionalString cfg.enableSecondaryWorkspaces ''
-      ${renderWorkspaceOutputs cfg.workspaces.secondary secondaryOutput}
-    ''}
-
+  renderBar = ''
     bar {
         font ${cfg.barFont}
-        output ${primary}
-        ${lib.optionalString cfg.enableSecondaryWorkspaces "output ${secondaryOutput}"}
+        output primary
+        ${lib.optionalString cfg.enableSecondaryWorkspaces "output nonprimary"}
         status_command ${pkgs.i3status-rust}/bin/i3status-rs $HOME/.config/i3status-rust/config.toml
         strip_workspace_numbers no
         ${renderBarColors}
     }
+  '';
+
+  displayConfig = ''
+    # Workspace output assignments
+    ${renderWorkspaceOutputs cfg.workspaces.primary "primary"}
+
+    ${lib.optionalString cfg.enableSecondaryWorkspaces ''
+      ${renderWorkspaceOutputs cfg.workspaces.secondary "nonprimary primary"}
+    ''}
+
+    ${renderBar}
   '';
 
   secondaryWsConfig = lib.optionalString cfg.enableSecondaryWorkspaces ''
@@ -811,7 +807,7 @@
 
     ${commonConfig}
     ${secondaryWsConfig}
-    include ~/.config/i3/display-config
+    ${displayConfig}
     ${cfg.extraConfig}
   '';
 in {
@@ -819,19 +815,6 @@ in {
 
   options.my.hm.features.i3 = {
     enable = lib.mkEnableOption "i3 window manager configuration";
-
-    display = {
-      fallbackPrimary = lib.mkOption {
-        type = types.str;
-        default = "primary";
-        description = "Fallback primary output alias used before autorandr writes concrete outputs.";
-      };
-      fallbackSecondary = lib.mkOption {
-        type = types.nullOr types.str;
-        default = null;
-        description = "Fallback secondary output alias. null defaults to fallbackPrimary.";
-      };
-    };
 
     commonStartupCommands = lib.mkOption {
       type = types.listOf types.str;
@@ -1006,32 +989,6 @@ in {
       text = i3scriptsContent;
       executable = true;
     };
-    xdg.configFile."i3/scripts/write-display-config.sh" = let
-      displayTemplate = mkDisplayConfig {
-        primary = "__PRIMARY__";
-        secondary = "__SECONDARY__";
-      };
-    in {
-      text = ''
-        #!/usr/bin/env bash
-        set -eu
-
-        primary="$1"
-        secondary="''${2:-$1}"
-        target="$HOME/.config/i3/display-config"
-        mkdir -p "$(dirname "$target")"
-        tmp="$(mktemp)"
-        cat > "$tmp" <<'EOF'
-        ${displayTemplate}
-        EOF
-        sed \
-          -e "s/__PRIMARY__/$primary/g" \
-          -e "s/__SECONDARY__/$secondary/g" \
-          "$tmp" > "$target"
-        rm -f "$tmp"
-      '';
-      executable = true;
-    };
     xdg.configFile."i3/scripts/rename.sh" = {
       source = ./scripts/rename.sh;
       executable = true;
@@ -1044,20 +1001,5 @@ in {
     xdg.configFile."i3/layouts/work_left.json".source = ./layouts/work_left.json;
     xdg.configFile."i3/layouts/work_right.json".source = ./layouts/work_right.json;
     xdg.configFile."i3/layouts/announcekit.json".source = ./layouts/announcekit.json;
-
-    home.activation.createI3DisplayConfig = lib.hm.dag.entryAfter ["writeBoundary"] (let
-      secondary =
-        if cfg.display.fallbackSecondary != null
-        then cfg.display.fallbackSecondary
-        else cfg.display.fallbackPrimary;
-      defaultDisplayConfig = mkDisplayConfig {
-        primary = cfg.display.fallbackPrimary;
-        secondary = secondary;
-      };
-    in ''
-      displayConfig="$HOME/.config/i3/display-config"
-      mkdir -p "$(dirname "$displayConfig")"
-      printf '%s\n' ${lib.escapeShellArg defaultDisplayConfig} > "$displayConfig"
-    '');
   };
 }

@@ -33,6 +33,25 @@
     config = andromedaNoMaster.config.nixpkgs.config;
   };
 
+  pallonHome = andromeda.home-manager.users.pallon;
+  i3ConfigText = pallonHome.xdg.configFile."i3/config".text;
+  i3ConfigFiles = builtins.attrValues pallonHome.xdg.configFile;
+  autorandrProfiles = pallonHome.programs.autorandr.profiles;
+
+  enabledOutputs = profile:
+    lib.filterAttrs (_: output: output.enable or false) profile.config;
+
+  enabledPrimaryOutputs = profile:
+    lib.filterAttrs (_: output: (output.enable or false) && (output.primary or false)) profile.config;
+
+  hasExactlyOneEnabledPrimary = profile:
+    builtins.length (builtins.attrNames (enabledPrimaryOutputs profile)) == 1;
+
+  hasOneOrTwoEnabledOutputs = profile: let
+    n = builtins.length (builtins.attrNames (enabledOutputs profile));
+  in
+    n >= 1 && n <= 2;
+
   mkAssertionCheck = name: assertions:
     pkgs.runCommand name {} ''
       ${lib.concatMapStringsSep "\n" (assertion: ''
@@ -169,75 +188,89 @@ in {
 
   i3-config = mkAssertionCheck "i3-config" [
     {
-      condition = andromeda.home-manager.users.pallon.my.hm.features.i3.enable == true;
+      condition = pallonHome.my.hm.features.i3.enable == true;
       message = "andromeda: i3 feature must be enabled for pallon";
     }
     {
-      condition = lib.hasInfix "include ~/.config/i3/display-config" andromeda.home-manager.users.pallon.xdg.configFile."i3/config".text;
-      message = "andromeda: i3 config must include display-config file";
+      condition = !(lib.hasInfix "include ~/.config/i3/display-config" i3ConfigText);
+      message = "andromeda: i3 config must not include display-config file";
     }
     {
-      condition = !(lib.hasInfix "include ~/.config/i3/outputs" andromeda.home-manager.users.pallon.xdg.configFile."i3/config".text);
+      condition = !(pallonHome.home.activation ? createI3DisplayConfig);
+      message = "andromeda: Home Manager activation must not create i3 display-config";
+    }
+    {
+      condition = !(pallonHome.xdg.configFile ? "i3/scripts/write-display-config.sh");
+      message = "andromeda: write-display-config.sh must not be deployed";
+    }
+    {
+      condition = !(lib.hasInfix "include ~/.config/i3/outputs" i3ConfigText);
       message = "andromeda: i3 config must not include stale outputs file";
     }
     {
-      condition = lib.hasInfix "set $mod Mod4" andromeda.home-manager.users.pallon.xdg.configFile."i3/config".text;
+      condition = lib.hasInfix "set $mod Mod4" i3ConfigText;
       message = "andromeda: i3 config must define $mod";
     }
     {
-      condition = !(lib.hasInfix ''workspace "1: mail" output $OUT'' andromeda.home-manager.users.pallon.xdg.configFile."i3/config".text);
-      message = "andromeda: i3 config must not assign workspace 1 to $OUT";
+      condition = lib.hasInfix ''workspace "1: mail" output primary'' i3ConfigText;
+      message = "andromeda: i3 config must assign workspace 1 to primary";
     }
     {
-      condition = !(lib.hasInfix ''workspace "11: terminal" output $OUT2'' andromeda.home-manager.users.pallon.xdg.configFile."i3/config".text);
-      message = "andromeda: i3 config must not assign workspace 11 to $OUT2";
+      condition = lib.hasInfix ''workspace "11: terminal" output nonprimary primary'' i3ConfigText;
+      message = "andromeda: i3 config must assign workspace 11 to nonprimary primary";
     }
     {
-      condition = lib.hasInfix ''workspace "1: mail" output primary'' andromeda.home-manager.users.pallon.home.activation.createI3DisplayConfig.data;
-      message = "andromeda: i3 fallback display config must assign workspace 1 to primary";
+      condition = lib.hasInfix "bar {" i3ConfigText;
+      message = "andromeda: i3 config must include static bar";
     }
     {
-      condition = lib.hasInfix "bar {" andromeda.home-manager.users.pallon.home.activation.createI3DisplayConfig.data;
-      message = "andromeda: i3 fallback display config must include bar";
+      condition = lib.hasInfix "output primary" i3ConfigText;
+      message = "andromeda: i3 config must use primary output alias";
     }
     {
-      condition = lib.hasInfix "output primary" andromeda.home-manager.users.pallon.home.activation.createI3DisplayConfig.data;
-      message = "andromeda: i3 fallback display config must use primary output alias";
+      condition = lib.hasInfix "output nonprimary" i3ConfigText;
+      message = "andromeda: i3 config must use nonprimary output alias";
     }
     {
-      condition = lib.hasInfix "exec --no-startup-id nm-applet" andromeda.home-manager.users.pallon.xdg.configFile."i3/config".text;
+      condition = lib.hasInfix "i3status-rs" i3ConfigText;
+      message = "andromeda: i3 config must reference i3status-rs";
+    }
+    {
+      condition =
+        builtins.all
+        (file: let
+          text = file.text or null;
+        in
+          text == null || (!(lib.hasInfix "$OUT" text) && !(lib.hasInfix "$OUT2" text)))
+        i3ConfigFiles;
+      message = "andromeda: deployed i3 config text must not contain $OUT or $OUT2";
+    }
+    {
+      condition = lib.hasInfix "exec --no-startup-id nm-applet" i3ConfigText;
       message = "andromeda: i3 config must contain nm-applet startup";
     }
     {
-      condition = lib.hasInfix "exec --no-startup-id cbatticon" andromeda.home-manager.users.pallon.xdg.configFile."i3/config".text;
+      condition = lib.hasInfix "exec --no-startup-id cbatticon" i3ConfigText;
       message = "andromeda: i3 config must contain cbatticon startup";
     }
     {
-      condition = lib.hasInfix "i3status-rs" andromeda.home-manager.users.pallon.home.activation.createI3DisplayConfig.data;
-      message = "andromeda: i3 fallback display config must reference i3status-rs";
-    }
-    {
-      condition = andromeda.home-manager.users.pallon.xdg.configFile."i3/scripts/i3scripts.sh".executable == true;
+      condition = pallonHome.xdg.configFile."i3/scripts/i3scripts.sh".executable == true;
       message = "andromeda: i3scripts.sh must be executable";
     }
     {
-      condition = andromeda.home-manager.users.pallon.xdg.configFile."i3/scripts/write-display-config.sh".executable == true;
-      message = "andromeda: write-display-config.sh must be executable";
-    }
-    {
-      condition = andromeda.home-manager.users.pallon.xdg.configFile ? "i3status-rust/config.toml";
+      condition = pallonHome.xdg.configFile ? "i3status-rust/config.toml";
       message = "andromeda: i3status-rust config must be deployed";
     }
     {
-      condition = lib.hasInfix ''theme = "slick"'' andromeda.home-manager.users.pallon.xdg.configFile."i3status-rust/config.toml".text;
+      condition = lib.hasInfix ''theme = "slick"'' pallonHome.xdg.configFile."i3status-rust/config.toml".text;
       message = "andromeda: i3status-rust must use slick theme";
     }
     {
-      condition = lib.hasInfix ''device = "enp2s0f0"'' andromeda.home-manager.users.pallon.xdg.configFile."i3status-rust/config.toml".text;
+      condition = lib.hasInfix ''device = "enp2s0f0"'' pallonHome.xdg.configFile."i3status-rust/config.toml".text;
       message = "andromeda: i3status-rust must include ethernet device";
     }
     {
-      condition = lib.hasInfix ''device = "wlp3s0"'' andromeda.home-manager.users.pallon.xdg.configFile."i3status-rust/config.toml".text;
+      condition = lib.hasInfix ''device = "wlp3s0"'' pallonHome.xdg.configFile."i3status-rust/config.toml".text;
       message = "andromeda: i3status-rust must include wifi device";
     }
   ];
@@ -254,37 +287,61 @@ in {
 
   i3-autorandr = mkAssertionCheck "i3-autorandr" [
     {
-      condition = andromeda.home-manager.users.pallon.programs.autorandr.enable == true;
+      condition = pallonHome.programs.autorandr.enable == true;
       message = "andromeda: autorandr must be enabled for pallon";
     }
     {
-      condition = andromeda.home-manager.users.pallon.programs.autorandr.profiles ? "laptop";
+      condition = autorandrProfiles ? "laptop";
       message = "andromeda: autorandr must have laptop profile";
     }
     {
-      condition = andromeda.home-manager.users.pallon.programs.autorandr.profiles ? "docked";
+      condition = autorandrProfiles ? "docked";
       message = "andromeda: autorandr must have docked profile";
     }
     {
       condition =
         builtins.all
-        (profile: lib.hasInfix "write-display-config.sh" profile.hooks.postswitch)
-        (builtins.attrValues andromeda.home-manager.users.pallon.programs.autorandr.profiles);
-      message = "andromeda: autorandr postswitch hooks must call write-display-config.sh";
+        hasOneOrTwoEnabledOutputs
+        (builtins.attrValues autorandrProfiles);
+      message = "andromeda: every autorandr profile must enable one or two outputs";
     }
     {
-      condition = lib.hasInfix "/bin/i3-msg reload" andromeda.home-manager.users.pallon.programs.autorandr.profiles.docked.hooks.postswitch;
+      condition =
+        builtins.all
+        hasExactlyOneEnabledPrimary
+        (builtins.attrValues autorandrProfiles);
+      message = "andromeda: every autorandr profile must have exactly one enabled primary output";
+    }
+    {
+      condition =
+        builtins.all
+        (profile: !(lib.hasInfix "write-display-config.sh" profile.hooks.postswitch))
+        (builtins.attrValues autorandrProfiles);
+      message = "andromeda: autorandr postswitch hooks must not call write-display-config.sh";
+    }
+    {
+      condition =
+        builtins.all
+        (profile: lib.hasInfix "i3-msg reload" profile.hooks.postswitch)
+        (builtins.attrValues autorandrProfiles);
+      message = "andromeda: every autorandr postswitch hook must reload i3";
+    }
+    {
+      condition = lib.hasInfix "/bin/i3-msg reload" autorandrProfiles.docked.hooks.postswitch;
       message = "andromeda: docked postswitch must reload i3";
     }
     {
-      condition = lib.hasInfix ''"DP-4" "DP-3"'' andromeda.home-manager.users.pallon.programs.autorandr.profiles.docked.hooks.postswitch;
-      message = "andromeda: docked postswitch must write concrete output names";
-    }
-    {
-      condition = lib.hasInfix "i3-msg reload" andromeda.home-manager.users.pallon.programs.autorandr.profiles.laptop.hooks.postswitch;
+      condition = lib.hasInfix "i3-msg reload" autorandrProfiles.laptop.hooks.postswitch;
       message = "andromeda: laptop postswitch must reload i3";
     }
   ];
+
+  i3-syntax = pkgs.runCommand "i3-syntax" {} ''
+    export XDG_RUNTIME_DIR="$TMPDIR"
+    configFile=${pkgs.writeText "andromeda-i3-config" i3ConfigText}
+    ${pkgs.i3}/bin/i3 -C -c "$configFile"
+    touch "$out"
+  '';
 
   autorandr-gamma = mkAssertionCheck "autorandr-gamma" [
     {
@@ -348,8 +405,8 @@ in {
       message = "andromeda: codex must come from nixpkgs-master by default";
     }
     {
-      condition = andromedaSystem.pkgs.claude-code-bin.version == masterPkgs.claude-code-bin.version;
-      message = "andromeda: claude-code-bin must come from nixpkgs-master by default";
+      condition = andromedaSystem.pkgs.claude-code.version == masterPkgs.claude-code.version;
+      message = "andromeda: claude-code must come from nixpkgs-master by default";
     }
     {
       condition =
@@ -361,9 +418,9 @@ in {
     {
       condition =
         builtins.any
-        (p: (p.pname or p.name or "") == "claude-code-bin")
+        (p: (p.pname or p.name or "") == "claude-code")
         andromeda.home-manager.users.pallon.home.packages;
-      message = "andromeda: claude-code-bin must remain in pallon home.packages";
+      message = "andromeda: claude-code must remain in pallon home.packages";
     }
   ];
 
@@ -377,8 +434,8 @@ in {
       message = "opt-out fixture: codex must fall back to base nixpkgs when disabled";
     }
     {
-      condition = andromedaNoMaster.pkgs.claude-code-bin.version != masterPkgs.claude-code-bin.version;
-      message = "opt-out fixture: claude-code-bin must fall back to base nixpkgs when disabled";
+      condition = andromedaNoMaster.pkgs.claude-code.version != masterPkgs.claude-code.version;
+      message = "opt-out fixture: claude-code must fall back to base nixpkgs when disabled";
     }
   ];
 }
