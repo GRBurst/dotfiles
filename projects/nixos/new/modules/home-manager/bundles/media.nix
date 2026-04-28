@@ -43,7 +43,7 @@ in {
       # AI Tools
       aider-chat
       yek
-      lutris
+      # lutris  # broken since 2026-04-28
       umu-launcher
     ];
   };
