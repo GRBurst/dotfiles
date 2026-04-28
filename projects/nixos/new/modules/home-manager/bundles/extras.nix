@@ -196,7 +196,7 @@ in {
         spotify
         cheese
         xdg-utils
-        ffmpeg-full
+        # ffmpeg-full  # broken since 2026-04-28
         seafile-client
         seafile-shared
         # openai-whisper  # disabled: drags torch + piper-tts + faster-whisper (all uncached)
@@ -288,10 +288,9 @@ in {
         gnomeExtensions.random-wallpaper
         kdePackages.okular
         josm
-        kdePackages.kdenlive
+        # kdePackages.kdenlive  # broken dependency since 2026-04-28
         libnotify
         nextcloud-client
-        peek
         shotwell
         tesseract
         texstudio
@@ -318,7 +317,6 @@ in {
         hyprsunset
 
         # --- Misc ---
-        aider-chat
         yek
         timewarrior
         kdePackages.breeze

@@ -92,7 +92,7 @@
 
     features = {
       ai = {
-        enable = true;
+        enable = false;
         ollamaPackage = pkgs.ollama-cuda;
       };
       ausweisapp.enable = true;
