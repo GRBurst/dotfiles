@@ -162,7 +162,7 @@ in {
         # vim configs
         vim = "nvim";
         vn = "nvim /etc/nixos/configuration.nix";
-        vi3 = "nvim ~/.config/i3/common/config";
+        vi3 = "nvim ~/.config/i3/config";
         vnpc = "nvim ~/.config/nixpkgs/config.nix";
         vssh = "nvim ~/.ssh/config";
         vza = "nvim ~/.zaliases";
@@ -216,7 +216,7 @@ in {
         nload = "nload -u h";
 
         # Misc
-        i3-update-conf = "cat $HOME/.config/i3/local/config* > $HOME/.config/i3/config; cat $HOME/.config/i3/common/config >> $HOME/.config/i3/config; i3-msg reload;";
+        i3-update-conf = "i3-msg reload";
       };
       dotDir = "${config.xdg.configHome}/zsh";
 

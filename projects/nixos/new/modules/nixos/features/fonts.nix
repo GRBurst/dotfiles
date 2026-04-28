@@ -11,7 +11,7 @@ in {
 
     families = {
       monospace = {
-        package = lib.mkPackageOption pkgs "monospace font" {default = ["nerd-fonts" "noto"];};
+        package = lib.mkPackageOption pkgs "monospace font" {default = ["nerd-fonts" "jetbrains-mono"];};
         name = lib.mkOption {
           type = lib.types.str;
           default = "JetBrainsMono Nerd Font Mono";
@@ -35,16 +35,16 @@ in {
 
     sizes = {
       terminal = lib.mkOption {
-        type = lib.types.int;
+        type = lib.types.number;
         default = 12;
       };
       notification = {
         title = lib.mkOption {
-          type = lib.types.int;
+          type = lib.types.number;
           default = 16;
         };
         body = lib.mkOption {
-          type = lib.types.int;
+          type = lib.types.number;
           default = 14;
         };
       };
@@ -54,6 +54,11 @@ in {
   config = lib.mkIf cfg.enable {
     fonts = {
       enableDefaultPackages = true;
+      fontconfig.defaultFonts = {
+        monospace = [cfg.families.monospace.name];
+        sansSerif = [cfg.families.sansSerif.name];
+        serif = [cfg.families.serif.name];
+      };
       packages =
         (with pkgs; [
           corefonts

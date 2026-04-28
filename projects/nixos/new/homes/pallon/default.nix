@@ -29,6 +29,22 @@
         name = "GRBurst";
         email = "GRBurst@protonmail.com";
       };
+      i3 = {
+        enable = true;
+        defaultOutputs.primary = "eDP-1";
+        commonStartupCommands = ["nm-applet" "protonmail-bridge -n"];
+        localStartupCommands = ["cbatticon" "blueman-applet"];
+        statusBar.networkDevices = [
+          {
+            device = "enp2s0f0";
+            type = "wired";
+          }
+          {
+            device = "wlp3s0";
+            type = "wifi";
+          }
+        ];
+      };
       misc.enable = true;
       nvf.enable = true;
       zsh.enable = true;

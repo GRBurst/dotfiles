@@ -1,0 +1,181 @@
+// vim:ts=4:sw=4:et
+{
+    // workspace with 1 children
+    "border": "pixel",
+    "floating": "auto_off",
+    "layout": "splith",
+    "percent": 0.125,
+    "type": "workspace",
+    "nodes": [
+        {
+            // tabbed split container with 2 children
+            "border": "pixel",
+            "floating": "auto_off",
+            "layout": "tabbed",
+            "percent": null,
+            "type": "con",
+            "nodes": [
+                {
+                    "border": "none",
+                    "current_border_width": 2,
+                    "floating": "auto_off",
+                    "geometry": {
+                       "height": 984,
+                       "width": 1523,
+                       "x": 0,
+                       "y": 0
+                    },
+                    "name": "ProtonMail Bridge",
+                    "percent": 0.5,
+                    "swallows": [
+                       {
+                         "instance": "protonmail-bridge",
+                         "class": "Protonmail Bridge"
+                       }
+                    ],
+                    "type": "con"
+                },
+                {
+                    "border": "pixel",
+                    "current_border_width": 2,
+                    "floating": "auto_off",
+                    "geometry": {
+                       "height": 2112,
+                       "width": 3836,
+                       "x": 0,
+                       "y": 0
+                    },
+                    "name": "Inbox - Unified Folders - Thunderbird Daily",
+                    "percent": 0.5,
+                    "swallows": [
+                       {
+                          "class": "Daily"
+                       }
+                    ],
+                    "type": "con"
+                }
+            ]
+        }
+    ]
+}
+
+{
+    // workspace with 1 children
+    "border": "pixel",
+    "floating": "auto_off",
+    "fullscreen_mode": 1,
+    "layout": "splith",
+    "percent": 0.25,
+    "type": "workspace",
+    "nodes": [
+        {
+            "border": "pixel",
+            "current_border_width": 2,
+            "floating": "auto_off",
+            "geometry": {
+               "height": 2112,
+               "width": 3836,
+               "x": 0,
+               "y": 0
+            },
+            "name": "i3: Layout saving in i3 - Mozilla Firefox",
+            "percent": 1,
+            "swallows": [
+               {
+                 "class": "Firefox"
+               }
+            ],
+            "type": "con"
+        }
+    ]
+}
+
+{
+    // workspace with 1 children
+    "border": "pixel",
+    "floating": "auto_off",
+    "layout": "splith",
+    "percent": 0.125,
+    "type": "workspace",
+    "nodes": [
+        {
+            "border": "pixel",
+            "current_border_width": 2,
+            "floating": "auto_off",
+            "geometry": {
+               "height": 2112,
+               "width": 3836,
+               "x": 2,
+               "y": 2
+            },
+            "name": "Keyring - KeePassXC",
+            "percent": 1,
+            "swallows": [
+               {
+                 "class": "keepassxc"
+               }
+            ],
+            "type": "con"
+        }
+    ]
+}
+
+{
+    // workspace with 1 children
+    "border": "pixel",
+    "floating": "auto_off",
+    "layout": "splith",
+    "percent": 0.5,
+    "type": "workspace",
+    "nodes": [
+        {
+            // tabbed split container with 2 children
+            "border": "pixel",
+            "floating": "auto_off",
+            "layout": "tabbed",
+            "percent": null,
+            "type": "con",
+            "nodes": [
+                {
+                    "border": "pixel",
+                    "current_border_width": 2,
+                    "floating": "auto_off",
+                    "geometry": {
+                       "height": 484,
+                       "width": 348,
+                       "x": 0,
+                       "y": 0
+                    },
+                    "name": "Ekiga",
+                    "percent": 0.5,
+                    "swallows": [
+                       {
+                         "class": "Ekiga"
+                       }
+                    ],
+                    "type": "con"
+                },
+                {
+                    "border": "pixel",
+                    "current_border_width": 2,
+                    "floating": "auto_off",
+                    "geometry": {
+                       "height": 2080,
+                       "width": 3836,
+                       "x": 2,
+                       "y": 36
+                    },
+                    "name": "Signal",
+                    "percent": 0.5,
+                    "swallows": [
+                       {
+                         "class": "Signal",
+                       }
+                    ],
+                    "type": "con"
+                }
+            ]
+        }
+    ]
+}
+

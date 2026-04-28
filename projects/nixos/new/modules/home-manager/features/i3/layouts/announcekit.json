@@ -1,0 +1,73 @@
+// vim:ts=4:sw=4:et
+{
+    // floating_con with 1 children
+    "border": "none",
+    "floating": "auto_off",
+    "layout": "splith",
+    "percent": null,
+    "rect": {
+       "height": 1080,
+       "width": 1920,
+       "x": 960,
+       "y": 516
+    },
+    "type": "floating_con",
+    "nodes": [
+        {
+            "border": "none",
+            "current_border_width": 2,
+            "floating": "user_on",
+            "geometry": {
+               "height": 1080,
+               "width": 1920,
+               "x": 960,
+               "y": 516
+            },
+            "name": "Welcome - dev - Chromium",
+            "percent": 1,
+            "swallows": [
+               {
+                    "class": "(?i)chromium-browser"
+               }
+            ],
+            "type": "con"
+        }
+    ]
+}
+
+{
+    // floating_con with 1 children
+    "border": "none",
+    "floating": "auto_off",
+    "layout": "splith",
+    "percent": null,
+    "rect": {
+       "height": 1138,
+       "width": 1922,
+       "x": 959,
+       "y": 459
+    },
+    "type": "floating_con",
+    "nodes": [
+        {
+            "border": "none",
+            "current_border_width": 2,
+            "floating": "user_on",
+            "geometry": {
+               "height": 1138,
+               "width": 1924,
+               "x": 958,
+               "y": 459
+            },
+            "name": "Peek",
+            "percent": 1,
+            "swallows": [
+               {
+                    "class": "(?i)peek"
+               }
+            ],
+            "type": "con"
+        }
+    ]
+}
+

@@ -7,8 +7,10 @@
     ./bundles/laptop.nix
     ./bundles/media.nix
     ./features/alacritty.nix
+    ./features/dictate.nix
     ./features/env.nix
     ./features/git.nix
+    ./features/i3
     ./features/kitty.nix
     ./features/misc.nix
     ./features/nvf.nix
