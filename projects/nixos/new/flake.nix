@@ -17,6 +17,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-master.url = "github:NixOS/nixpkgs/master";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -65,7 +66,7 @@
         ...
       }: {
         checks = import ./checks/eval-assertions.nix {
-          inherit self pkgs;
+          inherit self pkgs inputs;
           lib = inputs.nixpkgs.lib;
         };
       };

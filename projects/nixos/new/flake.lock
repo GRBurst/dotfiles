@@ -417,6 +417,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-master": {
+      "locked": {
+        "lastModified": 1777367405,
+        "narHash": "sha256-eOFqeMC7lte85GjnKwiAgLfkAgt27DF7l9P/cvK6SK4=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "dfbcbf54054d3dde9481aeaaac715e42ed60a2e8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "master",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1776877367,
@@ -523,6 +539,7 @@
         "nix-snapd": "nix-snapd",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_2",
+        "nixpkgs-master": "nixpkgs-master",
         "nvf": "nvf",
         "stylix": "stylix",
         "wired": "wired"

@@ -2,9 +2,36 @@
   self,
   pkgs,
   lib,
+  inputs,
 }: let
-  andromeda = self.nixosConfigurations.andromeda.config;
-  earth = self.nixosConfigurations.earth.config;
+  andromedaSystem = self.nixosConfigurations.andromeda;
+  earthSystem = self.nixosConfigurations.earth;
+  andromeda = andromedaSystem.config;
+  earth = earthSystem.config;
+
+  mkHost = hostModule: extraModules:
+    inputs.nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = {inherit inputs;};
+      modules =
+        [
+          inputs.stylix.nixosModules.stylix
+          hostModule
+          inputs.nix-snapd.nixosModules.default
+          inputs.home-manager.nixosModules.home-manager
+          ../modules/nixos
+        ]
+        ++ extraModules;
+    };
+
+  andromedaNoMaster = mkHost ../hosts/andromeda [
+    {my.nixos.core.nixpkgs.masterPackages.enable = false;}
+  ];
+
+  masterPkgs = import inputs.nixpkgs-master {
+    system = "x86_64-linux";
+    config = andromedaNoMaster.config.nixpkgs.config;
+  };
 
   mkAssertionCheck = name: assertions:
     pkgs.runCommand name {} ''
@@ -281,6 +308,46 @@ in {
     {
       condition = earth.home-manager.users.jelias.programs.nix-index.enable == true;
       message = "earth: Home Manager nix-index must stay enabled for jelias";
+    }
+  ];
+
+  master-package-defaults = mkAssertionCheck "master-package-defaults" [
+    {
+      condition = andromedaSystem.pkgs.codex.version == masterPkgs.codex.version;
+      message = "andromeda: codex must come from nixpkgs-master by default";
+    }
+    {
+      condition = andromedaSystem.pkgs.claude-code-bin.version == masterPkgs.claude-code-bin.version;
+      message = "andromeda: claude-code-bin must come from nixpkgs-master by default";
+    }
+    {
+      condition =
+        builtins.any
+        (p: (p.pname or p.name or "") == "codex")
+        andromeda.home-manager.users.pallon.home.packages;
+      message = "andromeda: codex must remain in pallon home.packages";
+    }
+    {
+      condition =
+        builtins.any
+        (p: (p.pname or p.name or "") == "claude-code-bin")
+        andromeda.home-manager.users.pallon.home.packages;
+      message = "andromeda: claude-code-bin must remain in pallon home.packages";
+    }
+  ];
+
+  master-package-opt-out = mkAssertionCheck "master-package-opt-out" [
+    {
+      condition = andromedaNoMaster.config.my.nixos.core.nixpkgs.masterPackages.enable == false;
+      message = "opt-out fixture: masterPackages.enable must be false";
+    }
+    {
+      condition = andromedaNoMaster.pkgs.codex.version != masterPkgs.codex.version;
+      message = "opt-out fixture: codex must fall back to base nixpkgs when disabled";
+    }
+    {
+      condition = andromedaNoMaster.pkgs.claude-code-bin.version != masterPkgs.claude-code-bin.version;
+      message = "opt-out fixture: claude-code-bin must fall back to base nixpkgs when disabled";
     }
   ];
 }

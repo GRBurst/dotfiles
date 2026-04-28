@@ -331,7 +331,7 @@ in {
 
         # --- Misc ---
         lmstudio
-        claude-code-bin
+        claude-code
         claude-monitor
         codex
         opencode
