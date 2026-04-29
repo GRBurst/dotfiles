@@ -31,9 +31,58 @@
       cache_home="''${XDG_CACHE_HOME:-$HOME/.cache}"
       out_dir="$cache_home/bing-wallpaper"
       mkdir -p "$out_dir"
+      manifest="$out_dir/latest-paths"
+
+      use_paths() {
+        ${cfg.setter.command}
+      }
+
+      write_manifest() {
+        tmp_manifest="$manifest.tmp"
+        : > "$tmp_manifest"
+        for path in "$@"; do
+          printf '%s\n' "$path" >> "$tmp_manifest"
+        done
+        mv "$tmp_manifest" "$manifest"
+      }
+
+      read_cached_manifest() {
+        [ -s "$manifest" ] || return 1
+
+        cached=()
+        while IFS= read -r path; do
+          [ -n "$path" ] || continue
+          [ -f "$path" ] || return 1
+          cached+=("$path")
+        done < "$manifest"
+
+        [ "''${#cached[@]}" -gt 0 ] || return 1
+        use_paths "''${cached[@]}"
+      }
+
+      read_cached_latest() {
+        [ -f "$out_dir/latest.jpg" ] || return 1
+        use_paths "$out_dir/latest.jpg"
+      }
+
+      use_cache_or_fail() {
+        echo "$1" >&2
+        if read_cached_manifest; then
+          echo "Reused cached Bing wallpaper manifest" >&2
+          exit 0
+        fi
+        if read_cached_latest; then
+          echo "Reused cached Bing latest.jpg" >&2
+          exit 0
+        fi
+        echo "No Bing wallpapers downloaded and no cache available" >&2
+        exit 1
+      }
 
       api="https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=$count&mkt=$market"
-      json="$(curl --fail --location --silent --show-error "$api")"
+      if ! json="$(curl --fail --location --silent --show-error "$api")"; then
+        use_cache_or_fail "Failed to fetch Bing metadata"
+      fi
 
       paths=()
 
@@ -55,22 +104,25 @@
           mv "$tmp" "$target"
         else
           rm -f "$tmp"
-          curl --fail --location --silent --show-error "$fallback_url" -o "$tmp"
-          mv "$tmp" "$target"
+          if curl --fail --location --silent --show-error "$fallback_url" -o "$tmp"; then
+            mv "$tmp" "$target"
+          else
+            rm -f "$tmp"
+            continue
+          fi
         fi
 
         paths+=("$target")
       done
 
       if [ "''${#paths[@]}" -eq 0 ]; then
-        echo "No Bing wallpapers downloaded" >&2
-        exit 1
+        use_cache_or_fail "No Bing wallpapers downloaded"
       fi
 
       ln -sfn "''${paths[0]}" "$out_dir/latest.jpg"
+      write_manifest "''${paths[@]}"
 
-      set -- "''${paths[@]}"
-      ${cfg.setter.command}
+      use_paths "''${paths[@]}"
     '';
   };
 in {

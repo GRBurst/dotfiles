@@ -58,6 +58,29 @@
   pallonNvfLua = pallonHome.programs.nvf.settings.vim.luaConfigRC.custom-functions.data or "";
   jeliasNvfLua = jeliasHome.programs.nvf.settings.vim.luaConfigRC.custom-functions.data or "";
   autorandrProfiles = pallonHome.programs.autorandr.profiles;
+  bingWallpaperTestHome = inputs.home-manager.lib.homeManagerConfiguration {
+    inherit pkgs;
+    modules = [
+      ../modules/home-manager/features/bing-wallpaper.nix
+      {
+        home = {
+          username = "bing-test";
+          homeDirectory = "/tmp/bing-test";
+          stateVersion = "25.11";
+        };
+
+        my.hm.features.bingWallpaper = {
+          enable = true;
+          count = 2;
+          setter = {
+            packages = [];
+            command = ''printf '%s\n' "$@" > "$BING_WALLPAPER_TEST_OUT"'';
+          };
+        };
+      }
+    ];
+  };
+  bingWallpaperTestPackage = bingWallpaperTestHome.config.my.hm.features.bingWallpaper.package;
   themeDocPath = ../docs/theme-architecture.md;
   themeDoc =
     if builtins.pathExists themeDocPath
@@ -423,7 +446,72 @@ in {
     (pallonHome.systemd.user.timers.bing-wallpaper.Timer.OnUnitActiveSec == "6h")
     "Bing wallpaper timer must run every 6h";
 
+  andromeda-bing-wallpaper-timer-install =
+    mkCheck "andromeda-bing-wallpaper-timer-install"
+    (pallonHome.systemd.user.timers.bing-wallpaper.Install.WantedBy == ["timers.target"])
+    "Bing wallpaper timer must install into timers.target";
+
   andromeda-bing-wallpaper-package = pallonHome.my.hm.features.bingWallpaper.package;
+
+  andromeda-bing-wallpaper-script-structure = pkgs.runCommand "andromeda-bing-wallpaper-script-structure" {} ''
+    script="${pallonHome.my.hm.features.bingWallpaper.package}/bin/my-bing-wallpaper"
+    grep -F latest-paths "$script"
+    grep -F "Reused cached Bing wallpaper manifest" "$script"
+    touch "$out"
+  '';
+
+  bing-wallpaper-reuses-latest-paths = pkgs.runCommand "bing-wallpaper-reuses-latest-paths" {} ''
+    export HOME="$PWD/home"
+    export XDG_CACHE_HOME="$PWD/cache"
+    out_dir="$XDG_CACHE_HOME/bing-wallpaper"
+    mkdir -p "$out_dir"
+    printf 'one\n' > "$out_dir/one.jpg"
+    printf 'two\n' > "$out_dir/two.jpg"
+    printf '%s\n%s\n' "$out_dir/one.jpg" "$out_dir/two.jpg" > "$out_dir/latest-paths"
+    export BING_WALLPAPER_TEST_OUT="$PWD/setter.out"
+    export HTTPS_PROXY="http://127.0.0.1:9"
+    export HTTP_PROXY="http://127.0.0.1:9"
+
+    ${bingWallpaperTestPackage}/bin/my-bing-wallpaper 2>stderr
+    printf '%s\n%s\n' "$out_dir/one.jpg" "$out_dir/two.jpg" > expected
+    cmp expected "$BING_WALLPAPER_TEST_OUT"
+    grep -F "Reused cached Bing wallpaper manifest" stderr
+    touch "$out"
+  '';
+
+  bing-wallpaper-reuses-latest-jpg = pkgs.runCommand "bing-wallpaper-reuses-latest-jpg" {} ''
+    export HOME="$PWD/home"
+    export XDG_CACHE_HOME="$PWD/cache"
+    out_dir="$XDG_CACHE_HOME/bing-wallpaper"
+    mkdir -p "$out_dir"
+    printf 'latest\n' > "$out_dir/latest.jpg"
+    export BING_WALLPAPER_TEST_OUT="$PWD/setter.out"
+    export HTTPS_PROXY="http://127.0.0.1:9"
+    export HTTP_PROXY="http://127.0.0.1:9"
+
+    ${bingWallpaperTestPackage}/bin/my-bing-wallpaper 2>stderr
+    printf '%s\n' "$out_dir/latest.jpg" > expected
+    cmp expected "$BING_WALLPAPER_TEST_OUT"
+    grep -F "Reused cached Bing latest.jpg" stderr
+    touch "$out"
+  '';
+
+  bing-wallpaper-fails-without-cache = pkgs.runCommand "bing-wallpaper-fails-without-cache" {} ''
+    export HOME="$PWD/home"
+    export XDG_CACHE_HOME="$PWD/cache"
+    mkdir -p "$XDG_CACHE_HOME/bing-wallpaper"
+    export BING_WALLPAPER_TEST_OUT="$PWD/setter.out"
+    export HTTPS_PROXY="http://127.0.0.1:9"
+    export HTTP_PROXY="http://127.0.0.1:9"
+
+    if ${bingWallpaperTestPackage}/bin/my-bing-wallpaper 2>stderr; then
+      echo "Bing wallpaper should fail without downloads or cache" >&2
+      exit 1
+    fi
+    grep -F "No Bing wallpapers downloaded and no cache available" stderr
+    test ! -e "$BING_WALLPAPER_TEST_OUT"
+    touch "$out"
+  '';
 
   nvf-config = mkAssertionCheck "nvf-config" [
     {
