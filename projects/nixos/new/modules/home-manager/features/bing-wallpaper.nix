@@ -156,13 +156,30 @@ in {
     setter = {
       packages = lib.mkOption {
         type = types.listOf types.package;
-        default = [pkgs.feh];
+        default = [
+          pkgs.feh
+          pkgs.hyprland
+        ];
         description = "Packages required by the wallpaper setter command.";
       };
 
       command = lib.mkOption {
         type = types.lines;
-        default = ''feh --bg-fill "$@"'';
+        default = ''
+          if [ "$#" -eq 0 ]; then
+            echo "No wallpaper paths provided" >&2
+            exit 1
+          fi
+
+          if command -v hyprctl >/dev/null 2>&1 && hyprctl hyprpaper listloaded >/dev/null 2>&1; then
+            hyprctl hyprpaper reload ",$1"
+          elif [ -n "''${DISPLAY:-}" ]; then
+            feh --bg-fill "$@"
+          else
+            echo "No supported wallpaper session found" >&2
+            exit 1
+          fi
+        '';
         description = "Shell command that receives downloaded image paths as positional arguments.";
       };
     };

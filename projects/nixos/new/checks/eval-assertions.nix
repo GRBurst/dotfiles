@@ -431,10 +431,16 @@ in {
     (pallonHome.my.hm.features.bingWallpaper.preferUhd == true)
     "Bing wallpaper must prefer UHD";
 
-  andromeda-bing-wallpaper-feh-setter =
-    mkCheck "andromeda-bing-wallpaper-feh-setter"
-    (lib.hasInfix "feh --bg-fill" pallonHome.my.hm.features.bingWallpaper.setter.command)
-    "Bing wallpaper setter must use feh --bg-fill";
+  andromeda-bing-wallpaper-session-aware-setter = mkAssertionCheck "check-andromeda-bing-wallpaper-session-aware-setter" [
+    {
+      condition = lib.hasInfix "hyprctl hyprpaper reload" pallonHome.my.hm.features.bingWallpaper.setter.command;
+      message = "Bing wallpaper setter must support Hyprland via hyprpaper reload";
+    }
+    {
+      condition = lib.hasInfix "feh --bg-fill" pallonHome.my.hm.features.bingWallpaper.setter.command;
+      message = "Bing wallpaper setter must preserve feh fallback";
+    }
+  ];
 
   andromeda-bing-wallpaper-user-service =
     mkCheck "andromeda-bing-wallpaper-user-service"
@@ -457,6 +463,8 @@ in {
     script="${pallonHome.my.hm.features.bingWallpaper.package}/bin/my-bing-wallpaper"
     grep -F latest-paths "$script"
     grep -F "Reused cached Bing wallpaper manifest" "$script"
+    grep -F "hyprctl hyprpaper reload" "$script"
+    grep -F "feh --bg-fill" "$script"
     touch "$out"
   '';
 

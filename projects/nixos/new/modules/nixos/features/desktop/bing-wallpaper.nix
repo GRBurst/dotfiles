@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }: let
   cfg = config.my.nixos.features.desktop.bingWallpaper;
@@ -52,10 +51,6 @@ in {
     home-manager.users.${cfg.user}.my.hm.features.bingWallpaper = {
       enable = true;
       inherit (cfg) market interval count preferUhd;
-      setter = {
-        packages = [pkgs.feh];
-        command = ''feh --bg-fill "$@"'';
-      };
     };
   };
 }
