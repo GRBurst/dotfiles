@@ -58,6 +58,11 @@
   pallonNvfLua = pallonHome.programs.nvf.settings.vim.luaConfigRC.custom-functions.data or "";
   jeliasNvfLua = jeliasHome.programs.nvf.settings.vim.luaConfigRC.custom-functions.data or "";
   autorandrProfiles = pallonHome.programs.autorandr.profiles;
+  themeDocPath = ../docs/theme-architecture.md;
+  themeDoc =
+    if builtins.pathExists themeDocPath
+    then builtins.readFile themeDocPath
+    else "";
 
   enabledOutputs = profile:
     lib.filterAttrs (_: output: output.enable or false) profile.config;
@@ -603,6 +608,62 @@ in {
         earthFiles ? "my/theme/current/i3status-rust.toml"
         && (builtins.fromTOML earthFiles."my/theme/current/i3status-rust.toml".text).idle_bg == "#ffffff";
       message = "earth i3status-rust current theme must default to Enfocado light";
+    }
+  ];
+
+  theme-dispatcher-runtime = pkgs.runCommand "theme-dispatcher-runtime" {} ''
+    export HOME="$TMPDIR/home"
+    export USER="pallon"
+    export XDG_CONFIG_HOME="$HOME/.config"
+    export XDG_STATE_HOME="$HOME/.local/state"
+
+    mkdir -p \
+      "$XDG_CONFIG_HOME/my/theme/alacritty" \
+      "$XDG_CONFIG_HOME/my/theme/i3" \
+      "$XDG_CONFIG_HOME/my/theme/i3status-rust" \
+      "$XDG_CONFIG_HOME/my/theme/hyprland" \
+      "$XDG_CONFIG_HOME/my/theme/waybar"
+
+    touch "$XDG_CONFIG_HOME/my/theme/alacritty/enfocado_light.toml"
+    touch "$XDG_CONFIG_HOME/my/theme/alacritty/enfocado_dark.toml"
+    touch "$XDG_CONFIG_HOME/my/theme/i3/light.conf"
+    touch "$XDG_CONFIG_HOME/my/theme/i3/dark.conf"
+    touch "$XDG_CONFIG_HOME/my/theme/i3status-rust/enfocado_light.toml"
+    touch "$XDG_CONFIG_HOME/my/theme/i3status-rust/enfocado_dark.toml"
+    touch "$XDG_CONFIG_HOME/my/theme/hyprland/light.conf"
+    touch "$XDG_CONFIG_HOME/my/theme/hyprland/dark.conf"
+    touch "$XDG_CONFIG_HOME/my/theme/waybar/light.css"
+    touch "$XDG_CONFIG_HOME/my/theme/waybar/dark.css"
+
+    ${pallonHome.my.hm.features.style.dispatcher.package}/bin/my-style-switch light
+    test "$(cat "$XDG_STATE_HOME/my-theme/mode")" = light
+    test "$(readlink "$XDG_CONFIG_HOME/my/theme/current/alacritty.toml")" = "$XDG_CONFIG_HOME/my/theme/alacritty/enfocado_light.toml"
+
+    ${pallonHome.my.hm.features.style.dispatcher.package}/bin/my-style-switch dark
+    test "$(cat "$XDG_STATE_HOME/my-theme/mode")" = dark
+    test "$(readlink "$XDG_CONFIG_HOME/my/theme/current/waybar.css")" = "$XDG_CONFIG_HOME/my/theme/waybar/dark.css"
+
+    if ${pallonHome.my.hm.features.style.dispatcher.package}/bin/my-style-switch invalid; then
+      echo "invalid mode must fail" >&2
+      exit 1
+    fi
+
+    touch "$out"
+  '';
+
+  theme-operations-doc = mkAssertionCheck "theme-operations-doc" [
+    {
+      condition = builtins.pathExists themeDocPath;
+      message = "theme operations document must exist";
+    }
+    {
+      condition =
+        lib.hasInfix "darkman" themeDoc
+        && lib.hasInfix "my-style-switch" themeDoc
+        && lib.hasInfix "darkman set light" themeDoc
+        && lib.hasInfix "org.freedesktop.appearance color-scheme" themeDoc
+        && lib.hasInfix "pallon@andromeda" themeDoc;
+      message = "theme operations document must cover runtime validation";
     }
   ];
 

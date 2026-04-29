@@ -40,7 +40,7 @@ Goals:
 
 ## Current Implementation Status
 
-Status: initial dynamic Enfocado implementation is in place and evaluates successfully.
+Status: dynamic Enfocado implementation, runtime dispatcher checks, and operations documentation are in place and evaluate successfully.
 
 Implemented:
 
@@ -64,6 +64,8 @@ Implemented:
 - Neovim uses a pinned `vim-enfocado` plugin and reads `~/.local/state/my-theme/mode` on startup and `SIGUSR1`.
 - Both users enable `my.hm.features.style` and `my.hm.features.yazi`.
 - Eval assertions cover style enablement, Stylix migration, darkman, portal merging, generated theme artifacts, i3 includes, i3status-rust theme files, Kitty auto files, Yazi flavors, and Neovim signal sync.
+- Eval assertions run `my-style-switch` in a temporary `$HOME` and verify state/current-link switching for light, dark, and invalid modes.
+- `docs/theme-architecture.md` documents operations, portal validation, the app matrix, and live-session validation commands.
 
 Verified:
 
@@ -71,13 +73,16 @@ Verified:
 nix flake check --show-trace
 ```
 
-Result: all checks passed after implementation and formatting.
+Result: all checks pass with the dispatcher temp-home check and operations-doc check.
+
+Pending live validation:
+
+- `pallon@andromeda`: pending in a real graphical session using the commands in `docs/theme-architecture.md`.
+- `jelias@earth`: pending until a live session is available.
 
 Not implemented yet:
 
-- Runtime manual validation on a live user session (`darkman set light`, `darkman set dark`).
 - Ghostty and VSCode adapters beyond disabled stubs.
-- Dedicated user-facing operations document separate from this plan.
 
 ## Divergences From Original Plan
 
@@ -96,6 +101,8 @@ Not implemented yet:
 - Reason: the dispatcher is produced with `pkgs.writeShellApplication`, and Neovim sync is injected directly via the existing `luaConfigRC.custom-functions` hook. This keeps the change smaller and avoids extra single-use files.
 - Yazi flavors include only `flavor.toml`, not `tmtheme.xml`.
 - Reason: this slice only needs Yazi's native UI theme keys and keeps the adapter minimal; syntax/file preview highlighting can be added later if a real use case appears.
+- Live D-Bus, portal, and desktop-app behavior is not marked verified by `nix flake check`.
+- Reason: the sandbox can prove the generated dispatcher updates state and links, but it cannot prove behavior in the user's graphical D-Bus session. `docs/theme-architecture.md` now records the manual validation commands; `pallon@andromeda` and `jelias@earth` remain explicit follow-ups until run in those sessions.
 
 ## First Step: Read Relevant Files
 
@@ -1076,8 +1083,9 @@ Verify:
 
 - Full Ghostty module if Ghostty is added.
 - Full VSCode module if VSCode is added.
+- Live-session validation for `pallon@andromeda` using `docs/theme-architecture.md`.
+- Live-session validation for `jelias@earth` when that session is available.
 - Optional Yazi `tmtheme.xml` generation if preview/syntax highlighting needs repo-owned colors.
-- Live-session validation for the Hyprland themed config adapter.
 - VM/integration tests for darkman portal behavior.
 - Evaluate Redshift replacement for Wayland/Hyprland.
 - Accessibility pass: contrast and light palette readability.
