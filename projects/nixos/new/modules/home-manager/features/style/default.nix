@@ -132,6 +132,18 @@ in {
         type = lib.types.bool;
         default = enabled ["my" "hm" "features" "kitty" "enable"];
       };
+      yazi.enable = lib.mkOption {
+        type = lib.types.bool;
+        default = enabled ["my" "hm" "features" "yazi" "enable"];
+      };
+      ghostty.enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+      };
+      vscode.enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+      };
       gnome.enable = lib.mkOption {
         type = lib.types.bool;
         default = enabled ["my" "hm" "features" "gnome" "enable"];
@@ -193,6 +205,18 @@ in {
       xdg.configFile."kitty/light-theme.auto.conf".text = style.mkKittyTheme palettes.light;
       xdg.configFile."kitty/dark-theme.auto.conf".text = style.mkKittyTheme palettes.dark;
       xdg.configFile."kitty/no-preference-theme.auto.conf".text = style.mkKittyTheme defaultPalette;
+    })
+
+    (lib.mkIf cfg.adapters.yazi.enable {
+      programs.yazi.theme.flavor = {
+        dark = "enfocado-dark";
+        light = "enfocado-light";
+      };
+
+      programs.yazi.flavors = {
+        enfocado-light = pkgs.writeTextDir "flavor.toml" (style.mkYaziFlavor palettes.light);
+        enfocado-dark = pkgs.writeTextDir "flavor.toml" (style.mkYaziFlavor palettes.dark);
+      };
     })
   ]);
 }

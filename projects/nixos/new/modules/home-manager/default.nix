@@ -21,6 +21,7 @@
     ./features/style
     ./features/waybar.nix
     ./features/wired.nix
+    ./features/yazi.nix
     ./features/zsh.nix
   ];
 }

@@ -69,6 +69,7 @@
         enable = true;
         battery = true;
       };
+      yazi.enable = true;
       zsh.enable = true;
       kitty.enable = true;
     };

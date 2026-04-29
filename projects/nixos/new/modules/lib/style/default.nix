@@ -73,6 +73,29 @@ in {
     color15 ${palette.bright.white}
   '';
 
+  mkYaziFlavor = palette: ''
+    [mgr]
+    cwd = { fg = "${palette.normal.blue}" }
+    hovered = { fg = "${palette.primary.background}", bg = "${palette.normal.blue}" }
+    preview_hovered = { fg = "${palette.primary.background}", bg = "${palette.normal.blue}" }
+
+    [status]
+    overall = { fg = "${palette.primary.foreground}", bg = "${palette.primary.background}" }
+
+    [mode]
+    normal_main = { fg = "${palette.primary.background}", bg = "${palette.normal.blue}" }
+    select_main = { fg = "${palette.primary.background}", bg = "${palette.normal.magenta}" }
+    unset_main = { fg = "${palette.primary.background}", bg = "${palette.normal.red}" }
+
+    [filetype]
+    rules = [
+      { mime = "image/*", fg = "${palette.normal.yellow}" },
+      { mime = "{audio,video}/*", fg = "${palette.normal.magenta}" },
+      { mime = "application/{zip,rar,7z*,tar,gzip,xz}", fg = "${palette.normal.red}" },
+      { url = "*/", fg = "${palette.normal.blue}" },
+    ]
+  '';
+
   mkI3StatusTheme = palette: ''
     idle_bg = "${palette.primary.background}"
     idle_fg = "${palette.primary.foreground}"

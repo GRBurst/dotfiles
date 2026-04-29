@@ -140,7 +140,6 @@ in {
         usbutils
         ripgrep
         trashy
-        yazi
         rsync
         rclone
 

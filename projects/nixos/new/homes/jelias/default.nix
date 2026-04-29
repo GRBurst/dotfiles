@@ -110,6 +110,7 @@
       shellAliases.enable = true;
       style.enable = true;
       waybar.enable = true;
+      yazi.enable = true;
       zsh.enable = true;
       kitty.enable = true;
     };

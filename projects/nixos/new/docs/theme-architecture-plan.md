@@ -34,7 +34,8 @@ Goals:
 - Kitty uses native auto-theme file names, generated from the repo palette.
 - Alacritty stays the primary terminal and uses the same runtime theme import path.
 - Enfocado light/dark is the canonical palette baseline.
-- Yazi, Ghostty, and VSCode get architectural target stubs first; full config comes later.
+- Yazi uses native light/dark flavors generated from the repo palette.
+- Ghostty and VSCode get disabled architectural adapter stubs first; full config comes later.
 - Redshift stays separate; it only shares location/timing assumptions with darkman.
 
 ## Current Implementation Status
@@ -49,7 +50,7 @@ Implemented:
 - Home Manager API `my.hm.features.style` in `modules/home-manager/features/style/default.nix`.
 - Per-user `darkman` with `portal = true`, manual host location, and a `my-style-switch` dispatcher.
 - XDG Settings portal provider merged as `org.freedesktop.impl.portal.Settings = "darkman"` while preserving existing portal defaults.
-- Generated Enfocado light/dark artifacts for Alacritty, i3, Hyprland, Waybar, and Kitty.
+- Generated Enfocado light/dark artifacts for Alacritty, i3, Hyprland, Waybar, Kitty, and Yazi.
 - Runtime switching via state/link updates plus targeted reloads/signals, not whole Home Manager activation.
 - Darkman's generic scripts receive the new mode as `$1`; the generated dispatcher forwards `"$@"` to `my-style-switch`.
 - Alacritty imports `~/.config/my/theme/current/alacritty.toml`.
@@ -59,9 +60,10 @@ Implemented:
 - Hyprland sources `~/.config/my/theme/current/hyprland.conf`.
 - Waybar imports `../my/theme/current/waybar.css`.
 - Kitty receives generated `light-theme.auto.conf`, `dark-theme.auto.conf`, and `no-preference-theme.auto.conf`.
+- Yazi receives generated `enfocado-light` and `enfocado-dark` flavors through Home Manager `programs.yazi.flavors`, with `programs.yazi.theme.flavor` selecting by OS light/dark mode.
 - Neovim uses a pinned `vim-enfocado` plugin and reads `~/.local/state/my-theme/mode` on startup and `SIGUSR1`.
-- Both users enable `my.hm.features.style`.
-- Eval assertions cover style enablement, Stylix migration, darkman, portal merging, generated theme artifacts, i3 includes, i3status-rust theme files, Kitty auto files, and Neovim signal sync.
+- Both users enable `my.hm.features.style` and `my.hm.features.yazi`.
+- Eval assertions cover style enablement, Stylix migration, darkman, portal merging, generated theme artifacts, i3 includes, i3status-rust theme files, Kitty auto files, Yazi flavors, and Neovim signal sync.
 
 Verified:
 
@@ -74,7 +76,7 @@ Result: all checks passed after implementation and formatting.
 Not implemented yet:
 
 - Runtime manual validation on a live user session (`darkman set light`, `darkman set dark`).
-- Yazi, Ghostty, and VSCode adapters.
+- Ghostty and VSCode adapters beyond disabled stubs.
 - Dedicated user-facing operations document separate from this plan.
 
 ## Divergences From Original Plan
@@ -92,6 +94,8 @@ Not implemented yet:
 - Reason: nvf's typed `theme.name` option only accepts its built-in theme enum. The implementation disables the built-in nvf theme and applies the pinned `vim-enfocado` plugin through Lua.
 - Separate `theme-dispatch.sh` and `neovim-theme-sync.lua` files were not added.
 - Reason: the dispatcher is produced with `pkgs.writeShellApplication`, and Neovim sync is injected directly via the existing `luaConfigRC.custom-functions` hook. This keeps the change smaller and avoids extra single-use files.
+- Yazi flavors include only `flavor.toml`, not `tmtheme.xml`.
+- Reason: this slice only needs Yazi's native UI theme keys and keeps the adapter minimal; syntax/file preview highlighting can be added later if a real use case appears.
 
 ## First Step: Read Relevant Files
 
@@ -727,25 +731,36 @@ xdg.configFile."kitty/no-preference-theme.auto.conf".text = style.mkKittyTheme d
 
 Reason: Home Manager's `programs.kitty.autoThemeFiles` expects theme names from `kitty-themes`, and the pinned package does not include Enfocado. Writing Kitty's native auto-theme files directly keeps Enfocado as source of truth.
 
+### Yazi Native Flavor
+
+Implementation:
+
+```nix
+programs.yazi.theme.flavor = {
+  dark = "enfocado-dark";
+  light = "enfocado-light";
+};
+
+programs.yazi.flavors = {
+  enfocado-light = pkgs.writeTextDir "flavor.toml" (style.mkYaziFlavor palettes.light);
+  enfocado-dark = pkgs.writeTextDir "flavor.toml" (style.mkYaziFlavor palettes.dark);
+};
+```
+
+Reason: Yazi supports light/dark flavor selection natively through `theme.toml`, so it does not need to participate in `my-style-switch`. The generated flavor packages intentionally contain only `flavor.toml` for now; `tmtheme.xml` is left out to keep this adapter scoped to Yazi's own UI colors.
+
 ### Future Stubs
 
 Add typed target options only:
 
 ```nix
-targets.yazi.enable = false;
-targets.ghostty.enable = false;
-targets.vscode.enable = false;
+adapters.ghostty.enable = false;
+adapters.vscode.enable = false;
 ```
 
 Document future mappings:
 
 ```nix
-# Yazi
-programs.yazi.theme.flavor = {
-  dark = "...";
-  light = "...";
-};
-
 # Ghostty
 programs.ghostty.settings.theme = "dark:...,light:...";
 
@@ -983,7 +998,7 @@ Hyprland  generated source + reload
 Neovim    SIGUSR1 live switch
 Kitty     generated native auto-theme files
 Alacritty current import + runtime msg reload
-Yazi      future native flavor
+Yazi      generated native light/dark flavors
 Ghostty   future native dual theme
 VSCode    future autoDetectColorScheme
 Redshift  independent, shared location
@@ -1059,9 +1074,9 @@ Verify:
 
 ## Follow-Up Tasks
 
-- Full Yazi module with native light/dark flavors.
 - Full Ghostty module if Ghostty is added.
 - Full VSCode module if VSCode is added.
+- Optional Yazi `tmtheme.xml` generation if preview/syntax highlighting needs repo-owned colors.
 - Live-session validation for the Hyprland themed config adapter.
 - VM/integration tests for darkman portal behavior.
 - Evaluate Redshift replacement for Wayland/Hyprland.

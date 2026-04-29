@@ -485,6 +485,30 @@ in {
       message = "both Home Manager users must enable dynamic style";
     }
     {
+      condition =
+        pallonHome.my.hm.features.yazi.enable
+        && jeliasHome.my.hm.features.yazi.enable
+        && pallonHome.programs.yazi.enable
+        && jeliasHome.programs.yazi.enable;
+      message = "both users must enable the Yazi feature and HM Yazi program";
+    }
+    {
+      condition =
+        pallonHome.my.hm.features.style.adapters.yazi.enable
+        && !pallonHome.my.hm.features.style.adapters.ghostty.enable
+        && !pallonHome.my.hm.features.style.adapters.vscode.enable;
+      message = "style must enable Yazi adapter and keep Ghostty/VSCode stubs disabled";
+    }
+    {
+      condition =
+        pallonHome.programs.yazi.theme.flavor.dark
+        == "enfocado-dark"
+        && pallonHome.programs.yazi.theme.flavor.light == "enfocado-light"
+        && pallonHome.programs.yazi.flavors ? "enfocado-dark"
+        && pallonHome.programs.yazi.flavors ? "enfocado-light";
+      message = "Yazi must use generated Enfocado light/dark flavors";
+    }
+    {
       condition = pallonHome.services.darkman.enable == true && jeliasHome.services.darkman.enable == true;
       message = "both users must run darkman as the mode source";
     }
