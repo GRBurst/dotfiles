@@ -73,21 +73,30 @@ in {
     color15 ${palette.bright.white}
   '';
 
-  mkI3Theme = palette: ''
-    set $theme_bg ${palette.primary.background}
-    set $theme_fg ${palette.primary.foreground}
-    set $theme_black ${palette.normal.black}
-    set $theme_dim ${palette.bright.black}
-    set $theme_blue ${palette.normal.blue}
-    set $theme_red ${palette.normal.red}
-    set $theme_green ${palette.normal.green}
-    set $theme_magenta ${palette.normal.magenta}
+  mkI3StatusTheme = palette: ''
+    idle_bg = "${palette.primary.background}"
+    idle_fg = "${palette.primary.foreground}"
+    info_bg = "${palette.primary.background}"
+    info_fg = "${palette.normal.blue}"
+    good_bg = "${palette.primary.background}"
+    good_fg = "${palette.normal.green}"
+    warning_bg = "${palette.primary.background}"
+    warning_fg = "${palette.normal.yellow}"
+    critical_bg = "${palette.primary.background}"
+    critical_fg = "${palette.normal.red}"
+    separator = ""
+    separator_bg = "${palette.primary.background}"
+    separator_fg = "${palette.bright.black}"
+    alternating_tint_bg = "#00000000"
+    alternating_tint_fg = "#00000000"
+  '';
 
-    client.focused          $theme_blue  $theme_blue  $theme_bg $theme_magenta $theme_blue
-    client.focused_inactive $theme_black $theme_black $theme_fg $theme_dim     $theme_black
-    client.unfocused        $theme_black $theme_black $theme_dim $theme_dim     $theme_black
-    client.urgent           $theme_red   $theme_red   $theme_bg $theme_red     $theme_red
-    client.placeholder      $theme_bg    $theme_green $theme_fg $theme_bg      $theme_bg
+  mkI3Theme = palette: ''
+    client.focused          ${palette.normal.blue}  ${palette.normal.blue}  ${palette.primary.background} ${palette.normal.magenta} ${palette.normal.blue}
+    client.focused_inactive ${palette.normal.black} ${palette.normal.black} ${palette.primary.foreground} ${palette.bright.black}    ${palette.normal.black}
+    client.unfocused        ${palette.normal.black} ${palette.normal.black} ${palette.bright.black}       ${palette.bright.black}    ${palette.normal.black}
+    client.urgent           ${palette.normal.red}   ${palette.normal.red}   ${palette.primary.background} ${palette.normal.red}      ${palette.normal.red}
+    client.placeholder      ${palette.primary.background} ${palette.normal.green} ${palette.primary.foreground} ${palette.primary.background} ${palette.primary.background}
   '';
 
   mkWaybarCss = palette: fontFamily: ''

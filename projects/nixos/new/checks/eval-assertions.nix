@@ -37,9 +37,22 @@
   pallonHome = andromeda.home-manager.users.pallon;
   jeliasHome = earth.home-manager.users.jelias;
   pallonFiles = pallonHome.xdg.configFile or {};
+  pallonDarkmanScript = pallonHome.services.darkman.scripts."theme-dispatch" or "";
+  pallonDarkmanDataScript =
+    if pallonHome.xdg.dataFile ? "darkman/theme-dispatch"
+    then builtins.readFile pallonHome.xdg.dataFile."darkman/theme-dispatch".source
+    else "";
+  jeliasDarkmanScript = jeliasHome.services.darkman.scripts."theme-dispatch" or "";
+  pallonI3StatusText = pallonFiles."i3status-rust/config.toml".text or "";
+  pallonI3StatusThemePath = "${pallonHome.xdg.configHome}/my/theme/current/i3status-rust.toml";
+  jeliasI3StatusThemePath = "${jeliasHome.xdg.configHome}/my/theme/current/i3status-rust.toml";
   i3ConfigText = pallonHome.xdg.configFile."i3/config".text;
   i3ConfigFiles = builtins.attrValues pallonHome.xdg.configFile;
+  pallonI3ThemeText = pallonFiles."my/theme/current/i3.conf".text or "";
+  pallonI3LightThemeText = pallonFiles."my/theme/i3/light.conf".text or "";
+  pallonI3DarkThemeText = pallonFiles."my/theme/i3/dark.conf".text or "";
   earthFiles = jeliasHome.xdg.configFile or {};
+  earthI3ThemeText = earthFiles."my/theme/current/i3.conf".text or "";
   earthI3ConfigText = earthFiles."i3/config".text or "";
   earthI3StatusText = earthFiles."i3status-rust/config.toml".text or "";
   pallonNvfLua = pallonHome.programs.nvf.settings.vim.luaConfigRC.custom-functions.data or "";
@@ -443,12 +456,22 @@ in {
       message = "darkman must expose the XDG Settings portal";
     }
     {
-      condition = lib.hasInfix "my-style-switch" pallonHome.services.darkman.scripts."theme-dispatch";
-      message = "pallon darkman must call the shared style dispatcher";
+      condition =
+        lib.hasInfix "my-style-switch" pallonDarkmanScript
+        && lib.hasInfix ''"$@"'' pallonDarkmanScript;
+      message = "pallon darkman must call the shared style dispatcher with mode arguments";
     }
     {
-      condition = lib.hasInfix "my-style-switch" jeliasHome.services.darkman.scripts."theme-dispatch";
-      message = "jelias darkman must call the shared style dispatcher";
+      condition =
+        lib.hasInfix "my-style-switch" pallonDarkmanDataScript
+        && lib.hasInfix ''"$@"'' pallonDarkmanDataScript;
+      message = "pallon darkman data script must call the shared style dispatcher with mode arguments";
+    }
+    {
+      condition =
+        lib.hasInfix "my-style-switch" jeliasDarkmanScript
+        && lib.hasInfix ''"$@"'' jeliasDarkmanScript;
+      message = "jelias darkman must call the shared style dispatcher with mode arguments";
     }
     {
       condition = pallonHome.xdg.portal.config.common.default == "*" && jeliasHome.xdg.portal.config.common.default == "*";
@@ -491,8 +514,8 @@ in {
       message = "pallon Kitty native dark auto theme must use Enfocado dark";
     }
     {
-      condition = lib.hasInfix "set $theme_bg #ffffff" pallonFiles."my/theme/current/i3.conf".text;
-      message = "pallon i3 current theme must default to Enfocado light";
+      condition = lib.hasInfix "#ffffff" pallonI3ThemeText && !(lib.hasInfix "$theme_" pallonI3ThemeText);
+      message = "pallon i3 current theme must default to literal Enfocado light colors";
     }
     {
       condition = lib.hasInfix "background-color: #ffffff" pallonFiles."my/theme/current/waybar.css".text;
@@ -505,6 +528,20 @@ in {
     {
       condition = builtins.any (p: (p.pname or p.name or "") == "my-style-switch") pallonHome.home.packages;
       message = "pallon home must include the style dispatcher package";
+    }
+    {
+      condition =
+        pallonFiles ? "my/theme/i3status-rust/enfocado_light.toml"
+        && pallonFiles ? "my/theme/i3status-rust/enfocado_dark.toml"
+        && (builtins.fromTOML pallonFiles."my/theme/i3status-rust/enfocado_light.toml".text).idle_bg == "#ffffff"
+        && (builtins.fromTOML pallonFiles."my/theme/i3status-rust/enfocado_dark.toml".text).idle_bg == "#181818";
+      message = "pallon i3status-rust Enfocado light and dark themes must be generated";
+    }
+    {
+      condition =
+        earthFiles ? "my/theme/current/i3status-rust.toml"
+        && (builtins.fromTOML earthFiles."my/theme/current/i3status-rust.toml".text).idle_bg == "#ffffff";
+      message = "earth i3status-rust current theme must default to Enfocado light";
     }
   ];
 
@@ -641,6 +678,10 @@ in {
       message = "andromeda: i3 config must include the managed style theme";
     }
     {
+      condition = !(lib.hasInfix "$theme_" i3ConfigText);
+      message = "andromeda: parent i3 config must not reference theme variables from an include";
+    }
+    {
       condition = lib.hasInfix ''workspace "1: mail" output primary'' i3ConfigText;
       message = "andromeda: i3 config must assign workspace 1 to primary";
     }
@@ -649,8 +690,22 @@ in {
       message = "andromeda: i3 config must assign workspace 11 to nonprimary primary";
     }
     {
-      condition = lib.hasInfix "bar {" i3ConfigText;
-      message = "andromeda: i3 config must include static bar";
+      condition = lib.hasInfix "bar {" pallonI3ThemeText;
+      message = "andromeda: generated current i3 theme must own the bar block";
+    }
+    {
+      condition =
+        lib.hasInfix "focused_workspace" pallonI3ThemeText
+        && lib.hasInfix "#0064e4" pallonI3ThemeText
+        && lib.hasInfix "#474747" pallonI3ThemeText;
+      message = "andromeda: generated light i3 bar colors must be literal and visible";
+    }
+    {
+      condition =
+        lib.hasInfix "#181818" pallonI3DarkThemeText
+        && lib.hasInfix "#b9b9b9" pallonI3DarkThemeText
+        && !(lib.hasInfix "$theme_" pallonI3DarkThemeText);
+      message = "andromeda: generated dark i3 theme must use literal Enfocado colors";
     }
     {
       condition = lib.hasInfix "output primary" i3ConfigText;
@@ -661,8 +716,8 @@ in {
       message = "andromeda: i3 config must use nonprimary output alias";
     }
     {
-      condition = lib.hasInfix "i3status-rs" i3ConfigText;
-      message = "andromeda: i3 config must reference i3status-rs";
+      condition = lib.hasInfix "i3status-rs" pallonI3ThemeText;
+      message = "andromeda: generated current i3 theme must reference i3status-rs";
     }
     {
       condition =
@@ -691,8 +746,8 @@ in {
       message = "andromeda: i3status-rust config must be deployed";
     }
     {
-      condition = lib.hasInfix ''theme = "slick"'' pallonHome.xdg.configFile."i3status-rust/config.toml".text;
-      message = "andromeda: i3status-rust must use slick theme";
+      condition = lib.hasInfix ''theme = "${pallonI3StatusThemePath}"'' pallonI3StatusText;
+      message = "andromeda: i3status-rust must use the generated Enfocado theme";
     }
     {
       condition = lib.hasInfix ''device = "enp2s0f0"'' pallonHome.xdg.configFile."i3status-rust/config.toml".text;
@@ -793,8 +848,8 @@ in {
 
   earth-i3-statusbar = mkAssertionCheck "earth-i3-statusbar" [
     {
-      condition = lib.hasInfix ''theme = "slick"'' earthI3StatusText;
-      message = "earth: i3status-rust must use slick theme";
+      condition = lib.hasInfix ''theme = "${jeliasI3StatusThemePath}"'' earthI3StatusText;
+      message = "earth: i3status-rust must use the generated Enfocado theme";
     }
     {
       condition = lib.hasInfix ''gpu = "🎮"'' earthI3StatusText;

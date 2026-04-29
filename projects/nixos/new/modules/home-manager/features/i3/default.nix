@@ -8,6 +8,11 @@
   types = lib.types;
   primaryOutput = cfg.display.primaryOutput;
   secondaryOutput = cfg.display.secondaryOutput;
+  style = import ../../../lib/style {inherit lib;};
+  styleCfg = config.my.hm.features.style;
+  palettes = style.palettes.${styleCfg.palette};
+  dynamicStyleEnabled = styleCfg.enable && styleCfg.adapters.i3.enable;
+  defaultPalette = palettes.${styleCfg.defaultMode};
 
   defaultWorkRestoreCommand = ''i3-msg 'workspace "1: mail"; exec protonmail-bridge; exec thunderbird; workspace "2: browser"; exec librewolf; workspace 7; exec ~/local/bin/kxo; workspace "9: communication"; exec signal-desktop; exec librewolf --new-window --kiosk https://priceloop.slack.com; workspace 3; exec alacritty --working-directory ~/projects/priceloop/ogopogo/nocode' '';
 
@@ -551,27 +556,27 @@
 
   renderModes = lib.concatMapStringsSep "\n" renderMode cfg.modes;
 
-  renderBarColors = ''
+  renderBarColors = palette: ''
     colors {
-        background $theme_bg
-        statusline $theme_fg
-        separator $theme_dim
+        background ${palette.primary.background}
+        statusline ${palette.primary.foreground}
+        separator ${palette.bright.black}
 
-        focused_workspace  $theme_blue  $theme_blue  $theme_bg
-        active_workspace   $theme_black $theme_dim   $theme_fg
-        inactive_workspace $theme_black $theme_bg    $theme_dim
-        urgent_workspace   $theme_red   $theme_red   $theme_bg
+        focused_workspace  ${palette.normal.blue}  ${palette.normal.blue}  ${palette.primary.background}
+        active_workspace   ${palette.bright.black} ${palette.bright.black} ${palette.primary.background}
+        inactive_workspace ${palette.primary.background} ${palette.primary.background} ${palette.primary.foreground}
+        urgent_workspace   ${palette.normal.red}   ${palette.normal.red}   ${palette.primary.background}
     }
   '';
 
-  renderBar = ''
+  renderBar = palette: ''
     bar {
         font ${cfg.barFont}
         output primary
         ${lib.optionalString cfg.enableSecondaryWorkspaces "output nonprimary"}
         status_command ${pkgs.i3status-rust}/bin/i3status-rs $HOME/.config/i3status-rust/config.toml
         strip_workspace_numbers no
-        ${renderBarColors}
+        ${renderBarColors palette}
     }
   '';
 
@@ -583,7 +588,7 @@
       ${renderWorkspaceOutputs cfg.workspaces.secondary "nonprimary primary"}
     ''}
 
-    ${renderBar}
+    ${lib.optionalString (!dynamicStyleEnabled) (renderBar defaultPalette)}
   '';
 
   secondaryWsConfig = lib.optionalString cfg.enableSecondaryWorkspaces ''
@@ -1013,26 +1018,39 @@ in {
     };
   };
 
-  config = lib.mkIf cfg.enable {
-    home.packages = [pkgs.i3status-rust] ++ cfg.extraPackages;
+  config = lib.mkIf cfg.enable (lib.mkMerge [
+    {
+      home.packages = [pkgs.i3status-rust] ++ cfg.extraPackages;
 
-    xdg.configFile."i3/config".text = i3Config;
+      xdg.configFile."i3/config".text = i3Config;
 
-    xdg.configFile."i3/scripts/i3scripts.sh" = {
-      text = i3scriptsContent;
-      executable = true;
-    };
-    xdg.configFile."i3/scripts/rename.sh" = {
-      source = ./scripts/rename.sh;
-      executable = true;
-    };
-    xdg.configFile."i3/scripts/display.sh" = {
-      source = ./scripts/display.sh;
-      executable = true;
-    };
+      xdg.configFile."i3/scripts/i3scripts.sh" = {
+        text = i3scriptsContent;
+        executable = true;
+      };
+      xdg.configFile."i3/scripts/rename.sh" = {
+        source = ./scripts/rename.sh;
+        executable = true;
+      };
+      xdg.configFile."i3/scripts/display.sh" = {
+        source = ./scripts/display.sh;
+        executable = true;
+      };
 
-    xdg.configFile."i3/layouts/work_left.json".source = ./layouts/work_left.json;
-    xdg.configFile."i3/layouts/work_right.json".source = ./layouts/work_right.json;
-    xdg.configFile."i3/layouts/announcekit.json".source = ./layouts/announcekit.json;
-  };
+      xdg.configFile."i3/layouts/work_left.json".source = ./layouts/work_left.json;
+      xdg.configFile."i3/layouts/work_right.json".source = ./layouts/work_right.json;
+      xdg.configFile."i3/layouts/announcekit.json".source = ./layouts/announcekit.json;
+    }
+
+    (lib.mkIf dynamicStyleEnabled {
+      xdg.configFile."my/theme/i3/light.conf".text =
+        style.mkI3Theme palettes.light + "\n" + renderBar palettes.light;
+
+      xdg.configFile."my/theme/i3/dark.conf".text =
+        style.mkI3Theme palettes.dark + "\n" + renderBar palettes.dark;
+
+      xdg.configFile."my/theme/current/i3.conf".text =
+        style.mkI3Theme defaultPalette + "\n" + renderBar defaultPalette;
+    })
+  ]);
 }

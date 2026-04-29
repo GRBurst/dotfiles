@@ -51,14 +51,17 @@ Implemented:
 - XDG Settings portal provider merged as `org.freedesktop.impl.portal.Settings = "darkman"` while preserving existing portal defaults.
 - Generated Enfocado light/dark artifacts for Alacritty, i3, Hyprland, Waybar, and Kitty.
 - Runtime switching via state/link updates plus targeted reloads/signals, not whole Home Manager activation.
+- Darkman's generic scripts receive the new mode as `$1`; the generated dispatcher forwards `"$@"` to `my-style-switch`.
 - Alacritty imports `~/.config/my/theme/current/alacritty.toml`.
-- i3 stays static and includes `~/.config/my/theme/current/i3.conf`; runtime only reloads i3.
+- i3 stays static and includes `~/.config/my/theme/current/i3.conf`; runtime only reloads i3. The parent i3 config does not consume variables from the include, because i3 expands variables before processing includes.
+- Generated i3 theme files contain literal client colors and the full dynamic `bar { ... }` block, including literal workspace colors.
+- i3status-rust references `~/.config/my/theme/current/i3status-rust.toml` through an absolute Home Manager config path and receives generated Enfocado light/dark/current TOML artifacts.
 - Hyprland sources `~/.config/my/theme/current/hyprland.conf`.
 - Waybar imports `../my/theme/current/waybar.css`.
 - Kitty receives generated `light-theme.auto.conf`, `dark-theme.auto.conf`, and `no-preference-theme.auto.conf`.
 - Neovim uses a pinned `vim-enfocado` plugin and reads `~/.local/state/my-theme/mode` on startup and `SIGUSR1`.
 - Both users enable `my.hm.features.style`.
-- Eval assertions cover style enablement, Stylix migration, darkman, portal merging, generated theme artifacts, i3 includes, Kitty auto files, and Neovim signal sync.
+- Eval assertions cover style enablement, Stylix migration, darkman, portal merging, generated theme artifacts, i3 includes, i3status-rust theme files, Kitty auto files, and Neovim signal sync.
 
 Verified:
 
@@ -72,7 +75,6 @@ Not implemented yet:
 
 - Runtime manual validation on a live user session (`darkman set light`, `darkman set dark`).
 - Yazi, Ghostty, and VSCode adapters.
-- i3status light/dark theme mapping; current `slick` invariant remains.
 - Dedicated user-facing operations document separate from this plan.
 
 ## Divergences From Original Plan
@@ -84,6 +86,8 @@ Not implemented yet:
 - Reason: the implementation uses a shorter repo-owned runtime namespace and all adapters consistently read/write that path.
 - Kitty does not use `programs.kitty.autoThemeFiles` with theme names from `kitty-themes`.
 - Reason: Enfocado is not available in the pinned `kitty-themes` package. The implementation writes Kitty's native auto-theme files directly from the canonical Enfocado palette, preserving native Kitty behavior without changing palette source.
+- i3status-rust does not use the earlier `slick`/`plain` built-in theme idea.
+- Reason: Enfocado is the central palette, and i3status-rust has no built-in Enfocado theme. The implementation writes a custom TOML theme from `modules/lib/style/enfocado.nix`, switches `current/i3status-rust.toml`, and relies on the existing `i3-msg reload` to restart the bar.
 - Neovim does not use `programs.nvf.settings.vim.theme.name = "enfocado"`.
 - Reason: nvf's typed `theme.name` option only accepts its built-in theme enum. The implementation disables the built-in nvf theme and applies the pinned `vim-enfocado` plugin through Lua.
 - Separate `theme-dispatch.sh` and `neovim-theme-sync.lua` files were not added.
@@ -332,7 +336,7 @@ Actions:
 - i3 syntax passes.
 - autorandr reloads i3 only.
 - nvf used gruvbox before implementation; current implementation uses Enfocado through a pinned plugin.
-- i3status currently uses slick.
+- i3status uses a generated Enfocado theme through `my/theme/current/i3status-rust.toml`.
 - Stylix `autoEnable = false`.
 
 Type-check point:
@@ -828,7 +832,8 @@ Add:
   name = "i3-colors-derived-from-style";
   condition =
     contains "include ~/.config/my/theme/current/i3.conf" i3Config
-    && contains "set $theme_bg #ffffff" pallonFiles."my/theme/current/i3.conf".text;
+    && contains "bar {" pallonFiles."my/theme/current/i3.conf".text
+    && contains "#0064e4" pallonFiles."my/theme/current/i3.conf".text;
 }
 
 {
@@ -841,39 +846,32 @@ Implementation shape:
 
 ```nix
 mkI3Theme = palette: ''
-set $theme_bg ${palette.primary.background}
-set $theme_fg ${palette.primary.foreground}
-set $theme_dim ${palette.bright.black}
-set $theme_blue ${palette.normal.blue}
-set $theme_red ${palette.normal.red}
-set $theme_green ${palette.normal.green}
-set $theme_magenta ${palette.normal.magenta}
-
-client.focused $theme_blue $theme_blue $theme_bg $theme_blue $theme_blue
-client.unfocused $theme_dim $theme_bg $theme_fg $theme_dim $theme_dim
-client.urgent $theme_red $theme_red $theme_bg $theme_red $theme_red
+client.focused ${palette.normal.blue} ${palette.normal.blue} ${palette.primary.background} ${palette.normal.magenta} ${palette.normal.blue}
+client.unfocused ${palette.normal.black} ${palette.normal.black} ${palette.bright.black} ${palette.bright.black} ${palette.normal.black}
+client.urgent ${palette.normal.red} ${palette.normal.red} ${palette.primary.background} ${palette.normal.red} ${palette.normal.red}
 '';
 ```
 
-Implemented shape: `renderBarColors` consumes theme variables from the included file instead of hardcoded colors.
+Implemented shape: the i3 parent config includes the current theme file, and the generated theme file contains literal client colors plus the full bar block. This avoids i3 include variable ordering problems.
 
 ```text
 include ~/.config/my/theme/current/i3.conf
-bar.colors.background $theme_bg
-client.focused $theme_blue $theme_blue $theme_bg $theme_blue $theme_blue
+bar.colors.background #ffffff
+client.focused #0064e4 #0064e4 #ffffff #dd0f9d #0064e4
 ```
 
 ### i3status
 
-Initial recommendation: keep existing `slick` invariant unless a concrete light/dark i3status theme is chosen.
+Implemented shape: generate custom Enfocado i3status-rust TOML from the shared palette and point the status config at the current theme path.
 
-Follow-up option:
-
-```nix
-theme = if mode == "dark" then "slick" else "plain";
+```text
+theme = "/home/<user>/.config/my/theme/current/i3status-rust.toml"
+my/theme/i3status-rust/enfocado_light.toml
+my/theme/i3status-rust/enfocado_dark.toml
+my/theme/current/i3status-rust.toml
 ```
 
-Only update the existing check when this mapping is intentionally implemented.
+Runtime behavior: `my-style-switch` updates `current/i3status-rust.toml`, then the existing `i3-msg reload` restarts the bar.
 
 ### Alacritty Tests First
 
@@ -1064,7 +1062,6 @@ Verify:
 - Full Yazi module with native light/dark flavors.
 - Full Ghostty module if Ghostty is added.
 - Full VSCode module if VSCode is added.
-- Optional i3status light/dark theme mapping.
 - Live-session validation for the Hyprland themed config adapter.
 - VM/integration tests for darkman portal behavior.
 - Evaluate Redshift replacement for Wayland/Hyprland.

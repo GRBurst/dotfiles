@@ -11,8 +11,8 @@
   fontCfg = osConfig.my.nixos.features.fonts.families;
 
   enabled = path: lib.attrByPath path false config;
-  themePath = mode: name: "my/theme/${name}/${mode}.conf";
   defaultPalette = palettes.${cfg.defaultMode};
+  i3statusThemePath = "${config.xdg.configHome}/my/theme/current/i3status-rust.toml";
 
   styleSwitch = pkgs.writeShellApplication {
     name = "my-style-switch";
@@ -55,6 +55,7 @@
 
       switch_link "$theme_dir/alacritty/enfocado_$mode.toml" "$current_dir/alacritty.toml"
       switch_link "$theme_dir/i3/$mode.conf" "$current_dir/i3.conf"
+      switch_link "$theme_dir/i3status-rust/enfocado_$mode.toml" "$current_dir/i3status-rust.toml"
       switch_link "$theme_dir/hyprland/$mode.conf" "$current_dir/hyprland.conf"
       switch_link "$theme_dir/waybar/$mode.css" "$current_dir/waybar.css"
 
@@ -111,6 +112,10 @@ in {
         type = lib.types.bool;
         default = enabled ["my" "hm" "features" "i3" "enable"];
       };
+      i3status.enable = lib.mkOption {
+        type = lib.types.bool;
+        default = enabled ["my" "hm" "features" "i3" "enable"];
+      };
       hyprland.enable = lib.mkOption {
         type = lib.types.bool;
         default = enabled ["my" "hm" "features" "hyprland" "enable"];
@@ -147,7 +152,9 @@ in {
           lat = osConfig.location.latitude;
           lng = osConfig.location.longitude;
         };
-        scripts."theme-dispatch" = "${styleSwitch}/bin/my-style-switch";
+        scripts."theme-dispatch" = ''
+          exec ${styleSwitch}/bin/my-style-switch "$@"
+        '';
       };
 
       xdg.portal = {
@@ -162,15 +169,17 @@ in {
       xdg.configFile."my/theme/current/alacritty.toml".text = style.mkAlacrittyTheme defaultPalette;
     })
 
-    (lib.mkIf cfg.adapters.i3.enable {
-      xdg.configFile.${themePath "light" "i3"}.text = style.mkI3Theme palettes.light;
-      xdg.configFile.${themePath "dark" "i3"}.text = style.mkI3Theme palettes.dark;
-      xdg.configFile."my/theme/current/i3.conf".text = style.mkI3Theme defaultPalette;
+    (lib.mkIf cfg.adapters.i3status.enable {
+      my.hm.features.i3.statusBar.theme = lib.mkDefault i3statusThemePath;
+
+      xdg.configFile."my/theme/i3status-rust/enfocado_light.toml".text = style.mkI3StatusTheme palettes.light;
+      xdg.configFile."my/theme/i3status-rust/enfocado_dark.toml".text = style.mkI3StatusTheme palettes.dark;
+      xdg.configFile."my/theme/current/i3status-rust.toml".text = style.mkI3StatusTheme defaultPalette;
     })
 
     (lib.mkIf cfg.adapters.hyprland.enable {
-      xdg.configFile.${themePath "light" "hyprland"}.text = style.mkHyprlandTheme palettes.light;
-      xdg.configFile.${themePath "dark" "hyprland"}.text = style.mkHyprlandTheme palettes.dark;
+      xdg.configFile."my/theme/hyprland/light.conf".text = style.mkHyprlandTheme palettes.light;
+      xdg.configFile."my/theme/hyprland/dark.conf".text = style.mkHyprlandTheme palettes.dark;
       xdg.configFile."my/theme/current/hyprland.conf".text = style.mkHyprlandTheme defaultPalette;
     })
 

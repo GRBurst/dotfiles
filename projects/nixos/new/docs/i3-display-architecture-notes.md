@@ -53,8 +53,8 @@ enabled output as primary. After applying a profile, autorandr only reloads i3:
 i3-msg reload
 ```
 
-The Home Manager i3 module renders static logical output rules directly into
-`~/.config/i3/config`:
+The Home Manager i3 module renders static logical workspace output rules
+directly into `~/.config/i3/config`:
 
 ```i3
 workspace "1: mail" output primary
@@ -62,11 +62,25 @@ workspace "2: browser" output primary
 
 workspace "11: terminal" output nonprimary primary
 workspace "12" output nonprimary primary
+```
 
+The parent config includes the managed theme file:
+
+```i3
+include ~/.config/my/theme/current/i3.conf
+```
+
+That include owns all dynamic i3 style, including literal client colors and the
+full bar block:
+
+```i3
 bar {
     output primary
     output nonprimary
     status_command /nix/store/.../bin/i3status-rs $HOME/.config/i3status-rust/config.toml
+    colors {
+        focused_workspace #0064e4 #0064e4 #ffffff
+    }
 }
 ```
 
@@ -74,6 +88,11 @@ Primary workspaces target i3's `primary` alias. Secondary workspaces target
 `nonprimary primary`, so a two-output profile places them on the non-primary
 display and a single-output profile falls back to the primary display. The bar
 uses `output primary` and `output nonprimary`, matching the same logical model.
+
+The parent config must not reference variables defined by the included theme
+file. i3 expands variables before processing includes, so included-file
+variables cannot be consumed by the parent. Generated dynamic theme files use
+literal hex colors instead.
 
 There is no `include ~/.config/i3/display-config`, no
 `write-display-config.sh`, and no Home Manager activation step that writes an i3
@@ -98,9 +117,11 @@ absent.
 The flake checks cover the architecture directly:
 
 - `i3-config` asserts the rendered i3 config contains static primary and
-  secondary workspace rules, contains the static bar, does not include
-  `display-config`, does not deploy `write-display-config.sh`, and contains no
-  stale `$OUT` / `$OUT2` text.
+  secondary workspace rules, includes the managed style theme, does not
+  reference included-file theme variables, does not include `display-config`,
+  does not deploy `write-display-config.sh`, and contains no stale `$OUT` /
+  `$OUT2` text. It also asserts the generated dynamic theme owns the bar block
+  and uses literal visible workspace colors.
 - `i3-autorandr` asserts the autorandr profile invariants and verifies hooks
   only reload i3.
 - `i3-syntax` runs `i3 -C` against the generated Andromeda i3 config.
