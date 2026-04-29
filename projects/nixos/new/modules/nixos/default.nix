@@ -13,6 +13,7 @@
     ./features/ausweisapp.nix
     ./features/coolercontrol.nix
     ./features/desktop/addons.nix
+    ./features/desktop/bing-wallpaper.nix
     ./features/desktop/compositor.nix
     ./features/desktop/displayManager.nix
     ./features/desktop/gnome.nix

@@ -80,6 +80,14 @@
       ai.enable = true;
       desktop = {
         addons.enable = true;
+        bingWallpaper = {
+          enable = true;
+          user = "pallon";
+          market = "de-DE";
+          interval = "6h";
+          count = 2;
+          preferUhd = true;
+        };
         hyprland.enable = true;
         i3.enable = true;
         xserver = {

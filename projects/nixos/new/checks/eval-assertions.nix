@@ -383,6 +383,43 @@ in {
     cfgs.andromeda.config.services.xserver.windowManager.i3.enable
     "andromeda must still have i3 enabled";
 
+  andromeda-bing-wallpaper-enabled =
+    mkCheck "andromeda-bing-wallpaper-enabled"
+    (pallonHome.my.hm.features.bingWallpaper.enable == true)
+    "andromeda/pallon must enable Bing wallpaper";
+
+  andromeda-bing-wallpaper-market =
+    mkCheck "andromeda-bing-wallpaper-market"
+    (pallonHome.my.hm.features.bingWallpaper.market == "de-DE")
+    "Bing wallpaper market must be de-DE";
+
+  andromeda-bing-wallpaper-count =
+    mkCheck "andromeda-bing-wallpaper-count"
+    (pallonHome.my.hm.features.bingWallpaper.count == 2)
+    "Bing wallpaper must fetch 2 images";
+
+  andromeda-bing-wallpaper-prefers-uhd =
+    mkCheck "andromeda-bing-wallpaper-prefers-uhd"
+    (pallonHome.my.hm.features.bingWallpaper.preferUhd == true)
+    "Bing wallpaper must prefer UHD";
+
+  andromeda-bing-wallpaper-feh-setter =
+    mkCheck "andromeda-bing-wallpaper-feh-setter"
+    (lib.hasInfix "feh --bg-fill" pallonHome.my.hm.features.bingWallpaper.setter.command)
+    "Bing wallpaper setter must use feh --bg-fill";
+
+  andromeda-bing-wallpaper-user-service =
+    mkCheck "andromeda-bing-wallpaper-user-service"
+    (pallonHome.systemd.user.services.bing-wallpaper.Service.Type == "oneshot")
+    "Bing wallpaper service must be oneshot";
+
+  andromeda-bing-wallpaper-user-timer =
+    mkCheck "andromeda-bing-wallpaper-user-timer"
+    (pallonHome.systemd.user.timers.bing-wallpaper.Timer.OnUnitActiveSec == "6h")
+    "Bing wallpaper timer must run every 6h";
+
+  andromeda-bing-wallpaper-package = pallonHome.my.hm.features.bingWallpaper.package;
+
   nvf-config = mkAssertionCheck "nvf-config" [
     {
       condition = andromeda.home-manager.users.pallon.my.hm.features.nvf.enable == true;

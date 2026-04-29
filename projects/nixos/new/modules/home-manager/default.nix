@@ -7,6 +7,7 @@
     ./bundles/laptop.nix
     ./bundles/media.nix
     ./features/alacritty.nix
+    ./features/bing-wallpaper.nix
     ./features/dictate.nix
     ./features/env.nix
     ./features/git.nix
