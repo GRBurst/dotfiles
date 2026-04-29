@@ -17,6 +17,7 @@
     ./features/misc.nix
     ./features/nvf.nix
     ./features/shellAliases.nix
+    ./features/style
     ./features/waybar.nix
     ./features/wired.nix
     ./features/zsh.nix

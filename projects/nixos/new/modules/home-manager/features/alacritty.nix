@@ -37,6 +37,13 @@ in {
           normal.family = fontCfg.families.monospace.name;
           size = fontCfg.sizes.terminal;
         };
+        general.import = [
+          (
+            if config.my.hm.features.style.enable
+            then "~/.config/my/theme/current/alacritty.toml"
+            else "~/.config/alacritty/themes/themes/enfocado_light.toml"
+          )
+        ];
       };
     };
   };

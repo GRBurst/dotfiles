@@ -36,11 +36,14 @@
 
   pallonHome = andromeda.home-manager.users.pallon;
   jeliasHome = earth.home-manager.users.jelias;
+  pallonFiles = pallonHome.xdg.configFile or {};
   i3ConfigText = pallonHome.xdg.configFile."i3/config".text;
   i3ConfigFiles = builtins.attrValues pallonHome.xdg.configFile;
   earthFiles = jeliasHome.xdg.configFile or {};
   earthI3ConfigText = earthFiles."i3/config".text or "";
   earthI3StatusText = earthFiles."i3status-rust/config.toml".text or "";
+  pallonNvfLua = pallonHome.programs.nvf.settings.vim.luaConfigRC.custom-functions.data or "";
+  jeliasNvfLua = jeliasHome.programs.nvf.settings.vim.luaConfigRC.custom-functions.data or "";
   autorandrProfiles = pallonHome.programs.autorandr.profiles;
 
   enabledOutputs = profile:
@@ -377,8 +380,131 @@ in {
       message = "andromeda: programs.nvf must be enabled for pallon";
     }
     {
-      condition = andromeda.home-manager.users.pallon.programs.nvf.settings.vim.theme.name == "gruvbox";
-      message = "andromeda: nvf theme must be gruvbox";
+      condition = andromeda.home-manager.users.pallon.programs.nvf.settings.vim.theme.enable == false;
+      message = "andromeda: nvf built-in theme must be disabled for external Enfocado";
+    }
+    {
+      condition = earth.home-manager.users.jelias.my.hm.features.nvf.enable == true;
+      message = "earth: nvf feature must be enabled for jelias";
+    }
+    {
+      condition = earth.home-manager.users.jelias.programs.nvf.settings.vim.theme.enable == false;
+      message = "earth: nvf built-in theme must be disabled for external Enfocado";
+    }
+    {
+      condition = andromeda.home-manager.users.pallon.programs.nvf.settings.vim.extraPlugins ? "vim-enfocado";
+      message = "andromeda: nvf must include the Vim Enfocado plugin";
+    }
+    {
+      condition = lib.hasInfix "colorscheme" pallonNvfLua && lib.hasInfix "enfocado" pallonNvfLua;
+      message = "andromeda: nvf must apply the Enfocado colorscheme in Lua";
+    }
+    {
+      condition = lib.hasInfix "my-theme/mode" pallonNvfLua && lib.hasInfix "SIGUSR1" pallonNvfLua;
+      message = "andromeda: nvf must follow the shared theme state via SIGUSR1";
+    }
+    {
+      condition = lib.hasInfix "colorscheme" jeliasNvfLua && lib.hasInfix "enfocado" jeliasNvfLua;
+      message = "earth: nvf must apply the Enfocado colorscheme in Lua";
+    }
+    {
+      condition = lib.hasInfix "my-theme/mode" jeliasNvfLua && lib.hasInfix "SIGUSR1" jeliasNvfLua;
+      message = "earth: nvf must follow the shared theme state via SIGUSR1";
+    }
+  ];
+
+  style-config = mkAssertionCheck "style-config" [
+    {
+      condition = andromeda.my.nixos.features.style.enable == true && earth.my.nixos.features.style.enable == true;
+      message = "both hosts must enable the public NixOS style API through the Stylix migration shim";
+    }
+    {
+      condition = andromeda.stylix.enable == true && andromeda.stylix.autoEnable == false;
+      message = "andromeda: style must keep Stylix enabled only as an explicit migration target";
+    }
+    {
+      condition = earth.stylix.enable == true && earth.stylix.autoEnable == false;
+      message = "earth: style must keep Stylix enabled only as an explicit migration target";
+    }
+    {
+      condition = andromeda.stylix.base16Scheme.base00 == "ffffff" && earth.stylix.base16Scheme.base00 == "ffffff";
+      message = "Stylix migration palette must default to Enfocado light";
+    }
+    {
+      condition = pallonHome.my.hm.features.style.enable == true && jeliasHome.my.hm.features.style.enable == true;
+      message = "both Home Manager users must enable dynamic style";
+    }
+    {
+      condition = pallonHome.services.darkman.enable == true && jeliasHome.services.darkman.enable == true;
+      message = "both users must run darkman as the mode source";
+    }
+    {
+      condition = pallonHome.services.darkman.settings.portal == true && jeliasHome.services.darkman.settings.portal == true;
+      message = "darkman must expose the XDG Settings portal";
+    }
+    {
+      condition = lib.hasInfix "my-style-switch" pallonHome.services.darkman.scripts."theme-dispatch";
+      message = "pallon darkman must call the shared style dispatcher";
+    }
+    {
+      condition = lib.hasInfix "my-style-switch" jeliasHome.services.darkman.scripts."theme-dispatch";
+      message = "jelias darkman must call the shared style dispatcher";
+    }
+    {
+      condition = pallonHome.xdg.portal.config.common.default == "*" && jeliasHome.xdg.portal.config.common.default == "*";
+      message = "style must preserve existing common portal defaults";
+    }
+    {
+      condition = pallonHome.xdg.portal.config.common."org.freedesktop.impl.portal.Settings" == "darkman";
+      message = "pallon Settings portal must prefer darkman";
+    }
+    {
+      condition = jeliasHome.xdg.portal.config.common."org.freedesktop.impl.portal.Settings" == "darkman";
+      message = "jelias Settings portal must prefer darkman";
+    }
+    {
+      condition = (builtins.length pallonHome.xdg.portal.extraPortals) > 0 && (builtins.length jeliasHome.xdg.portal.extraPortals) > 0;
+      message = "style must preserve existing GTK portal packages";
+    }
+    {
+      condition = pallonHome.programs.alacritty.settings.general.import == ["~/.config/my/theme/current/alacritty.toml"];
+      message = "pallon Alacritty must import the dynamic style theme";
+    }
+    {
+      condition = jeliasHome.programs.alacritty.settings.general.import == ["~/.config/my/theme/current/alacritty.toml"];
+      message = "jelias Alacritty must import the dynamic style theme";
+    }
+    {
+      condition = lib.hasInfix ''background = "#ffffff"'' pallonFiles."my/theme/alacritty/enfocado_light.toml".text;
+      message = "pallon Enfocado light Alacritty theme must be generated";
+    }
+    {
+      condition = lib.hasInfix ''background = "#181818"'' pallonFiles."my/theme/alacritty/enfocado_dark.toml".text;
+      message = "pallon Enfocado dark Alacritty theme must be generated";
+    }
+    {
+      condition = lib.hasInfix "background #ffffff" pallonFiles."kitty/light-theme.auto.conf".text;
+      message = "pallon Kitty native light auto theme must use Enfocado light";
+    }
+    {
+      condition = lib.hasInfix "background #181818" pallonFiles."kitty/dark-theme.auto.conf".text;
+      message = "pallon Kitty native dark auto theme must use Enfocado dark";
+    }
+    {
+      condition = lib.hasInfix "set $theme_bg #ffffff" pallonFiles."my/theme/current/i3.conf".text;
+      message = "pallon i3 current theme must default to Enfocado light";
+    }
+    {
+      condition = lib.hasInfix "background-color: #ffffff" pallonFiles."my/theme/current/waybar.css".text;
+      message = "pallon Waybar current theme must default to Enfocado light";
+    }
+    {
+      condition = lib.hasInfix "col.active_border = rgba(0064e4ee)" pallonFiles."my/theme/current/hyprland.conf".text;
+      message = "pallon Hyprland current theme must default to Enfocado light";
+    }
+    {
+      condition = builtins.any (p: (p.pname or p.name or "") == "my-style-switch") pallonHome.home.packages;
+      message = "pallon home must include the style dispatcher package";
     }
   ];
 
@@ -509,6 +635,10 @@ in {
     {
       condition = lib.hasInfix "set $mod Mod4" i3ConfigText;
       message = "andromeda: i3 config must define $mod";
+    }
+    {
+      condition = lib.hasInfix "include ~/.config/my/theme/current/i3.conf" i3ConfigText;
+      message = "andromeda: i3 config must include the managed style theme";
     }
     {
       condition = lib.hasInfix ''workspace "1: mail" output primary'' i3ConfigText;
@@ -642,6 +772,10 @@ in {
     {
       condition = !(lib.hasInfix "include ~/.config/i3" earthI3ConfigText);
       message = "earth: i3 config must not include unmanaged ~/.config/i3 snippets";
+    }
+    {
+      condition = lib.hasInfix "include ~/.config/my/theme/current/i3.conf" earthI3ConfigText;
+      message = "earth: i3 config must include the managed style theme";
     }
     {
       condition = andromeda.services.xserver.windowManager.i3.enable == true;

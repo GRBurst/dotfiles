@@ -61,26 +61,7 @@ in {
       ];
 
       style = ''
-        * {
-          font-family: "JetBrainsMono Nerd Font", monospace;
-          font-size: 13px;
-        }
-        window#waybar {
-          background-color: rgba(34, 36, 54, 0.9);
-          color: #c8d3f5;
-        }
-        #workspaces button {
-          padding: 0 5px;
-          color: #c8d3f5;
-          border-bottom: 2px solid transparent;
-        }
-        #workspaces button.active {
-          color: #00ccff;
-          border-bottom: 2px solid #00ccff;
-        }
-        #clock, #pulseaudio, #network, #cpu, #memory, #battery, #tray {
-          padding: 0 8px;
-        }
+        @import url("../my/theme/current/waybar.css");
       '';
     };
   };

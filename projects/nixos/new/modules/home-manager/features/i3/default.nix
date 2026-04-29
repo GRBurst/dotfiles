@@ -553,14 +553,14 @@
 
   renderBarColors = ''
     colors {
-        background #000000
-        statusline #ffffff
-        separator #666666
+        background $theme_bg
+        statusline $theme_fg
+        separator $theme_dim
 
-        focused_workspace  $lblue   #285577 #ffffff
-        active_workspace   #333333  #5f676a #ffffff
-        inactive_workspace #333333  #222222 #888888
-        urgent_workspace   #2f343a  #900000 #ffffff
+        focused_workspace  $theme_blue  $theme_blue  $theme_bg
+        active_workspace   $theme_black $theme_dim   $theme_fg
+        inactive_workspace $theme_black $theme_bg    $theme_dim
+        urgent_workspace   $theme_red   $theme_red   $theme_bg
     }
   '';
 
@@ -679,6 +679,8 @@
   commonConfig = ''
     # i3 config file (v4)
 
+    include ~/.config/my/theme/current/i3.conf
+
     set $sp ~/.config/i3/scripts
 
     # neo modifier, Mod4 is the windows key
@@ -762,17 +764,6 @@
 
     # Show the first scratchpad window
     bindsym $mod+u scratchpad show
-
-    # Colors
-    set $lblue "#37baff"
-    set $ddgray "#101010"
-    # Color => for 1px border only backgr. visible
-    # class                 border  backgr. text    indicator
-    client.focused          #4c7899 #00ccff #ffffff #ff99ff
-    client.focused_inactive #333333 #cccccc #ffffff #484e50
-    client.unfocused        #333333 #333333 #888888 #292d2e
-    client.urgent           #2f343a #ff0000 #ffffff #900000
-    client.placeholder      #000000 #33cc33 #ffffff #000000
 
     # Change keybindings
     bindsym $mod+x exec setxkbmap de neo

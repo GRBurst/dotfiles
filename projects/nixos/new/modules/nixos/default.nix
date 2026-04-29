@@ -24,6 +24,7 @@
     ./features/nvidia.nix
     ./features/security.nix
     ./features/steam.nix
+    ./features/style.nix
     ./features/stylix.nix
     ./features/tpm2.nix
     ./features/virtualisation.nix

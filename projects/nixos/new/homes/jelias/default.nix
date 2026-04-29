@@ -108,6 +108,7 @@
       nvf.enable = true;
       misc.enable = true;
       shellAliases.enable = true;
+      style.enable = true;
       waybar.enable = true;
       zsh.enable = true;
       kitty.enable = true;

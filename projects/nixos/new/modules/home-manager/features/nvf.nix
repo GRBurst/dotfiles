@@ -5,6 +5,16 @@
   ...
 }: let
   cfg = config.my.hm.features.nvf;
+  enfocadoPlugin = pkgs.vimUtils.buildVimPlugin {
+    pname = "vim-enfocado";
+    version = "unstable-2026-04-29";
+    src = pkgs.fetchFromGitHub {
+      owner = "wuelnerdotexe";
+      repo = "vim-enfocado";
+      rev = "2a8fffdff1a20473f0fbacef10f2fb356e039b31";
+      sha256 = "1ircbl87rxn2l7frywg8xr88y63vqkjp0zfk5j5fc5cryvzrzvmk";
+    };
+  };
 in {
   options.my.hm.features.nvf.enable = lib.mkEnableOption "Neovim (nvf)";
 
@@ -30,9 +40,7 @@ in {
 
           # --- Theme ---
           theme = {
-            enable = true;
-            name = "gruvbox";
-            style = "dark";
+            enable = false;
           };
 
           # --- Options ---
@@ -45,7 +53,7 @@ in {
             scrolloff = 5;
             sidescrolloff = 10;
             sidescroll = 1;
-            wrap = true;
+            wrap = false;
             linebreak = true;
             breakindent = true;
             breakindentopt = "shift:2";
@@ -150,6 +158,7 @@ in {
 
           # --- Extra Plugins ---
           extraPlugins = {
+            vim-enfocado.package = enfocadoPlugin;
             vim-repeat.package = pkgs.vimPlugins.vim-repeat;
             vim-speeddating.package = pkgs.vimPlugins.vim-speeddating;
             vim-visual-multi.package = pkgs.vimPlugins.vim-visual-multi;
@@ -753,6 +762,28 @@ in {
 
           # --- Lua Config ---
           luaConfigRC.custom-functions = lib.mkBefore ''
+            -- Follow the shared darkman mode state without rebuilding Neovim.
+            local function apply_enfocado_mode()
+              local state_home = vim.env.XDG_STATE_HOME or (vim.env.HOME .. "/.local/state")
+              local mode_file = state_home .. "/my-theme/mode"
+              local ok, lines = pcall(vim.fn.readfile, mode_file)
+              local mode = ok and lines[1] or "light"
+
+              if mode ~= "dark" then
+                mode = "light"
+              end
+
+              vim.o.background = mode
+              vim.g.enfocado_style = "nature"
+              pcall(vim.cmd.colorscheme, "enfocado")
+            end
+
+            apply_enfocado_mode()
+            vim.api.nvim_create_autocmd("Signal", {
+              pattern = "SIGUSR1",
+              callback = apply_enfocado_mode,
+            })
+
             -- Smart Home: toggle between col 0 and first non-blank
             vim.keymap.set("n", "<Home>", function()
               return vim.fn.col(".") == vim.fn.match(vim.fn.getline("."), "\\S") + 1 and "0" or "^"

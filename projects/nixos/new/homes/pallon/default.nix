@@ -64,6 +64,7 @@
       gnome.enable = true;
       misc.enable = true;
       nvf.enable = true;
+      style.enable = true;
       waybar = {
         enable = true;
         battery = true;

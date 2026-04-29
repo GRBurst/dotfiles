@@ -74,8 +74,6 @@ in {
           gaps_out = 4;
           border_size = 2;
           layout = "dwindle";
-          "col.active_border" = "rgba(00ccffee) rgba(ff99ffee) 45deg";
-          "col.inactive_border" = "rgba(333333aa)";
         };
 
         dwindle = {
@@ -286,6 +284,8 @@ in {
       # Submaps (matching i3 modes)
       extraConfig =
         ''
+          source = ~/.config/my/theme/current/hyprland.conf
+
           # --- Exit submap (i3: $mod+Shift+E) ---
           submap = exit
           bind = SUPER, R, exec, systemctl reboot
