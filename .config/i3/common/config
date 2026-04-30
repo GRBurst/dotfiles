@@ -23,7 +23,8 @@ set $MRight Mod3+Right
 set $MUp    Mod3+Up
 
 # font -misc-fixed-medium-r-normal--13-120-75-75-C-70-iso10646-1
-font pango:Droid Sans Mono 11
+# font pango:Droid Sans Mono, "Font Awesome 7 Free", 11
+font pango:Droid Sans Mono, 11
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -33,7 +34,7 @@ floating_modifier $mod
 bindsym $mod+Return exec --no-startup-id $sp/i3scripts.sh ws_split auto
 bindsym $mod+Shift+Return exec --no-startup-id $sp/i3scripts.sh ws_split manual
 # bindsym $mod+$AltGr+Return exec termite -e zsh
-bindsym $mod+$AltGr+Return exec alacritty
+bindsym $mod+$AltGr+Return exec alacritty --working-directory ~/projects/pallon/webapp/frontend
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -138,8 +139,9 @@ bindsym XF86AudioLowerVolume exec ponymix decrease 5
 bindsym XF86AudioRaiseVolume exec ponymix increase 5
 bindsym XF86AudioMute exec ponymix toggle
 bindsym $mod+m exec ponymix --source toggle
-bindsym XF86MonBrightnessUp exec light -A 5
-bindsym XF86MonBrightnessDown exec light -U 5
+bindsym XF86MonBrightnessUp exec brightnessctl set +1%
+bindsym XF86MonBrightnessDown exec brightnessctl set 1%-
+
 
 # Helper scripts
 bindsym $mod+b exec --no-startup-id $sp/rename.sh 0
@@ -256,7 +258,7 @@ mode "Screen / DMMS <<< Screens: (k)ino, (g)ame, (h)game right, (1) screen, (a)u
 bindsym $mod+Shift+m mode "Screen / DMMS <<< Screens: (k)ino, (g)ame, (h)game right, (1) screen, (a)utomatic, (r)eset, (s)tandby, (p) suspend, (l)ock, (o)ff"
 
 # resize window (you can also use the mouse for that)
-mode "resize <<< Resolution:(2) 1920x1080, (4) 3840x2160, (7) 1280x720; Position: (c) center" {
+mode "resize <<< Resolution:(1) 1080p, (2) 2160p, (4) 480p, (7) 720p; Position: (c) center" {
         # These bindings trigger as soon as you enter the resize mode
 
         # Pressing left will shrink the window’s width.
@@ -275,9 +277,10 @@ mode "resize <<< Resolution:(2) 1920x1080, (4) 3840x2160, (7) 1280x720; Position
         bindsym Right resize grow width 1 px or 1 ppt
 
         # specific sizes
-        bindsym KP_2 resize set 1920 1080; move position center; mode "default"
-        bindsym KP_4 resize set 3840 2160; move position center; mode "default"
-        bindsym KP_7 resize set 1280 720; move position center; mode "default"
+        bindsym 1 resize set 1920 1080; move position center; mode "default"
+        bindsym 2 resize set 3840 2160; move position center; mode "default"
+        bindsym 4 resize set 768 480; move position center; mode "default"
+        bindsym 7 resize set 1280 720; move position center; mode "default"
 
         bindsym c move position center; mode "default"
 
@@ -285,7 +288,7 @@ mode "resize <<< Resolution:(2) 1920x1080, (4) 3840x2160, (7) 1280x720; Position
         bindsym Return mode "default"
         bindsym Escape mode "default"
 }
-bindsym $mod+Shift+r mode "resize <<< Resolution:(2) 1920x1080, (4) 3840x2160, (7) 1280x720; Position: (c) center"
+bindsym $mod+Shift+r mode "resize <<< Resolution:(1) 1080p, (2) 2160p, (4) 480p, (7) 720p; Position: (c) center"
 
 mode "work <<< Programs: (w) restore work layout, (s/S) move/show scratchpad" {
 

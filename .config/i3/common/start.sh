@@ -3,7 +3,7 @@ ETESYNC_URL=https://scal.metacosmos.space etesync-dav &
 qsyncthingtray &
 nm-applet &
 # pasystray &
-protonvpn-app &
+# protonvpn-app &
 protonmail-bridge -n &
 # unclutter &
 # redshift-gtk &
