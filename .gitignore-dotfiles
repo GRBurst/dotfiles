@@ -61,7 +61,7 @@
 !.dir_colors
 !.ideavimrc
 !.vimrc*
-!.Xresources
+.Xresources
 .zsh*
 .zaliases
 .zprofile
