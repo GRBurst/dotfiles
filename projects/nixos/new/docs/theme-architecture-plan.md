@@ -35,12 +35,13 @@ Goals:
 - Alacritty stays the primary terminal and uses the same runtime theme import path.
 - Enfocado light/dark is the canonical palette baseline.
 - Yazi uses native light/dark flavors generated from the repo palette.
+- Rofi is managed by Home Manager and reads the generated current theme on each invocation.
 - Ghostty and VSCode get disabled architectural adapter stubs first; full config comes later.
 - Redshift stays separate; it only shares location/timing assumptions with darkman.
 
 ## Current Implementation Status
 
-Status: dynamic Enfocado implementation, active NixOS portal ownership including backend selection and backend discovery, runtime dispatcher checks, and operations documentation are in place and evaluate successfully.
+Status: dynamic Enfocado implementation, active NixOS portal ownership including backend selection and backend discovery, managed Rofi, runtime dispatcher checks, and operations documentation are in place and evaluate successfully.
 
 Implemented:
 
@@ -52,7 +53,7 @@ Implemented:
 - Active NixOS XDG portal config selects `org.freedesktop.impl.portal.Settings = "darkman"` while preserving existing portal defaults.
 - NixOS includes `pkgs.darkman` in `xdg.portal.extraPortals`, making `darkman.portal` discoverable through `/run/current-system/sw/share/xdg-desktop-portal/portals`.
 - Home Manager portal config is not the active source in Hyprland/UWSM sessions; NixOS owns the portal services and Home Manager portals stay disabled.
-- Generated Enfocado light/dark artifacts for Alacritty, i3, Hyprland, Waybar, Kitty, and Yazi.
+- Generated Enfocado light/dark artifacts for Alacritty, i3, Hyprland, Waybar, Kitty, Rofi, and Yazi.
 - Runtime switching via state/link updates plus targeted reloads/signals, not whole Home Manager activation.
 - Darkman's generic scripts receive the new mode as `$1`; the generated dispatcher forwards `"$@"` to `my-style-switch`.
 - Alacritty imports `~/.config/my/theme/current/alacritty.toml`.
@@ -62,10 +63,11 @@ Implemented:
 - Hyprland sources `~/.config/my/theme/current/hyprland.conf`.
 - Waybar imports `../my/theme/current/waybar.css`.
 - Kitty receives generated `light-theme.auto.conf`, `dark-theme.auto.conf`, and `no-preference-theme.auto.conf`.
+- Rofi reads `~/.config/my/theme/current/rofi.rasi`; the dispatcher switches that link and no reload signal is needed.
 - Yazi receives generated `enfocado-light` and `enfocado-dark` flavors through Home Manager `programs.yazi.flavors`, with `programs.yazi.theme.flavor` selecting by OS light/dark mode.
 - Neovim uses a pinned `vim-enfocado` plugin and reads `~/.local/state/my-theme/mode` on startup and `SIGUSR1`.
-- Both users enable `my.hm.features.style` and `my.hm.features.yazi`.
-- Eval assertions cover style enablement, Stylix migration, darkman, portal merging, generated theme artifacts, i3 includes, i3status-rust theme files, Kitty auto files, Yazi flavors, and Neovim signal sync.
+- Both users enable `my.hm.features.style`, `my.hm.features.rofi`, and `my.hm.features.yazi`.
+- Eval assertions cover style enablement, Stylix migration, darkman, portal merging, generated theme artifacts, i3 includes, i3status-rust theme files, Kitty auto files, Rofi theme files, Yazi flavors, and Neovim signal sync.
 - Eval assertions run `my-style-switch` in a temporary `$HOME` and verify state/current-link switching for light, dark, and invalid modes.
 - `docs/theme-architecture.md` documents operations, portal validation, the app matrix, and live-session validation commands.
 - Browser status: LibreWolf/Firefox, Chromium, and Brave are portal consumers pending live validation through `matchMedia("(prefers-color-scheme: dark)")`; no browser-specific adapter or launch flag has been added.
@@ -80,7 +82,7 @@ Result: all checks pass with the dispatcher temp-home check and operations-doc c
 
 Pending live validation:
 
-- `pallon@andromeda`: pending in a real graphical session using the commands in `docs/theme-architecture.md`.
+- `pallon@andromeda`: Firefox/Thunderbird, i3 bar, Waybar, Alacritty, Kitty, Neovim, Yazi, and Signal/Electron were manually validated. Rofi was found to use an unmanaged hard-coded config before this adapter.
 - `jelias@earth`: pending until a live session is available.
 
 Not implemented yet:
@@ -112,6 +114,8 @@ Not implemented yet:
 - Reason: prior eval coverage checked Settings backend selection, not backend availability in `/run/current-system/sw/share/xdg-desktop-portal/portals`.
 - Browser-specific flags such as `--force-dark-mode` and forced GTK themes were not added.
 - Reason: browsers should consume `prefers-color-scheme` from the portal first. Application-specific fallbacks stay deferred until live validation proves a concrete browser needs one.
+- Rofi was not in the original active matrix.
+- Reason: live i3 validation found an unmanaged hard-coded `~/.config/rofi/config.rasi`, so Rofi was promoted into Home Manager as a managed style adapter.
 
 ## First Step: Read Relevant Files
 
