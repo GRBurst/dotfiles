@@ -14,6 +14,51 @@ net_down = ""
 # net_up = "↑"
 # net_down = "↓"
 
+  # folder="$(mktemp -d)"
+  # yq -i ".price.startup = $coinvalue" folder/btc.yaml
+  # yq -i '.a.b[0].c = "cool"' btc.yaml
+# [[block]]
+# block = "custom"
+# shell="bash"
+# interval = 10
+# command = '''
+#   coinvalue="$(wget -q -O- https://api.binance.com/api/v3/ticker/price\?symbol\=BTCEUR | jq -r ".price | tonumber | floor")"
+#   state="Idle"
+#   if $(( coinvalue > 100000 )); then
+#     state="Good"
+#   elif $(( coinvalue < 96000 )); then
+#     state="Info"
+#   elif $(( coinvalue < 95000 )); then
+#     state="Warning"
+#   elif $(( coinvalue < 90000 )); then
+#     state="Critical"
+#   fi
+#   echo "{\"state\":\"$state\", \"text\": \"$coinvalue\"}"
+# '''
+# format = "₿$text.pango-str()"
+# json = true
+
+# [[block]]
+# block = "custom"
+# shell="bash"
+# interval = 10
+# command = '''
+#   coinvalue="$(wget -q -O- https://api.binance.com/api/v3/ticker/price\?symbol\=ETHEUR | jq -r ".price | tonumber | floor")"
+#   state="Idle"
+#   if $(( coinvalue > 4000 )); then
+#     state="Good"
+#   elif $(( coinvalue < 3400 )); then
+#     state="Info"
+#   elif $(( coinvalue < 3300 )); then
+#     state="Warning"
+#   elif $(( coinvalue < 3000 )); then
+#     state="Critical"
+#   fi
+#   echo "{\"state\":\"$state\", \"text\": \"$coinvalue\"}"
+# '''
+# format = "⟠$text.pango-str()"
+# json = true
+
 [[block]]
 block = "disk_space"
 path = "/"
@@ -67,6 +112,12 @@ format_alt = " {ip}"
 inactive_format = ""
 missing_format = ""
 
+# [[block]]
+# block = "custom"
+# command = '''if ! ping -W 10 -c 1 1.1.1.1 &> /dev/null; then echo "❌"; else echo "🟢"; fi'''
+# format = "$text"
+# interval = 15
+
 [[block]]
 block = "net"
 device = "wlp3s0"
@@ -76,7 +127,19 @@ interval = 5
 inactive_format = ""
 missing_format = ""
 
+# [[block]]
+# block = "time"
+# interval = 5
+# format = " $icon $timestamp.datetime(f:'%d/%m %R')"
+# timezone = "Asia/Bangkok"
+
 [[block]]
 block = "time"
 interval = 5
-format = " $icon $timestamp.datetime(f:'%d/%m %R')"
+format = " $timestamp.datetime(f:'%R')"
+timezone = "Europe/Berlin"
+
+# block = "time"
+# interval = 5
+# format = "|%R"
+
