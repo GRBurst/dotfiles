@@ -17,6 +17,7 @@
     ./features/kitty.nix
     ./features/misc.nix
     ./features/nvf.nix
+    ./features/rofi.nix
     ./features/shellAliases.nix
     ./features/style
     ./features/waybar.nix

@@ -73,6 +73,71 @@ in {
     color15 ${palette.bright.white}
   '';
 
+  mkRofiTheme = palette: ''
+    * {
+      background: ${palette.primary.background};
+      foreground: ${palette.primary.foreground};
+      accent: ${palette.normal.blue};
+      muted: ${palette.bright.black};
+      urgent: ${palette.normal.red};
+
+      background-color: @background;
+      text-color: @foreground;
+      border-color: @accent;
+    }
+
+    window {
+      background-color: @background;
+      border: 2px;
+      border-color: @accent;
+      padding: 8px;
+    }
+
+    mainbox {
+      background-color: @background;
+    }
+
+    inputbar {
+      background-color: @background;
+      text-color: @foreground;
+      padding: 6px;
+    }
+
+    prompt, entry {
+      text-color: @foreground;
+    }
+
+    listview {
+      background-color: @background;
+      lines: 8;
+    }
+
+    element {
+      background-color: @background;
+      text-color: @foreground;
+      padding: 4px 6px;
+    }
+
+    element selected {
+      background-color: @accent;
+      text-color: @background;
+    }
+
+    element urgent {
+      background-color: @urgent;
+      text-color: @background;
+    }
+
+    mode-switcher {
+      background-color: @background;
+    }
+
+    button selected {
+      background-color: @accent;
+      text-color: @background;
+    }
+  '';
+
   mkYaziFlavor = palette: ''
     [mgr]
     cwd = { fg = "${palette.normal.blue}" }

@@ -46,6 +46,7 @@
   pallonI3StatusText = pallonFiles."i3status-rust/config.toml".text or "";
   pallonI3StatusThemePath = "${pallonHome.xdg.configHome}/my/theme/current/i3status-rust.toml";
   jeliasI3StatusThemePath = "${jeliasHome.xdg.configHome}/my/theme/current/i3status-rust.toml";
+  pallonRofiConfigText = pallonHome.home.file."${pallonHome.programs.rofi.configPath}".text or "";
   i3ConfigText = pallonHome.xdg.configFile."i3/config".text;
   i3ConfigFiles = builtins.attrValues pallonHome.xdg.configFile;
   pallonI3ThemeText = pallonFiles."my/theme/current/i3.conf".text or "";
@@ -1090,10 +1091,24 @@ in {
     }
     {
       condition =
+        pallonHome.my.hm.features.rofi.enable
+        && jeliasHome.my.hm.features.rofi.enable
+        && pallonHome.programs.rofi.enable
+        && jeliasHome.programs.rofi.enable;
+      message = "both users must enable managed rofi";
+    }
+    {
+      condition =
         pallonHome.my.hm.features.style.adapters.yazi.enable
         && !pallonHome.my.hm.features.style.adapters.ghostty.enable
         && !pallonHome.my.hm.features.style.adapters.vscode.enable;
       message = "style must enable Yazi adapter and keep Ghostty/VSCode stubs disabled";
+    }
+    {
+      condition =
+        pallonHome.my.hm.features.style.adapters.rofi.enable
+        && jeliasHome.my.hm.features.style.adapters.rofi.enable;
+      message = "style must enable rofi adapter when rofi feature is enabled";
     }
     {
       condition =
@@ -1103,6 +1118,17 @@ in {
         && pallonHome.programs.yazi.flavors ? "enfocado-dark"
         && pallonHome.programs.yazi.flavors ? "enfocado-light";
       message = "Yazi must use generated Enfocado light/dark flavors";
+    }
+    {
+      condition = lib.hasInfix "~/.config/my/theme/current/rofi.rasi" pallonRofiConfigText;
+      message = "rofi config must use the dynamic current theme";
+    }
+    {
+      condition =
+        lib.hasInfix "#ffffff" pallonFiles."my/theme/rofi/light.rasi".text
+        && lib.hasInfix "#181818" pallonFiles."my/theme/rofi/dark.rasi".text
+        && lib.hasInfix "#0064e4" pallonFiles."my/theme/rofi/light.rasi".text;
+      message = "rofi light/dark themes must be generated from Enfocado";
     }
     {
       condition = pallonHome.services.darkman.enable == true && jeliasHome.services.darkman.enable == true;
@@ -1121,13 +1147,15 @@ in {
       message = "earth NixOS portal Settings backend must be darkman";
     }
     {
-      condition = builtins.any
+      condition =
+        builtins.any
         (p: (p.pname or p.name or "") == "darkman")
         andromeda.xdg.portal.extraPortals;
       message = "andromeda NixOS portal backends must include darkman";
     }
     {
-      condition = builtins.any
+      condition =
+        builtins.any
         (p: (p.pname or p.name or "") == "darkman")
         earth.xdg.portal.extraPortals;
       message = "earth NixOS portal backends must include darkman";
@@ -1245,6 +1273,7 @@ in {
       "$XDG_CONFIG_HOME/my/theme/i3" \
       "$XDG_CONFIG_HOME/my/theme/i3status-rust" \
       "$XDG_CONFIG_HOME/my/theme/hyprland" \
+      "$XDG_CONFIG_HOME/my/theme/rofi" \
       "$XDG_CONFIG_HOME/my/theme/waybar"
 
     touch "$XDG_CONFIG_HOME/my/theme/alacritty/enfocado_light.toml"
@@ -1255,6 +1284,8 @@ in {
     touch "$XDG_CONFIG_HOME/my/theme/i3status-rust/enfocado_dark.toml"
     touch "$XDG_CONFIG_HOME/my/theme/hyprland/light.conf"
     touch "$XDG_CONFIG_HOME/my/theme/hyprland/dark.conf"
+    touch "$XDG_CONFIG_HOME/my/theme/rofi/light.rasi"
+    touch "$XDG_CONFIG_HOME/my/theme/rofi/dark.rasi"
     touch "$XDG_CONFIG_HOME/my/theme/waybar/light.css"
     touch "$XDG_CONFIG_HOME/my/theme/waybar/dark.css"
 
@@ -1264,6 +1295,7 @@ in {
 
     ${pallonHome.my.hm.features.style.dispatcher.package}/bin/my-style-switch dark
     test "$(cat "$XDG_STATE_HOME/my-theme/mode")" = dark
+    test "$(readlink "$XDG_CONFIG_HOME/my/theme/current/rofi.rasi")" = "$XDG_CONFIG_HOME/my/theme/rofi/dark.rasi"
     test "$(readlink "$XDG_CONFIG_HOME/my/theme/current/waybar.css")" = "$XDG_CONFIG_HOME/my/theme/waybar/dark.css"
 
     if ${pallonHome.my.hm.features.style.dispatcher.package}/bin/my-style-switch invalid; then

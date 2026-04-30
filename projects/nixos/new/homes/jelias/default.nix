@@ -107,6 +107,7 @@
       gnome.enable = true;
       nvf.enable = true;
       misc.enable = true;
+      rofi.enable = true;
       shellAliases.enable = true;
       style.enable = true;
       waybar.enable = true;

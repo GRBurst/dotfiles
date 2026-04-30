@@ -57,6 +57,7 @@
       switch_link "$theme_dir/i3/$mode.conf" "$current_dir/i3.conf"
       switch_link "$theme_dir/i3status-rust/enfocado_$mode.toml" "$current_dir/i3status-rust.toml"
       switch_link "$theme_dir/hyprland/$mode.conf" "$current_dir/hyprland.conf"
+      switch_link "$theme_dir/rofi/$mode.rasi" "$current_dir/rofi.rasi"
       switch_link "$theme_dir/waybar/$mode.css" "$current_dir/waybar.css"
 
       printf '%s\n' "$mode" > "$state_dir/mode"
@@ -132,6 +133,10 @@ in {
         type = lib.types.bool;
         default = enabled ["my" "hm" "features" "kitty" "enable"];
       };
+      rofi.enable = lib.mkOption {
+        type = lib.types.bool;
+        default = enabled ["my" "hm" "features" "rofi" "enable"];
+      };
       yazi.enable = lib.mkOption {
         type = lib.types.bool;
         default = enabled ["my" "hm" "features" "yazi" "enable"];
@@ -205,6 +210,12 @@ in {
       xdg.configFile."kitty/light-theme.auto.conf".text = style.mkKittyTheme palettes.light;
       xdg.configFile."kitty/dark-theme.auto.conf".text = style.mkKittyTheme palettes.dark;
       xdg.configFile."kitty/no-preference-theme.auto.conf".text = style.mkKittyTheme defaultPalette;
+    })
+
+    (lib.mkIf cfg.adapters.rofi.enable {
+      xdg.configFile."my/theme/rofi/light.rasi".text = style.mkRofiTheme palettes.light;
+      xdg.configFile."my/theme/rofi/dark.rasi".text = style.mkRofiTheme palettes.dark;
+      xdg.configFile."my/theme/current/rofi.rasi".text = style.mkRofiTheme defaultPalette;
     })
 
     (lib.mkIf cfg.adapters.yazi.enable {
