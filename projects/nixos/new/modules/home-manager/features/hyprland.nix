@@ -44,9 +44,16 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    xdg.configFile."uwsm/env".source = "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh";
+
+    # NixOS owns Hyprland and xdg-desktop-portal-hyprland packages.
+    xdg.portal.enable = lib.mkForce false;
+
     wayland.windowManager.hyprland = {
       enable = true;
-      systemd.enable = true;
+      systemd.enable = false;
+      package = null;
+      portalPackage = null;
       xwayland.enable = true;
 
       settings = {

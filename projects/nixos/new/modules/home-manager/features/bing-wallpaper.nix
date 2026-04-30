@@ -285,6 +285,25 @@ in {
 
           preferred_monitor=${lib.escapeShellArg hyprlandPrimaryMonitor}
 
+          set_hyprpaper_wallpaper() {
+            monitor="$1"
+            path="$2"
+            attempts=0
+
+            while [ "$attempts" -lt 5 ]; do
+              if hyprctl hyprpaper wallpaper "$monitor, $path, cover"; then
+                return 0
+              fi
+
+              attempts="$((attempts + 1))"
+              if [ "$attempts" -lt 5 ]; then
+                sleep 1
+              fi
+            done
+
+            return 1
+          }
+
           if command -v hyprctl >/dev/null 2>&1 && monitors_json="$(hyprctl monitors -j 2>/dev/null)"; then
             primary="$(
               printf '%s' "$monitors_json" |
@@ -297,14 +316,14 @@ in {
             )"
 
             [ -n "$primary" ] || exit 1
-            hyprctl hyprpaper wallpaper "$primary, $1, cover"
+            set_hyprpaper_wallpaper "$primary" "$1" || exit 1
 
             if [ "$#" -ge 2 ]; then
               printf '%s' "$monitors_json" |
                 jq -r --arg primary "$primary" '.[] | select(.name != $primary) | .name' |
                 while IFS= read -r monitor; do
                   [ -n "$monitor" ] || continue
-                  hyprctl hyprpaper wallpaper "$monitor, $2, cover"
+                  set_hyprpaper_wallpaper "$monitor" "$2" || exit 1
                 done
             fi
           elif [ -n "''${DISPLAY:-}" ]; then

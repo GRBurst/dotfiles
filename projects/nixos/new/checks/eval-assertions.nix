@@ -288,6 +288,21 @@ in {
     cfgs.earth.config.programs.hyprland.withUWSM
     "earth hyprland must use UWSM";
 
+  andromeda-hyprland-uwsm =
+    mkCheck "andromeda-hyprland-uwsm"
+    cfgs.andromeda.config.programs.hyprland.withUWSM
+    "andromeda hyprland must use UWSM";
+
+  earth-hyprland-package-present =
+    mkCheck "earth-hyprland-package-present"
+    (cfgs.earth.config.programs.hyprland.package != null)
+    "earth NixOS Hyprland package must be present";
+
+  andromeda-hyprland-package-present =
+    mkCheck "andromeda-hyprland-package-present"
+    (cfgs.andromeda.config.programs.hyprland.package != null)
+    "andromeda NixOS Hyprland package must be present";
+
   earth-hyprlock-pam =
     mkCheck "earth-hyprlock-pam"
     (cfgs.earth.config.security.pam.services ? hyprlock)
@@ -317,6 +332,86 @@ in {
     mkCheck "andromeda-hm-hyprland-enabled"
     cfgs.andromeda.config.home-manager.users.pallon.wayland.windowManager.hyprland.enable
     "andromeda pallon must enable HM hyprland";
+
+  earth-hm-hyprland-systemd-disabled =
+    mkCheck "earth-hm-hyprland-systemd-disabled"
+    (!cfgs.earth.config.home-manager.users.jelias.wayland.windowManager.hyprland.systemd.enable)
+    "earth HM Hyprland systemd integration must be disabled for UWSM";
+
+  andromeda-hm-hyprland-systemd-disabled =
+    mkCheck "andromeda-hm-hyprland-systemd-disabled"
+    (!cfgs.andromeda.config.home-manager.users.pallon.wayland.windowManager.hyprland.systemd.enable)
+    "andromeda HM Hyprland systemd integration must be disabled for UWSM";
+
+  earth-hm-hyprland-package-null =
+    mkCheck "earth-hm-hyprland-package-null"
+    (cfgs.earth.config.home-manager.users.jelias.wayland.windowManager.hyprland.package == null)
+    "earth HM Hyprland package must be null to use NixOS module package";
+
+  andromeda-hm-hyprland-package-null =
+    mkCheck "andromeda-hm-hyprland-package-null"
+    (cfgs.andromeda.config.home-manager.users.pallon.wayland.windowManager.hyprland.package == null)
+    "andromeda HM Hyprland package must be null to use NixOS module package";
+
+  earth-hm-hyprland-portal-package-null =
+    mkCheck "earth-hm-hyprland-portal-package-null"
+    (cfgs.earth.config.home-manager.users.jelias.wayland.windowManager.hyprland.portalPackage == null)
+    "earth HM Hyprland portalPackage must be null to use NixOS module portal package";
+
+  andromeda-hm-hyprland-portal-package-null =
+    mkCheck "andromeda-hm-hyprland-portal-package-null"
+    (cfgs.andromeda.config.home-manager.users.pallon.wayland.windowManager.hyprland.portalPackage == null)
+    "andromeda HM Hyprland portalPackage must be null to use NixOS module portal package";
+
+  earth-hm-hyprland-final-package-null =
+    mkCheck "earth-hm-hyprland-final-package-null"
+    (cfgs.earth.config.home-manager.users.jelias.wayland.windowManager.hyprland.finalPackage == null)
+    "earth HM Hyprland finalPackage must resolve to null";
+
+  andromeda-hm-hyprland-final-package-null =
+    mkCheck "andromeda-hm-hyprland-final-package-null"
+    (cfgs.andromeda.config.home-manager.users.pallon.wayland.windowManager.hyprland.finalPackage == null)
+    "andromeda HM Hyprland finalPackage must resolve to null";
+
+  earth-hm-hyprland-final-portal-package-null =
+    mkCheck "earth-hm-hyprland-final-portal-package-null"
+    (cfgs.earth.config.home-manager.users.jelias.wayland.windowManager.hyprland.finalPortalPackage == null)
+    "earth HM Hyprland finalPortalPackage must resolve to null";
+
+  andromeda-hm-hyprland-final-portal-package-null =
+    mkCheck "andromeda-hm-hyprland-final-portal-package-null"
+    (cfgs.andromeda.config.home-manager.users.pallon.wayland.windowManager.hyprland.finalPortalPackage == null)
+    "andromeda HM Hyprland finalPortalPackage must resolve to null";
+
+  earth-hm-hyprland-session-target-absent =
+    mkCheck "earth-hm-hyprland-session-target-absent"
+    (!(cfgs.earth.config.home-manager.users.jelias.systemd.user.targets ? "hyprland-session"))
+    "earth HM must not generate hyprland-session.target for UWSM";
+
+  andromeda-hm-hyprland-session-target-absent =
+    mkCheck "andromeda-hm-hyprland-session-target-absent"
+    (!(cfgs.andromeda.config.home-manager.users.pallon.systemd.user.targets ? "hyprland-session"))
+    "andromeda HM must not generate hyprland-session.target for UWSM";
+
+  earth-hm-xdg-portal-disabled =
+    mkCheck "earth-hm-xdg-portal-disabled"
+    (!cfgs.earth.config.home-manager.users.jelias.xdg.portal.enable)
+    "earth HM xdg portal must be disabled because NixOS owns portals";
+
+  andromeda-hm-xdg-portal-disabled =
+    mkCheck "andromeda-hm-xdg-portal-disabled"
+    (!cfgs.andromeda.config.home-manager.users.pallon.xdg.portal.enable)
+    "andromeda HM xdg portal must be disabled because NixOS owns portals";
+
+  earth-hm-uwsm-env =
+    mkCheck "earth-hm-uwsm-env"
+    (cfgs.earth.config.home-manager.users.jelias.xdg.configFile ? "uwsm/env")
+    "earth HM must export session variables for UWSM";
+
+  andromeda-hm-uwsm-env =
+    mkCheck "andromeda-hm-uwsm-env"
+    (cfgs.andromeda.config.home-manager.users.pallon.xdg.configFile ? "uwsm/env")
+    "andromeda HM must export session variables for UWSM";
 
   earth-hm-waybar-enabled =
     mkCheck "earth-hm-waybar-enabled"
@@ -635,6 +730,111 @@ in {
     printf '%s\n%s\n' \
       "eDP-1, /cache/bing.jpg, cover" \
       "DP-4, /cache/nasa.jpg, cover" > expected
+    cmp expected "$PWD/hyprctl.out"
+    touch "$out"
+  '';
+
+  bing-wallpaper-hyprland-missing-primary-falls-back = pkgs.runCommand "bing-wallpaper-hyprland-missing-primary-falls-back" {} ''
+    mkdir -p "$PWD/bin"
+    export PATH="$PWD/bin:${lib.makeBinPath [pkgs.coreutils pkgs.diffutils pkgs.jq]}"
+    cat > "$PWD/bin/hyprctl" <<'EOF'
+    #!${pkgs.runtimeShell}
+    if [ "$1" = monitors ] && [ "$2" = -j ]; then
+      printf '[{"name":"DP-4"},{"name":"HDMI-A-1"}]\n'
+      exit 0
+    fi
+    if [ "$1" = hyprpaper ] && [ "$2" = wallpaper ]; then
+      printf '%s\n' "$3" >> "$PWD/hyprctl.out"
+      exit 0
+    fi
+    exit 1
+    EOF
+    chmod +x "$PWD/bin/hyprctl"
+
+    ${bingWallpaperDefaultSetter} /cache/bing.jpg /cache/nasa.jpg
+
+    printf '%s\n%s\n' \
+      "DP-4, /cache/bing.jpg, cover" \
+      "HDMI-A-1, /cache/nasa.jpg, cover" > expected
+    cmp expected "$PWD/hyprctl.out"
+    touch "$out"
+  '';
+
+  bing-wallpaper-hyprland-single-monitor-one-call = pkgs.runCommand "bing-wallpaper-hyprland-single-monitor-one-call" {} ''
+    mkdir -p "$PWD/bin"
+    export PATH="$PWD/bin:${lib.makeBinPath [pkgs.coreutils pkgs.diffutils pkgs.jq]}"
+    cat > "$PWD/bin/hyprctl" <<'EOF'
+    #!${pkgs.runtimeShell}
+    if [ "$1" = monitors ] && [ "$2" = -j ]; then
+      printf '[{"name":"eDP-1"}]\n'
+      exit 0
+    fi
+    if [ "$1" = hyprpaper ] && [ "$2" = wallpaper ]; then
+      printf '%s\n' "$3" >> "$PWD/hyprctl.out"
+      exit 0
+    fi
+    exit 1
+    EOF
+    chmod +x "$PWD/bin/hyprctl"
+
+    ${bingWallpaperDefaultSetter} /cache/bing.jpg /cache/nasa.jpg
+
+    printf '%s\n' "eDP-1, /cache/bing.jpg, cover" > expected
+    cmp expected "$PWD/hyprctl.out"
+    touch "$out"
+  '';
+
+  bing-wallpaper-hyprland-one-path-keeps-secondary = pkgs.runCommand "bing-wallpaper-hyprland-one-path-keeps-secondary" {} ''
+    mkdir -p "$PWD/bin"
+    export PATH="$PWD/bin:${lib.makeBinPath [pkgs.coreutils pkgs.diffutils pkgs.jq]}"
+    cat > "$PWD/bin/hyprctl" <<'EOF'
+    #!${pkgs.runtimeShell}
+    if [ "$1" = monitors ] && [ "$2" = -j ]; then
+      printf '[{"name":"eDP-1"},{"name":"DP-4"}]\n'
+      exit 0
+    fi
+    if [ "$1" = hyprpaper ] && [ "$2" = wallpaper ]; then
+      printf '%s\n' "$3" >> "$PWD/hyprctl.out"
+      exit 0
+    fi
+    exit 1
+    EOF
+    chmod +x "$PWD/bin/hyprctl"
+
+    ${bingWallpaperDefaultSetter} /cache/bing.jpg
+
+    printf '%s\n' "eDP-1, /cache/bing.jpg, cover" > expected
+    cmp expected "$PWD/hyprctl.out"
+    touch "$out"
+  '';
+
+  bing-wallpaper-hyprland-wallpaper-retries = pkgs.runCommand "bing-wallpaper-hyprland-wallpaper-retries" {} ''
+    mkdir -p "$PWD/bin"
+    export PATH="$PWD/bin:${lib.makeBinPath [pkgs.coreutils pkgs.diffutils pkgs.jq]}"
+    cat > "$PWD/bin/hyprctl" <<'EOF'
+    #!${pkgs.runtimeShell}
+    if [ "$1" = monitors ] && [ "$2" = -j ]; then
+      printf '[{"name":"eDP-1"}]\n'
+      exit 0
+    fi
+    if [ "$1" = hyprpaper ] && [ "$2" = wallpaper ]; then
+      count="$(cat "$PWD/wallpaper-count" 2>/dev/null || printf 0)"
+      count="$((count + 1))"
+      printf '%s\n' "$count" > "$PWD/wallpaper-count"
+      if [ "$count" -eq 1 ]; then
+        exit 1
+      fi
+      printf '%s\n' "$3" >> "$PWD/hyprctl.out"
+      exit 0
+    fi
+    exit 1
+    EOF
+    chmod +x "$PWD/bin/hyprctl"
+
+    ${bingWallpaperDefaultSetter} /cache/bing.jpg
+
+    test "$(cat "$PWD/wallpaper-count")" = 2
+    printf '%s\n' "eDP-1, /cache/bing.jpg, cover" > expected
     cmp expected "$PWD/hyprctl.out"
     touch "$out"
   '';
