@@ -172,10 +172,20 @@ in {
     cfgs.earth.config.services.displayManager.gdm.enable
     "earth must use gdm";
 
-  andromeda-dm-sddm =
-    mkCheck "andromeda-dm-sddm"
-    cfgs.andromeda.config.services.displayManager.sddm.enable
-    "andromeda must still use sddm";
+  andromeda-dm-gdm =
+    mkCheck "andromeda-dm-gdm"
+    cfgs.andromeda.config.services.displayManager.gdm.enable
+    "andromeda must use gdm";
+
+  andromeda-dm-sddm-disabled =
+    mkCheck "andromeda-dm-sddm-disabled"
+    (!cfgs.andromeda.config.services.displayManager.sddm.enable)
+    "andromeda must not use sddm";
+
+  andromeda-dm-default-session-null =
+    mkCheck "andromeda-dm-default-session-null"
+    (cfgs.andromeda.config.services.displayManager.defaultSession == null)
+    "andromeda gdm must leave defaultSession unset";
 
   earth-firewall-k3s = let
     ports = cfgs.earth.config.networking.firewall.allowedTCPPorts;
@@ -584,8 +594,25 @@ in {
 
   andromeda-bing-wallpaper-user-service =
     mkCheck "andromeda-bing-wallpaper-user-service"
-    (pallonHome.systemd.user.services.bing-wallpaper.Service.Type == "oneshot")
-    "Bing wallpaper service must be oneshot";
+    (
+      pallonHome.systemd.user.services.bing-wallpaper.Service.Type
+      == "oneshot"
+      && pallonHome.systemd.user.services.bing-wallpaper.Service.ExecStart
+      == ["${pallonHome.my.hm.features.bingWallpaper.package}/bin/my-bing-wallpaper refresh-if-stale"]
+    )
+    "Bing wallpaper timer service must run refresh-if-stale";
+
+  andromeda-bing-wallpaper-login-service =
+    mkCheck "andromeda-bing-wallpaper-login-service"
+    (
+      pallonHome.systemd.user.services.bing-wallpaper-login.Service.ExecStart
+      == ["${pallonHome.my.hm.features.bingWallpaper.package}/bin/my-bing-wallpaper login"]
+      && pallonHome.systemd.user.services.bing-wallpaper-login.Unit.PartOf
+      == ["graphical-session.target"]
+      && pallonHome.systemd.user.services.bing-wallpaper-login.Install.WantedBy
+      == ["graphical-session.target"]
+    )
+    "Bing wallpaper login service must run from graphical-session.target";
 
   andromeda-bing-wallpaper-user-timer =
     mkCheck "andromeda-bing-wallpaper-user-timer"
@@ -892,6 +919,103 @@ in {
     touch "$out"
   '';
 
+  bing-wallpaper-login-fresh-cache-skips-fetch = pkgs.runCommand "bing-wallpaper-login-fresh-cache-skips-fetch" {} ''
+    export HOME="$PWD/home"
+    export XDG_CACHE_HOME="$PWD/cache"
+    out_dir="$XDG_CACHE_HOME/bing-wallpaper"
+    mkdir -p "$out_dir"
+
+    printf 'cached\n' > "$out_dir/cached.jpg"
+    printf '%s\n' "$out_dir/cached.jpg" > "$out_dir/latest-paths"
+    today="$(date +%F)"
+    printf '{"version":1,"refreshedDate":"%s","market":"de-DE","displayPaths":["%s"],"bingStartdate":"20260429","nasaDate":null}\n' "$today" "$out_dir/cached.jpg" > "$out_dir/state.json"
+
+    printf 'fresh-fetch\n' > "$PWD/fresh-fetch.jpg"
+    printf '{"images":[{"urlbase":"/unused/fresh","url":"file://%s","startdate":"20260430"}]}\n' "$PWD/fresh-fetch.jpg" > "$PWD/bing.json"
+
+    export BING_WALLPAPER_BING_API="file://$PWD/bing.json"
+    export BING_WALLPAPER_TEST_OUT="$PWD/setter.out"
+
+    ${bingWallpaperTestPackage}/bin/my-bing-wallpaper login
+
+    printf '%s\n' "$out_dir/cached.jpg" > expected
+    cmp expected "$BING_WALLPAPER_TEST_OUT"
+    grep -F "$out_dir/cached.jpg" "$out_dir/state.json"
+    test ! -e "$out_dir/20260430_0.jpg"
+    touch "$out"
+  '';
+
+  bing-wallpaper-login-stale-cache-refreshes = pkgs.runCommand "bing-wallpaper-login-stale-cache-refreshes" {} ''
+    export HOME="$PWD/home"
+    export XDG_CACHE_HOME="$PWD/cache"
+    out_dir="$XDG_CACHE_HOME/bing-wallpaper"
+    mkdir -p "$out_dir"
+
+    printf 'cached\n' > "$out_dir/cached.jpg"
+    printf '%s\n' "$out_dir/cached.jpg" > "$out_dir/latest-paths"
+    printf '{"version":1,"refreshedDate":"2026-01-01","market":"de-DE","displayPaths":["%s"],"bingStartdate":"20260101","nasaDate":null}\n' "$out_dir/cached.jpg" > "$out_dir/state.json"
+
+    printf 'refreshed\n' > "$PWD/refreshed.jpg"
+    printf '{"images":[{"urlbase":"/unused/refreshed","url":"file://%s","startdate":"20260430"}]}\n' "$PWD/refreshed.jpg" > "$PWD/bing.json"
+
+    export BING_WALLPAPER_BING_API="file://$PWD/bing.json"
+    export BING_WALLPAPER_TEST_OUT="$PWD/setter.out"
+
+    ${bingWallpaperTestPackage}/bin/my-bing-wallpaper login
+
+    printf '%s\n' "$out_dir/20260430_0.jpg" > expected
+    cmp expected "$BING_WALLPAPER_TEST_OUT"
+    cmp expected "$out_dir/latest-paths"
+    grep -F '"refreshedDate": "'"$(date +%F)"'"' "$out_dir/state.json"
+    grep -F '"bingStartdate": "20260430"' "$out_dir/state.json"
+    touch "$out"
+  '';
+
+  bing-wallpaper-login-stale-fetch-failure-keeps-cache = pkgs.runCommand "bing-wallpaper-login-stale-fetch-failure-keeps-cache" {} ''
+    export HOME="$PWD/home"
+    export XDG_CACHE_HOME="$PWD/cache"
+    out_dir="$XDG_CACHE_HOME/bing-wallpaper"
+    mkdir -p "$out_dir"
+
+    printf 'cached\n' > "$out_dir/cached.jpg"
+    printf '%s\n' "$out_dir/cached.jpg" > "$out_dir/latest-paths"
+    printf '{"version":1,"refreshedDate":"2026-01-01","market":"de-DE","displayPaths":["%s"],"bingStartdate":"20260101","nasaDate":null}\n' "$out_dir/cached.jpg" > "$out_dir/state.json"
+
+    export BING_WALLPAPER_BING_API="file://$PWD/missing.json"
+    export BING_WALLPAPER_TEST_OUT="$PWD/setter.out"
+
+    ${bingWallpaperTestPackage}/bin/my-bing-wallpaper login 2>stderr
+
+    printf '%s\n' "$out_dir/cached.jpg" > expected
+    cmp expected "$BING_WALLPAPER_TEST_OUT"
+    grep -F "Failed to fetch Bing metadata" stderr
+    touch "$out"
+  '';
+
+  bing-wallpaper-refresh-if-stale-skips-when-fresh = pkgs.runCommand "bing-wallpaper-refresh-if-stale-skips-when-fresh" {} ''
+    export HOME="$PWD/home"
+    export XDG_CACHE_HOME="$PWD/cache"
+    out_dir="$XDG_CACHE_HOME/bing-wallpaper"
+    mkdir -p "$out_dir"
+
+    printf 'cached\n' > "$out_dir/cached.jpg"
+    printf '%s\n' "$out_dir/cached.jpg" > "$out_dir/latest-paths"
+    today="$(date +%F)"
+    printf '{"version":1,"refreshedDate":"%s","market":"de-DE","displayPaths":["%s"],"bingStartdate":"20260429","nasaDate":null}\n' "$today" "$out_dir/cached.jpg" > "$out_dir/state.json"
+
+    printf 'fresh-fetch\n' > "$PWD/fresh-fetch.jpg"
+    printf '{"images":[{"urlbase":"/unused/fresh","url":"file://%s","startdate":"20260430"}]}\n' "$PWD/fresh-fetch.jpg" > "$PWD/bing.json"
+
+    export BING_WALLPAPER_BING_API="file://$PWD/bing.json"
+    export BING_WALLPAPER_TEST_OUT="$PWD/setter.out"
+
+    ${bingWallpaperTestPackage}/bin/my-bing-wallpaper refresh-if-stale
+
+    test ! -e "$BING_WALLPAPER_TEST_OUT"
+    test ! -e "$out_dir/20260430_0.jpg"
+    touch "$out"
+  '';
+
   nvf-config = mkAssertionCheck "nvf-config" [
     {
       condition = andromeda.home-manager.users.pallon.my.hm.features.nvf.enable == true;
@@ -987,6 +1111,38 @@ in {
     {
       condition = pallonHome.services.darkman.settings.portal == true && jeliasHome.services.darkman.settings.portal == true;
       message = "darkman must expose the XDG Settings portal";
+    }
+    {
+      condition = andromeda.xdg.portal.config.common."org.freedesktop.impl.portal.Settings" == "darkman";
+      message = "andromeda NixOS portal Settings backend must be darkman";
+    }
+    {
+      condition = earth.xdg.portal.config.common."org.freedesktop.impl.portal.Settings" == "darkman";
+      message = "earth NixOS portal Settings backend must be darkman";
+    }
+    {
+      condition = builtins.any
+        (p: (p.pname or p.name or "") == "darkman")
+        andromeda.xdg.portal.extraPortals;
+      message = "andromeda NixOS portal backends must include darkman";
+    }
+    {
+      condition = builtins.any
+        (p: (p.pname or p.name or "") == "darkman")
+        earth.xdg.portal.extraPortals;
+      message = "earth NixOS portal backends must include darkman";
+    }
+    {
+      condition = !pallonHome.xdg.portal.enable && !jeliasHome.xdg.portal.enable;
+      message = "Home Manager portals must stay disabled because NixOS owns portal services";
+    }
+    {
+      condition = builtins.any (p: (p.pname or p.name or "") == "xdg-desktop-portal-gtk") andromeda.xdg.portal.extraPortals;
+      message = "andromeda NixOS portals must include xdg-desktop-portal-gtk as fallback";
+    }
+    {
+      condition = builtins.any (p: (p.pname or p.name or "") == "xdg-desktop-portal-gtk") earth.xdg.portal.extraPortals;
+      message = "earth NixOS portals must include xdg-desktop-portal-gtk as fallback";
     }
     {
       condition =
@@ -1129,6 +1285,9 @@ in {
         && lib.hasInfix "my-style-switch" themeDoc
         && lib.hasInfix "darkman set light" themeDoc
         && lib.hasInfix "org.freedesktop.appearance color-scheme" themeDoc
+        && lib.hasInfix "browser portal validation" themeDoc
+        && lib.hasInfix "darkman.portal" themeDoc
+        && lib.hasInfix ''matchMedia("(prefers-color-scheme: dark)")'' themeDoc
         && lib.hasInfix "pallon@andromeda" themeDoc;
       message = "theme operations document must cover runtime validation";
     }

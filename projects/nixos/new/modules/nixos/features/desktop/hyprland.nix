@@ -18,7 +18,10 @@ in {
     xdg.portal = {
       enable = true;
       config.common.default = "*";
-      extraPortals = [pkgs.xdg-desktop-portal-hyprland];
+      extraPortals = with pkgs; [
+        xdg-desktop-portal-hyprland
+        xdg-desktop-portal-gtk
+      ];
     };
 
     security.pam.services.hyprlock = {};

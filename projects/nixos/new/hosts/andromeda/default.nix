@@ -102,8 +102,8 @@
             options = "grp:menu_toggle";
           };
         };
-        displayManager = "sddm";
-        defaultSession = "none+i3";
+        displayManager = "gdm";
+        defaultSession = null;
       };
       firefox.enable = true;
       fonts.enable = true;

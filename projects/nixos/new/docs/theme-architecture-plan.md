@@ -40,7 +40,7 @@ Goals:
 
 ## Current Implementation Status
 
-Status: dynamic Enfocado implementation, runtime dispatcher checks, and operations documentation are in place and evaluate successfully.
+Status: dynamic Enfocado implementation, active NixOS portal ownership including backend selection and backend discovery, runtime dispatcher checks, and operations documentation are in place and evaluate successfully.
 
 Implemented:
 
@@ -49,7 +49,9 @@ Implemented:
 - Legacy `my.nixos.features.stylix` converted into a migration shim that enables `style` and keeps Stylix `autoEnable = false`.
 - Home Manager API `my.hm.features.style` in `modules/home-manager/features/style/default.nix`.
 - Per-user `darkman` with `portal = true`, manual host location, and a `my-style-switch` dispatcher.
-- XDG Settings portal provider merged as `org.freedesktop.impl.portal.Settings = "darkman"` while preserving existing portal defaults.
+- Active NixOS XDG portal config selects `org.freedesktop.impl.portal.Settings = "darkman"` while preserving existing portal defaults.
+- NixOS includes `pkgs.darkman` in `xdg.portal.extraPortals`, making `darkman.portal` discoverable through `/run/current-system/sw/share/xdg-desktop-portal/portals`.
+- Home Manager portal config is not the active source in Hyprland/UWSM sessions; NixOS owns the portal services and Home Manager portals stay disabled.
 - Generated Enfocado light/dark artifacts for Alacritty, i3, Hyprland, Waybar, Kitty, and Yazi.
 - Runtime switching via state/link updates plus targeted reloads/signals, not whole Home Manager activation.
 - Darkman's generic scripts receive the new mode as `$1`; the generated dispatcher forwards `"$@"` to `my-style-switch`.
@@ -66,6 +68,7 @@ Implemented:
 - Eval assertions cover style enablement, Stylix migration, darkman, portal merging, generated theme artifacts, i3 includes, i3status-rust theme files, Kitty auto files, Yazi flavors, and Neovim signal sync.
 - Eval assertions run `my-style-switch` in a temporary `$HOME` and verify state/current-link switching for light, dark, and invalid modes.
 - `docs/theme-architecture.md` documents operations, portal validation, the app matrix, and live-session validation commands.
+- Browser status: LibreWolf/Firefox, Chromium, and Brave are portal consumers pending live validation through `matchMedia("(prefers-color-scheme: dark)")`; no browser-specific adapter or launch flag has been added.
 
 Verified:
 
@@ -103,6 +106,12 @@ Not implemented yet:
 - Reason: this slice only needs Yazi's native UI theme keys and keeps the adapter minimal; syntax/file preview highlighting can be added later if a real use case appears.
 - Live D-Bus, portal, and desktop-app behavior is not marked verified by `nix flake check`.
 - Reason: the sandbox can prove the generated dispatcher updates state and links, but it cannot prove behavior in the user's graphical D-Bus session. `docs/theme-architecture.md` now records the manual validation commands; `pallon@andromeda` and `jelias@earth` remain explicit follow-ups until run in those sessions.
+- Disabled Home Manager portal config is not used as the active portal source.
+- Reason: this repo's Hyprland/UWSM setup makes NixOS own the portal services. Home Manager still starts `darkman` with portal support, while NixOS selects `darkman` as the active Settings backend.
+- The earlier NixOS portal ownership fix selected `darkman` but did not make the backend descriptor discoverable.
+- Reason: prior eval coverage checked Settings backend selection, not backend availability in `/run/current-system/sw/share/xdg-desktop-portal/portals`.
+- Browser-specific flags such as `--force-dark-mode` and forced GTK themes were not added.
+- Reason: browsers should consume `prefers-color-scheme` from the portal first. Application-specific fallbacks stay deferred until live validation proves a concrete browser needs one.
 
 ## First Step: Read Relevant Files
 

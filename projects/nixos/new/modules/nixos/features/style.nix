@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }: let
   cfg = config.my.nixos.features.style;
@@ -50,6 +51,11 @@ in {
           name = fontCfg.serif.name;
         };
       };
+    };
+
+    xdg.portal = {
+      extraPortals = [pkgs.darkman];
+      config.common."org.freedesktop.impl.portal.Settings" = "darkman";
     };
   };
 }
