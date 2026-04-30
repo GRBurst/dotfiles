@@ -9,6 +9,7 @@
     ./features/alacritty.nix
     ./features/bing-wallpaper.nix
     ./features/dictate.nix
+    ./features/dunst.nix
     ./features/env.nix
     ./features/git.nix
     ./features/gnome.nix
@@ -21,7 +22,6 @@
     ./features/shellAliases.nix
     ./features/style
     ./features/waybar.nix
-    ./features/wired.nix
     ./features/yazi.nix
     ./features/zsh.nix
   ];

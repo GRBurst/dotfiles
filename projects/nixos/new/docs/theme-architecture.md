@@ -50,6 +50,7 @@ Examples:
 ~/.config/my/theme/current/i3.conf
 ~/.config/my/theme/current/i3status-rust.toml
 ~/.config/my/theme/current/hyprland.conf
+~/.config/my/theme/current/dunst.conf
 ~/.config/my/theme/current/rofi.rasi
 ~/.config/my/theme/current/waybar.css
 ```
@@ -106,6 +107,8 @@ i3status-rust reads a generated theme TOML through the current i3status-rust lin
 
 Hyprland sources `~/.config/my/theme/current/hyprland.conf`. The dispatcher updates the current link and runs `hyprctl reload`.
 
+Dunst is started only by the i3 and Hyprland session startup paths with `dunst -config ~/.config/my/theme/current/dunst.conf`. The dispatcher updates the current dunst link and runs `dunstctl reload ~/.config/my/theme/current/dunst.conf`.
+
 Waybar imports CSS from `../my/theme/current/waybar.css`. The dispatcher updates the current link and sends `SIGUSR2` to Waybar.
 
 Rofi reads `~/.config/my/theme/current/rofi.rasi` on each invocation. The dispatcher switches the current rofi theme link; no signal is needed.
@@ -133,6 +136,8 @@ New or refreshed Yazi instances follow the OS light/dark mode through Home Manag
 
 GNOME is a consumer and fallback desktop layer. The dispatcher mirrors the selected mode to `org.gnome.desktop.interface color-scheme`.
 
+GNOME must not start dunst. Dunst is intentionally not enabled through Home Manager's `services.dunst` option or D-Bus activation, so notification ownership stays scoped to i3 and Hyprland sessions.
+
 Redshift is independent. It shares location and timing assumptions with `darkman`, but it is not part of the theme switching path.
 
 Ghostty and VSCode are disabled adapter stubs. They are intentionally future work and should not be treated as active consumers.
@@ -146,6 +151,7 @@ darkman set light
 darkman get
 cat ~/.local/state/my-theme/mode
 readlink ~/.config/my/theme/current/alacritty.toml
+readlink ~/.config/my/theme/current/dunst.conf
 readlink ~/.config/my/theme/current/rofi.rasi
 
 gdbus call --session \
@@ -158,6 +164,7 @@ darkman set dark
 darkman get
 cat ~/.local/state/my-theme/mode
 readlink ~/.config/my/theme/current/alacritty.toml
+readlink ~/.config/my/theme/current/dunst.conf
 readlink ~/.config/my/theme/current/rofi.rasi
 
 gdbus call --session \
@@ -173,11 +180,13 @@ Expected results:
 - `~/.local/state/my-theme/mode` contains `light`.
 - The portal `org.freedesktop.appearance color-scheme` value is `2`.
 - The Alacritty current link points at `enfocado_light.toml`.
+- The Dunst current link points at `light.conf`.
 - The Rofi current link points at `light.rasi`.
 - `darkman get` returns `dark` after `darkman set dark`.
 - `~/.local/state/my-theme/mode` contains `dark`.
 - The portal `org.freedesktop.appearance color-scheme` value is `1`.
 - The Alacritty current link points at `enfocado_dark.toml`.
+- The Dunst current link points at `dark.conf`.
 - The Rofi current link points at `dark.rasi`.
 
 Also check the visible consumers in the same session:
@@ -186,10 +195,12 @@ Also check the visible consumers in the same session:
 - LibreWolf/Firefox, Chromium, and Brave update `matchMedia("(prefers-color-scheme: dark)")` from `false` in light mode to `true` in dark mode, preferably without browser restart.
 - i3 reloads and i3bar colors update.
 - Hyprland reloads without error.
+- Dunst starts in i3 and Hyprland, `notify-send "dunst" "theme test"` displays a notification, and `dunstctl reload ~/.config/my/theme/current/dunst.conf` succeeds.
 - Waybar updates after `SIGUSR2`, or any limitation is recorded in the plan.
 - Kitty follows OS light/dark mode.
 - A running Neovim instance switches after `SIGUSR1`.
 - GNOME `color-scheme` follows the selected mode.
+- GNOME does not autostart dunst; before sending a notification, `pgrep -u "$USER" dunst` is empty in a GNOME session.
 - Yazi uses the light or dark flavor in a new or refreshed instance.
 - Rofi opens in light mode after `darkman set light` and in dark mode after `darkman set dark`.
 

@@ -37,6 +37,7 @@
   pallonHome = andromeda.home-manager.users.pallon;
   jeliasHome = earth.home-manager.users.jelias;
   pallonFiles = pallonHome.xdg.configFile or {};
+  jeliasFiles = jeliasHome.xdg.configFile or {};
   pallonDarkmanScript = pallonHome.services.darkman.scripts."theme-dispatch" or "";
   pallonDarkmanDataScript =
     if pallonHome.xdg.dataFile ? "darkman/theme-dispatch"
@@ -49,6 +50,8 @@
   pallonRofiConfigText = pallonHome.home.file."${pallonHome.programs.rofi.configPath}".text or "";
   i3ConfigText = pallonHome.xdg.configFile."i3/config".text;
   i3ConfigFiles = builtins.attrValues pallonHome.xdg.configFile;
+  dunstCommand = "dunst -config ~/.config/my/theme/current/dunst.conf";
+  pallonDunstCurrentText = pallonFiles."my/theme/current/dunst.conf".text or "";
   pallonI3ThemeText = pallonFiles."my/theme/current/i3.conf".text or "";
   pallonI3LightThemeText = pallonFiles."my/theme/i3/light.conf".text or "";
   pallonI3DarkThemeText = pallonFiles."my/theme/i3/dark.conf".text or "";
@@ -114,6 +117,11 @@
     if builtins.pathExists themeDocPath
     then builtins.readFile themeDocPath
     else "";
+  flakeText = builtins.readFile ../flake.nix;
+  hmDefaultText = builtins.readFile ../modules/home-manager/default.nix;
+  andromedaHostText = builtins.readFile ../hosts/andromeda/default.nix;
+  earthHostText = builtins.readFile ../hosts/earth/default.nix;
+  wiredFeaturePath = ../modules/home-manager/features/wired.nix;
 
   enabledOutputs = profile:
     lib.filterAttrs (_: output: output.enable or false) profile.config;
@@ -1083,6 +1091,44 @@ in {
     }
     {
       condition =
+        !(inputs ? wired)
+        && !(builtins.pathExists wiredFeaturePath)
+        && !(lib.hasInfix "wired.url" flakeText)
+        && !(lib.hasInfix "./features/wired.nix" hmDefaultText)
+        && !(lib.hasInfix "inputs.wired" andromedaHostText)
+        && !(lib.hasInfix "inputs.wired" earthHostText);
+      message = "wired must be removed from flake inputs, hosts, and Home Manager imports";
+    }
+    {
+      condition =
+        pallonHome.my.hm.features ? dunst
+        && jeliasHome.my.hm.features ? dunst
+        && pallonHome.my.hm.features.dunst.enable
+        && jeliasHome.my.hm.features.dunst.enable;
+      message = "both Home Manager users must enable the dunst feature";
+    }
+    {
+      condition =
+        (pallonHome.services.dunst.enable or false)
+        == false
+        && (jeliasHome.services.dunst.enable or false) == false;
+      message = "dunst must not be managed through services.dunst or D-Bus activation";
+    }
+    {
+      condition =
+        builtins.any (p: (p.pname or p.name or "") == "dunst") pallonHome.home.packages
+        && builtins.any (p: (p.pname or p.name or "") == "dunst") jeliasHome.home.packages;
+      message = "both users must have pkgs.dunst in home.packages";
+    }
+    {
+      condition =
+        lib.hasInfix dunstCommand i3ConfigText
+        && builtins.elem dunstCommand pallonHome.wayland.windowManager.hyprland.settings.exec-once
+        && builtins.elem dunstCommand jeliasHome.wayland.windowManager.hyprland.settings.exec-once;
+      message = "dunst must start explicitly from i3 and Hyprland session startup";
+    }
+    {
+      condition =
         pallonHome.my.hm.features.yazi.enable
         && jeliasHome.my.hm.features.yazi.enable
         && pallonHome.programs.yazi.enable
@@ -1235,6 +1281,23 @@ in {
       message = "pallon i3 current theme must default to literal Enfocado light colors";
     }
     {
+      condition =
+        pallonFiles ? "my/theme/dunst/light.conf"
+        && pallonFiles ? "my/theme/dunst/dark.conf"
+        && pallonFiles ? "my/theme/current/dunst.conf"
+        && jeliasFiles ? "my/theme/dunst/light.conf"
+        && jeliasFiles ? "my/theme/dunst/dark.conf"
+        && jeliasFiles ? "my/theme/current/dunst.conf";
+      message = "dunst light, dark, and current theme files must be generated for both users";
+    }
+    {
+      condition =
+        lib.hasInfix ''background = "#ffffff"'' pallonDunstCurrentText
+        && lib.hasInfix ''foreground = "#474747"'' pallonDunstCurrentText
+        && lib.hasInfix ''font = "'' pallonDunstCurrentText;
+      message = "dunst current config must default to Enfocado light and central notification fonts";
+    }
+    {
       condition = lib.hasInfix "background-color: #ffffff" pallonFiles."my/theme/current/waybar.css".text;
       message = "pallon Waybar current theme must default to Enfocado light";
     }
@@ -1273,6 +1336,7 @@ in {
       "$XDG_CONFIG_HOME/my/theme/i3" \
       "$XDG_CONFIG_HOME/my/theme/i3status-rust" \
       "$XDG_CONFIG_HOME/my/theme/hyprland" \
+      "$XDG_CONFIG_HOME/my/theme/dunst" \
       "$XDG_CONFIG_HOME/my/theme/rofi" \
       "$XDG_CONFIG_HOME/my/theme/waybar"
 
@@ -1284,6 +1348,8 @@ in {
     touch "$XDG_CONFIG_HOME/my/theme/i3status-rust/enfocado_dark.toml"
     touch "$XDG_CONFIG_HOME/my/theme/hyprland/light.conf"
     touch "$XDG_CONFIG_HOME/my/theme/hyprland/dark.conf"
+    touch "$XDG_CONFIG_HOME/my/theme/dunst/light.conf"
+    touch "$XDG_CONFIG_HOME/my/theme/dunst/dark.conf"
     touch "$XDG_CONFIG_HOME/my/theme/rofi/light.rasi"
     touch "$XDG_CONFIG_HOME/my/theme/rofi/dark.rasi"
     touch "$XDG_CONFIG_HOME/my/theme/waybar/light.css"
@@ -1292,9 +1358,11 @@ in {
     ${pallonHome.my.hm.features.style.dispatcher.package}/bin/my-style-switch light
     test "$(cat "$XDG_STATE_HOME/my-theme/mode")" = light
     test "$(readlink "$XDG_CONFIG_HOME/my/theme/current/alacritty.toml")" = "$XDG_CONFIG_HOME/my/theme/alacritty/enfocado_light.toml"
+    test "$(readlink "$XDG_CONFIG_HOME/my/theme/current/dunst.conf")" = "$XDG_CONFIG_HOME/my/theme/dunst/light.conf"
 
     ${pallonHome.my.hm.features.style.dispatcher.package}/bin/my-style-switch dark
     test "$(cat "$XDG_STATE_HOME/my-theme/mode")" = dark
+    test "$(readlink "$XDG_CONFIG_HOME/my/theme/current/dunst.conf")" = "$XDG_CONFIG_HOME/my/theme/dunst/dark.conf"
     test "$(readlink "$XDG_CONFIG_HOME/my/theme/current/rofi.rasi")" = "$XDG_CONFIG_HOME/my/theme/rofi/dark.rasi"
     test "$(readlink "$XDG_CONFIG_HOME/my/theme/current/waybar.css")" = "$XDG_CONFIG_HOME/my/theme/waybar/dark.css"
 

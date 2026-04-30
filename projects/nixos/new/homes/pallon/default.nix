@@ -27,6 +27,7 @@
     };
     features = {
       alacritty.enable = true;
+      dunst.enable = true;
       env.enable = true;
       hyprland = {
         enable = true;

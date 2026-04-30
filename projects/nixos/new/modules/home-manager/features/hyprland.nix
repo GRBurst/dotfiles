@@ -41,6 +41,11 @@ in {
       default = "";
       description = "Extra lines appended to hyprland.conf";
     };
+    extraExecOnce = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [];
+      description = "Additional commands appended to Hyprland exec-once.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -124,14 +129,16 @@ in {
           ];
 
         # --- Autostart ---
-        exec-once = [
-          "waybar"
-          "hyprpaper"
-          "nm-applet --indicator"
-          "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
-          "gnome-keyring-daemon --start --components=pkcs11,secrets,ssh"
-          "hypridle"
-        ];
+        exec-once =
+          [
+            "waybar"
+            "hyprpaper"
+            "nm-applet --indicator"
+            "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
+            "gnome-keyring-daemon --start --components=pkcs11,secrets,ssh"
+            "hypridle"
+          ]
+          ++ cfg.extraExecOnce;
 
         # --- Keybindings (NEO layout: n/r/g/t = focus, i/a/e/l = move) ---
         "$mod" = "SUPER";

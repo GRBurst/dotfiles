@@ -159,7 +159,6 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     sharedModules = [
-      inputs.wired.homeManagerModules.default
       inputs.nix-index-database.homeModules.nix-index
       inputs.nvf.homeManagerModules.default
     ];

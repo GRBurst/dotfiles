@@ -40,10 +40,6 @@ in {
 
     nixpkgs.overlays = lib.mkIf cfg.masterPackages.enable [masterOverlay];
 
-    # nixpkgs.overlays = [
-    #   inputs.wired.overlays.default
-    # ];
-
     system.autoUpgrade.enable = true;
 
     environment.systemPackages = [pkgs.alejandra];

@@ -8,7 +8,7 @@
   cfg = config.my.hm.features.style;
   style = import ../../../lib/style {inherit lib;};
   palettes = style.palettes.${cfg.palette};
-  fontCfg = osConfig.my.nixos.features.fonts.families;
+  fontCfg = osConfig.my.nixos.features.fonts;
 
   enabled = path: lib.attrByPath path false config;
   defaultPalette = palettes.${cfg.defaultMode};
@@ -19,6 +19,7 @@
     runtimeInputs = with pkgs; [
       alacritty
       coreutils
+      dunst
       glib
       hyprland
       i3
@@ -57,6 +58,7 @@
       switch_link "$theme_dir/i3/$mode.conf" "$current_dir/i3.conf"
       switch_link "$theme_dir/i3status-rust/enfocado_$mode.toml" "$current_dir/i3status-rust.toml"
       switch_link "$theme_dir/hyprland/$mode.conf" "$current_dir/hyprland.conf"
+      switch_link "$theme_dir/dunst/$mode.conf" "$current_dir/dunst.conf"
       switch_link "$theme_dir/rofi/$mode.rasi" "$current_dir/rofi.rasi"
       switch_link "$theme_dir/waybar/$mode.css" "$current_dir/waybar.css"
 
@@ -65,6 +67,7 @@
       alacritty msg config -w -1 "general.import=['$current_dir/alacritty.toml']" || true
       i3-msg reload || true
       hyprctl reload || true
+      dunstctl reload "$current_dir/dunst.conf" || true
       pkill -u "$USER" -SIGUSR2 waybar || true
       pkill -u "$USER" -USR1 nvim || true
 
@@ -120,6 +123,10 @@ in {
       hyprland.enable = lib.mkOption {
         type = lib.types.bool;
         default = enabled ["my" "hm" "features" "hyprland" "enable"];
+      };
+      dunst.enable = lib.mkOption {
+        type = lib.types.bool;
+        default = enabled ["my" "hm" "features" "dunst" "enable"];
       };
       waybar.enable = lib.mkOption {
         type = lib.types.bool;
@@ -201,9 +208,15 @@ in {
     })
 
     (lib.mkIf cfg.adapters.waybar.enable {
-      xdg.configFile."my/theme/waybar/light.css".text = style.mkWaybarCss palettes.light fontCfg.monospace.name;
-      xdg.configFile."my/theme/waybar/dark.css".text = style.mkWaybarCss palettes.dark fontCfg.monospace.name;
-      xdg.configFile."my/theme/current/waybar.css".text = style.mkWaybarCss defaultPalette fontCfg.monospace.name;
+      xdg.configFile."my/theme/waybar/light.css".text = style.mkWaybarCss palettes.light fontCfg.families.monospace.name;
+      xdg.configFile."my/theme/waybar/dark.css".text = style.mkWaybarCss palettes.dark fontCfg.families.monospace.name;
+      xdg.configFile."my/theme/current/waybar.css".text = style.mkWaybarCss defaultPalette fontCfg.families.monospace.name;
+    })
+
+    (lib.mkIf cfg.adapters.dunst.enable {
+      xdg.configFile."my/theme/dunst/light.conf".text = style.mkDunstConfig palettes.light fontCfg;
+      xdg.configFile."my/theme/dunst/dark.conf".text = style.mkDunstConfig palettes.dark fontCfg;
+      xdg.configFile."my/theme/current/dunst.conf".text = style.mkDunstConfig defaultPalette fontCfg;
     })
 
     (lib.mkIf cfg.adapters.kitty.enable {

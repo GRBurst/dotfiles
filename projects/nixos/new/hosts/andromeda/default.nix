@@ -110,7 +110,6 @@
       security.enable = true;
       stylix.enable = true;
       virtualisation.enable = true;
-      # wired.enable = true;
     };
     services = {
       maintenance.enable = true;
@@ -125,14 +124,12 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     sharedModules = [
-      inputs.wired.homeManagerModules.default
       inputs.nix-index-database.homeModules.nix-index
       inputs.nvf.homeManagerModules.default
     ];
     users.pallon = {
       imports = [../../homes/pallon];
       my.hm.features.env.enable = true;
-      # my.hm.features.wired.enable = true;
 
       programs.autorandr = let
         mkHook = ''

@@ -179,6 +179,46 @@ in {
     alternating_tint_fg = "#00000000"
   '';
 
+  mkDunstConfig = palette: fontCfg: ''
+    [global]
+        monitor = 0
+        follow = keyboard
+        origin = top-right
+        offset = 12x42
+        width = 420
+        height = 300
+        notification_limit = 5
+        corner_radius = 4
+        frame_width = 2
+        separator_height = 2
+        padding = 10
+        horizontal_padding = 12
+        gap_size = 6
+        font = "${fontCfg.families.sansSerif.name} ${toString fontCfg.sizes.notification.body}"
+        markup = full
+        format = "<b>%s</b>\n%b"
+        icon_position = left
+        max_icon_size = 48
+        frame_color = "${palette.normal.blue}"
+        separator_color = frame
+
+    [urgency_low]
+        background = "${palette.primary.background}"
+        foreground = "${palette.bright.black}"
+        timeout = 5
+
+    [urgency_normal]
+        background = "${palette.primary.background}"
+        foreground = "${palette.primary.foreground}"
+        timeout = 8
+
+    [urgency_critical]
+        background = "${palette.primary.background}"
+        foreground = "${palette.normal.red}"
+        frame_color = "${palette.normal.red}"
+        timeout = 0
+  '';
+
   mkI3Theme = palette: ''
     client.focused          ${palette.normal.blue}  ${palette.normal.blue}  ${palette.primary.background} ${palette.normal.magenta} ${palette.normal.blue}
     client.focused_inactive ${palette.normal.black} ${palette.normal.black} ${palette.primary.foreground} ${palette.bright.black}    ${palette.normal.black}

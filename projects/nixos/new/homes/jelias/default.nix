@@ -28,6 +28,7 @@
         scrollingMultiplier = 5;
         saveSelectionToClipboard = true;
       };
+      dunst.enable = true;
       env.enable = true;
       hyprland = {
         enable = true;

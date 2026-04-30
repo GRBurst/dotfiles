@@ -29,7 +29,6 @@
     ./features/stylix.nix
     ./features/tpm2.nix
     ./features/virtualisation.nix
-    # ./features/wired.nix
     ./services/maintenance.nix
     ./services/printing.nix
     ./services/smartd.nix

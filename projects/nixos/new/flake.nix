@@ -46,8 +46,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    wired.url = "github:Toqozz/wired-notify";
-
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     flake-parts.url = "github:hercules-ci/flake-parts";
   };
