@@ -24,8 +24,6 @@
 !/.config/fontconfig
 !/.config/git
 !/.config/htop
-!/.config/i3status
-/.config/i3status/config
 !/.config/mpv
 !/.config/networkmanager-dmenu
 !/.config/nixpkgs
