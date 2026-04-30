@@ -72,6 +72,7 @@
         my.hm.features.bingWallpaper = {
           enable = true;
           count = 2;
+          preferUhd = false;
           setter = {
             packages = [];
             command = ''printf '%s\n' "$@" > "$BING_WALLPAPER_TEST_OUT"'';
@@ -81,6 +82,32 @@
     ];
   };
   bingWallpaperTestPackage = bingWallpaperTestHome.config.my.hm.features.bingWallpaper.package;
+  bingWallpaperNasaTestHome = inputs.home-manager.lib.homeManagerConfiguration {
+    inherit pkgs;
+    modules = [
+      ../modules/home-manager/features/bing-wallpaper.nix
+      {
+        home = {
+          username = "bing-test";
+          homeDirectory = "/tmp/bing-test";
+          stateVersion = "25.11";
+        };
+
+        my.hm.features.bingWallpaper = {
+          enable = true;
+          count = 2;
+          preferUhd = false;
+          nasaApod.enable = true;
+          setter = {
+            packages = [];
+            command = ''printf '%s\n' "$@" > "$BING_WALLPAPER_TEST_OUT"'';
+          };
+        };
+      }
+    ];
+  };
+  bingWallpaperNasaTestPackage = bingWallpaperNasaTestHome.config.my.hm.features.bingWallpaper.package;
+  bingWallpaperDefaultSetter = pkgs.writeShellScript "bing-wallpaper-default-setter" pallonHome.my.hm.features.bingWallpaper.setter.command;
   themeDocPath = ../docs/theme-architecture.md;
   themeDoc =
     if builtins.pathExists themeDocPath
@@ -431,10 +458,28 @@ in {
     (pallonHome.my.hm.features.bingWallpaper.preferUhd == true)
     "Bing wallpaper must prefer UHD";
 
+  andromeda-bing-wallpaper-primary-monitor =
+    mkCheck "andromeda-bing-wallpaper-primary-monitor"
+    (pallonHome.my.hm.features.bingWallpaper.hyprlandPrimaryMonitor == "eDP-1")
+    "Bing wallpaper must target eDP-1 as the Hyprland primary monitor";
+
+  andromeda-bing-wallpaper-nasa-apod =
+    mkCheck "andromeda-bing-wallpaper-nasa-apod"
+    (pallonHome.my.hm.features.bingWallpaper.nasaApod.enable == true)
+    "Andromeda must enable NASA APOD secondary wallpaper";
+
   andromeda-bing-wallpaper-session-aware-setter = mkAssertionCheck "check-andromeda-bing-wallpaper-session-aware-setter" [
     {
-      condition = lib.hasInfix "hyprctl hyprpaper reload" pallonHome.my.hm.features.bingWallpaper.setter.command;
-      message = "Bing wallpaper setter must support Hyprland via hyprpaper reload";
+      condition = lib.hasInfix "hyprctl monitors -j" pallonHome.my.hm.features.bingWallpaper.setter.command;
+      message = "Bing wallpaper setter must read Hyprland monitors as JSON";
+    }
+    {
+      condition = lib.hasInfix "hyprctl hyprpaper wallpaper" pallonHome.my.hm.features.bingWallpaper.setter.command;
+      message = "Bing wallpaper setter must support Hyprland via hyprpaper wallpaper";
+    }
+    {
+      condition = lib.hasInfix "preferred_monitor=eDP-1" pallonHome.my.hm.features.bingWallpaper.setter.command;
+      message = "Bing wallpaper setter must embed the configured primary monitor";
     }
     {
       condition = lib.hasInfix "feh --bg-fill" pallonHome.my.hm.features.bingWallpaper.setter.command;
@@ -463,8 +508,134 @@ in {
     script="${pallonHome.my.hm.features.bingWallpaper.package}/bin/my-bing-wallpaper"
     grep -F latest-paths "$script"
     grep -F "Reused cached Bing wallpaper manifest" "$script"
-    grep -F "hyprctl hyprpaper reload" "$script"
+    grep -F "api.nasa.gov/planetary/apod" "$script"
+    grep -F "media_type" "$script"
+    grep -F "hdurl" "$script"
+    grep -F "hyprctl monitors -j" "$script"
+    grep -F "hyprctl hyprpaper wallpaper" "$script"
     grep -F "feh --bg-fill" "$script"
+    touch "$out"
+  '';
+
+  bing-wallpaper-nasa-image-second-path = pkgs.runCommand "bing-wallpaper-nasa-image-second-path" {} ''
+    export HOME="$PWD/home"
+    export XDG_CACHE_HOME="$PWD/cache"
+    out_dir="$XDG_CACHE_HOME/bing-wallpaper"
+    mkdir -p "$out_dir"
+
+    printf 'bing-one\n' > "$PWD/bing-one.jpg"
+    printf 'bing-two\n' > "$PWD/bing-two.jpg"
+    printf 'nasa\n' > "$PWD/nasa.jpg"
+    printf '{"images":[{"urlbase":"/unused/one","url":"file://%s","startdate":"20260429"},{"urlbase":"/unused/two","url":"file://%s","startdate":"20260428"}]}\n' "$PWD/bing-one.jpg" "$PWD/bing-two.jpg" > "$PWD/bing.json"
+    printf '{"date":"2026-04-30","media_type":"image","url":"file://%s","hdurl":"file://%s"}\n' "$PWD/nasa.jpg" "$PWD/nasa.jpg" > "$PWD/nasa.json"
+
+    export BING_WALLPAPER_BING_API="file://$PWD/bing.json"
+    export BING_WALLPAPER_NASA_API="file://$PWD/nasa.json"
+    export BING_WALLPAPER_TEST_OUT="$PWD/setter.out"
+
+    ${bingWallpaperNasaTestPackage}/bin/my-bing-wallpaper
+
+    printf '%s\n%s\n' "$out_dir/20260429_0.jpg" "$out_dir/nasa-20260430.jpg" > expected
+    cmp expected "$BING_WALLPAPER_TEST_OUT"
+    cmp expected "$out_dir/latest-paths"
+    touch "$out"
+  '';
+
+  bing-wallpaper-nasa-video-range-selects-newest-image = pkgs.runCommand "bing-wallpaper-nasa-video-range-selects-newest-image" {} ''
+    export HOME="$PWD/home"
+    export XDG_CACHE_HOME="$PWD/cache"
+    out_dir="$XDG_CACHE_HOME/bing-wallpaper"
+    mkdir -p "$out_dir"
+
+    printf 'bing-one\n' > "$PWD/bing-one.jpg"
+    printf 'bing-two\n' > "$PWD/bing-two.jpg"
+    printf 'nasa-new\n' > "$PWD/nasa-new.jpg"
+    printf 'nasa-old\n' > "$PWD/nasa-old.jpg"
+    printf '{"images":[{"urlbase":"/unused/one","url":"file://%s","startdate":"20260429"},{"urlbase":"/unused/two","url":"file://%s","startdate":"20260428"}]}\n' "$PWD/bing-one.jpg" "$PWD/bing-two.jpg" > "$PWD/bing.json"
+    printf '[{"date":"2026-04-30","media_type":"video","url":"https://example.invalid/video"},{"date":"2026-04-29","media_type":"image","url":"file://%s","hdurl":"file://%s"},{"date":"2026-04-24","media_type":"image","url":"file://%s","hdurl":"file://%s"}]\n' "$PWD/nasa-new.jpg" "$PWD/nasa-new.jpg" "$PWD/nasa-old.jpg" "$PWD/nasa-old.jpg" > "$PWD/nasa.json"
+
+    export BING_WALLPAPER_BING_API="file://$PWD/bing.json"
+    export BING_WALLPAPER_NASA_API="file://$PWD/nasa.json"
+    export BING_WALLPAPER_TEST_OUT="$PWD/setter.out"
+
+    ${bingWallpaperNasaTestPackage}/bin/my-bing-wallpaper
+
+    printf '%s\n%s\n' "$out_dir/20260429_0.jpg" "$out_dir/nasa-20260429.jpg" > expected
+    cmp expected "$BING_WALLPAPER_TEST_OUT"
+    cmp expected "$out_dir/latest-paths"
+    touch "$out"
+  '';
+
+  bing-wallpaper-nasa-range-no-image-reuses-cache = pkgs.runCommand "bing-wallpaper-nasa-range-no-image-reuses-cache" {} ''
+    export HOME="$PWD/home"
+    export XDG_CACHE_HOME="$PWD/cache"
+    out_dir="$XDG_CACHE_HOME/bing-wallpaper"
+    mkdir -p "$out_dir"
+
+    printf 'bing-one\n' > "$PWD/bing-one.jpg"
+    printf 'bing-two\n' > "$PWD/bing-two.jpg"
+    printf 'cached-nasa\n' > "$out_dir/nasa-latest.jpg"
+    printf '{"images":[{"urlbase":"/unused/one","url":"file://%s","startdate":"20260429"},{"urlbase":"/unused/two","url":"file://%s","startdate":"20260428"}]}\n' "$PWD/bing-one.jpg" "$PWD/bing-two.jpg" > "$PWD/bing.json"
+    printf '[{"date":"2026-04-30","media_type":"video","url":"https://example.invalid/video"},{"date":"2026-04-29","media_type":"video","url":"https://example.invalid/video"}]\n' > "$PWD/nasa.json"
+
+    export BING_WALLPAPER_BING_API="file://$PWD/bing.json"
+    export BING_WALLPAPER_NASA_API="file://$PWD/nasa.json"
+    export BING_WALLPAPER_TEST_OUT="$PWD/setter.out"
+
+    ${bingWallpaperNasaTestPackage}/bin/my-bing-wallpaper
+
+    printf '%s\n%s\n' "$out_dir/20260429_0.jpg" "$out_dir/nasa-latest.jpg" > expected
+    cmp expected "$BING_WALLPAPER_TEST_OUT"
+    cmp expected "$out_dir/latest-paths"
+    touch "$out"
+  '';
+
+  bing-wallpaper-nasa-range-no-image-keeps-secondary = pkgs.runCommand "bing-wallpaper-nasa-range-no-image-keeps-secondary" {} ''
+    export HOME="$PWD/home"
+    export XDG_CACHE_HOME="$PWD/cache"
+    out_dir="$XDG_CACHE_HOME/bing-wallpaper"
+    mkdir -p "$out_dir"
+
+    printf 'bing-one\n' > "$PWD/bing-one.jpg"
+    printf 'bing-two\n' > "$PWD/bing-two.jpg"
+    printf '{"images":[{"urlbase":"/unused/one","url":"file://%s","startdate":"20260429"},{"urlbase":"/unused/two","url":"file://%s","startdate":"20260428"}]}\n' "$PWD/bing-one.jpg" "$PWD/bing-two.jpg" > "$PWD/bing.json"
+    printf '[{"date":"2026-04-30","media_type":"video","url":"https://example.invalid/video"},{"date":"2026-04-29","media_type":"video","url":"https://example.invalid/video"}]\n' > "$PWD/nasa.json"
+
+    export BING_WALLPAPER_BING_API="file://$PWD/bing.json"
+    export BING_WALLPAPER_NASA_API="file://$PWD/nasa.json"
+    export BING_WALLPAPER_TEST_OUT="$PWD/setter.out"
+
+    ${bingWallpaperNasaTestPackage}/bin/my-bing-wallpaper
+
+    printf '%s\n' "$out_dir/20260429_0.jpg" > expected
+    cmp expected "$BING_WALLPAPER_TEST_OUT"
+    cmp expected "$out_dir/latest-paths"
+    touch "$out"
+  '';
+
+  bing-wallpaper-hyprland-primary-secondary = pkgs.runCommand "bing-wallpaper-hyprland-primary-secondary" {} ''
+    mkdir -p "$PWD/bin"
+    export PATH="$PWD/bin:${lib.makeBinPath [pkgs.coreutils pkgs.diffutils pkgs.jq]}"
+    cat > "$PWD/bin/hyprctl" <<'EOF'
+    #!${pkgs.runtimeShell}
+    if [ "$1" = monitors ] && [ "$2" = -j ]; then
+      printf '[{"name":"eDP-1"},{"name":"DP-4"}]\n'
+      exit 0
+    fi
+    if [ "$1" = hyprpaper ] && [ "$2" = wallpaper ]; then
+      printf '%s\n' "$3" >> "$PWD/hyprctl.out"
+      exit 0
+    fi
+    exit 1
+    EOF
+    chmod +x "$PWD/bin/hyprctl"
+
+    ${bingWallpaperDefaultSetter} /cache/bing.jpg /cache/nasa.jpg
+
+    printf '%s\n%s\n' \
+      "eDP-1, /cache/bing.jpg, cover" \
+      "DP-4, /cache/nasa.jpg, cover" > expected
+    cmp expected "$PWD/hyprctl.out"
     touch "$out"
   '';
 

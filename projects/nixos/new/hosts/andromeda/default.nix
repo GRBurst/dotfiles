@@ -87,6 +87,8 @@
           interval = "6h";
           count = 2;
           preferUhd = true;
+          hyprlandPrimaryMonitor = "eDP-1";
+          nasaApod.enable = true;
         };
         hyprland.enable = true;
         i3.enable = true;

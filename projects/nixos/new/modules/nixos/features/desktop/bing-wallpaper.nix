@@ -38,6 +38,28 @@ in {
       default = true;
       description = "Try the derived UHD image URL before falling back to Bing's advertised URL.";
     };
+
+    hyprlandPrimaryMonitor = lib.mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      description = "Preferred Hyprland monitor for the primary Bing wallpaper.";
+    };
+
+    nasaApod = {
+      enable = lib.mkEnableOption "NASA APOD secondary wallpaper";
+
+      apiKey = lib.mkOption {
+        type = types.str;
+        default = "DEMO_KEY";
+        description = "NASA APOD API key.";
+      };
+
+      preferHd = lib.mkOption {
+        type = types.bool;
+        default = true;
+        description = "Prefer APOD hdurl over url when APOD returns an image.";
+      };
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -50,7 +72,7 @@ in {
 
     home-manager.users.${cfg.user}.my.hm.features.bingWallpaper = {
       enable = true;
-      inherit (cfg) market interval count preferUhd;
+      inherit (cfg) market interval count preferUhd hyprlandPrimaryMonitor nasaApod;
     };
   };
 }
