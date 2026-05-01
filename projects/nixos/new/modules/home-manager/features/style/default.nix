@@ -66,6 +66,7 @@
 
       alacritty msg config -w -1 "general.import=['$current_dir/alacritty.toml']" || true
       i3-msg reload || true
+      pkill -u "$USER" -SIGUSR2 i3status-rs || true
       hyprctl reload || true
       dunstctl reload "$current_dir/dunst.conf" || true
       pkill -u "$USER" -SIGUSR2 waybar || true

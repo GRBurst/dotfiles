@@ -103,7 +103,7 @@ Alacritty imports `~/.config/my/theme/current/alacritty.toml`. The dispatcher up
 
 i3 includes `~/.config/my/theme/current/i3.conf`. The generated theme file owns literal client colors and the dynamic `bar { ... }` block. The dispatcher updates the current link and runs `i3-msg reload`.
 
-i3status-rust reads a generated theme TOML through the current i3status-rust link. i3 reload restarts the bar path that consumes it.
+i3status-rust reads a generated theme TOML through the current i3status-rust link. The dispatcher updates the current link and sends `SIGUSR2` to `i3status-rs` so running status blocks reload the active theme.
 
 Hyprland sources `~/.config/my/theme/current/hyprland.conf`. The dispatcher updates the current link and runs `hyprctl reload`.
 
@@ -193,7 +193,7 @@ Also check the visible consumers in the same session:
 
 - Alacritty changes or reloads config after the mode switch.
 - LibreWolf/Firefox, Chromium, and Brave update `matchMedia("(prefers-color-scheme: dark)")` from `false` in light mode to `true` in dark mode, preferably without browser restart.
-- i3 reloads and i3bar colors update.
+- i3 reloads, i3bar colors update, and i3status-rust blocks update after `SIGUSR2`.
 - Hyprland reloads without error.
 - Dunst starts in i3 and Hyprland, `notify-send "dunst" "theme test"` displays a notification, and `dunstctl reload ~/.config/my/theme/current/dunst.conf` succeeds.
 - Waybar updates after `SIGUSR2`, or any limitation is recorded in the plan.

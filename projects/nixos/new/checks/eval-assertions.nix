@@ -39,6 +39,7 @@
   pallonFiles = pallonHome.xdg.configFile or {};
   jeliasFiles = jeliasHome.xdg.configFile or {};
   pallonDarkmanScript = pallonHome.services.darkman.scripts."theme-dispatch" or "";
+  styleSwitchText = pallonHome.my.hm.features.style.dispatcher.package.text or "";
   pallonDarkmanDataScript =
     if pallonHome.xdg.dataFile ? "darkman/theme-dispatch"
     then builtins.readFile pallonHome.xdg.dataFile."darkman/theme-dispatch".source
@@ -1308,6 +1309,10 @@ in {
     {
       condition = builtins.any (p: (p.pname or p.name or "") == "my-style-switch") pallonHome.home.packages;
       message = "pallon home must include the style dispatcher package";
+    }
+    {
+      condition = lib.hasInfix ''pkill -u "$USER" -SIGUSR2 i3status-rs || true'' styleSwitchText;
+      message = "style dispatcher must restart i3status-rust after switching its theme symlink";
     }
     {
       condition =
