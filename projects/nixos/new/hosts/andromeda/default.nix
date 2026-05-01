@@ -32,15 +32,14 @@
 
   # --- Hardware & Power ---
   hardware = {
-    graphics = {
-      enable = true;
-      enable32Bit = true;
-    };
     bluetooth = {
       enable = true;
       powerOnBoot = false;
     };
-    sane.enable = true;
+    graphics = {
+      enable = true;
+      enable32Bit = true;
+    };
   };
 
   # time.timeZone = "Europe/Berlin";

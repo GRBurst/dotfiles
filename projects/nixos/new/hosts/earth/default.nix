@@ -26,7 +26,6 @@
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    kernelPackages = pkgs.linuxPackages_latest;
     initrd.availableKernelModules = ["r8169"];
   };
 
@@ -39,7 +38,6 @@
       enable = true;
       enable32Bit = true;
     };
-    acpilight.enable = true;
   };
 
   nixpkgs.config.cudaSupport = true;
@@ -99,6 +97,16 @@
       coolercontrol.enable = true;
       desktop = {
         addons.enable = true;
+        bingWallpaper = {
+          enable = true;
+          user = "jelias";
+          market = "de-DE";
+          interval = "6h";
+          count = 2;
+          preferUhd = true;
+          hyprlandPrimaryMonitor = "eDP-1";
+          nasaApod.enable = true;
+        };
         compositor = "compton";
         displayManager = "gdm";
         defaultSession = null;

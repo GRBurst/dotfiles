@@ -106,8 +106,8 @@
         };
       };
       gnome.enable = true;
-      nvf.enable = true;
       misc.enable = true;
+      nvf.enable = true;
       rofi.enable = true;
       shellAliases.enable = true;
       style.enable = true;
