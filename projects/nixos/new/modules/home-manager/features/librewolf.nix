@@ -7,6 +7,11 @@
 }: let
   cfg = config.my.hm.features.librewolf;
   addons = inputs.firefox-addons.packages.${pkgs.system};
+  # Helper to dynamically build the policy object based on the Mozilla Add-on slug.
+  amoExtension = slug: {
+    install_url = "https://addons.mozilla.org/firefox/downloads/latest/${slug}/latest.xpi";
+    installation_mode = "force_installed";
+  };
 in {
   options.my.hm.features.librewolf = {
     enable = lib.mkEnableOption "Declarative LibreWolf via Home Manager";
@@ -41,6 +46,21 @@ in {
         id = 1;
         path = "mi3lqq74.default";
         isDefault = false;
+      };
+      policies = {
+        ExtensionSettings = {
+          "{3579f63b-d8ee-424f-bbb6-6d0ce3285e6a}" = amoExtension "chameleon-ext";
+          "de-DE@dictionaries.addons.mozilla.org" = amoExtension "german-dictionary-de_de-for-sp";
+          "{af37054b-3ace-46a2-ac59-709e4412bec6}" = amoExtension "add-custom-search-engine";
+          "{7a07e802-6785-4e48-a29e-b81bdd5efbd3}" = amoExtension "clear-private-data-now";
+          "{800215d6-eff0-4a62-9268-09857c048030}" = amoExtension "containers-helper";
+          "{69c84059-c632-41d0-b3bf-ae54aacb632e}" = amoExtension "containers-theme";
+          "page-assist@nazeem" = amoExtension "page-assist";
+          "sourcegraph-for-firefox@sourcegraph.com" = amoExtension "sourcegraph-for-firefox";
+          "{d5ac33ed-723c-402b-b17c-e7bbb0d3a80d}" = amoExtension "switch-container-plus";
+          "{2bd18ca8-5dd7-4311-a777-02ed29663496}" = amoExtension "tamper-data-for-ff-quantum";
+          "jid0-GXjLLfbCoAx0LcltEdFrEkQdQPI@jetpack" = amoExtension "awesome-screenshot-screen-record";
+        };
       };
       profiles.${cfg.profileName} = {
         id = 0;
