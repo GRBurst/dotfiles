@@ -2,9 +2,11 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }: let
   cfg = config.my.hm.features.librewolf;
+  addons = inputs.firefox-addons.packages.${pkgs.system};
 in {
   options.my.hm.features.librewolf = {
     enable = lib.mkEnableOption "Declarative LibreWolf via Home Manager";
@@ -43,6 +45,21 @@ in {
       profiles.${cfg.profileName} = {
         id = 0;
         isDefault = true;
+        extensions.packages = with addons; [
+          ublock-origin
+          keepassxc-browser
+          darkreader
+          noscript
+          tridactyl
+          temporary-containers
+          multi-account-containers
+          cookie-autodelete
+          decentraleyes
+          refined-github
+          web-developer
+          containerise
+          canvasblocker
+        ];
         settings = {
           # --- privacy / fingerprinting ---
           "privacy.fingerprintingProtection" = true;
@@ -110,6 +127,9 @@ in {
           "services.sync.engine.history" = false;
           "services.sync.engine.prefs.modified" = false;
           "services.sync.engine.tabs" = false;
+
+          # --- extensions (prevent browser from disabling declaratively installed extensions on first launch) ---
+          "extensions.autoDisableScopes" = 0;
         };
       };
     };

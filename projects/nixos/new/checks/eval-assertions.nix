@@ -164,6 +164,7 @@
 
   librewolfTestHome = inputs.home-manager.lib.homeManagerConfiguration {
     inherit pkgs;
+    extraSpecialArgs = {inherit inputs;};
     modules = [
       ../modules/home-manager/features/librewolf.nix
       {
@@ -184,6 +185,7 @@
   lwFakeBin = {pname = "librewolf-bin"; name = "librewolf-bin-999"; meta.knownVulnerabilities = ["x"];};
   lwFakeUnwrapped = {pname = "librewolf-bin-unwrapped"; name = "librewolf-bin-unwrapped-999"; meta.knownVulnerabilities = ["x"];};
   lwFakeOther = {pname = "unrelated-pkg"; name = "unrelated-pkg-1"; meta.knownVulnerabilities = ["x"];};
+  lwHasExt = pkgList: n: builtins.any (p: (p.pname or "") == n) pkgList;
 in {
   andromeda-syncthing-user =
     mkCheck "andromeda-syncthing-user"
@@ -2039,6 +2041,42 @@ in {
         && pallonHome.programs.librewolf.profiles."nix-managed".settings."services.sync.engine.tabs" == false
         && pallonHome.programs.librewolf.profiles."nix-managed".settings."services.sync.engine.prefs.modified" == false;
       message = "andromeda/pallon: sync engines for history/tabs/prefs must be disabled to avoid conflicting with Nix";
+    }
+  ];
+
+  lw-extensions = mkAssertionCheck "lw-extensions" [
+    {
+      condition =
+        librewolfTest.programs.librewolf.profiles."nix-managed".extensions.packages != [];
+      message = "lw module: extensions.packages must be non-empty";
+    }
+    {
+      condition =
+        lwHasExt
+          librewolfTest.programs.librewolf.profiles."nix-managed".extensions.packages
+          "ublock-origin";
+      message = "lw module: ublock-origin must be in extensions.packages";
+    }
+    {
+      condition =
+        lwHasExt
+          jeliasHome.programs.librewolf.profiles."nix-managed".extensions.packages
+          "ublock-origin";
+      message = "earth/jelias: ublock-origin must be in extensions.packages";
+    }
+    {
+      condition =
+        lwHasExt
+          pallonHome.programs.librewolf.profiles."nix-managed".extensions.packages
+          "ublock-origin";
+      message = "andromeda/pallon: ublock-origin must be in extensions.packages";
+    }
+    {
+      condition =
+        builtins.length
+          pallonHome.programs.librewolf.profiles."nix-managed".extensions.packages
+        >= 10;
+      message = "andromeda/pallon: at least 10 extensions must be installed";
     }
   ];
 
