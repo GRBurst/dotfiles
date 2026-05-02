@@ -1048,9 +1048,6 @@ in {
 
       xdg.configFile."my/theme/i3/dark.conf".text =
         style.mkI3Theme palettes.dark + "\n" + renderBar palettes.dark;
-
-      xdg.configFile."my/theme/current/i3.conf".text =
-        style.mkI3Theme defaultPalette + "\n" + renderBar defaultPalette;
     })
   ]);
 }

@@ -186,12 +186,50 @@ in {
         enable = true;
         config.common."org.freedesktop.impl.portal.Settings" = "darkman";
       };
+
+      home.activation.styleCurrentLinks =
+        lib.hm.dag.entryAfter ["writeBoundary"] ''
+          PATH="${pkgs.coreutils}/bin:$PATH"
+          state_file="${config.xdg.stateHome}/my-theme/mode"
+          mode="$(cat "$state_file" 2>/dev/null || echo ${lib.escapeShellArg cfg.defaultMode})"
+          case "$mode" in light|dark) ;; *) mode=${lib.escapeShellArg cfg.defaultMode} ;; esac
+
+          cur="${config.xdg.configHome}/my/theme"
+          mkdir -p "$cur/current"
+
+          switch_link() {
+            local target="$1" link="$2" tmp="$2.$$"
+            ln -sfT "$target" "$tmp"
+            mv -Tf "$tmp" "$link"
+          }
+
+          ${lib.optionalString cfg.adapters.alacritty.enable ''
+            switch_link "$cur/alacritty/enfocado_$mode.toml" "$cur/current/alacritty.toml"
+          ''}
+          ${lib.optionalString cfg.adapters.i3status.enable ''
+            switch_link "$cur/i3status-rust/enfocado_$mode.toml" "$cur/current/i3status-rust.toml"
+          ''}
+          ${lib.optionalString cfg.adapters.hyprland.enable ''
+            switch_link "$cur/hyprland/$mode.conf" "$cur/current/hyprland.conf"
+          ''}
+          ${lib.optionalString cfg.adapters.waybar.enable ''
+            switch_link "$cur/waybar/$mode.css" "$cur/current/waybar.css"
+          ''}
+          ${lib.optionalString cfg.adapters.dunst.enable ''
+            switch_link "$cur/dunst/$mode.conf" "$cur/current/dunst.conf"
+          ''}
+          ${lib.optionalString cfg.adapters.rofi.enable ''
+            switch_link "$cur/rofi/$mode.rasi" "$cur/current/rofi.rasi"
+          ''}
+          ${lib.optionalString cfg.adapters.i3.enable ''
+            switch_link "$cur/i3/$mode.conf" "$cur/current/i3.conf"
+          ''}
+        '';
     }
 
     (lib.mkIf cfg.adapters.alacritty.enable {
       xdg.configFile."my/theme/alacritty/enfocado_light.toml".text = style.mkAlacrittyTheme palettes.light;
       xdg.configFile."my/theme/alacritty/enfocado_dark.toml".text = style.mkAlacrittyTheme palettes.dark;
-      xdg.configFile."my/theme/current/alacritty.toml".text = style.mkAlacrittyTheme defaultPalette;
     })
 
     (lib.mkIf cfg.adapters.i3status.enable {
@@ -199,25 +237,21 @@ in {
 
       xdg.configFile."my/theme/i3status-rust/enfocado_light.toml".text = style.mkI3StatusTheme palettes.light;
       xdg.configFile."my/theme/i3status-rust/enfocado_dark.toml".text = style.mkI3StatusTheme palettes.dark;
-      xdg.configFile."my/theme/current/i3status-rust.toml".text = style.mkI3StatusTheme defaultPalette;
     })
 
     (lib.mkIf cfg.adapters.hyprland.enable {
       xdg.configFile."my/theme/hyprland/light.conf".text = style.mkHyprlandTheme palettes.light;
       xdg.configFile."my/theme/hyprland/dark.conf".text = style.mkHyprlandTheme palettes.dark;
-      xdg.configFile."my/theme/current/hyprland.conf".text = style.mkHyprlandTheme defaultPalette;
     })
 
     (lib.mkIf cfg.adapters.waybar.enable {
       xdg.configFile."my/theme/waybar/light.css".text = style.mkWaybarCss palettes.light fontCfg.families.monospace.name;
       xdg.configFile."my/theme/waybar/dark.css".text = style.mkWaybarCss palettes.dark fontCfg.families.monospace.name;
-      xdg.configFile."my/theme/current/waybar.css".text = style.mkWaybarCss defaultPalette fontCfg.families.monospace.name;
     })
 
     (lib.mkIf cfg.adapters.dunst.enable {
       xdg.configFile."my/theme/dunst/light.conf".text = style.mkDunstConfig palettes.light fontCfg;
       xdg.configFile."my/theme/dunst/dark.conf".text = style.mkDunstConfig palettes.dark fontCfg;
-      xdg.configFile."my/theme/current/dunst.conf".text = style.mkDunstConfig defaultPalette fontCfg;
     })
 
     (lib.mkIf cfg.adapters.kitty.enable {
@@ -229,7 +263,6 @@ in {
     (lib.mkIf cfg.adapters.rofi.enable {
       xdg.configFile."my/theme/rofi/light.rasi".text = style.mkRofiTheme palettes.light;
       xdg.configFile."my/theme/rofi/dark.rasi".text = style.mkRofiTheme palettes.dark;
-      xdg.configFile."my/theme/current/rofi.rasi".text = style.mkRofiTheme defaultPalette;
     })
 
     (lib.mkIf cfg.adapters.yazi.enable {

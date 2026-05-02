@@ -60,6 +60,7 @@
   earthI3ThemeText = earthFiles."my/theme/current/i3.conf".text or "";
   earthI3ConfigText = earthFiles."i3/config".text or "";
   earthI3StatusText = earthFiles."i3status-rust/config.toml".text or "";
+  pallonActivation = pallonHome.home.activation or {};
   pallonNvfLua = pallonHome.programs.nvf.settings.vim.luaConfigRC.custom-functions.data or "";
   jeliasNvfLua = jeliasHome.programs.nvf.settings.vim.luaConfigRC.custom-functions.data or "";
   autorandrProfiles = pallonHome.programs.autorandr.profiles;
@@ -1304,33 +1305,54 @@ in {
       message = "pallon Kitty native dark auto theme must use Enfocado dark";
     }
     {
-      condition = lib.hasInfix "#ffffff" pallonI3ThemeText && !(lib.hasInfix "$theme_" pallonI3ThemeText);
-      message = "pallon i3 current theme must default to literal Enfocado light colors";
+      condition = lib.hasInfix "#ffffff" pallonI3LightThemeText && !(lib.hasInfix "$theme_" pallonI3LightThemeText);
+      message = "pallon i3 light theme must use literal Enfocado light colors";
     }
     {
       condition =
         pallonFiles ? "my/theme/dunst/light.conf"
         && pallonFiles ? "my/theme/dunst/dark.conf"
-        && pallonFiles ? "my/theme/current/dunst.conf"
         && jeliasFiles ? "my/theme/dunst/light.conf"
-        && jeliasFiles ? "my/theme/dunst/dark.conf"
-        && jeliasFiles ? "my/theme/current/dunst.conf";
-      message = "dunst light, dark, and current theme files must be generated for both users";
+        && jeliasFiles ? "my/theme/dunst/dark.conf";
+      message = "dunst light and dark theme files must be generated for both users";
     }
     {
       condition =
-        lib.hasInfix ''background = "#ffffff"'' pallonDunstCurrentText
-        && lib.hasInfix ''foreground = "#474747"'' pallonDunstCurrentText
-        && lib.hasInfix ''font = "'' pallonDunstCurrentText;
-      message = "dunst current config must default to Enfocado light and central notification fonts";
+        lib.hasInfix ''background = "#ffffff"'' pallonFiles."my/theme/dunst/light.conf".text
+        && lib.hasInfix ''foreground = "#474747"'' pallonFiles."my/theme/dunst/light.conf".text
+        && lib.hasInfix ''font = "'' pallonFiles."my/theme/dunst/light.conf".text;
+      message = "dunst light config must use Enfocado light colors and central notification fonts";
     }
     {
-      condition = lib.hasInfix "background-color: #ffffff" pallonFiles."my/theme/current/waybar.css".text;
-      message = "pallon Waybar current theme must default to Enfocado light";
+      condition = lib.hasInfix "background-color: #ffffff" pallonFiles."my/theme/waybar/light.css".text;
+      message = "pallon Waybar light theme must use Enfocado light";
     }
     {
-      condition = lib.hasInfix "col.active_border = rgba(0064e4ee)" pallonFiles."my/theme/current/hyprland.conf".text;
-      message = "pallon Hyprland current theme must default to Enfocado light";
+      condition = lib.hasInfix "col.active_border = rgba(0064e4ee)" pallonFiles."my/theme/hyprland/light.conf".text;
+      message = "pallon Hyprland light theme must use Enfocado light";
+    }
+    {
+      condition = pallonActivation ? "styleCurrentLinks";
+      message = "pallon style module must provide styleCurrentLinks home.activation entry";
+    }
+    {
+      condition =
+        let data = (pallonActivation.styleCurrentLinks or {data = "";}).data; in
+        lib.hasInfix "enfocado_" data
+        && lib.hasInfix "current/dunst.conf" data
+        && lib.hasInfix "current/waybar.css" data
+        && lib.hasInfix "my-theme/mode" data;
+      message = "styleCurrentLinks activation must wire alacritty, dunst, waybar symlinks and read persisted mode";
+    }
+    {
+      condition =
+        !(pallonFiles ? "my/theme/current/alacritty.toml")
+        && !(pallonFiles ? "my/theme/current/dunst.conf")
+        && !(pallonFiles ? "my/theme/current/waybar.css")
+        && !(pallonFiles ? "my/theme/current/hyprland.conf")
+        && !(pallonFiles ? "my/theme/current/rofi.rasi")
+        && !(pallonFiles ? "my/theme/current/i3status-rust.toml");
+      message = "current/ theme files must be managed by home.activation, not xdg.configFile";
     }
     {
       condition = builtins.any (p: (p.pname or p.name or "") == "my-style-switch") pallonHome.home.packages;
@@ -1350,9 +1372,9 @@ in {
     }
     {
       condition =
-        earthFiles ? "my/theme/current/i3status-rust.toml"
-        && (builtins.fromTOML earthFiles."my/theme/current/i3status-rust.toml".text).idle_bg == "#ffffff";
-      message = "earth i3status-rust current theme must default to Enfocado light";
+        earthFiles ? "my/theme/i3status-rust/enfocado_light.toml"
+        && (builtins.fromTOML earthFiles."my/theme/i3status-rust/enfocado_light.toml".text).idle_bg == "#ffffff";
+      message = "earth i3status-rust light theme must use Enfocado light";
     }
   ];
 
@@ -1569,14 +1591,14 @@ in {
       message = "andromeda: i3 config must assign workspace 11 to nonprimary primary";
     }
     {
-      condition = lib.hasInfix "bar {" pallonI3ThemeText;
-      message = "andromeda: generated current i3 theme must own the bar block";
+      condition = lib.hasInfix "bar {" pallonI3LightThemeText;
+      message = "andromeda: generated light i3 theme must own the bar block";
     }
     {
       condition =
-        lib.hasInfix "focused_workspace" pallonI3ThemeText
-        && lib.hasInfix "#0064e4" pallonI3ThemeText
-        && lib.hasInfix "#474747" pallonI3ThemeText;
+        lib.hasInfix "focused_workspace" pallonI3LightThemeText
+        && lib.hasInfix "#0064e4" pallonI3LightThemeText
+        && lib.hasInfix "#474747" pallonI3LightThemeText;
       message = "andromeda: generated light i3 bar colors must be literal and visible";
     }
     {
@@ -1595,8 +1617,8 @@ in {
       message = "andromeda: i3 config must use nonprimary output alias";
     }
     {
-      condition = lib.hasInfix "i3status-rs" pallonI3ThemeText;
-      message = "andromeda: generated current i3 theme must reference i3status-rs";
+      condition = lib.hasInfix "i3status-rs" pallonI3LightThemeText;
+      message = "andromeda: generated light i3 theme must reference i3status-rs";
     }
     {
       condition =
