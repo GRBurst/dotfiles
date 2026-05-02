@@ -160,6 +160,7 @@ in {
         tigd = "$HOME/projects/bin/tig-dotfiles";
 
         # vim configs
+        v = "nvim $('fd' --type f | fzf --height 80% --reverse)";
         vim = "nvim";
         vn = "nvim /etc/nixos/configuration.nix";
         vi3 = "nvim ~/.config/i3/config";
