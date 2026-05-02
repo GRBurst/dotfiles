@@ -16,6 +16,7 @@
     ./features/hyprland.nix
     ./features/i3
     ./features/kitty.nix
+    ./features/librewolf.nix
     ./features/misc.nix
     ./features/nvf.nix
     ./features/rofi.nix

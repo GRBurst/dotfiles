@@ -74,6 +74,7 @@
       yazi.enable = true;
       zsh.enable = true;
       kitty.enable = true;
+      librewolf.enable = true;
     };
   };
 

@@ -161,6 +161,29 @@
         message = msg;
       }
     ];
+
+  librewolfTestHome = inputs.home-manager.lib.homeManagerConfiguration {
+    inherit pkgs;
+    modules = [
+      ../modules/home-manager/features/librewolf.nix
+      {
+        home.username = "lw-test";
+        home.homeDirectory = "/tmp/lw-test";
+        home.stateVersion = "25.11";
+        my.hm.features.librewolf = {
+          enable = true;
+          package = pkgs.librewolf;
+        };
+      }
+    ];
+  };
+  librewolfTest = librewolfTestHome.config;
+
+  lwAndromedaNixpkgsCfg = andromeda.nixpkgs.config;
+  lwAllowInsecurePred = lwAndromedaNixpkgsCfg.allowInsecurePredicate or (_: false);
+  lwFakeBin = {pname = "librewolf-bin"; name = "librewolf-bin-999"; meta.knownVulnerabilities = ["x"];};
+  lwFakeUnwrapped = {pname = "librewolf-bin-unwrapped"; name = "librewolf-bin-unwrapped-999"; meta.knownVulnerabilities = ["x"];};
+  lwFakeOther = {pname = "unrelated-pkg"; name = "unrelated-pkg-1"; meta.knownVulnerabilities = ["x"];};
 in {
   andromeda-syncthing-user =
     mkCheck "andromeda-syncthing-user"
@@ -1912,6 +1935,104 @@ in {
     {
       condition = andromedaNoMaster.pkgs.claude-code.version != masterPkgs.claude-code.version;
       message = "opt-out fixture: claude-code must fall back to base nixpkgs when disabled";
+    }
+  ];
+
+  lw-module-isolation = mkAssertionCheck "lw-module-isolation" [
+    {
+      condition = librewolfTest.programs.librewolf.enable;
+      message = "lw module: programs.librewolf.enable must be true when feature is enabled";
+    }
+    {
+      condition = builtins.hasAttr "nix-managed" librewolfTest.programs.librewolf.profiles;
+      message = "lw module: profile 'nix-managed' must exist";
+    }
+    {
+      condition =
+        librewolfTest.programs.librewolf.profiles."nix-managed".id == 0
+        && librewolfTest.programs.librewolf.profiles."nix-managed".isDefault;
+      message = "lw module: profile 'nix-managed' must have id=0 and isDefault=true";
+    }
+    {
+      condition = lib.getName librewolfTest.programs.librewolf.package == "librewolf";
+      message = "lw module: package option must thread through to programs.librewolf.package";
+    }
+  ];
+
+  lw-jelias-enabled = mkAssertionCheck "lw-jelias-enabled" [
+    {
+      condition = jeliasHome.my.hm.features.librewolf.enable;
+      message = "earth/jelias: my.hm.features.librewolf.enable must be true";
+    }
+    {
+      condition = jeliasHome.programs.librewolf.enable;
+      message = "earth/jelias: programs.librewolf.enable must be true";
+    }
+    {
+      condition = builtins.hasAttr "nix-managed" jeliasHome.programs.librewolf.profiles;
+      message = "earth/jelias: librewolf profile 'nix-managed' must exist";
+    }
+    {
+      condition =
+        jeliasHome.programs.librewolf.profiles."nix-managed".id == 0
+        && jeliasHome.programs.librewolf.profiles."nix-managed".isDefault;
+      message = "earth/jelias: librewolf profile 'nix-managed' must have id=0 and isDefault=true";
+    }
+    {
+      condition = lib.getName jeliasHome.programs.librewolf.package == "librewolf-bin";
+      message = "earth/jelias: librewolf package must be librewolf-bin";
+    }
+  ];
+
+  lw-pallon-enabled = mkAssertionCheck "lw-pallon-enabled" [
+    {
+      condition = pallonHome.my.hm.features.librewolf.enable;
+      message = "andromeda/pallon: my.hm.features.librewolf.enable must be true";
+    }
+    {
+      condition = pallonHome.programs.librewolf.enable;
+      message = "andromeda/pallon: programs.librewolf.enable must be true";
+    }
+    {
+      condition = builtins.hasAttr "nix-managed" pallonHome.programs.librewolf.profiles;
+      message = "andromeda/pallon: librewolf profile 'nix-managed' must exist";
+    }
+    {
+      condition =
+        pallonHome.programs.librewolf.profiles."nix-managed".id == 0
+        && pallonHome.programs.librewolf.profiles."nix-managed".isDefault;
+      message = "andromeda/pallon: librewolf profile 'nix-managed' must have id=0 and isDefault=true";
+    }
+    {
+      condition = lib.getName pallonHome.programs.librewolf.package == "librewolf-bin";
+      message = "andromeda/pallon: librewolf package must be librewolf-bin";
+    }
+  ];
+
+  lw-system-insecure = mkAssertionCheck "lw-system-insecure" [
+    {
+      condition = builtins.elem "openssl-1.1.1w" lwAndromedaNixpkgsCfg.permittedInsecurePackages;
+      message = "andromeda: openssl-1.1.1w must remain in permittedInsecurePackages";
+    }
+    {
+      condition = !(builtins.elem "librewolf-bin-149.0.2-2" lwAndromedaNixpkgsCfg.permittedInsecurePackages);
+      message = "andromeda: pinned librewolf-bin-149.0.2-2 must not be in permittedInsecurePackages (use predicate instead)";
+    }
+    {
+      condition = !(builtins.elem "librewolf-bin-unwrapped-149.0.2-2" lwAndromedaNixpkgsCfg.permittedInsecurePackages);
+      message = "andromeda: pinned librewolf-bin-unwrapped-149.0.2-2 must not be in permittedInsecurePackages (use predicate instead)";
+    }
+    {
+      condition = lwAllowInsecurePred lwFakeBin;
+      message = "andromeda: allowInsecurePredicate must permit librewolf-bin (any version)";
+    }
+    {
+      condition = lwAllowInsecurePred lwFakeUnwrapped;
+      message = "andromeda: allowInsecurePredicate must permit librewolf-bin-unwrapped (any version)";
+    }
+    {
+      condition = !(lwAllowInsecurePred lwFakeOther);
+      message = "andromeda: allowInsecurePredicate must not permit unrelated packages";
     }
   ];
 }

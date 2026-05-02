@@ -43,12 +43,17 @@ in {
       "vm.swappiness" = 1;
     };
 
-    # Insecure Packages (Required for OpenSSL 1.1.1w)
-    nixpkgs.config.permittedInsecurePackages = [
-      "openssl-1.1.1w"
-      "librewolf-bin-149.0.2-2"
-      "librewolf-bin-unwrapped-149.0.2-2"
-    ];
+    # Insecure Packages
+    nixpkgs.config = {
+      permittedInsecurePackages = [
+        "openssl-1.1.1w"
+      ];
+      allowInsecurePredicate = pkg:
+        builtins.elem (lib.getName pkg) [
+          "librewolf-bin"
+          "librewolf-bin-unwrapped"
+        ];
+    };
 
     # Security Wrappers (PMount, Light, Beep)
     security.wrappers = {
