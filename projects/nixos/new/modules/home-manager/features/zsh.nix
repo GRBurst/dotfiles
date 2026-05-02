@@ -160,7 +160,7 @@ in {
         tigd = "$HOME/projects/bin/tig-dotfiles";
 
         # vim configs
-        v = "nvim $('fd' --type f | fzf --height 80% --reverse)";
+        v = "(file=$('fd' --type f | fzf --height 80% --reverse) && nvim \"$file\")";
         vim = "nvim";
         vn = "nvim /etc/nixos/configuration.nix";
         vi3 = "nvim ~/.config/i3/config";
@@ -438,16 +438,34 @@ in {
             nvim "$file"
         }
         fivl() {
-            local query file
+            local query="" file="" output exit_code
+            local RG_PREFIX="rg --column --smart-case --no-heading --files-with-matches --hidden"
+
             while true; do
-                RG_PREFIX="rg --column --smart-case --no-heading --files-with-matches --hidden"
-                fzf --bind "change:reload:$RG_PREFIX {q} || true" --ansi --disabled --preview 'rg --color=always --smart-case -C 5 {q} {+}' --preview-window wrap --print-query --print0 -q "$query" | read -r query file
+                output=$(fzf --bind "change:reload:$RG_PREFIX {q} || true" \
+                            --ansi \
+                            --disabled \
+                            --preview 'rg --color=always --smart-case -C 5 {q} {+}' \
+                            --preview-window wrap \
+                            --print-query \
+                            -q "$query")
+                exit_code=$?
+
+                query="''${output%%$'\n'*}"
+
+                if [[ $exit_code -ne 0 ]]; then
+                    break
+                fi
+
+                # Escaped here as well
+                file="''${output#*$'\n'}"
+
                 if [[ -z "$file" ]]; then
                     break
                 fi
+
+                # Escaped EDITOR fallback
                 nvim "$file" || break
-                echo "query: $query"
-                echo "file: $file"
             done
         }
         fakl() {
