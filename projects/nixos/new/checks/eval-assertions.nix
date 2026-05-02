@@ -185,7 +185,8 @@
   lwFakeBin = {pname = "librewolf-bin"; name = "librewolf-bin-999"; meta.knownVulnerabilities = ["x"];};
   lwFakeUnwrapped = {pname = "librewolf-bin-unwrapped"; name = "librewolf-bin-unwrapped-999"; meta.knownVulnerabilities = ["x"];};
   lwFakeOther = {pname = "unrelated-pkg"; name = "unrelated-pkg-1"; meta.knownVulnerabilities = ["x"];};
-  lwHasExt = pkgList: n: builtins.any (p: (p.pname or "") == n) pkgList;
+  lwHasExt = pkgList: n: builtins.any (p: lib.getName p == n) pkgList;
+  lwAddons = inputs.firefox-addons.packages.${pkgs.stdenv.hostPlatform.system};
 in {
   andromeda-syncthing-user =
     mkCheck "andromeda-syncthing-user"
@@ -2077,6 +2078,63 @@ in {
           pallonHome.programs.librewolf.profiles."nix-managed".extensions.packages
         >= 10;
       message = "andromeda/pallon: at least 10 extensions must be installed";
+    }
+  ];
+
+  lw-3rdparty = mkAssertionCheck "lw-3rdparty" [
+    {
+      condition =
+        librewolfTest.programs.librewolf.policies ? "3rdparty";
+      message = "lw module: policies must contain '3rdparty' key";
+    }
+    {
+      condition =
+        librewolfTest.programs.librewolf.policies ? "3rdparty"
+        && librewolfTest.programs.librewolf.policies."3rdparty".Extensions
+          ? "uBlock0@raymondhill.net";
+      message = "lw module: 3rdparty.Extensions must have uBlock0@raymondhill.net";
+    }
+    {
+      condition =
+        librewolfTest.programs.librewolf.policies ? "3rdparty"
+        && librewolfTest.programs.librewolf.policies."3rdparty".Extensions
+          ? "uBlock0@raymondhill.net"
+        && (builtins.length
+          librewolfTest.programs.librewolf.policies."3rdparty"
+            .Extensions."uBlock0@raymondhill.net".toOverwrite.filterLists) > 0;
+      message = "lw module: uBlock Origin toOverwrite.filterLists must be non-empty";
+    }
+    {
+      condition =
+        librewolfTest.programs.librewolf.policies ? "3rdparty"
+        && librewolfTest.programs.librewolf.policies."3rdparty".Extensions
+          ? "{1ea2fa75-677e-4702-b06a-50fc7d06fe7e}";
+      message = "lw module: 3rdparty.Extensions must have Temporary Containers Plus";
+    }
+    {
+      condition =
+        pallonHome.programs.librewolf.policies ? "3rdparty"
+        && pallonHome.programs.librewolf.policies."3rdparty".Extensions
+          ? "uBlock0@raymondhill.net"
+        && pallonHome.programs.librewolf.policies."3rdparty".Extensions
+          ? "{1ea2fa75-677e-4702-b06a-50fc7d06fe7e}";
+      message = "andromeda/pallon: 3rdparty Extensions must contain uBO and TempContainers+";
+    }
+  ];
+
+  lw-mozpermissions = let
+    ubo = lwAddons.ublock-origin;
+  in mkAssertionCheck "lw-mozpermissions" [
+    {
+      condition = ubo ? meta && ubo.meta ? mozPermissions;
+      message = "ublock-origin: meta.mozPermissions must be present (rycee NUR audit trail)";
+    }
+    {
+      condition =
+        ubo ? meta
+        && ubo.meta ? mozPermissions
+        && builtins.elem "webRequest" ubo.meta.mozPermissions;
+      message = "ublock-origin: webRequest must be in meta.mozPermissions";
     }
   ];
 

@@ -6,7 +6,7 @@
   ...
 }: let
   cfg = config.my.hm.features.librewolf;
-  addons = inputs.firefox-addons.packages.${pkgs.system};
+  addons = inputs.firefox-addons.packages.${pkgs.stdenv.hostPlatform.system};
   # Helper to dynamically build the policy object based on the Mozilla Add-on slug.
   amoExtension = slug: {
     install_url = "https://addons.mozilla.org/firefox/downloads/latest/${slug}/latest.xpi";
@@ -49,36 +49,76 @@ in {
       };
       policies = {
         ExtensionSettings = {
-          "{3579f63b-d8ee-424f-bbb6-6d0ce3285e6a}" = amoExtension "chameleon-ext";
-          "de-DE@dictionaries.addons.mozilla.org" = amoExtension "german-dictionary-de_de-for-sp";
-          "{af37054b-3ace-46a2-ac59-709e4412bec6}" = amoExtension "add-custom-search-engine";
-          "{7a07e802-6785-4e48-a29e-b81bdd5efbd3}" = amoExtension "clear-private-data-now";
           "{800215d6-eff0-4a62-9268-09857c048030}" = amoExtension "containers-helper";
-          "{69c84059-c632-41d0-b3bf-ae54aacb632e}" = amoExtension "containers-theme";
-          "page-assist@nazeem" = amoExtension "page-assist";
-          "sourcegraph-for-firefox@sourcegraph.com" = amoExtension "sourcegraph-for-firefox";
           "{d5ac33ed-723c-402b-b17c-e7bbb0d3a80d}" = amoExtension "switch-container-plus";
           "{2bd18ca8-5dd7-4311-a777-02ed29663496}" = amoExtension "tamper-data-for-ff-quantum";
-          "jid0-GXjLLfbCoAx0LcltEdFrEkQdQPI@jetpack" = amoExtension "awesome-screenshot-screen-record";
+        };
+        "3rdparty" = {
+          Extensions = {
+            "uBlock0@raymondhill.net" = {
+              userSettings = [
+                ["colorTheme" "dark"]
+                ["contextMenuEnabled" true]
+              ];
+              toOverwrite = {
+                filterLists = [
+                  "ublock-filters"
+                  "ublock-badware"
+                  "ublock-privacy"
+                  "ublock-abuse"
+                  "ublock-unbreak"
+                  "easylist"
+                  "easyprivacy"
+                  "urlhaus-1"
+                  "plowe-0"
+                  "ublock-annoyances"
+                ];
+              };
+            };
+            "{1ea2fa75-677e-4702-b06a-50fc7d06fe7e}" = {
+              automaticMode = {
+                active = true;
+              };
+              container = {
+                numberMode = "reuse";
+              };
+              isolation = {
+                global = {
+                  navigation = {
+                    action = "always";
+                  };
+                };
+              };
+            };
+          };
         };
       };
       profiles.${cfg.profileName} = {
         id = 0;
         isDefault = true;
         extensions.packages = with addons; [
-          ublock-origin
-          keepassxc-browser
-          darkreader
-          noscript
-          tridactyl
-          temporary-containers
-          multi-account-containers
-          cookie-autodelete
-          decentraleyes
-          refined-github
-          web-developer
-          containerise
+          add-custom-search-engine
           canvasblocker
+          chameleon-ext
+          clearcache
+          cookie-autodelete
+          container-colors
+          container-proxy
+          containerise
+          darkreader
+          dictionary-german
+          decentraleyes
+          keepassxc-browser
+          multi-account-containers
+          noscript
+          page-assist
+          refined-github
+          screenshot-capture-annotate
+          sourcegraph
+          temporary-containers-plus
+          tridactyl
+          ublock-origin
+          web-developer
         ];
         settings = {
           # --- privacy / fingerprinting ---

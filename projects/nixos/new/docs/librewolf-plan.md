@@ -13,7 +13,7 @@ Instead, it builds the configuration in isolated, verifiable phases.
 | P₁    | Base Module Activation       | ✅ Done    |
 | P₂    | Core Preferences Migration   | ✅ Done    |
 | P₃    | Extension Installation       | ✅ Done    |
-| P₄    | Plugin Configuration         | ⏳ Pending |
+| P₄    | Plugin Configuration         | ✅ Done    |
 | P₅    | Volatile Data (Bookmarks)    | ⏳ Pending |
 
 ### Divergence from plan (P₁)
@@ -120,6 +120,34 @@ mismatches).
    from P₂; the extension is redundant.
 8. **5 new eval assertions** under `lw-extensions`: verify `extensions.packages` non-empty,
    `ublock-origin` present in isolation fixture and both real users, ≥10 extensions installed.
+
+### Divergence from plan (P₄)
+
+1. **ExtensionSettings reduced from 11 to 3.** Eight of the originally-manual extensions were
+   found in `generated-firefox-addons.nix` and moved to `extensions.packages`. The NUR package
+   builder is `buildMozillaXpiAddon` (renamed from `buildFirefoxXpiAddon`). Only Containers
+   Helper, Switch Container Plus, and Tamper Data remain in `policies.ExtensionSettings`.
+2. **`pkgs.stdenv.hostPlatform.system` replaces `pkgs.system`.** Applied per rycee README
+   recommendation for multi-platform flake correctness.
+3. **`policies."3rdparty"` added with two entries.** uBlock Origin
+   (`uBlock0@raymondhill.net`) is configured with ten privacy-focused filter lists via
+   `toOverwrite`. Temporary Containers Plus (`{1ea2fa75-677e-4702-b06a-50fc7d06fe7e}`) is
+   configured with automatic isolation mode, `reuse` container numbering, and `always`-isolate
+   cross-site navigation. `toOverwrite` is used for both since the `nix-managed` profile is
+   fresh with no prior managed-storage state.
+4. **Decentraleyes and KeePassXC-Browser explicitly reviewed and excluded** from `3rdparty`
+   configuration. Both have managed storage APIs but their factory defaults are appropriate.
+   KeePassXC-Browser connects to the system KeePassXC socket without additional config.
+5. **`lwHasExt` fixed to use `lib.getName`.** `buildMozillaXpiAddon` does not expose `pname`
+   as a derivation attribute (only `name = pname-version`). The old `p.pname or ""` check
+   always returned `""`, silently failing all extension-presence assertions. Fixed to
+   `lib.getName p` which strips the version suffix from `name`.
+6. **Two new assertion blocks added.** `lw-3rdparty` (5 conditions): verifies the `3rdparty`
+   policy key, uBlock Origin and Temporary Containers Plus entries, filter lists non-empty, and
+   propagation to `pallon@andromeda`. `lw-mozpermissions` (2 conditions): verifies
+   `ublock-origin.meta.mozPermissions` exists and contains `webRequest` — a change-detection
+   guard per the rycee README guidance that NUR-managed installs skip the browser permission
+   prompt.
 
 ## Phase 2: Core Preferences Migration (The Hardening)
 
