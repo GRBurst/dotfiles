@@ -2009,6 +2009,39 @@ in {
     }
   ];
 
+  lw-settings-shared = mkAssertionCheck "lw-settings-shared" [
+    {
+      condition =
+        librewolfTest.programs.librewolf.profiles."nix-managed".settings."privacy.fingerprintingProtection" == true;
+      message = "lw module: nix-managed profile must enable privacy.fingerprintingProtection";
+    }
+    {
+      condition =
+        jeliasHome.programs.librewolf.profiles."nix-managed".settings."privacy.fingerprintingProtection" == true;
+      message = "earth/jelias: nix-managed profile must enable privacy.fingerprintingProtection";
+    }
+    {
+      condition =
+        pallonHome.programs.librewolf.profiles."nix-managed".settings."privacy.fingerprintingProtection" == true;
+      message = "andromeda/pallon: nix-managed profile must enable privacy.fingerprintingProtection";
+    }
+    {
+      condition =
+        pallonHome.programs.librewolf.profiles."nix-managed".settings."privacy.trackingprotection.enabled" == true
+        && pallonHome.programs.librewolf.profiles."nix-managed".settings."network.predictor.enabled" == false
+        && pallonHome.programs.librewolf.profiles."nix-managed".settings."places.history.enabled" == false
+        && pallonHome.programs.librewolf.profiles."nix-managed".settings."browser.contentblocking.category" == "strict";
+      message = "andromeda/pallon: representative privacy/UX prefs must be present in nix-managed profile settings";
+    }
+    {
+      condition =
+        pallonHome.programs.librewolf.profiles."nix-managed".settings."services.sync.engine.history" == false
+        && pallonHome.programs.librewolf.profiles."nix-managed".settings."services.sync.engine.tabs" == false
+        && pallonHome.programs.librewolf.profiles."nix-managed".settings."services.sync.engine.prefs.modified" == false;
+      message = "andromeda/pallon: sync engines for history/tabs/prefs must be disabled to avoid conflicting with Nix";
+    }
+  ];
+
   lw-system-insecure = mkAssertionCheck "lw-system-insecure" [
     {
       condition = builtins.elem "openssl-1.1.1w" lwAndromedaNixpkgsCfg.permittedInsecurePackages;
