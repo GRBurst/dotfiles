@@ -209,20 +209,62 @@ in {
     cfgs.earth.config.services.displayManager.gdm.enable
     "earth must use gdm";
 
-  andromeda-dm-gdm =
-    mkCheck "andromeda-dm-gdm"
-    cfgs.andromeda.config.services.displayManager.gdm.enable
-    "andromeda must use gdm";
+  andromeda-dm-greetd =
+    mkCheck "andromeda-dm-greetd"
+    cfgs.andromeda.config.services.greetd.enable
+    "andromeda must use greetd";
 
   andromeda-dm-sddm-disabled =
     mkCheck "andromeda-dm-sddm-disabled"
     (!cfgs.andromeda.config.services.displayManager.sddm.enable)
     "andromeda must not use sddm";
 
+  andromeda-dm-gdm-disabled =
+    mkCheck "andromeda-dm-gdm-disabled"
+    (!cfgs.andromeda.config.services.displayManager.gdm.enable)
+    "andromeda must not use gdm";
+
   andromeda-dm-default-session-null =
     mkCheck "andromeda-dm-default-session-null"
     (cfgs.andromeda.config.services.displayManager.defaultSession == null)
-    "andromeda gdm must leave defaultSession unset";
+    "andromeda greetd must leave services.displayManager.defaultSession unset";
+
+  andromeda-greetd-greeter-user =
+    mkCheck "andromeda-greetd-greeter-user"
+    (cfgs.andromeda.config.services.greetd.settings.default_session.user == "greeter")
+    "andromeda greetd default_session must run as the greeter system user";
+
+  andromeda-greetd-tuigreet-cmd = let
+    cmd = cfgs.andromeda.config.services.greetd.settings.default_session.command;
+  in
+    mkAssertionCheck "check-andromeda-greetd-tuigreet-cmd" [
+      {
+        condition = lib.hasInfix "tuigreet" cmd;
+        message = "andromeda greetd command must invoke tuigreet";
+      }
+      {
+        condition = lib.hasInfix "--time" cmd;
+        message = "andromeda tuigreet must pass --time";
+      }
+      {
+        condition = lib.hasInfix "--remember" cmd;
+        message = "andromeda tuigreet must pass --remember";
+      }
+      {
+        condition = lib.hasInfix "--remember-session" cmd;
+        message = "andromeda tuigreet must pass --remember-session";
+      }
+    ];
+
+  andromeda-greetd-no-initial-session =
+    mkCheck "andromeda-greetd-no-initial-session"
+    (!(cfgs.andromeda.config.services.greetd.settings ? initial_session))
+    "andromeda greetd must not auto-login (no initial_session) when autoLogin = false";
+
+  earth-greetd-disabled =
+    mkCheck "earth-greetd-disabled"
+    (!cfgs.earth.config.services.greetd.enable)
+    "earth must not enable greetd (regression — earth uses gdm)";
 
   earth-firewall-k3s = let
     ports = cfgs.earth.config.networking.firewall.allowedTCPPorts;

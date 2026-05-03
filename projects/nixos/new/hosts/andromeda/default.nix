@@ -102,7 +102,7 @@
             options = "grp:menu_toggle";
           };
         };
-        displayManager = "sddm";
+        displayManager = "greetd";
         defaultSession = null;
       };
       firefox.enable = true;
