@@ -91,6 +91,7 @@
         };
         hyprland.enable = true;
         i3.enable = true;
+        sway.enable = true;
         xserver = {
           enable = true;
           dpi = 192;
@@ -101,7 +102,7 @@
             options = "grp:menu_toggle";
           };
         };
-        displayManager = "gdm";
+        displayManager = "sddm";
         defaultSession = null;
       };
       firefox.enable = true;

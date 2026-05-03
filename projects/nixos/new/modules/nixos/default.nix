@@ -19,6 +19,7 @@
     ./features/desktop/gnome.nix
     ./features/desktop/hyprland.nix
     ./features/desktop/i3.nix
+    ./features/desktop/sway.nix
     ./features/desktop/xserver.nix
     ./features/firefox.nix
     ./features/fonts.nix

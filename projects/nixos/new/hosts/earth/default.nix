@@ -114,6 +114,10 @@
         gnome.enable = true;
         hyprland.enable = true;
         i3.enable = true;
+        sway = {
+          enable = true;
+          package = pkgs.sway;
+        };
         xserver = {
           enable = true;
           dpi = 192;

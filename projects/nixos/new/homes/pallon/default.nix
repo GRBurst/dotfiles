@@ -35,7 +35,7 @@
         monitors = [
           {
             name = "eDP-1";
-            resolution = "1920x1080";
+            resolution = "3840x2160";
             position = "0x0";
             scale = 1.0;
           }
@@ -59,6 +59,30 @@
           {
             device = "wlp3s0";
             type = "wifi";
+          }
+        ];
+      };
+      sway = {
+        enable = true;
+        # workspaces, modes, programShortcuts, assignments all inherited from i3
+        commonStartupCommands = ["nm-applet" "protonmail-bridge -n"];
+        localStartupCommands = ["cbatticon" "blueman-applet"];
+        input = {
+          xkbLayout = "de,de";
+          xkbVariant = "neo,basic";
+          xkbOptions = "grp:menu_toggle";
+          touchpad = {
+            enable = true;
+            naturalScroll = false;
+            dwt = true;
+          };
+        };
+        outputs = [
+          {
+            name = "eDP-1";
+            resolution = "3840x2160";
+            position = "0 0";
+            scale = 1.0;
           }
         ];
       };

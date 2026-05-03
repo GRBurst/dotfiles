@@ -38,13 +38,13 @@
             name = "DP-2";
             resolution = "3840x2160";
             position = "0x0";
-            scale = 2.0;
+            scale = 1.0;
           }
           {
             name = "DP-4";
             resolution = "3840x2160";
-            position = "1920x0";
-            scale = 2.0;
+            position = "3840x0";
+            scale = 1.0;
           }
         ];
       };
@@ -104,6 +104,38 @@
           timeFormat = "%d/%m %R";
           timezone = null;
         };
+      };
+      sway = {
+        enable = true;
+        # workspaces, modes, programShortcuts, assignments all inherited from i3
+        commonStartupCommands = [
+          "ETESYNC_URL=https://scal.metacosmos.space etesync-dav"
+          "syncthingtray"
+          "nm-applet"
+          "protonvpn-app"
+          "protonmail-bridge -n"
+          "pasystray"
+        ];
+        input = {
+          xkbLayout = "de,de";
+          xkbVariant = "neo,basic,basic";
+          xkbOptions = "grp:menu_toggle";
+        };
+        outputs = [
+          {
+            name = "DP-2";
+            resolution = "3840x2160";
+            position = "0 0";
+            scale = 1.0;
+          }
+          {
+            name = "DP-4";
+            resolution = "3840x2160";
+            position = "3840 0";
+            scale = 1.0;
+          }
+        ];
+        swayFx.enable = false;
       };
       gnome.enable = true;
       misc.enable = true;

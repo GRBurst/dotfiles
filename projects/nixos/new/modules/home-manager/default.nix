@@ -15,6 +15,7 @@
     ./features/gnome.nix
     ./features/hyprland.nix
     ./features/i3
+    ./features/sway
     ./features/kitty.nix
     ./features/librewolf.nix
     ./features/misc.nix
