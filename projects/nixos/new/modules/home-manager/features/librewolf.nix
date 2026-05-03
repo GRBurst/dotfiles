@@ -59,19 +59,24 @@ in {
               userSettings = [
                 ["colorTheme" "dark"]
                 ["contextMenuEnabled" true]
+                ["dynamicFilteringEnabled" true]
               ];
               toOverwrite = {
                 filterLists = [
-                  "ublock-filters"
-                  "ublock-badware"
-                  "ublock-privacy"
-                  "ublock-abuse"
-                  "ublock-unbreak"
+                  "curben-phishing"
+                  "DEU-0"
+                  "dpollock-0"
                   "easylist"
                   "easyprivacy"
-                  "urlhaus-1"
+                  "fanboy-social"
                   "plowe-0"
+                  "ublock-abuse"
                   "ublock-annoyances"
+                  "ublock-badware"
+                  "ublock-filters"
+                  "ublock-privacy"
+                  "ublock-unbreak"
+                  "urlhaus-1"
                 ];
               };
             };
