@@ -83,16 +83,123 @@ in {
             "{1ea2fa75-677e-4702-b06a-50fc7d06fe7e}" = {
               automaticMode = {
                 active = true;
+                newTab = "created";
               };
+              notifications = false;
               container = {
+                namePrefix = "_";
+                color = "red";
+                colorRandom = false;
+                colorRandomExcluded = [];
+                icon = "circle";
+                iconRandom = false;
+                iconRandomExcluded = [];
                 numberMode = "reuse";
+                removal = 900000;
               };
+              iconColor = "default";
               isolation = {
+                reactivateDelay = 0;
                 global = {
                   navigation = {
-                    action = "always";
+                    action = "never";
                   };
+                  mouseClick = {
+                    middle = {
+                      action = "notsamedomain";
+                      container = "deleteshistory";
+                    };
+                    ctrlleft = {
+                      action = "notsamedomain";
+                      container = "deleteshistory";
+                    };
+                    left = {
+                      action = "notsamedomain";
+                      container = "deleteshistory";
+                    };
+                  };
+                  excluded = {
+                    "paypal.com" = {};
+                  };
+                  excludedContainers = [];
                 };
+                domain = [
+                  {
+                    pattern = "runescape.com";
+                    always = {
+                      action = "disabled";
+                      allowedInPermanent = false;
+                      allowedInTemporary = false;
+                    };
+                    navigation = {
+                      action = "never";
+                    };
+                    mouseClick = {
+                      middle = {
+                        action = "global";
+                      };
+                      ctrlleft = {
+                        action = "global";
+                      };
+                      left = {
+                        action = "never";
+                      };
+                    };
+                    excluded = {
+                      "jagex.com" = {};
+                    };
+                  }
+                ];
+                mac = {
+                  action = "disabled";
+                };
+              };
+              browserActionPopup = false;
+              pageAction = false;
+              contextMenu = true;
+              contextMenuBookmarks = false;
+              keyboardShortcuts = {
+                AltC = false;
+                AltP = false;
+                AltN = false;
+                AltShiftC = false;
+                AltX = false;
+                AltO = false;
+                AltI = false;
+              };
+              replaceTabs = false;
+              closeRedirectorTabs = {
+                active = false;
+                delay = 2000;
+                domains = [
+                  "t.co"
+                  "outgoing.prod.mozaws.net"
+                  "slack-redir.net"
+                ];
+              };
+              ignoreRequests = [];
+              cookies = {
+                domain = {};
+              };
+              scripts = {
+                active = false;
+                domain = {};
+              };
+              deletesHistory = {
+                active = true;
+                automaticMode = "automatic";
+                contextMenu = true;
+                contextMenuBookmarks = false;
+                containerAlwaysPerDomain = "automatic";
+                containerIsolation = "automatic";
+                containerRemoval = 900000;
+                containerMouseClicks = "automatic";
+                statistics = true;
+              };
+              statistics = true;
+              ui = {
+                expandPreferences = true;
+                popupDefaultTab = "isolation-global";
               };
             };
           };

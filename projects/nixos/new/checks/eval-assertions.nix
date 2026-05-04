@@ -254,6 +254,14 @@ in {
         condition = lib.hasInfix "--remember-session" cmd;
         message = "andromeda tuigreet must pass --remember-session";
       }
+      {
+        condition = lib.hasInfix "--sessions" cmd;
+        message = "andromeda tuigreet must pass --sessions (prevents double-scan via XDG_DATA_DIRS)";
+      }
+      {
+        condition = lib.hasInfix "--xsessions" cmd;
+        message = "andromeda tuigreet must pass --xsessions (enables X11 session discovery for i3)";
+      }
     ];
 
   andromeda-greetd-no-initial-session =
@@ -2183,6 +2191,104 @@ in {
         && pallonHome.programs.librewolf.policies."3rdparty".Extensions
           ? "{1ea2fa75-677e-4702-b06a-50fc7d06fe7e}";
       message = "andromeda/pallon: 3rdparty Extensions must contain uBO and TempContainers+";
+    }
+  ];
+
+  lw-tempcontainers-prefs = let
+    tcPrefs =
+      librewolfTest.programs.librewolf.policies."3rdparty"
+        .Extensions."{1ea2fa75-677e-4702-b06a-50fc7d06fe7e}";
+  in mkAssertionCheck "lw-tempcontainers-prefs" [
+    {
+      condition =
+        tcPrefs.automaticMode.active == true
+        && tcPrefs.automaticMode.newTab == "created";
+      message = "tc: automaticMode must be active with newTab=\"created\"";
+    }
+    {
+      condition = tcPrefs.notifications == false;
+      message = "tc: notifications must be false";
+    }
+    {
+      condition =
+        tcPrefs.container.namePrefix == "_"
+        && tcPrefs.container.color == "red"
+        && tcPrefs.container.icon == "circle"
+        && tcPrefs.container.numberMode == "reuse"
+        && tcPrefs.container.removal == 900000;
+      message = "tc: container shape (prefix/color/icon/numberMode/removal) mismatch";
+    }
+    {
+      condition = tcPrefs.iconColor == "default";
+      message = "tc: iconColor must be \"default\"";
+    }
+    {
+      condition =
+        tcPrefs.isolation.reactivateDelay == 0
+        && tcPrefs.isolation.global.navigation.action == "never";
+      message = "tc: isolation.global.navigation.action must be \"never\" (was \"always\" in stub)";
+    }
+    {
+      condition =
+        tcPrefs.isolation.global.mouseClick.middle.action == "notsamedomain"
+        && tcPrefs.isolation.global.mouseClick.middle.container == "deleteshistory"
+        && tcPrefs.isolation.global.mouseClick.ctrlleft.action == "notsamedomain"
+        && tcPrefs.isolation.global.mouseClick.left.action == "notsamedomain";
+      message = "tc: isolation.global.mouseClick must be notsamedomain/deleteshistory";
+    }
+    {
+      condition = tcPrefs.isolation.global.excluded ? "paypal.com";
+      message = "tc: isolation.global.excluded must contain paypal.com";
+    }
+    {
+      condition =
+        builtins.length tcPrefs.isolation.domain == 1
+        && (builtins.head tcPrefs.isolation.domain).pattern == "runescape.com"
+        && (builtins.head tcPrefs.isolation.domain).always.action == "disabled"
+        && (builtins.head tcPrefs.isolation.domain).excluded ? "jagex.com";
+      message = "tc: isolation.domain[0] must be runescape.com rule with jagex.com excluded";
+    }
+    {
+      condition = tcPrefs.isolation.mac.action == "disabled";
+      message = "tc: isolation.mac.action must be \"disabled\"";
+    }
+    {
+      condition =
+        tcPrefs.contextMenu == true
+        && tcPrefs.browserActionPopup == false
+        && tcPrefs.pageAction == false
+        && tcPrefs.contextMenuBookmarks == false;
+      message = "tc: contextMenu/browserActionPopup/pageAction/contextMenuBookmarks shape mismatch";
+    }
+    {
+      condition =
+        builtins.all (k: tcPrefs.keyboardShortcuts.${k} == false)
+          ["AltC" "AltP" "AltN" "AltShiftC" "AltX" "AltO" "AltI"];
+      message = "tc: all keyboardShortcuts must be disabled";
+    }
+    {
+      condition =
+        tcPrefs.closeRedirectorTabs.active == false
+        && tcPrefs.closeRedirectorTabs.delay == 2000
+        && builtins.elem "t.co" tcPrefs.closeRedirectorTabs.domains
+        && builtins.elem "slack-redir.net" tcPrefs.closeRedirectorTabs.domains
+        && builtins.elem "outgoing.prod.mozaws.net" tcPrefs.closeRedirectorTabs.domains;
+      message = "tc: closeRedirectorTabs domain set mismatch";
+    }
+    {
+      condition =
+        tcPrefs.deletesHistory.active == true
+        && tcPrefs.deletesHistory.automaticMode == "automatic"
+        && tcPrefs.deletesHistory.containerRemoval == 900000
+        && tcPrefs.deletesHistory.statistics == true;
+      message = "tc: deletesHistory must be active/automatic with 900000ms removal";
+    }
+    {
+      condition =
+        tcPrefs.statistics == true
+        && tcPrefs.ui.expandPreferences == true
+        && tcPrefs.ui.popupDefaultTab == "isolation-global";
+      message = "tc: ui shape mismatch";
     }
   ];
 
