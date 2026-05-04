@@ -38,13 +38,13 @@
             name = "DP-2";
             resolution = "3840x2160";
             position = "0x0";
-            scale = 1.0;
+            scale = 2.0;
           }
           {
             name = "DP-4";
             resolution = "3840x2160";
             position = "3840x0";
-            scale = 1.0;
+            scale = 2.0;
           }
         ];
       };
@@ -126,13 +126,13 @@
             name = "DP-2";
             resolution = "3840x2160";
             position = "0 0";
-            scale = 1.0;
+            scale = 2.0;
           }
           {
             name = "DP-4";
             resolution = "3840x2160";
             position = "3840 0";
-            scale = 1.0;
+            scale = 2.0;
           }
         ];
         swayFx.enable = false;
