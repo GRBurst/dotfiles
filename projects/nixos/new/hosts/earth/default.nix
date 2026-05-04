@@ -26,7 +26,11 @@
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    initrd.availableKernelModules = ["r8169"];
+    initrd = {
+      availableKernelModules = ["r8169"];
+      systemd.enable = true;
+    };
+    kernelParams = ["console=tty1"];
   };
 
   hardware = {

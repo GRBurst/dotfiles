@@ -19,7 +19,7 @@
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    kernelParams = ["usbcore.autosuspend=-1"];
+    kernelParams = ["usbcore.autosuspend=-1" "console=tty1"];
     initrd.systemd.enable = true;
   };
 
