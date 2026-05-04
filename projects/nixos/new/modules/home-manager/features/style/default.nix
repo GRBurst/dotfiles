@@ -168,6 +168,20 @@ in {
     {
       home.packages = [styleSwitch];
 
+      # Disable Stylix for tools whose themes are managed by our own template functions.
+      stylix.targets = {
+        alacritty.enable = false;
+        kitty.enable     = false;
+        rofi.enable      = false;
+        i3.enable        = false;
+        hyprland.enable  = false;
+        waybar.enable    = false;
+        yazi.enable      = false;
+        dunst.enable     = false;
+        nvf.enable       = false;
+        qt.enable        = false;
+      };
+
       services.darkman = lib.mkIf cfg.darkman.enable {
         enable = true;
         settings = {

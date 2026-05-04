@@ -1152,16 +1152,16 @@ in {
       message = "both hosts must enable the public NixOS style API through the Stylix migration shim";
     }
     {
-      condition = andromeda.stylix.enable == true && andromeda.stylix.autoEnable == false;
-      message = "andromeda: style must keep Stylix enabled only as an explicit migration target";
+      condition = andromeda.stylix.enable == true && andromeda.stylix.autoEnable == true;
+      message = "andromeda: Stylix must be enabled with autoEnable for full coverage";
     }
     {
-      condition = earth.stylix.enable == true && earth.stylix.autoEnable == false;
-      message = "earth: style must keep Stylix enabled only as an explicit migration target";
+      condition = earth.stylix.enable == true && earth.stylix.autoEnable == true;
+      message = "earth: Stylix must be enabled with autoEnable for full coverage";
     }
     {
-      condition = andromeda.stylix.base16Scheme.base00 == "ffffff" && earth.stylix.base16Scheme.base00 == "ffffff";
-      message = "Stylix migration palette must default to Enfocado light";
+      condition = andromeda.stylix.base16Scheme.base00 == "181818" && earth.stylix.base16Scheme.base00 == "181818";
+      message = "Stylix must use dark palette for boot readability (VT console)";
     }
     {
       condition = pallonHome.my.hm.features.style.enable == true && jeliasHome.my.hm.features.style.enable == true;
@@ -1378,7 +1378,7 @@ in {
       message = "pallon Waybar light theme must use Enfocado light";
     }
     {
-      condition = lib.hasInfix "col.active_border = rgba(0064e4ee)" pallonFiles."my/theme/hyprland/light.conf".text;
+      condition = lib.hasInfix "col.active_border   = rgba(0064e4ee)" pallonFiles."my/theme/hyprland/light.conf".text;
       message = "pallon Hyprland light theme must use Enfocado light";
     }
     {

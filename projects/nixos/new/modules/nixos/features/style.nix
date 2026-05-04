@@ -34,9 +34,17 @@ in {
   config = lib.mkIf cfg.enable {
     stylix = lib.mkIf cfg.stylixMigration.enable {
       enable = true;
-      autoEnable = false;
-      targets.console.enable = true;
-      base16Scheme = style.toBase16 palettes.${cfg.defaultMode};
+      autoEnable = true;
+
+      # Console always uses dark palette for boot readability:
+      # 256-color gray maps to #b9b9b9 on #181818 (~9:1 contrast, WCAG AAA).
+      base16Scheme = style.toBase16 palettes.dark;
+
+      targets = {
+        console.enable = true;
+        qt.enable      = false;
+      };
+
       fonts = {
         monospace = {
           package = fontCfg.monospace.package;

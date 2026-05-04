@@ -5,12 +5,18 @@ in {
 
   inherit stripHash;
 
-  toBase16 = palette: {
+  toBase16 = palette: let
+    isLight = (palette.polarity or "dark") == "light";
+  in {
     base00 = stripHash palette.primary.background;
     base01 = stripHash palette.normal.black;
     base02 = stripHash palette.bright.black;
-    base03 = stripHash palette.bright.black;
-    base04 = stripHash palette.normal.white;
+    base03 = stripHash (
+      if isLight
+      then palette.normal.white   # dim_0 — comments / muted text
+      else palette.bright.black   # bg_2 — selection bg
+    );
+    base04 = stripHash palette.primary.foreground;
     base05 = stripHash palette.primary.foreground;
     base06 = stripHash palette.bright.white;
     base07 = stripHash palette.bright.white;
@@ -21,7 +27,7 @@ in {
     base0C = stripHash palette.normal.cyan;
     base0D = stripHash palette.normal.blue;
     base0E = stripHash palette.normal.magenta;
-    base0F = stripHash palette.bright.magenta;
+    base0F = stripHash palette.normal.violet;
   };
 
   mkAlacrittyTheme = palette: ''
@@ -78,7 +84,7 @@ in {
       background: ${palette.primary.background};
       foreground: ${palette.primary.foreground};
       accent: ${palette.normal.blue};
-      muted: ${palette.bright.black};
+      muted: ${palette.normal.white};
       urgent: ${palette.normal.red};
 
       background-color: @background;
@@ -154,10 +160,11 @@ in {
 
     [filetype]
     rules = [
-      { mime = "image/*", fg = "${palette.normal.yellow}" },
-      { mime = "{audio,video}/*", fg = "${palette.normal.magenta}" },
+      { mime = "image/*",                                fg = "${palette.normal.yellow}" },
+      { mime = "{audio,video}/*",                        fg = "${palette.normal.orange}" },
       { mime = "application/{zip,rar,7z*,tar,gzip,xz}", fg = "${palette.normal.red}" },
-      { url = "*/", fg = "${palette.normal.blue}" },
+      { mime = "text/*",                                 fg = "${palette.normal.violet}" },
+      { url = "*/",                                      fg = "${palette.normal.blue}" },
     ]
   '';
 
@@ -174,7 +181,7 @@ in {
     critical_fg = "${palette.normal.red}"
     separator = ""
     separator_bg = "${palette.primary.background}"
-    separator_fg = "${palette.bright.black}"
+    separator_fg = "${palette.normal.white}"
     alternating_tint_bg = "#00000000"
     alternating_tint_fg = "#00000000"
   '';
@@ -203,8 +210,9 @@ in {
         separator_color = frame
 
     [urgency_low]
-        background = "${palette.primary.background}"
-        foreground = "${palette.bright.black}"
+        background  = "${palette.primary.background}"
+        foreground  = "${palette.normal.white}"
+        frame_color = "${palette.normal.orange}"
         timeout = 5
 
     [urgency_normal]
@@ -221,8 +229,8 @@ in {
 
   mkI3Theme = palette: ''
     client.focused          ${palette.normal.blue}  ${palette.normal.blue}  ${palette.primary.background} ${palette.normal.magenta} ${palette.normal.blue}
-    client.focused_inactive ${palette.normal.black} ${palette.normal.black} ${palette.primary.foreground} ${palette.bright.black}    ${palette.normal.black}
-    client.unfocused        ${palette.normal.black} ${palette.normal.black} ${palette.bright.black}       ${palette.bright.black}    ${palette.normal.black}
+    client.focused_inactive ${palette.bright.black} ${palette.bright.black} ${palette.normal.white} ${palette.normal.white} ${palette.bright.black}
+    client.unfocused        ${palette.bright.black} ${palette.bright.black} ${palette.normal.white} ${palette.normal.white} ${palette.bright.black}
     client.urgent           ${palette.normal.red}   ${palette.normal.red}   ${palette.primary.background} ${palette.normal.red}      ${palette.normal.red}
     client.placeholder      ${palette.primary.background} ${palette.normal.green} ${palette.primary.foreground} ${palette.primary.background} ${palette.primary.background}
   '';
@@ -256,8 +264,8 @@ in {
 
   mkHyprlandTheme = palette: ''
     general {
-      col.active_border = rgba(${stripHash palette.normal.blue}ee) rgba(${stripHash palette.normal.magenta}ee) 45deg
-      col.inactive_border = rgba(${stripHash palette.normal.black}aa)
+      col.active_border   = rgba(${stripHash palette.normal.blue}ee) rgba(${stripHash palette.normal.violet}ee) 45deg
+      col.inactive_border = rgba(${stripHash palette.bright.black}aa)
     }
   '';
 }
