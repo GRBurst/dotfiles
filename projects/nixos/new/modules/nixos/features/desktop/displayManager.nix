@@ -93,7 +93,7 @@ in {
       services.xserver.displayManager.startx.enable = true;
 
       # Append xinit to greetd's hardcoded minimal PATH so tuigreet can invoke startx.
-      systemd.services.greetd.path = [pkgs.xorg.xinit];
+      systemd.services.greetd.path = [pkgs.xinit];
     })
   ];
 }
