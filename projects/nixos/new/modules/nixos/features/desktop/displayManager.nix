@@ -66,6 +66,7 @@ in {
         enable = true;
         settings =
           {
+            terminal.vt = lib.mkForce 2;
             default_session = {
               command = lib.concatStringsSep " " (
                 [
