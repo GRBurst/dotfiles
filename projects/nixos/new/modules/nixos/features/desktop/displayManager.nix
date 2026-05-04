@@ -68,7 +68,14 @@ in {
           {
             default_session = {
               command = lib.concatStringsSep " " (
-                ["${pkgs.tuigreet}/bin/tuigreet" "--time" "--remember" "--remember-session"]
+                [
+                  "${pkgs.tuigreet}/bin/tuigreet"
+                  "--time"
+                  "--remember"
+                  "--remember-session"
+                  "--sessions" "${config.services.displayManager.sessionData.desktops}/share/wayland-sessions"
+                  "--xsessions" "${config.services.displayManager.sessionData.desktops}/share/xsessions"
+                ]
                 ++ lib.optional (cfg.defaultSession != null) "--cmd ${lib.escapeShellArg cfg.defaultSession}"
               );
               user = "greeter";
@@ -81,6 +88,12 @@ in {
             };
           };
       };
+
+      # Provide a valid xserverrc on NixOS so startx can locate the X binary.
+      services.xserver.displayManager.startx.enable = true;
+
+      # Append xinit to greetd's hardcoded minimal PATH so tuigreet can invoke startx.
+      systemd.services.greetd.path = [pkgs.xorg.xinit];
     })
   ];
 }
