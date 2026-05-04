@@ -73,8 +73,10 @@ in {
                   "--time"
                   "--remember"
                   "--remember-session"
-                  "--sessions" "${config.services.displayManager.sessionData.desktops}/share/wayland-sessions"
-                  "--xsessions" "${config.services.displayManager.sessionData.desktops}/share/xsessions"
+                  "--sessions"
+                  "${config.services.displayManager.sessionData.desktops}/share/wayland-sessions"
+                  "--xsessions"
+                  "${config.services.displayManager.sessionData.desktops}/share/xsessions"
                 ]
                 ++ lib.optional (cfg.defaultSession != null) "--cmd ${lib.escapeShellArg cfg.defaultSession}"
               );

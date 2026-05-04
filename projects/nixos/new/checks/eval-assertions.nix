@@ -2334,4 +2334,156 @@ in {
       message = "andromeda: allowInsecurePredicate must not permit unrelated packages";
     }
   ];
+
+  # ---------------------------------------------------------------------------
+  # Waybar multi-WM assertions (T1-T8, per user)
+  # Negative coverage (enforced by types, not run): listOf-enum rejects unknown
+  # WMs; xdg.configFile collision prevents re-introducing programs.waybar.settings.
+  # ---------------------------------------------------------------------------
+
+  andromeda-waybar-wm-list-nonempty =
+    mkCheck "andromeda-waybar-wm-list-nonempty"
+    (pallonHome.my.hm.features.waybar.windowManagers != [])
+    "andromeda pallon: waybar.windowManagers must be non-empty";
+
+  andromeda-waybar-has-hyprland =
+    mkCheck "andromeda-waybar-has-hyprland"
+    (builtins.elem "hyprland" pallonHome.my.hm.features.waybar.windowManagers)
+    "andromeda pallon: waybar.windowManagers must include hyprland";
+
+  andromeda-waybar-has-sway =
+    mkCheck "andromeda-waybar-has-sway"
+    (builtins.elem "sway" pallonHome.my.hm.features.waybar.windowManagers)
+    "andromeda pallon: waybar.windowManagers must include sway";
+
+  andromeda-waybar-file-hyprland =
+    mkCheck "andromeda-waybar-file-hyprland"
+    (pallonFiles ? "waybar/config-hyprland")
+    "andromeda pallon: xdg.configFile must contain waybar/config-hyprland";
+
+  andromeda-waybar-file-sway =
+    mkCheck "andromeda-waybar-file-sway"
+    (pallonFiles ? "waybar/config-sway")
+    "andromeda pallon: xdg.configFile must contain waybar/config-sway";
+
+  andromeda-waybar-no-legacy-settings =
+    mkCheck "andromeda-waybar-no-legacy-settings"
+    ((pallonHome.programs.waybar.settings or null) == null
+      || pallonHome.programs.waybar.settings == [])
+    "andromeda pallon: programs.waybar.settings must not be set (use xdg.configFile instead)";
+
+  andromeda-waybar-hypr-exec-flag =
+    mkCheck "andromeda-waybar-hypr-exec-flag"
+    (lib.any
+      (s: lib.hasInfix "waybar -c" s && lib.hasInfix "waybar/config-hyprland" s)
+      (pallonHome.wayland.windowManager.hyprland.settings.exec-once or []))
+    "andromeda pallon: hyprland exec-once must launch waybar with -c .../waybar/config-hyprland";
+
+  andromeda-sway-start-waybar =
+    mkCheck "andromeda-sway-start-waybar"
+    (pallonHome.my.hm.features.sway.startWaybar == true)
+    "andromeda pallon: sway.startWaybar must default to true when sway is in waybar.windowManagers";
+
+  andromeda-sway-config-has-waybar =
+    mkAssertionCheck "check-andromeda-sway-config-has-waybar" [
+      {
+        condition = lib.hasInfix "waybar -c"
+          (pallonFiles."sway/config".text or "");
+        message = "andromeda pallon: sway/config must exec waybar with -c flag";
+      }
+      {
+        condition = lib.hasInfix "waybar/config-sway"
+          (pallonFiles."sway/config".text or "");
+        message = "andromeda pallon: sway/config must reference waybar/config-sway";
+      }
+    ];
+
+  andromeda-waybar-hypr-modules-left =
+    mkCheck "andromeda-waybar-hypr-modules-left"
+    (builtins.elem "hyprland/workspaces"
+      (builtins.head
+        (builtins.fromJSON
+          (pallonFiles."waybar/config-hyprland".text or "[]"))).modules-left)
+    "andromeda pallon: waybar/config-hyprland modules-left must contain hyprland/workspaces";
+
+  andromeda-waybar-sway-modules-left =
+    mkCheck "andromeda-waybar-sway-modules-left"
+    (builtins.elem "sway/workspaces"
+      (builtins.head
+        (builtins.fromJSON
+          (pallonFiles."waybar/config-sway".text or "[]"))).modules-left)
+    "andromeda pallon: waybar/config-sway modules-left must contain sway/workspaces";
+
+  earth-waybar-wm-list-nonempty =
+    mkCheck "earth-waybar-wm-list-nonempty"
+    (jeliasHome.my.hm.features.waybar.windowManagers != [])
+    "earth jelias: waybar.windowManagers must be non-empty";
+
+  earth-waybar-has-hyprland =
+    mkCheck "earth-waybar-has-hyprland"
+    (builtins.elem "hyprland" jeliasHome.my.hm.features.waybar.windowManagers)
+    "earth jelias: waybar.windowManagers must include hyprland";
+
+  earth-waybar-has-sway =
+    mkCheck "earth-waybar-has-sway"
+    (builtins.elem "sway" jeliasHome.my.hm.features.waybar.windowManagers)
+    "earth jelias: waybar.windowManagers must include sway";
+
+  earth-waybar-file-hyprland =
+    mkCheck "earth-waybar-file-hyprland"
+    (jeliasFiles ? "waybar/config-hyprland")
+    "earth jelias: xdg.configFile must contain waybar/config-hyprland";
+
+  earth-waybar-file-sway =
+    mkCheck "earth-waybar-file-sway"
+    (jeliasFiles ? "waybar/config-sway")
+    "earth jelias: xdg.configFile must contain waybar/config-sway";
+
+  earth-waybar-no-legacy-settings =
+    mkCheck "earth-waybar-no-legacy-settings"
+    ((jeliasHome.programs.waybar.settings or null) == null
+      || jeliasHome.programs.waybar.settings == [])
+    "earth jelias: programs.waybar.settings must not be set (use xdg.configFile instead)";
+
+  earth-waybar-hypr-exec-flag =
+    mkCheck "earth-waybar-hypr-exec-flag"
+    (lib.any
+      (s: lib.hasInfix "waybar -c" s && lib.hasInfix "waybar/config-hyprland" s)
+      (jeliasHome.wayland.windowManager.hyprland.settings.exec-once or []))
+    "earth jelias: hyprland exec-once must launch waybar with -c .../waybar/config-hyprland";
+
+  earth-sway-start-waybar =
+    mkCheck "earth-sway-start-waybar"
+    (jeliasHome.my.hm.features.sway.startWaybar == true)
+    "earth jelias: sway.startWaybar must default to true when sway is in waybar.windowManagers";
+
+  earth-sway-config-has-waybar =
+    mkAssertionCheck "check-earth-sway-config-has-waybar" [
+      {
+        condition = lib.hasInfix "waybar -c"
+          (jeliasFiles."sway/config".text or "");
+        message = "earth jelias: sway/config must exec waybar with -c flag";
+      }
+      {
+        condition = lib.hasInfix "waybar/config-sway"
+          (jeliasFiles."sway/config".text or "");
+        message = "earth jelias: sway/config must reference waybar/config-sway";
+      }
+    ];
+
+  earth-waybar-hypr-modules-left =
+    mkCheck "earth-waybar-hypr-modules-left"
+    (builtins.elem "hyprland/workspaces"
+      (builtins.head
+        (builtins.fromJSON
+          (jeliasFiles."waybar/config-hyprland".text or "[]"))).modules-left)
+    "earth jelias: waybar/config-hyprland modules-left must contain hyprland/workspaces";
+
+  earth-waybar-sway-modules-left =
+    mkCheck "earth-waybar-sway-modules-left"
+    (builtins.elem "sway/workspaces"
+      (builtins.head
+        (builtins.fromJSON
+          (jeliasFiles."waybar/config-sway".text or "[]"))).modules-left)
+    "earth jelias: waybar/config-sway modules-left must contain sway/workspaces";
 }

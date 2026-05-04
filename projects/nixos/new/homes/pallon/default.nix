@@ -94,6 +94,7 @@
       waybar = {
         enable = true;
         battery = true;
+        windowManagers = ["hyprland" "sway"];
       };
       yazi.enable = true;
       zsh.enable = true;

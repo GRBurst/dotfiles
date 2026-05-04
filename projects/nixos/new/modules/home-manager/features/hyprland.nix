@@ -131,7 +131,7 @@ in {
         # --- Autostart ---
         exec-once =
           [
-            "waybar"
+            "waybar -c ${config.xdg.configHome}/waybar/config-hyprland"
             "hyprpaper"
             "nm-applet --indicator"
             "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"

@@ -143,7 +143,10 @@
       rofi.enable = true;
       shellAliases.enable = true;
       style.enable = true;
-      waybar.enable = true;
+      waybar = {
+        enable = true;
+        windowManagers = ["hyprland" "sway"];
+      };
       yazi.enable = true;
       zsh.enable = true;
       kitty.enable = true;

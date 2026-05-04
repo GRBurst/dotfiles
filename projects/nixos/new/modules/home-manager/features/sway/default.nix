@@ -73,7 +73,10 @@
   startupExecs =
     lib.concatMapStringsSep "\n"
     (cmd: "exec ${cmd}")
-    (cfg.commonStartupCommands ++ cfg.localStartupCommands);
+    (cfg.commonStartupCommands
+      ++ cfg.localStartupCommands
+      ++ lib.optional cfg.startWaybar
+      "waybar -c ${config.xdg.configHome}/waybar/config-sway");
 
   secondaryWsConfig = lib.optionalString cfg.enableSecondaryWorkspaces ''
     # switch to workspace (secondary)
@@ -315,6 +318,14 @@ in {
     };
 
     # -- Startup commands ---------------------------------------------------
+
+    startWaybar = lib.mkOption {
+      type = types.bool;
+      default =
+        config.my.hm.features.waybar.enable
+        && builtins.elem "sway" config.my.hm.features.waybar.windowManagers;
+      description = "Launch waybar with sway-specific config on startup.";
+    };
 
     commonStartupCommands = lib.mkOption {
       type = types.listOf types.str;
