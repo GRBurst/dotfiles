@@ -339,11 +339,19 @@ in {
 
       xdg.configFile."gtk-3.0/settings.ini".force = true;
 
-      home.activation.styleCurrentLinks = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      home.activation.removeCurrentThemeLinks = lib.hm.dag.entryBefore ["linkGenFiles"] ''
         PATH="${pkgs.coreutils}/bin:$PATH"
-        state_file="${config.xdg.stateHome}/my-theme/mode"
-        mode="$(cat "$state_file" 2>/dev/null || echo ${lib.escapeShellArg cfg.defaultMode})"
-        case "$mode" in light|dark) ;; *) mode=${lib.escapeShellArg cfg.defaultMode} ;; esac
+        _cur="${config.xdg.configHome}/my/theme/current"
+        if [[ -d "$_cur" ]]; then
+          find "$_cur" -maxdepth 1 -type l -delete
+        fi
+      '';
+
+      home.activation.styleCurrentLinks = lib.hm.dag.entryAfter ["writeBoundary"] ''
+          PATH="${pkgs.coreutils}/bin:$PATH"
+          state_file="${config.xdg.stateHome}/my-theme/mode"
+          mode="$(cat "$state_file" 2>/dev/null || echo ${lib.escapeShellArg cfg.defaultMode})"
+          case "$mode" in light|dark) ;; *) mode=${lib.escapeShellArg cfg.defaultMode} ;; esac
 
         cur="${config.xdg.configHome}/my/theme"
         mkdir -p "$cur/current"
