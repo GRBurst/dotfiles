@@ -83,7 +83,10 @@
       yazi.enable = true;
       zsh.enable = true;
       kitty.enable = true;
-      librewolf.enable = true;
+      librewolf = {
+        enable = true;
+        manualProfilePath = "mi3lqq74.default";
+      };
     };
   };
 

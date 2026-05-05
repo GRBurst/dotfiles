@@ -26,6 +26,13 @@ in {
       '';
     };
 
+    manualProfilePath = lib.mkOption {
+      type = lib.types.str;
+      description = ''
+        LibreWolf path to the pre-migration profile.
+      '';
+    };
+
     profileName = lib.mkOption {
       type = lib.types.str;
       default = "nix-managed";
@@ -54,7 +61,7 @@ in {
       # Keep pre-migration profile on disk as an escape hatch; id=1 leaves id=0 for the managed profile
       profiles.manual = {
         id = 1;
-        path = "mi3lqq74.default";
+        path = cfg.manualProfilePath;
         isDefault = false;
       };
       policies = {

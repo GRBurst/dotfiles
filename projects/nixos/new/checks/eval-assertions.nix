@@ -1753,6 +1753,21 @@ in {
       message = "current/ theme files must be managed by home.activation, not xdg.configFile";
     }
     {
+      condition = pallonActivation ? "removeCurrentThemeLinks";
+      message = "style module must provide removeCurrentThemeLinks activation entry";
+    }
+    {
+      condition = let
+        data = pallonActivation.removeCurrentThemeLinks.data or "";
+      in
+        lib.hasInfix "linkGenFiles" "${builtins.toJSON (pallonActivation.removeCurrentThemeLinks.before or [])}"
+        && lib.hasInfix "find" data
+        && lib.hasInfix "current" data
+        && lib.hasInfix "-type l" data
+        && lib.hasInfix "-delete" data;
+      message = "removeCurrentThemeLinks must run before linkGenFiles and remove symlinks from current/";
+    }
+    {
       condition = builtins.any (p: (p.pname or p.name or "") == "my-style-switch") pallonHome.home.packages;
       message = "pallon home must include the style dispatcher package";
     }
@@ -2145,7 +2160,6 @@ in {
           "nm-applet"
           "protonvpn-app"
           "protonmail-bridge -n"
-          "pasystray"
         ];
       message = "earth: i3 config must contain expected startup commands";
     }
