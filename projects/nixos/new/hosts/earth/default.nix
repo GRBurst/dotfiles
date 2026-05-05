@@ -112,7 +112,7 @@
           nasaApod.enable = true;
         };
         compositor = "compton";
-        displayManager = "gdm";
+        displayManager = "greetd";
         defaultSession = null;
         autoLogin = false;
         gnome.enable = true;
