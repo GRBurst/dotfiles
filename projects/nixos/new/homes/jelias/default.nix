@@ -55,13 +55,13 @@
       };
       i3 = {
         enable = true;
+        # xdg autostart contains pasystray and similar
         commonStartupCommands = [
           "ETESYNC_URL=https://scal.metacosmos.space etesync-dav"
           "syncthingtray"
           "nm-applet"
           "protonvpn-app"
           "protonmail-bridge -n"
-          "pasystray"
         ];
         display = {
           primaryOutput = "DP-2";
@@ -69,7 +69,6 @@
         };
         extraPackages = with pkgs; [
           brightnessctl
-          pasystray
           pavucontrol
           syncthingtray
         ];
