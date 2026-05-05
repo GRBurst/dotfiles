@@ -457,15 +457,26 @@ in {
       xdg.configFile."i3/scripts/rename.sh" = {
         source = ./scripts/rename.sh;
         executable = true;
+        force = true;
       };
       xdg.configFile."i3/scripts/display.sh" = {
         source = ./scripts/display.sh;
         executable = true;
+        force = true;
       };
 
-      xdg.configFile."i3/layouts/work_left.json".source = ./layouts/work_left.json;
-      xdg.configFile."i3/layouts/work_right.json".source = ./layouts/work_right.json;
-      xdg.configFile."i3/layouts/announcekit.json".source = ./layouts/announcekit.json;
+      xdg.configFile."i3/layouts/work_left.json" = {
+        source = ./layouts/work_left.json;
+        force = true;
+      };
+      xdg.configFile."i3/layouts/work_right.json" = {
+        source = ./layouts/work_right.json;
+        force = true;
+      };
+      xdg.configFile."i3/layouts/announcekit.json" = {
+        source = ./layouts/announcekit.json;
+        force = true;
+      };
     }
 
     (lib.mkIf dynamicStyleEnabled {

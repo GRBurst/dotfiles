@@ -168,10 +168,16 @@ in {
     {
       home.packages = [styleSwitch];
 
+      gtk = {
+        enable = true;
+        gtk2.force = true;
+      };
+
       # Disable Stylix for tools whose themes are managed by our own template functions.
       stylix.targets = {
         alacritty.enable = false;
         kitty.enable     = false;
+        gtk.enable       = true;
         rofi.enable      = false;
         i3.enable        = false;
         hyprland.enable  = false;
@@ -200,6 +206,8 @@ in {
         enable = true;
         config.common."org.freedesktop.impl.portal.Settings" = "darkman";
       };
+
+      xdg.configFile."gtk-3.0/settings.ini".force = true;
 
       home.activation.styleCurrentLinks =
         lib.hm.dag.entryAfter ["writeBoundary"] ''

@@ -1259,6 +1259,18 @@ in {
       message = "both users must run darkman as the mode source";
     }
     {
+      condition = pallonHome.stylix.targets.gtk.enable == true;
+      message = "pallon GTK theming must stay declarative through Stylix";
+    }
+    {
+      condition = pallonHome.gtk.gtk2.force == true;
+      message = "pallon GTK2 config must be force-owned by Home Manager";
+    }
+    {
+      condition = pallonFiles."gtk-3.0/settings.ini".force == true;
+      message = "pallon GTK3 settings.ini must be force-owned by Home Manager";
+    }
+    {
       condition = pallonHome.services.darkman.settings.portal == true && jeliasHome.services.darkman.settings.portal == true;
       message = "darkman must expose the XDG Settings portal";
     }
@@ -1691,6 +1703,26 @@ in {
     {
       condition = pallonHome.xdg.configFile."i3/scripts/i3scripts.sh".executable == true;
       message = "andromeda: i3scripts.sh must be executable";
+    }
+    {
+      condition = pallonHome.xdg.configFile."i3/scripts/display.sh".force == true;
+      message = "andromeda: display.sh must be force-owned by Home Manager";
+    }
+    {
+      condition = pallonHome.xdg.configFile."i3/scripts/rename.sh".force == true;
+      message = "andromeda: rename.sh must be force-owned by Home Manager";
+    }
+    {
+      condition = pallonHome.xdg.configFile."i3/layouts/work_left.json".force == true;
+      message = "andromeda: work_left layout must be force-owned by Home Manager";
+    }
+    {
+      condition = pallonHome.xdg.configFile."i3/layouts/work_right.json".force == true;
+      message = "andromeda: work_right layout must be force-owned by Home Manager";
+    }
+    {
+      condition = pallonHome.xdg.configFile."i3/layouts/announcekit.json".force == true;
+      message = "andromeda: announcekit layout must be force-owned by Home Manager";
     }
     {
       condition = pallonHome.xdg.configFile ? "i3status-rust/config.toml";
