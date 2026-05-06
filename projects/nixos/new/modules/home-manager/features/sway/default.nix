@@ -26,6 +26,10 @@
     command =
       if binding.command == "__WORK_RESTORE_COMMAND__"
       then ''exec ${cfg.workRestoreCommand}; mode "default"''
+      else if binding.command == ''exec unmount-container-sync; exit''
+      then "exec unmount-container-sync && uwsm stop"
+      else if binding.command == "exit"
+      then "exec uwsm stop"
       else binding.command;
   in "    bindsym ${binding.key} ${command}";
 

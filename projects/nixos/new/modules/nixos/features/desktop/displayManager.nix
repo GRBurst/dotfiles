@@ -6,6 +6,13 @@
 }: let
   cfg = config.my.nixos.features.desktop;
   primary = config.my.nixos.core.user.primary;
+  greetdWaylandSessions = pkgs.runCommand "greetd-wayland-sessions" {} ''
+    mkdir -p "$out/share/wayland-sessions"
+    ln -s ${config.services.displayManager.sessionData.desktops}/share/wayland-sessions/hyprland-uwsm.desktop \
+      "$out/share/wayland-sessions/hyprland-uwsm.desktop"
+    ln -s ${config.services.displayManager.sessionData.desktops}/share/wayland-sessions/sway-uwsm.desktop \
+      "$out/share/wayland-sessions/sway-uwsm.desktop"
+  '';
 in {
   options.my.nixos.features.desktop = {
     displayManager = lib.mkOption {
@@ -75,7 +82,7 @@ in {
                   "--remember"
                   "--remember-session"
                   "--sessions"
-                  "${config.services.displayManager.sessionData.desktops}/share/wayland-sessions"
+                  "${greetdWaylandSessions}/share/wayland-sessions"
                   "--xsessions"
                   "${config.services.displayManager.sessionData.desktops}/share/xsessions"
                 ]

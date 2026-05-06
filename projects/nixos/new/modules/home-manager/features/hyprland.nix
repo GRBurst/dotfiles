@@ -305,11 +305,11 @@ in {
           bind = SUPER, R, exec, systemctl reboot
           bind = SUPER, S, exec, systemctl suspend
           bind = SUPER, P, exec, systemctl poweroff
-          bind = SUPER, E, exec, hyprctl dispatch exit
+          bind = SUPER, E, exec, uwsm stop
           bind = , R, exec, systemctl reboot
           bind = , S, exec, systemctl suspend
           bind = , P, exec, systemctl poweroff
-          bind = , E, exec, hyprctl dispatch exit
+          bind = , E, exec, uwsm stop
           bind = , Return, submap, reset
           bind = , Escape, submap, reset
           submap = reset

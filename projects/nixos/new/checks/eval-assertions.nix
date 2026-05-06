@@ -38,6 +38,7 @@
   jeliasHome = earth.home-manager.users.jelias;
   pallonFiles = pallonHome.xdg.configFile or {};
   jeliasFiles = jeliasHome.xdg.configFile or {};
+  pallonSwayConfigText = pallonFiles."sway/config".text or "";
   pallonDarkmanScript = pallonHome.services.darkman.scripts."theme-dispatch" or "";
   styleSwitchText = pallonHome.my.hm.features.style.dispatcher.package.text or "";
   pallonDarkmanDataScript =
@@ -294,6 +295,20 @@ in {
       }
     ];
 
+  andromeda-greetd-uwsm-wayland-sessions = let
+    cmd = cfgs.andromeda.config.services.greetd.settings.default_session.command;
+  in
+    pkgs.runCommand "check-andromeda-greetd-uwsm-wayland-sessions" {nativeBuildInputs = [pkgs.gnused];} ''
+      cmd=${lib.escapeShellArg cmd}
+      sessions="$(printf '%s\n' "$cmd" | sed -n 's/.*--sessions \([^ ]*\).*/\1/p')"
+      test -n "$sessions"
+      test -e "$sessions/hyprland-uwsm.desktop"
+      test -e "$sessions/sway-uwsm.desktop"
+      test ! -e "$sessions/hyprland.desktop"
+      test ! -e "$sessions/sway.desktop"
+      touch "$out"
+    '';
+
   andromeda-greetd-no-initial-session =
     mkCheck "andromeda-greetd-no-initial-session"
     (!(cfgs.andromeda.config.services.greetd.settings ? initial_session))
@@ -419,6 +434,11 @@ in {
     mkCheck "andromeda-hyprland-uwsm"
     cfgs.andromeda.config.programs.hyprland.withUWSM
     "andromeda hyprland must use UWSM";
+
+  andromeda-sway-uwsm-managed =
+    mkCheck "andromeda-sway-uwsm-managed"
+    (cfgs.andromeda.config.programs.uwsm.waylandCompositors ? sway)
+    "andromeda Sway must be exposed as a UWSM-managed compositor";
 
   earth-hyprland-package-present =
     mkCheck "earth-hyprland-package-present"
@@ -627,6 +647,16 @@ in {
     (builtins.any (b: builtins.match ".*SHIFT.*E.*submap.*exit.*" b != null)
       cfgs.earth.config.home-manager.users.jelias.wayland.windowManager.hyprland.settings.bind)
     "Hyprland must bind $mod+Shift+E to exit submap";
+
+  hyprland-exit-uses-uwsm =
+    mkCheck "hyprland-exit-uses-uwsm"
+    (lib.hasInfix "uwsm stop" pallonHome.wayland.windowManager.hyprland.extraConfig)
+    "Hyprland logout binding must stop the UWSM session";
+
+  sway-exit-uses-uwsm =
+    mkCheck "sway-exit-uses-uwsm"
+    (lib.hasInfix "uwsm stop" pallonSwayConfigText)
+    "Sway logout binding must stop the UWSM session";
 
   hyprland-bind-screen-submap =
     mkCheck "hyprland-bind-screen-submap"
@@ -1287,6 +1317,10 @@ in {
     {
       condition = pallonHome.services.darkman.enable == true && jeliasHome.services.darkman.enable == true;
       message = "both users must run darkman as the mode source";
+    }
+    {
+      condition = pallonHome.systemd.user.services.darkman.Install.WantedBy == ["graphical-session.target"];
+      message = "darkman must start from graphical-session.target";
     }
     {
       condition = pallonHome.stylix.targets.gtk.enable == true;
