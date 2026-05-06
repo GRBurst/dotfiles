@@ -35,6 +35,16 @@ in {
         non-destructive and reversible.
       '';
     };
+
+    webCompatibility.enable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Enable browser settings for verified web-font or icon-font
+        breakage. Leave disabled for the default privacy posture unless
+        a site is known to require document fonts and downloadable fonts.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -222,7 +232,6 @@ in {
           decentraleyes
           keepassxc-browser
           multi-account-containers
-          noscript
           page-assist
           refined-github
           screenshot-capture-annotate
@@ -231,78 +240,86 @@ in {
           tridactyl
           ublock-origin
           web-developer
+          noscript
         ];
-        settings = {
-          # --- privacy / fingerprinting ---
-          "privacy.fingerprintingProtection" = true;
-          "privacy.trackingprotection.enabled" = true;
-          "privacy.trackingprotection.emailtracking.enabled" = true;
-          "privacy.trackingprotection.socialtracking.enabled" = true;
-          "privacy.trackingprotection.allow_list.baseline.enabled" = false;
-          "privacy.trackingprotection.allow_list.convenience.enabled" = false;
-          "privacy.trackingprotection.consentmanager.skip.pbmode.enabled" = false;
-          "privacy.annotate_channels.strict_list.enabled" = true;
-          "privacy.bounceTrackingProtection.mode" = 1;
-          "privacy.donottrackheader.enabled" = true;
-          "privacy.query_stripping.enabled" = true;
-          "privacy.query_stripping.enabled.pbmode" = true;
-          "privacy.spoof_english" = 1;
-          "privacy.history.custom" = true;
-          "privacy.clearOnShutdown_v2.formdata" = true;
-          "privacy.clearOnShutdown_v2.historyFormDataAndDownloads" = true;
-          "privacy.sanitize.sanitizeOnShutdown" = false;
+        settings =
+          {
+            # --- privacy / fingerprinting ---
+            "privacy.fingerprintingProtection" = true;
+            "privacy.trackingprotection.enabled" = true;
+            "privacy.trackingprotection.emailtracking.enabled" = true;
+            "privacy.trackingprotection.socialtracking.enabled" = true;
+            "privacy.trackingprotection.allow_list.baseline.enabled" = false;
+            "privacy.trackingprotection.allow_list.convenience.enabled" = false;
+            "privacy.trackingprotection.consentmanager.skip.pbmode.enabled" = false;
+            "privacy.annotate_channels.strict_list.enabled" = true;
+            "privacy.bounceTrackingProtection.mode" = 1;
+            "privacy.donottrackheader.enabled" = true;
+            "privacy.query_stripping.enabled" = true;
+            "privacy.query_stripping.enabled.pbmode" = true;
+            "privacy.spoof_english" = 1;
+            "privacy.history.custom" = true;
+            "privacy.clearOnShutdown_v2.formdata" = true;
+            "privacy.clearOnShutdown_v2.historyFormDataAndDownloads" = true;
+            "privacy.sanitize.sanitizeOnShutdown" = false;
 
-          # --- network hardening ---
-          "network.captive-portal-service.enabled" = false;
-          "network.connectivity-service.enabled" = false;
-          "network.early-hints.preconnect.max_connections" = 0;
-          "network.http.http3.enable_0rtt" = false;
-          "network.http.referer.disallowCrossSiteRelaxingDefault.top_navigation" = true;
-          "network.http.speculative-parallel-limit" = 0;
-          "network.predictor.enabled" = false;
-          "network.prefetch-next" = false;
+            # --- network hardening ---
+            "network.captive-portal-service.enabled" = false;
+            "network.connectivity-service.enabled" = false;
+            "network.early-hints.preconnect.max_connections" = 0;
+            "network.http.http3.enable_0rtt" = false;
+            "network.http.referer.disallowCrossSiteRelaxingDefault.top_navigation" = true;
+            "network.http.speculative-parallel-limit" = 0;
+            "network.predictor.enabled" = false;
+            "network.prefetch-next" = false;
 
-          # --- WebRTC / media ---
-          "media.peerconnection.enabled" = false;
-          "media.peerconnection.ice.no_host" = true;
-          "media.eme.enabled" = true;
+            # --- WebRTC / media ---
+            "media.peerconnection.enabled" = false;
+            "media.peerconnection.ice.no_host" = true;
+            "media.eme.enabled" = true;
 
-          # --- TLS ---
-          "security.tls.enable_0rtt_data" = false;
+            # --- TLS ---
+            "security.tls.enable_0rtt_data" = false;
 
-          # --- history / browsing data ---
-          "places.history.enabled" = false;
-          "browser.contentblocking.category" = "strict";
-          "browser.startup.page" = 3;
+            # --- history / browsing data ---
+            "places.history.enabled" = false;
+            "browser.contentblocking.category" = "strict";
+            "browser.startup.page" = 3;
 
-          # --- UI ---
-          "accessibility.typeaheadfind.flashBar" = 0;
-          "browser.toolbars.bookmarks.showOtherBookmarks" = false;
-          "browser.toolbars.bookmarks.visibility" = "never";
-          "browser.urlbar.placeholderName" = "DuckDuckGo";
-          "browser.urlbar.placeholderName.private" = "DuckDuckGo";
-          "browser.urlbar.suggest.searches" = true;
+            # --- UI ---
+            "accessibility.typeaheadfind.flashBar" = 0;
+            "browser.toolbars.bookmarks.showOtherBookmarks" = false;
+            "browser.toolbars.bookmarks.visibility" = "never";
+            "browser.urlbar.placeholderName" = "DuckDuckGo";
+            "browser.urlbar.placeholderName.private" = "DuckDuckGo";
+            "browser.urlbar.suggest.searches" = true;
 
-          # --- locale ---
-          "javascript.use_us_english_locale" = true;
+            # --- locale ---
+            "javascript.use_us_english_locale" = true;
 
-          # --- credentials ---
-          "signon.autofillForms" = true;
-          "signon.firefoxRelay.feature" = "disabled";
-          "signon.generation.enabled" = false;
-          "signon.rememberSignons" = true;
-          "dom.forms.autocomplete.formautofill" = true;
+            # --- credentials ---
+            "signon.autofillForms" = true;
+            "signon.firefoxRelay.feature" = "disabled";
+            "signon.generation.enabled" = false;
+            "signon.rememberSignons" = true;
+            "dom.forms.autocomplete.formautofill" = true;
 
-          # --- sync (disable history/tabs/prefs to avoid conflicting with Nix; P5 uses Sync for bookmarks only) ---
-          "identity.fxaccounts.enabled" = true;
-          "services.sync.declinedEngines" = "history,creditcards,tabs";
-          "services.sync.engine.history" = false;
-          "services.sync.engine.prefs.modified" = false;
-          "services.sync.engine.tabs" = false;
+            # --- sync (disable history/tabs/prefs to avoid conflicting with Nix; P5 uses Sync for bookmarks only) ---
+            "identity.fxaccounts.enabled" = true;
+            "services.sync.declinedEngines" = "history,creditcards,tabs";
+            "services.sync.engine.history" = false;
+            "services.sync.engine.prefs.modified" = false;
+            "services.sync.engine.tabs" = false;
 
-          # --- extensions (prevent browser from disabling declaratively installed extensions on first launch) ---
-          "extensions.autoDisableScopes" = 0;
-        };
+            # --- extensions (prevent browser from disabling declaratively installed extensions on first launch) ---
+            "extensions.autoDisableScopes" = 0;
+          }
+          // lib.optionalAttrs cfg.webCompatibility.enable {
+            # --- verified web-font / icon-font compatibility ---
+            "browser.display.use_document_fonts" = 1;
+            "gfx.downloadable_fonts.enabled" = true;
+            "privacy.fingerprintingProtection.overrides" = "-FontVisibilityBaseSystem,-FontVisibilityLangPack";
+          };
       };
     };
   };

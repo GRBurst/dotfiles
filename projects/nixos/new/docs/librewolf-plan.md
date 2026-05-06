@@ -149,6 +149,38 @@ mismatches).
    guard per the rycee README guidance that NUR-managed installs skip the browser permission
    prompt.
 
+### Page UI icon compatibility invariant
+
+1. **Scope.** This invariant covers page-rendered UI icons such as icon-font
+   glyphs used by web applications. It does not cover bookmarks/history
+   favicons, and `places.history.enabled = false` remains unchanged.
+2. **NoScript is always installed.** The managed profile always includes
+   NoScript. This feature module intentionally has no NoScript opt-out or
+   opt-in toggle.
+3. **Web font compatibility is opt-in.** The managed profile does not set
+   document-font, downloadable-font, or font-visibility override prefs by
+   default. For verified web-font or icon-font breakage,
+   `my.hm.features.librewolf.webCompatibility.enable = true` enables:
+   ```nix
+   "browser.display.use_document_fonts" = 1;
+   "gfx.downloadable_fonts.enabled" = true;
+   "privacy.fingerprintingProtection.overrides" =
+     "-FontVisibilityBaseSystem,-FontVisibilityLangPack";
+   ```
+   This trades stricter font visibility fingerprinting resistance for usable
+   web application UI only when the breakage is known to be font-related.
+4. **Rocicorp icon diagnosis.** The manual LibreWolf profile is not managed by
+   Home Manager settings, so managed web-compat prefs cannot explain failures
+   reproduced only in that profile. Rocicorp's affected docs icons are inline
+   Lucide SVGs using `stroke="currentColor"`, not web-font glyphs. For that
+   symptom, inspect computed `color`, `stroke`, `opacity`, `filter`,
+   `visibility`, `forced-colors`, and Dark Reader/theme effects before changing
+   font prefs.
+5. **Guardrail.** `checks/eval-assertions.nix` includes
+   `lw-noscript-always-on`, `lw-webcompat-default-off`, and
+   `lw-webcompat-opt-in` so this behavior is enforced by evaluation checks
+   rather than documentation alone.
+
 ## Phase 2: Core Preferences Migration (The Hardening)
 
 **Goal:** Translate specific privacy, security, and UI tweaks from

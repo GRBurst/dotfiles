@@ -180,6 +180,24 @@
     ];
   };
   librewolfTest = librewolfTestHome.config;
+  librewolfWebCompatTestHome = inputs.home-manager.lib.homeManagerConfiguration {
+    inherit pkgs;
+    extraSpecialArgs = {inherit inputs;};
+    modules = [
+      ../modules/home-manager/features/librewolf.nix
+      {
+        home.username = "lw-webcompat-test";
+        home.homeDirectory = "/tmp/lw-webcompat-test";
+        home.stateVersion = "25.11";
+        my.hm.features.librewolf = {
+          enable = true;
+          package = pkgs.librewolf;
+          webCompatibility.enable = true;
+        };
+      }
+    ];
+  };
+  librewolfWebCompatTest = librewolfWebCompatTestHome.config;
 
   lwAndromedaNixpkgsCfg = andromeda.nixpkgs.config;
   lwAllowInsecurePred = lwAndromedaNixpkgsCfg.allowInsecurePredicate or (_: false);
@@ -2167,80 +2185,82 @@ in {
     }
   ];
 
-  lw-page-icons-compat = let
+  lw-noscript-always-on = mkAssertionCheck "lw-noscript-always-on" [
+    {
+      condition =
+        lwHasExt
+        librewolfTest.programs.librewolf.profiles."nix-managed".extensions.packages
+        "noscript";
+      message = "lw module: default profile must always install NoScript";
+    }
+    {
+      condition =
+        lwHasExt
+        jeliasHome.programs.librewolf.profiles."nix-managed".extensions.packages
+        "noscript";
+      message = "earth/jelias: LibreWolf managed profile must always install NoScript";
+    }
+    {
+      condition =
+        lwHasExt
+        pallonHome.programs.librewolf.profiles."nix-managed".extensions.packages
+        "noscript";
+      message = "andromeda/pallon: LibreWolf managed profile must always install NoScript";
+    }
+  ];
+
+  lw-webcompat-default-off = let
     defaultSettings =
       librewolfTest.programs.librewolf.profiles."nix-managed".settings;
     jeliasSettings =
       jeliasHome.programs.librewolf.profiles."nix-managed".settings;
     pallonSettings =
       pallonHome.programs.librewolf.profiles."nix-managed".settings;
-    hasPageIconCompat = settings:
-      settings."browser.display.use_document_fonts"
-      == 1
-      && settings."gfx.downloadable_fonts.enabled" == true
-      && settings."privacy.fingerprintingProtection.overrides"
-      == "-FontVisibilityBaseSystem,-FontVisibilityLangPack";
+    lacksWebCompatPrefs = settings:
+      !(settings ? "browser.display.use_document_fonts")
+      && !(settings ? "gfx.downloadable_fonts.enabled")
+      && !(settings ? "privacy.fingerprintingProtection.overrides");
   in
-    mkAssertionCheck "lw-page-icons-compat" [
+    mkAssertionCheck "lw-webcompat-default-off" [
       {
-        condition =
-          !(lwHasExt
-            librewolfTest.programs.librewolf.profiles."nix-managed".extensions.packages
-            "noscript");
-        message = "lw module: default profile must not install NoScript because it blocks font resources used by page UI icons";
+        condition = lacksWebCompatPrefs defaultSettings;
+        message = "lw module: web font compatibility prefs must be absent by default";
       }
       {
-        condition = hasPageIconCompat defaultSettings;
-        message = "lw module: default profile must enable document fonts, downloadable fonts, and font visibility overrides for page UI icons";
+        condition = lacksWebCompatPrefs jeliasSettings;
+        message = "earth/jelias: web font compatibility prefs must be absent by default";
       }
       {
-        condition =
-          !(lwHasExt
-            jeliasHome.programs.librewolf.profiles."nix-managed".extensions.packages
-            "noscript")
-          && hasPageIconCompat jeliasSettings;
-        message = "earth/jelias: LibreWolf defaults must keep NoScript absent and page icon font compatibility enabled";
-      }
-      {
-        condition =
-          !(lwHasExt
-            pallonHome.programs.librewolf.profiles."nix-managed".extensions.packages
-            "noscript")
-          && hasPageIconCompat pallonSettings;
-        message = "andromeda/pallon: LibreWolf defaults must keep NoScript absent and page icon font compatibility enabled";
-      }
-      {
-        condition =
-          pallonSettings."places.history.enabled"
-          == false
-          && jeliasSettings."places.history.enabled" == false;
-        message = "LibreWolf page icon compatibility must not re-enable places.history.enabled";
+        condition = lacksWebCompatPrefs pallonSettings;
+        message = "andromeda/pallon: web font compatibility prefs must be absent by default";
       }
     ];
 
-  lw-noscript-opt-in = mkAssertionCheck "lw-noscript-opt-in" [
-    {
-      condition =
-        !(lwHasExt
-          librewolfTest.programs.librewolf.profiles."nix-managed".extensions.packages
-          "noscript");
-      message = "lw module: NoScript must be absent by default";
-    }
-    {
-      condition =
-        lwHasExt
-        librewolfNoScriptTest.programs.librewolf.profiles."nix-managed".extensions.packages
-        "noscript";
-      message = "lw module: NoScript must be installed when my.hm.features.librewolf.noscript.enable = true";
-    }
-    {
-      condition =
-        lwHasExt
-        librewolfNoScriptTest.programs.librewolf.profiles."nix-managed".extensions.packages
-        "ublock-origin";
-      message = "lw module: enabling NoScript must not remove uBlock Origin";
-    }
-  ];
+  lw-webcompat-opt-in = let
+    settings =
+      librewolfWebCompatTest.programs.librewolf.profiles."nix-managed".settings;
+  in
+    mkAssertionCheck "lw-webcompat-opt-in" [
+      {
+        condition =
+          settings."browser.display.use_document_fonts"
+          == 1
+          && settings."gfx.downloadable_fonts.enabled" == true
+          && settings."privacy.fingerprintingProtection.overrides"
+          == "-FontVisibilityBaseSystem,-FontVisibilityLangPack";
+        message = "lw module: webCompatibility.enable must set document fonts, downloadable fonts, and font visibility overrides exactly";
+      }
+      {
+        condition =
+          lwHasExt
+          librewolfWebCompatTest.programs.librewolf.profiles."nix-managed".extensions.packages
+          "noscript"
+          && lwHasExt
+          librewolfWebCompatTest.programs.librewolf.profiles."nix-managed".extensions.packages
+          "ublock-origin";
+        message = "lw module: enabling webCompatibility must preserve NoScript and uBlock Origin";
+      }
+    ];
 
   lw-extensions = mkAssertionCheck "lw-extensions" [
     {
