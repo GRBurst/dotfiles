@@ -33,6 +33,10 @@
     system = "x86_64-linux";
     config = andromedaNoMaster.config.nixpkgs.config;
   };
+  basePkgs = import inputs.nixpkgs {
+    system = "x86_64-linux";
+    config = andromedaNoMaster.config.nixpkgs.config;
+  };
 
   pallonHome = andromeda.home-manager.users.pallon;
   jeliasHome = earth.home-manager.users.jelias;
@@ -712,8 +716,13 @@ in {
 
   andromeda-bing-wallpaper-primary-monitor =
     mkCheck "andromeda-bing-wallpaper-primary-monitor"
-    (pallonHome.my.hm.features.bingWallpaper.hyprlandPrimaryMonitor == "eDP-1")
-    "Bing wallpaper must target eDP-1 as the Hyprland primary monitor";
+    (pallonHome.my.hm.features.bingWallpaper.primaryMonitor == "eDP-1")
+    "Bing wallpaper must target eDP-1 as the primary monitor";
+
+  earth-bing-wallpaper-primary-monitor =
+    mkCheck "earth-bing-wallpaper-primary-monitor"
+    (jeliasHome.my.hm.features.bingWallpaper.primaryMonitor == "DP-2")
+    "Earth Bing wallpaper must target DP-2 as the primary monitor";
 
   andromeda-bing-wallpaper-nasa-apod =
     mkCheck "andromeda-bing-wallpaper-nasa-apod"
@@ -732,6 +741,14 @@ in {
     {
       condition = lib.hasInfix "preferred_monitor=eDP-1" pallonHome.my.hm.features.bingWallpaper.setter.command;
       message = "Bing wallpaper setter must embed the configured primary monitor";
+    }
+    {
+      condition = lib.hasInfix "swaymsg -t get_outputs" pallonHome.my.hm.features.bingWallpaper.setter.command;
+      message = "Bing wallpaper setter must read Sway outputs as JSON";
+    }
+    {
+      condition = lib.hasInfix " bg " pallonHome.my.hm.features.bingWallpaper.setter.command;
+      message = "Bing wallpaper setter must support Sway output background assignment";
     }
     {
       condition = lib.hasInfix "feh --bg-fill" pallonHome.my.hm.features.bingWallpaper.setter.command;
@@ -782,6 +799,8 @@ in {
     grep -F "hdurl" "$script"
     grep -F "hyprctl monitors -j" "$script"
     grep -F "hyprctl hyprpaper wallpaper" "$script"
+    grep -F "swaymsg -t get_outputs" "$script"
+    grep -F " bg " "$script"
     grep -F "feh --bg-fill" "$script"
     touch "$out"
   '';
@@ -1010,6 +1029,108 @@ in {
     test "$(cat "$PWD/wallpaper-count")" = 2
     printf '%s\n' "eDP-1, /cache/bing.jpg, cover" > expected
     cmp expected "$PWD/hyprctl.out"
+    touch "$out"
+  '';
+
+  bing-wallpaper-sway-primary-secondary = pkgs.runCommand "bing-wallpaper-sway-primary-secondary" {} ''
+    mkdir -p "$PWD/bin"
+    export PATH="$PWD/bin:${lib.makeBinPath [pkgs.coreutils pkgs.diffutils pkgs.jq]}"
+    cat > "$PWD/bin/swaymsg" <<'EOF'
+    #!${pkgs.runtimeShell}
+    if [ "$1" = -t ] && [ "$2" = get_outputs ]; then
+      printf '[{"name":"DP-2","active":true},{"name":"DP-4","active":true}]\n'
+      exit 0
+    fi
+    if [ "$1" = -- ] && [ "$2" = output ]; then
+      printf '%s %s %s %s\n' "$3" "$4" "$5" "$6" >> "$PWD/swaymsg.out"
+      exit 0
+    fi
+    exit 1
+    EOF
+    chmod +x "$PWD/bin/swaymsg"
+
+    ${bingWallpaperDefaultSetter} /cache/bing.jpg /cache/nasa.jpg
+
+    printf '%s\n%s\n' \
+      "DP-2 bg /cache/bing.jpg fill" \
+      "DP-4 bg /cache/nasa.jpg fill" > expected
+    cmp expected "$PWD/swaymsg.out"
+    touch "$out"
+  '';
+
+  bing-wallpaper-sway-missing-primary-falls-back = pkgs.runCommand "bing-wallpaper-sway-missing-primary-falls-back" {} ''
+    mkdir -p "$PWD/bin"
+    export PATH="$PWD/bin:${lib.makeBinPath [pkgs.coreutils pkgs.diffutils pkgs.jq]}"
+    cat > "$PWD/bin/swaymsg" <<'EOF'
+    #!${pkgs.runtimeShell}
+    if [ "$1" = -t ] && [ "$2" = get_outputs ]; then
+      printf '[{"name":"DP-4","active":true},{"name":"HDMI-A-1","active":true}]\n'
+      exit 0
+    fi
+    if [ "$1" = -- ] && [ "$2" = output ]; then
+      printf '%s %s %s %s\n' "$3" "$4" "$5" "$6" >> "$PWD/swaymsg.out"
+      exit 0
+    fi
+    exit 1
+    EOF
+    chmod +x "$PWD/bin/swaymsg"
+
+    ${bingWallpaperDefaultSetter} /cache/bing.jpg /cache/nasa.jpg
+
+    printf '%s\n%s\n' \
+      "DP-4 bg /cache/bing.jpg fill" \
+      "HDMI-A-1 bg /cache/nasa.jpg fill" > expected
+    cmp expected "$PWD/swaymsg.out"
+    touch "$out"
+  '';
+
+  bing-wallpaper-sway-single-monitor-one-call = pkgs.runCommand "bing-wallpaper-sway-single-monitor-one-call" {} ''
+    mkdir -p "$PWD/bin"
+    export PATH="$PWD/bin:${lib.makeBinPath [pkgs.coreutils pkgs.diffutils pkgs.jq]}"
+    cat > "$PWD/bin/swaymsg" <<'EOF'
+    #!${pkgs.runtimeShell}
+    if [ "$1" = -t ] && [ "$2" = get_outputs ]; then
+      printf '[{"name":"DP-2","active":true}]\n'
+      exit 0
+    fi
+    if [ "$1" = -- ] && [ "$2" = output ]; then
+      printf '%s %s %s %s\n' "$3" "$4" "$5" "$6" >> "$PWD/swaymsg.out"
+      exit 0
+    fi
+    exit 1
+    EOF
+    chmod +x "$PWD/bin/swaymsg"
+
+    ${bingWallpaperDefaultSetter} /cache/bing.jpg /cache/nasa.jpg
+
+    printf '%s\n' "DP-2 bg /cache/bing.jpg fill" > expected
+    cmp expected "$PWD/swaymsg.out"
+    touch "$out"
+  '';
+
+  bing-wallpaper-sway-ignores-inactive = pkgs.runCommand "bing-wallpaper-sway-ignores-inactive" {} ''
+    mkdir -p "$PWD/bin"
+    export PATH="$PWD/bin:${lib.makeBinPath [pkgs.coreutils pkgs.diffutils pkgs.jq]}"
+    cat > "$PWD/bin/swaymsg" <<'EOF'
+    #!${pkgs.runtimeShell}
+    if [ "$1" = -t ] && [ "$2" = get_outputs ]; then
+      printf '[{"name":"DP-2","active":true},{"name":"DP-4","active":false},{"name":"HDMI-A-1","active":true}]\n'
+      exit 0
+    fi
+    if [ "$1" = -- ] && [ "$2" = output ]; then
+      printf '%s %s %s %s\n' "$3" "$4" "$5" "$6" >> "$PWD/swaymsg.out"
+      exit 0
+    fi
+    exit 1
+    EOF
+    chmod +x "$PWD/bin/swaymsg"
+
+    ${bingWallpaperDefaultSetter} /cache/bing.jpg /cache/nasa.jpg
+
+    printf '%s\n%s\n' \
+      "DP-2 bg /cache/bing.jpg fill" \
+      "HDMI-A-1 bg /cache/nasa.jpg fill" > expected
+    cmp expected "$PWD/swaymsg.out"
     touch "$out"
   '';
 
@@ -2072,11 +2193,11 @@ in {
 
   master-package-defaults = mkAssertionCheck "master-package-defaults" [
     {
-      condition = andromedaSystem.pkgs.codex.version == masterPkgs.codex.version;
+      condition = andromedaSystem.pkgs.codex.drvPath == masterPkgs.codex.drvPath;
       message = "andromeda: codex must come from nixpkgs-master by default";
     }
     {
-      condition = andromedaSystem.pkgs.claude-code.version == masterPkgs.claude-code.version;
+      condition = andromedaSystem.pkgs.claude-code.drvPath == masterPkgs.claude-code.drvPath;
       message = "andromeda: claude-code must come from nixpkgs-master by default";
     }
     {
@@ -2101,11 +2222,11 @@ in {
       message = "opt-out fixture: masterPackages.enable must be false";
     }
     {
-      condition = andromedaNoMaster.pkgs.codex.version != masterPkgs.codex.version;
+      condition = andromedaNoMaster.pkgs.codex.drvPath == basePkgs.codex.drvPath;
       message = "opt-out fixture: codex must fall back to base nixpkgs when disabled";
     }
     {
-      condition = andromedaNoMaster.pkgs.claude-code.version != masterPkgs.claude-code.version;
+      condition = andromedaNoMaster.pkgs.claude-code.drvPath == basePkgs.claude-code.drvPath;
       message = "opt-out fixture: claude-code must fall back to base nixpkgs when disabled";
     }
   ];

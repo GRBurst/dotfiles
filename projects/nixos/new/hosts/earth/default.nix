@@ -108,7 +108,7 @@
           interval = "6h";
           count = 2;
           preferUhd = true;
-          hyprlandPrimaryMonitor = "eDP-1";
+          primaryMonitor = "DP-2";
           nasaApod.enable = true;
         };
         compositor = "compton";

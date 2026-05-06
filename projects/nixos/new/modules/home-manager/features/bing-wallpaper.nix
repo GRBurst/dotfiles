@@ -6,10 +6,12 @@
 }: let
   cfg = config.my.hm.features.bingWallpaper;
   types = lib.types;
-  hyprlandPrimaryMonitor =
-    if cfg.hyprlandPrimaryMonitor == null
-    then ""
-    else cfg.hyprlandPrimaryMonitor;
+  primaryMonitor =
+    if cfg.primaryMonitor != null
+    then cfg.primaryMonitor
+    else if cfg.hyprlandPrimaryMonitor != null
+    then cfg.hyprlandPrimaryMonitor
+    else "";
 
   bingWallpaper = pkgs.writeShellApplication {
     name = "my-bing-wallpaper";
@@ -328,10 +330,16 @@ in {
       description = "Try the derived UHD image URL before falling back to Bing's advertised URL.";
     };
 
+    primaryMonitor = lib.mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      description = "Preferred monitor for the primary Bing wallpaper.";
+    };
+
     hyprlandPrimaryMonitor = lib.mkOption {
       type = types.nullOr types.str;
       default = null;
-      description = "Preferred Hyprland monitor for the primary Bing wallpaper. Null uses Hyprland's first monitor.";
+      description = "Compatibility alias for primaryMonitor.";
     };
 
     nasaApod = {
@@ -356,6 +364,7 @@ in {
         default = [
           pkgs.feh
           pkgs.hyprland
+          pkgs.sway
         ];
         description = "Packages required by the wallpaper setter command.";
       };
@@ -368,7 +377,7 @@ in {
             exit 1
           fi
 
-          preferred_monitor=${lib.escapeShellArg hyprlandPrimaryMonitor}
+          preferred_monitor=${lib.escapeShellArg primaryMonitor}
 
           set_hyprpaper_wallpaper() {
             monitor="$1"
@@ -387,6 +396,12 @@ in {
             done
 
             return 1
+          }
+
+          set_sway_wallpaper() {
+            monitor="$1"
+            path="$2"
+            swaymsg -- output "$monitor" bg "$path" fill >/dev/null
           }
 
           if command -v hyprctl >/dev/null 2>&1 && monitors_json="$(hyprctl monitors -j 2>/dev/null)"; then
@@ -411,6 +426,29 @@ in {
                   set_hyprpaper_wallpaper "$monitor" "$2" || exit 1
                 done
             fi
+          elif command -v swaymsg >/dev/null 2>&1 && outputs_json="$(swaymsg -t get_outputs 2>/dev/null)"; then
+            primary="$(
+              printf '%s' "$outputs_json" |
+                jq -r --arg preferred "$preferred_monitor" '
+                  map(select(.active == true)) as $outputs |
+                  if $preferred != "" and any($outputs[]; .name == $preferred)
+                  then $preferred
+                  else $outputs[0].name // empty
+                  end
+                '
+            )"
+
+            [ -n "$primary" ] || exit 1
+            set_sway_wallpaper "$primary" "$1" || exit 1
+
+            if [ "$#" -ge 2 ]; then
+              printf '%s' "$outputs_json" |
+                jq -r --arg primary "$primary" '.[] | select(.active == true and .name != $primary) | .name' |
+                while IFS= read -r monitor; do
+                  [ -n "$monitor" ] || continue
+                  set_sway_wallpaper "$monitor" "$2" || exit 1
+                done
+            fi
           elif [ -n "''${DISPLAY:-}" ]; then
             feh --bg-fill "$@"
           else
@@ -431,6 +469,17 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion =
+          cfg.primaryMonitor
+          == null
+          || cfg.hyprlandPrimaryMonitor == null
+          || cfg.primaryMonitor == cfg.hyprlandPrimaryMonitor;
+        message = "my.hm.features.bingWallpaper.primaryMonitor and hyprlandPrimaryMonitor must match when both are set.";
+      }
+    ];
+
     home.packages = [bingWallpaper];
 
     systemd.user.services.bing-wallpaper = {

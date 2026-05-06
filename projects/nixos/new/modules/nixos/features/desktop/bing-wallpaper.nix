@@ -39,10 +39,16 @@ in {
       description = "Try the derived UHD image URL before falling back to Bing's advertised URL.";
     };
 
+    primaryMonitor = lib.mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      description = "Preferred monitor for the primary Bing wallpaper.";
+    };
+
     hyprlandPrimaryMonitor = lib.mkOption {
       type = types.nullOr types.str;
       default = null;
-      description = "Preferred Hyprland monitor for the primary Bing wallpaper.";
+      description = "Compatibility alias for primaryMonitor.";
     };
 
     nasaApod = {
@@ -68,11 +74,19 @@ in {
         assertion = cfg.user != "";
         message = "my.nixos.features.desktop.bingWallpaper requires a non-empty user.";
       }
+      {
+        assertion =
+          cfg.primaryMonitor
+          == null
+          || cfg.hyprlandPrimaryMonitor == null
+          || cfg.primaryMonitor == cfg.hyprlandPrimaryMonitor;
+        message = "my.nixos.features.desktop.bingWallpaper.primaryMonitor and hyprlandPrimaryMonitor must match when both are set.";
+      }
     ];
 
     home-manager.users.${cfg.user}.my.hm.features.bingWallpaper = {
       enable = true;
-      inherit (cfg) market interval count preferUhd hyprlandPrimaryMonitor nasaApod;
+      inherit (cfg) market interval count preferUhd primaryMonitor hyprlandPrimaryMonitor nasaApod;
     };
   };
 }

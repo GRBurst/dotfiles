@@ -3,8 +3,8 @@
 ## Status
 
 The optional Bing Image of the Day wallpaper feature is implemented for
-Andromeda/pallon and supports both i3/X11 and Hyprland/Wayland-capable sessions.
-Andromeda now uses Bing on the configured primary Hyprland monitor and NASA APOD
+Andromeda/pallon and supports i3/X11, Hyprland, and Sway sessions.
+Andromeda now uses Bing on the configured primary monitor and NASA APOD
 on secondary monitors, falling back across the latest seven APOD days when
 today's APOD is a video. Hyprland wallpaper assignment is retry-hardened so the
 user service can tolerate `hyprpaper` IPC not being ready immediately. For
@@ -20,7 +20,9 @@ Implemented files:
 - `checks/eval-assertions.nix`
 
 The public Nix API remains under the same feature roots, with APOD and Hyprland
-monitor options added under `bingWallpaper`:
+monitor options added under `bingWallpaper`. `primaryMonitor` is the generic
+preferred monitor option; `hyprlandPrimaryMonitor` remains as a compatibility
+alias:
 
 - `my.nixos.features.desktop.bingWallpaper`
 - `my.hm.features.bingWallpaper`
@@ -70,9 +72,14 @@ The default setter is session-aware:
 2. If a second image path is available, it sets that image on every other
    Hyprland monitor. Each Hyprland wallpaper assignment is tried up to five
    times before the setter fails.
-3. Otherwise, if `DISPLAY` is set, it falls back to X11 with
+3. Otherwise, if `swaymsg` is available and `swaymsg -t get_outputs` succeeds,
+   it sets the first image path on the configured primary monitor when active,
+   or Sway's first active output when no configured monitor is present.
+4. If a second image path is available, it sets that image on every other active
+   Sway output. Inactive Sway outputs are ignored.
+5. Otherwise, if `DISPLAY` is set, it falls back to X11 with
    `feh --bg-fill "$@"`.
-4. If neither supported session is found, it exits non-zero.
+6. If no supported session is found, it exits non-zero.
 
 The display order manifest is positional:
 
@@ -98,9 +105,9 @@ The Andromeda default remains:
 - `interval = "6h"`
 - `count = 2`
 - `preferUhd = true`
-- `hyprlandPrimaryMonitor = "eDP-1"`
+- `primaryMonitor = "eDP-1"`
 - `nasaApod.enable = true`
-- setter: session-aware Hyprland/hyprpaper first, X11/feh fallback
+- setter: session-aware Hyprland/hyprpaper first, Sway second, X11/feh fallback
 
 The user timer installs into `timers.target` and runs `bing-wallpaper.service`
 every six hours after successful activation. That service runs
@@ -143,6 +150,10 @@ nix build .#checks.x86_64-linux.bing-wallpaper-hyprland-missing-primary-falls-ba
 nix build .#checks.x86_64-linux.bing-wallpaper-hyprland-single-monitor-one-call
 nix build .#checks.x86_64-linux.bing-wallpaper-hyprland-one-path-keeps-secondary
 nix build .#checks.x86_64-linux.bing-wallpaper-hyprland-wallpaper-retries
+nix build .#checks.x86_64-linux.bing-wallpaper-sway-primary-secondary
+nix build .#checks.x86_64-linux.bing-wallpaper-sway-missing-primary-falls-back
+nix build .#checks.x86_64-linux.bing-wallpaper-sway-single-monitor-one-call
+nix build .#checks.x86_64-linux.bing-wallpaper-sway-ignores-inactive
 nix build .#checks.x86_64-linux.bing-wallpaper-reuses-latest-paths
 nix build .#checks.x86_64-linux.bing-wallpaper-reuses-latest-jpg
 nix build .#checks.x86_64-linux.bing-wallpaper-fails-without-cache
