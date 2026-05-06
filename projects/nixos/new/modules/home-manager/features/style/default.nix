@@ -176,16 +176,16 @@ in {
       # Disable Stylix for tools whose themes are managed by our own template functions.
       stylix.targets = {
         alacritty.enable = false;
-        kitty.enable     = false;
-        gtk.enable       = true;
-        rofi.enable      = false;
-        i3.enable        = false;
-        hyprland.enable  = false;
-        waybar.enable    = false;
-        yazi.enable      = false;
-        dunst.enable     = false;
-        nvf.enable       = false;
-        qt.enable        = false;
+        kitty.enable = false;
+        gtk.enable = true;
+        rofi.enable = false;
+        i3.enable = false;
+        hyprland.enable = false;
+        waybar.enable = false;
+        yazi.enable = false;
+        dunst.enable = false;
+        nvf.enable = false;
+        qt.enable = false;
       };
 
       services.darkman = lib.mkIf cfg.darkman.enable {
@@ -209,44 +209,43 @@ in {
 
       xdg.configFile."gtk-3.0/settings.ini".force = true;
 
-      home.activation.styleCurrentLinks =
-        lib.hm.dag.entryAfter ["writeBoundary"] ''
-          PATH="${pkgs.coreutils}/bin:$PATH"
-          state_file="${config.xdg.stateHome}/my-theme/mode"
-          mode="$(cat "$state_file" 2>/dev/null || echo ${lib.escapeShellArg cfg.defaultMode})"
-          case "$mode" in light|dark) ;; *) mode=${lib.escapeShellArg cfg.defaultMode} ;; esac
+      home.activation.styleCurrentLinks = lib.hm.dag.entryAfter ["writeBoundary"] ''
+        PATH="${pkgs.coreutils}/bin:$PATH"
+        state_file="${config.xdg.stateHome}/my-theme/mode"
+        mode="$(cat "$state_file" 2>/dev/null || echo ${lib.escapeShellArg cfg.defaultMode})"
+        case "$mode" in light|dark) ;; *) mode=${lib.escapeShellArg cfg.defaultMode} ;; esac
 
-          cur="${config.xdg.configHome}/my/theme"
-          mkdir -p "$cur/current"
+        cur="${config.xdg.configHome}/my/theme"
+        mkdir -p "$cur/current"
 
-          switch_link() {
-            local target="$1" link="$2" tmp="$2.$$"
-            ln -sfT "$target" "$tmp"
-            mv -Tf "$tmp" "$link"
-          }
+        switch_link() {
+          local target="$1" link="$2" tmp="$2.$$"
+          ln -sfT "$target" "$tmp"
+          mv -Tf "$tmp" "$link"
+        }
 
-          ${lib.optionalString cfg.adapters.alacritty.enable ''
-            switch_link "$cur/alacritty/enfocado_$mode.toml" "$cur/current/alacritty.toml"
-          ''}
-          ${lib.optionalString cfg.adapters.i3status.enable ''
-            switch_link "$cur/i3status-rust/enfocado_$mode.toml" "$cur/current/i3status-rust.toml"
-          ''}
-          ${lib.optionalString cfg.adapters.hyprland.enable ''
-            switch_link "$cur/hyprland/$mode.conf" "$cur/current/hyprland.conf"
-          ''}
-          ${lib.optionalString cfg.adapters.waybar.enable ''
-            switch_link "$cur/waybar/$mode.css" "$cur/current/waybar.css"
-          ''}
-          ${lib.optionalString cfg.adapters.dunst.enable ''
-            switch_link "$cur/dunst/$mode.conf" "$cur/current/dunst.conf"
-          ''}
-          ${lib.optionalString cfg.adapters.rofi.enable ''
-            switch_link "$cur/rofi/$mode.rasi" "$cur/current/rofi.rasi"
-          ''}
-          ${lib.optionalString cfg.adapters.i3.enable ''
-            switch_link "$cur/i3/$mode.conf" "$cur/current/i3.conf"
-          ''}
-        '';
+        ${lib.optionalString cfg.adapters.alacritty.enable ''
+          switch_link "$cur/alacritty/enfocado_$mode.toml" "$cur/current/alacritty.toml"
+        ''}
+        ${lib.optionalString cfg.adapters.i3status.enable ''
+          switch_link "$cur/i3status-rust/enfocado_$mode.toml" "$cur/current/i3status-rust.toml"
+        ''}
+        ${lib.optionalString cfg.adapters.hyprland.enable ''
+          switch_link "$cur/hyprland/$mode.conf" "$cur/current/hyprland.conf"
+        ''}
+        ${lib.optionalString cfg.adapters.waybar.enable ''
+          switch_link "$cur/waybar/$mode.css" "$cur/current/waybar.css"
+        ''}
+        ${lib.optionalString cfg.adapters.dunst.enable ''
+          switch_link "$cur/dunst/$mode.conf" "$cur/current/dunst.conf"
+        ''}
+        ${lib.optionalString cfg.adapters.rofi.enable ''
+          switch_link "$cur/rofi/$mode.rasi" "$cur/current/rofi.rasi"
+        ''}
+        ${lib.optionalString cfg.adapters.i3.enable ''
+          switch_link "$cur/i3/$mode.conf" "$cur/current/i3.conf"
+        ''}
+      '';
     }
 
     (lib.mkIf cfg.adapters.alacritty.enable {

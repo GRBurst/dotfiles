@@ -73,12 +73,14 @@
           lib = inputs.nixpkgs.lib;
         };
       in {
-        checks = existingChecks // {
-          style-palette   = pkgs.callPackage ./checks/style/palette.nix   { };
-          style-base16    = pkgs.callPackage ./checks/style/base16.nix    { };
-          style-templates = pkgs.callPackage ./checks/style/templates.nix { };
-          style-stylix    = pkgs.callPackage ./checks/style/stylix.nix    { inherit self; };
-        };
+        checks =
+          existingChecks
+          // {
+            style-palette = pkgs.callPackage ./checks/style/palette.nix {};
+            style-base16 = pkgs.callPackage ./checks/style/base16.nix {};
+            style-templates = pkgs.callPackage ./checks/style/templates.nix {};
+            style-stylix = pkgs.callPackage ./checks/style/stylix.nix {inherit self;};
+          };
       };
 
       flake = {

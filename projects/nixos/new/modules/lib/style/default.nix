@@ -13,8 +13,8 @@ in {
     base02 = stripHash palette.bright.black;
     base03 = stripHash (
       if isLight
-      then palette.normal.white   # dim_0 — comments / muted text
-      else palette.bright.black   # bg_2 — selection bg
+      then palette.normal.white # dim_0 — comments / muted text
+      else palette.bright.black # bg_2 — selection bg
     );
     base04 = stripHash palette.primary.foreground;
     base05 = stripHash palette.primary.foreground;

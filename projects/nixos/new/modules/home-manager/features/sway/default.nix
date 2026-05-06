@@ -12,12 +12,11 @@
   defaultWorkRestoreCommand = ''swaymsg 'workspace "1: mail"; exec protonmail-bridge; exec thunderbird; workspace "2: browser"; exec librewolf; workspace 7; exec ~/local/bin/kxo; workspace "9: communication"; exec signal-desktop; workspace 3; exec alacritty' '';
 
   # Replace the X11 Screen mode with a Wayland-native equivalent.
-  swayModes =
-    map (m:
-      if lib.hasPrefix "Screen" m.name
-      then shared.swayScreenMode
-      else m)
-    i3cfg.modes;
+  swayModes = map (m:
+    if lib.hasPrefix "Screen" m.name
+    then shared.swayScreenMode
+    else m)
+  i3cfg.modes;
 
   # --------------------------------------------------------------------------
   # Config rendering
@@ -125,15 +124,15 @@
     ${lib.optionalString cfg.input.touchpad.enable ''
       input type:touchpad {
         natural_scroll ${
-          if cfg.input.touchpad.naturalScroll
-          then "enabled"
-          else "disabled"
-        }
+        if cfg.input.touchpad.naturalScroll
+        then "enabled"
+        else "disabled"
+      }
         dwt ${
-          if cfg.input.touchpad.dwt
-          then "enabled"
-          else "disabled"
-        }
+        if cfg.input.touchpad.dwt
+        then "enabled"
+        else "disabled"
+      }
       }
     ''}
 
@@ -445,14 +444,16 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = with pkgs; [
-      swaylock
-      swayidle
-      wl-clipboard
-      grim
-      slurp
-      grimblast
-    ] ++ cfg.extraPackages;
+    home.packages = with pkgs;
+      [
+        swaylock
+        swayidle
+        wl-clipboard
+        grim
+        slurp
+        grimblast
+      ]
+      ++ cfg.extraPackages;
 
     xdg.configFile."sway/config".text = swayConfig;
   };

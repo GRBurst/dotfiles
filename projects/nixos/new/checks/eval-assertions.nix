@@ -183,9 +183,21 @@
 
   lwAndromedaNixpkgsCfg = andromeda.nixpkgs.config;
   lwAllowInsecurePred = lwAndromedaNixpkgsCfg.allowInsecurePredicate or (_: false);
-  lwFakeBin = {pname = "librewolf-bin"; name = "librewolf-bin-999"; meta.knownVulnerabilities = ["x"];};
-  lwFakeUnwrapped = {pname = "librewolf-bin-unwrapped"; name = "librewolf-bin-unwrapped-999"; meta.knownVulnerabilities = ["x"];};
-  lwFakeOther = {pname = "unrelated-pkg"; name = "unrelated-pkg-1"; meta.knownVulnerabilities = ["x"];};
+  lwFakeBin = {
+    pname = "librewolf-bin";
+    name = "librewolf-bin-999";
+    meta.knownVulnerabilities = ["x"];
+  };
+  lwFakeUnwrapped = {
+    pname = "librewolf-bin-unwrapped";
+    name = "librewolf-bin-unwrapped-999";
+    meta.knownVulnerabilities = ["x"];
+  };
+  lwFakeOther = {
+    pname = "unrelated-pkg";
+    name = "unrelated-pkg-1";
+    meta.knownVulnerabilities = ["x"];
+  };
   lwHasExt = pkgList: n: builtins.any (p: lib.getName p == n) pkgList;
   lwAddons = inputs.firefox-addons.packages.${pkgs.stdenv.hostPlatform.system};
 in {
@@ -1398,8 +1410,9 @@ in {
       message = "pallon style module must provide styleCurrentLinks home.activation entry";
     }
     {
-      condition =
-        let data = (pallonActivation.styleCurrentLinks or {data = "";}).data; in
+      condition = let
+        data = (pallonActivation.styleCurrentLinks or {data = "";}).data;
+      in
         lib.hasInfix "enfocado_" data
         && lib.hasInfix "current/dunst.conf" data
         && lib.hasInfix "current/waybar.css" data
@@ -2056,7 +2069,8 @@ in {
     }
     {
       condition =
-        librewolfTest.programs.librewolf.profiles."nix-managed".id == 0
+        librewolfTest.programs.librewolf.profiles."nix-managed".id
+        == 0
         && librewolfTest.programs.librewolf.profiles."nix-managed".isDefault;
       message = "lw module: profile 'nix-managed' must have id=0 and isDefault=true";
     }
@@ -2081,7 +2095,8 @@ in {
     }
     {
       condition =
-        jeliasHome.programs.librewolf.profiles."nix-managed".id == 0
+        jeliasHome.programs.librewolf.profiles."nix-managed".id
+        == 0
         && jeliasHome.programs.librewolf.profiles."nix-managed".isDefault;
       message = "earth/jelias: librewolf profile 'nix-managed' must have id=0 and isDefault=true";
     }
@@ -2106,7 +2121,8 @@ in {
     }
     {
       condition =
-        pallonHome.programs.librewolf.profiles."nix-managed".id == 0
+        pallonHome.programs.librewolf.profiles."nix-managed".id
+        == 0
         && pallonHome.programs.librewolf.profiles."nix-managed".isDefault;
       message = "andromeda/pallon: librewolf profile 'nix-managed' must have id=0 and isDefault=true";
     }
@@ -2134,7 +2150,8 @@ in {
     }
     {
       condition =
-        pallonHome.programs.librewolf.profiles."nix-managed".settings."privacy.trackingprotection.enabled" == true
+        pallonHome.programs.librewolf.profiles."nix-managed".settings."privacy.trackingprotection.enabled"
+        == true
         && pallonHome.programs.librewolf.profiles."nix-managed".settings."network.predictor.enabled" == false
         && pallonHome.programs.librewolf.profiles."nix-managed".settings."places.history.enabled" == false
         && pallonHome.programs.librewolf.profiles."nix-managed".settings."browser.contentblocking.category" == "strict";
@@ -2142,10 +2159,86 @@ in {
     }
     {
       condition =
-        pallonHome.programs.librewolf.profiles."nix-managed".settings."services.sync.engine.history" == false
+        pallonHome.programs.librewolf.profiles."nix-managed".settings."services.sync.engine.history"
+        == false
         && pallonHome.programs.librewolf.profiles."nix-managed".settings."services.sync.engine.tabs" == false
         && pallonHome.programs.librewolf.profiles."nix-managed".settings."services.sync.engine.prefs.modified" == false;
       message = "andromeda/pallon: sync engines for history/tabs/prefs must be disabled to avoid conflicting with Nix";
+    }
+  ];
+
+  lw-page-icons-compat = let
+    defaultSettings =
+      librewolfTest.programs.librewolf.profiles."nix-managed".settings;
+    jeliasSettings =
+      jeliasHome.programs.librewolf.profiles."nix-managed".settings;
+    pallonSettings =
+      pallonHome.programs.librewolf.profiles."nix-managed".settings;
+    hasPageIconCompat = settings:
+      settings."browser.display.use_document_fonts"
+      == 1
+      && settings."gfx.downloadable_fonts.enabled" == true
+      && settings."privacy.fingerprintingProtection.overrides"
+      == "-FontVisibilityBaseSystem,-FontVisibilityLangPack";
+  in
+    mkAssertionCheck "lw-page-icons-compat" [
+      {
+        condition =
+          !(lwHasExt
+            librewolfTest.programs.librewolf.profiles."nix-managed".extensions.packages
+            "noscript");
+        message = "lw module: default profile must not install NoScript because it blocks font resources used by page UI icons";
+      }
+      {
+        condition = hasPageIconCompat defaultSettings;
+        message = "lw module: default profile must enable document fonts, downloadable fonts, and font visibility overrides for page UI icons";
+      }
+      {
+        condition =
+          !(lwHasExt
+            jeliasHome.programs.librewolf.profiles."nix-managed".extensions.packages
+            "noscript")
+          && hasPageIconCompat jeliasSettings;
+        message = "earth/jelias: LibreWolf defaults must keep NoScript absent and page icon font compatibility enabled";
+      }
+      {
+        condition =
+          !(lwHasExt
+            pallonHome.programs.librewolf.profiles."nix-managed".extensions.packages
+            "noscript")
+          && hasPageIconCompat pallonSettings;
+        message = "andromeda/pallon: LibreWolf defaults must keep NoScript absent and page icon font compatibility enabled";
+      }
+      {
+        condition =
+          pallonSettings."places.history.enabled"
+          == false
+          && jeliasSettings."places.history.enabled" == false;
+        message = "LibreWolf page icon compatibility must not re-enable places.history.enabled";
+      }
+    ];
+
+  lw-noscript-opt-in = mkAssertionCheck "lw-noscript-opt-in" [
+    {
+      condition =
+        !(lwHasExt
+          librewolfTest.programs.librewolf.profiles."nix-managed".extensions.packages
+          "noscript");
+      message = "lw module: NoScript must be absent by default";
+    }
+    {
+      condition =
+        lwHasExt
+        librewolfNoScriptTest.programs.librewolf.profiles."nix-managed".extensions.packages
+        "noscript";
+      message = "lw module: NoScript must be installed when my.hm.features.librewolf.noscript.enable = true";
+    }
+    {
+      condition =
+        lwHasExt
+        librewolfNoScriptTest.programs.librewolf.profiles."nix-managed".extensions.packages
+        "ublock-origin";
+      message = "lw module: enabling NoScript must not remove uBlock Origin";
     }
   ];
 
@@ -2158,28 +2251,28 @@ in {
     {
       condition =
         lwHasExt
-          librewolfTest.programs.librewolf.profiles."nix-managed".extensions.packages
-          "ublock-origin";
+        librewolfTest.programs.librewolf.profiles."nix-managed".extensions.packages
+        "ublock-origin";
       message = "lw module: ublock-origin must be in extensions.packages";
     }
     {
       condition =
         lwHasExt
-          jeliasHome.programs.librewolf.profiles."nix-managed".extensions.packages
-          "ublock-origin";
+        jeliasHome.programs.librewolf.profiles."nix-managed".extensions.packages
+        "ublock-origin";
       message = "earth/jelias: ublock-origin must be in extensions.packages";
     }
     {
       condition =
         lwHasExt
-          pallonHome.programs.librewolf.profiles."nix-managed".extensions.packages
-          "ublock-origin";
+        pallonHome.programs.librewolf.profiles."nix-managed".extensions.packages
+        "ublock-origin";
       message = "andromeda/pallon: ublock-origin must be in extensions.packages";
     }
     {
       condition =
         builtins.length
-          pallonHome.programs.librewolf.profiles."nix-managed".extensions.packages
+        pallonHome.programs.librewolf.profiles."nix-managed".extensions.packages
         >= 10;
       message = "andromeda/pallon: at least 10 extensions must be installed";
     }
@@ -2205,7 +2298,8 @@ in {
           ? "uBlock0@raymondhill.net"
         && (builtins.length
           librewolfTest.programs.librewolf.policies."3rdparty"
-            .Extensions."uBlock0@raymondhill.net".toOverwrite.filterLists) > 0;
+            .Extensions."uBlock0@raymondhill.net".toOverwrite.filterLists)
+        > 0;
       message = "lw module: uBlock Origin toOverwrite.filterLists must be non-empty";
     }
     {
@@ -2230,115 +2324,126 @@ in {
     tcPrefs =
       librewolfTest.programs.librewolf.policies."3rdparty"
         .Extensions."{1ea2fa75-677e-4702-b06a-50fc7d06fe7e}";
-  in mkAssertionCheck "lw-tempcontainers-prefs" [
-    {
-      condition =
-        tcPrefs.automaticMode.active == true
-        && tcPrefs.automaticMode.newTab == "created";
-      message = "tc: automaticMode must be active with newTab=\"created\"";
-    }
-    {
-      condition = tcPrefs.notifications == false;
-      message = "tc: notifications must be false";
-    }
-    {
-      condition =
-        tcPrefs.container.namePrefix == "_"
-        && tcPrefs.container.color == "red"
-        && tcPrefs.container.icon == "circle"
-        && tcPrefs.container.numberMode == "reuse"
-        && tcPrefs.container.removal == 900000;
-      message = "tc: container shape (prefix/color/icon/numberMode/removal) mismatch";
-    }
-    {
-      condition = tcPrefs.iconColor == "default";
-      message = "tc: iconColor must be \"default\"";
-    }
-    {
-      condition =
-        tcPrefs.isolation.reactivateDelay == 0
-        && tcPrefs.isolation.global.navigation.action == "never";
-      message = "tc: isolation.global.navigation.action must be \"never\" (was \"always\" in stub)";
-    }
-    {
-      condition =
-        tcPrefs.isolation.global.mouseClick.middle.action == "notsamedomain"
-        && tcPrefs.isolation.global.mouseClick.middle.container == "deleteshistory"
-        && tcPrefs.isolation.global.mouseClick.ctrlleft.action == "notsamedomain"
-        && tcPrefs.isolation.global.mouseClick.left.action == "notsamedomain";
-      message = "tc: isolation.global.mouseClick must be notsamedomain/deleteshistory";
-    }
-    {
-      condition = tcPrefs.isolation.global.excluded ? "paypal.com";
-      message = "tc: isolation.global.excluded must contain paypal.com";
-    }
-    {
-      condition =
-        builtins.length tcPrefs.isolation.domain == 1
-        && (builtins.head tcPrefs.isolation.domain).pattern == "runescape.com"
-        && (builtins.head tcPrefs.isolation.domain).always.action == "disabled"
-        && (builtins.head tcPrefs.isolation.domain).excluded ? "jagex.com";
-      message = "tc: isolation.domain[0] must be runescape.com rule with jagex.com excluded";
-    }
-    {
-      condition = tcPrefs.isolation.mac.action == "disabled";
-      message = "tc: isolation.mac.action must be \"disabled\"";
-    }
-    {
-      condition =
-        tcPrefs.contextMenu == true
-        && tcPrefs.browserActionPopup == false
-        && tcPrefs.pageAction == false
-        && tcPrefs.contextMenuBookmarks == false;
-      message = "tc: contextMenu/browserActionPopup/pageAction/contextMenuBookmarks shape mismatch";
-    }
-    {
-      condition =
-        builtins.all (k: tcPrefs.keyboardShortcuts.${k} == false)
+  in
+    mkAssertionCheck "lw-tempcontainers-prefs" [
+      {
+        condition =
+          tcPrefs.automaticMode.active
+          == true
+          && tcPrefs.automaticMode.newTab == "created";
+        message = "tc: automaticMode must be active with newTab=\"created\"";
+      }
+      {
+        condition = tcPrefs.notifications == false;
+        message = "tc: notifications must be false";
+      }
+      {
+        condition =
+          tcPrefs.container.namePrefix
+          == "_"
+          && tcPrefs.container.color == "red"
+          && tcPrefs.container.icon == "circle"
+          && tcPrefs.container.numberMode == "reuse"
+          && tcPrefs.container.removal == 900000;
+        message = "tc: container shape (prefix/color/icon/numberMode/removal) mismatch";
+      }
+      {
+        condition = tcPrefs.iconColor == "default";
+        message = "tc: iconColor must be \"default\"";
+      }
+      {
+        condition =
+          tcPrefs.isolation.reactivateDelay
+          == 0
+          && tcPrefs.isolation.global.navigation.action == "never";
+        message = "tc: isolation.global.navigation.action must be \"never\" (was \"always\" in stub)";
+      }
+      {
+        condition =
+          tcPrefs.isolation.global.mouseClick.middle.action
+          == "notsamedomain"
+          && tcPrefs.isolation.global.mouseClick.middle.container == "deleteshistory"
+          && tcPrefs.isolation.global.mouseClick.ctrlleft.action == "notsamedomain"
+          && tcPrefs.isolation.global.mouseClick.left.action == "notsamedomain";
+        message = "tc: isolation.global.mouseClick must be notsamedomain/deleteshistory";
+      }
+      {
+        condition = tcPrefs.isolation.global.excluded ? "paypal.com";
+        message = "tc: isolation.global.excluded must contain paypal.com";
+      }
+      {
+        condition =
+          builtins.length tcPrefs.isolation.domain
+          == 1
+          && (builtins.head tcPrefs.isolation.domain).pattern == "runescape.com"
+          && (builtins.head tcPrefs.isolation.domain).always.action == "disabled"
+          && (builtins.head tcPrefs.isolation.domain).excluded ? "jagex.com";
+        message = "tc: isolation.domain[0] must be runescape.com rule with jagex.com excluded";
+      }
+      {
+        condition = tcPrefs.isolation.mac.action == "disabled";
+        message = "tc: isolation.mac.action must be \"disabled\"";
+      }
+      {
+        condition =
+          tcPrefs.contextMenu
+          == true
+          && tcPrefs.browserActionPopup == false
+          && tcPrefs.pageAction == false
+          && tcPrefs.contextMenuBookmarks == false;
+        message = "tc: contextMenu/browserActionPopup/pageAction/contextMenuBookmarks shape mismatch";
+      }
+      {
+        condition =
+          builtins.all (k: tcPrefs.keyboardShortcuts.${k} == false)
           ["AltC" "AltP" "AltN" "AltShiftC" "AltX" "AltO" "AltI"];
-      message = "tc: all keyboardShortcuts must be disabled";
-    }
-    {
-      condition =
-        tcPrefs.closeRedirectorTabs.active == false
-        && tcPrefs.closeRedirectorTabs.delay == 2000
-        && builtins.elem "t.co" tcPrefs.closeRedirectorTabs.domains
-        && builtins.elem "slack-redir.net" tcPrefs.closeRedirectorTabs.domains
-        && builtins.elem "outgoing.prod.mozaws.net" tcPrefs.closeRedirectorTabs.domains;
-      message = "tc: closeRedirectorTabs domain set mismatch";
-    }
-    {
-      condition =
-        tcPrefs.deletesHistory.active == true
-        && tcPrefs.deletesHistory.automaticMode == "automatic"
-        && tcPrefs.deletesHistory.containerRemoval == 900000
-        && tcPrefs.deletesHistory.statistics == true;
-      message = "tc: deletesHistory must be active/automatic with 900000ms removal";
-    }
-    {
-      condition =
-        tcPrefs.statistics == true
-        && tcPrefs.ui.expandPreferences == true
-        && tcPrefs.ui.popupDefaultTab == "isolation-global";
-      message = "tc: ui shape mismatch";
-    }
-  ];
+        message = "tc: all keyboardShortcuts must be disabled";
+      }
+      {
+        condition =
+          tcPrefs.closeRedirectorTabs.active
+          == false
+          && tcPrefs.closeRedirectorTabs.delay == 2000
+          && builtins.elem "t.co" tcPrefs.closeRedirectorTabs.domains
+          && builtins.elem "slack-redir.net" tcPrefs.closeRedirectorTabs.domains
+          && builtins.elem "outgoing.prod.mozaws.net" tcPrefs.closeRedirectorTabs.domains;
+        message = "tc: closeRedirectorTabs domain set mismatch";
+      }
+      {
+        condition =
+          tcPrefs.deletesHistory.active
+          == true
+          && tcPrefs.deletesHistory.automaticMode == "automatic"
+          && tcPrefs.deletesHistory.containerRemoval == 900000
+          && tcPrefs.deletesHistory.statistics == true;
+        message = "tc: deletesHistory must be active/automatic with 900000ms removal";
+      }
+      {
+        condition =
+          tcPrefs.statistics
+          == true
+          && tcPrefs.ui.expandPreferences == true
+          && tcPrefs.ui.popupDefaultTab == "isolation-global";
+        message = "tc: ui shape mismatch";
+      }
+    ];
 
   lw-mozpermissions = let
     ubo = lwAddons.ublock-origin;
-  in mkAssertionCheck "lw-mozpermissions" [
-    {
-      condition = ubo ? meta && ubo.meta ? mozPermissions;
-      message = "ublock-origin: meta.mozPermissions must be present (rycee NUR audit trail)";
-    }
-    {
-      condition =
-        ubo ? meta
-        && ubo.meta ? mozPermissions
-        && builtins.elem "webRequest" ubo.meta.mozPermissions;
-      message = "ublock-origin: webRequest must be in meta.mozPermissions";
-    }
-  ];
+  in
+    mkAssertionCheck "lw-mozpermissions" [
+      {
+        condition = ubo ? meta && ubo.meta ? mozPermissions;
+        message = "ublock-origin: meta.mozPermissions must be present (rycee NUR audit trail)";
+      }
+      {
+        condition =
+          ubo ? meta
+          && ubo.meta ? mozPermissions
+          && builtins.elem "webRequest" ubo.meta.mozPermissions;
+        message = "ublock-origin: webRequest must be in meta.mozPermissions";
+      }
+    ];
 
   lw-system-insecure = mkAssertionCheck "lw-system-insecure" [
     {
@@ -2400,7 +2505,8 @@ in {
 
   andromeda-waybar-no-legacy-settings =
     mkCheck "andromeda-waybar-no-legacy-settings"
-    ((pallonHome.programs.waybar.settings or null) == null
+    ((pallonHome.programs.waybar.settings or null)
+      == null
       || pallonHome.programs.waybar.settings == [])
     "andromeda pallon: programs.waybar.settings must not be set (use xdg.configFile instead)";
 
@@ -2416,19 +2522,20 @@ in {
     (pallonHome.my.hm.features.sway.startWaybar == true)
     "andromeda pallon: sway.startWaybar must default to true when sway is in waybar.windowManagers";
 
-  andromeda-sway-config-has-waybar =
-    mkAssertionCheck "check-andromeda-sway-config-has-waybar" [
-      {
-        condition = lib.hasInfix "waybar -c"
-          (pallonFiles."sway/config".text or "");
-        message = "andromeda pallon: sway/config must exec waybar with -c flag";
-      }
-      {
-        condition = lib.hasInfix "waybar/config-sway"
-          (pallonFiles."sway/config".text or "");
-        message = "andromeda pallon: sway/config must reference waybar/config-sway";
-      }
-    ];
+  andromeda-sway-config-has-waybar = mkAssertionCheck "check-andromeda-sway-config-has-waybar" [
+    {
+      condition =
+        lib.hasInfix "waybar -c"
+        (pallonFiles."sway/config".text or "");
+      message = "andromeda pallon: sway/config must exec waybar with -c flag";
+    }
+    {
+      condition =
+        lib.hasInfix "waybar/config-sway"
+        (pallonFiles."sway/config".text or "");
+      message = "andromeda pallon: sway/config must reference waybar/config-sway";
+    }
+  ];
 
   andromeda-waybar-hypr-modules-left =
     mkCheck "andromeda-waybar-hypr-modules-left"
@@ -2473,7 +2580,8 @@ in {
 
   earth-waybar-no-legacy-settings =
     mkCheck "earth-waybar-no-legacy-settings"
-    ((jeliasHome.programs.waybar.settings or null) == null
+    ((jeliasHome.programs.waybar.settings or null)
+      == null
       || jeliasHome.programs.waybar.settings == [])
     "earth jelias: programs.waybar.settings must not be set (use xdg.configFile instead)";
 
@@ -2489,19 +2597,20 @@ in {
     (jeliasHome.my.hm.features.sway.startWaybar == true)
     "earth jelias: sway.startWaybar must default to true when sway is in waybar.windowManagers";
 
-  earth-sway-config-has-waybar =
-    mkAssertionCheck "check-earth-sway-config-has-waybar" [
-      {
-        condition = lib.hasInfix "waybar -c"
-          (jeliasFiles."sway/config".text or "");
-        message = "earth jelias: sway/config must exec waybar with -c flag";
-      }
-      {
-        condition = lib.hasInfix "waybar/config-sway"
-          (jeliasFiles."sway/config".text or "");
-        message = "earth jelias: sway/config must reference waybar/config-sway";
-      }
-    ];
+  earth-sway-config-has-waybar = mkAssertionCheck "check-earth-sway-config-has-waybar" [
+    {
+      condition =
+        lib.hasInfix "waybar -c"
+        (jeliasFiles."sway/config".text or "");
+      message = "earth jelias: sway/config must exec waybar with -c flag";
+    }
+    {
+      condition =
+        lib.hasInfix "waybar/config-sway"
+        (jeliasFiles."sway/config".text or "");
+      message = "earth jelias: sway/config must reference waybar/config-sway";
+    }
+  ];
 
   earth-waybar-hypr-modules-left =
     mkCheck "earth-waybar-hypr-modules-left"

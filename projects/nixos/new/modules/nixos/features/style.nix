@@ -42,7 +42,7 @@ in {
 
       targets = {
         console.enable = true;
-        qt.enable      = false;
+        qt.enable = false;
       };
 
       fonts = {
