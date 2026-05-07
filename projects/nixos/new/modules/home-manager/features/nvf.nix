@@ -5,6 +5,7 @@
   ...
 }: let
   cfg = config.my.hm.features.nvf;
+  styleCfg = config.my.hm.features.style;
   enfocadoPlugin = pkgs.vimUtils.buildVimPlugin {
     pname = "vim-enfocado";
     version = "unstable-2026-04-29";
@@ -774,7 +775,7 @@ in {
               end
 
               vim.o.background = mode
-              vim.g.enfocado_style = "nature"
+              vim.g.enfocado_style = ${builtins.toJSON styleCfg.adapters.nvf.enfocadoStyle}
               pcall(vim.cmd.colorscheme, "enfocado")
             end
 

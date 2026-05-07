@@ -30,6 +30,35 @@ in {
     base0F = stripHash palette.normal.violet;
   };
 
+  mkAlacrittyThemeAttrs = palette: {
+    colors = {
+      primary = {
+        background = palette.primary.background;
+        foreground = palette.primary.foreground;
+      };
+      normal = {
+        black = palette.normal.black;
+        red = palette.normal.red;
+        green = palette.normal.green;
+        yellow = palette.normal.yellow;
+        blue = palette.normal.blue;
+        magenta = palette.normal.magenta;
+        cyan = palette.normal.cyan;
+        white = palette.normal.white;
+      };
+      bright = {
+        black = palette.bright.black;
+        red = palette.bright.red;
+        green = palette.bright.green;
+        yellow = palette.bright.yellow;
+        blue = palette.bright.blue;
+        magenta = palette.bright.magenta;
+        cyan = palette.bright.cyan;
+        white = palette.bright.white;
+      };
+    };
+  };
+
   mkAlacrittyTheme = palette: ''
     [colors.primary]
     background = "${palette.primary.background}"
@@ -121,7 +150,9 @@ in {
     element {
       background-color: @background;
       text-color: @foreground;
-      padding: 4px 6px;
+      margin: 0;
+      padding: 0;
+      border: 0;
     }
 
     element selected {
@@ -143,6 +174,60 @@ in {
       text-color: @background;
     }
   '';
+
+  mkYaziFlavorAttrs = palette: {
+    mgr = {
+      cwd.fg = palette.normal.blue;
+      hovered = {
+        fg = palette.primary.background;
+        bg = palette.normal.blue;
+      };
+      preview_hovered = {
+        fg = palette.primary.background;
+        bg = palette.normal.blue;
+      };
+    };
+    status.overall = {
+      fg = palette.primary.foreground;
+      bg = palette.primary.background;
+    };
+    mode = {
+      normal_main = {
+        fg = palette.primary.background;
+        bg = palette.normal.blue;
+      };
+      select_main = {
+        fg = palette.primary.background;
+        bg = palette.normal.magenta;
+      };
+      unset_main = {
+        fg = palette.primary.background;
+        bg = palette.normal.red;
+      };
+    };
+    filetype.rules = [
+      {
+        mime = "image/*";
+        fg = palette.normal.yellow;
+      }
+      {
+        mime = "{audio,video}/*";
+        fg = palette.normal.orange;
+      }
+      {
+        mime = "application/{zip,rar,7z*,tar,gzip,xz}";
+        fg = palette.normal.red;
+      }
+      {
+        mime = "text/*";
+        fg = palette.normal.violet;
+      }
+      {
+        url = "*/";
+        fg = palette.normal.blue;
+      }
+    ];
+  };
 
   mkYaziFlavor = palette: ''
     [mgr]
@@ -167,6 +252,24 @@ in {
       { url = "*/",                                      fg = "${palette.normal.blue}" },
     ]
   '';
+
+  mkI3StatusThemeAttrs = palette: {
+    idle_bg = palette.primary.background;
+    idle_fg = palette.primary.foreground;
+    info_bg = palette.primary.background;
+    info_fg = palette.normal.blue;
+    good_bg = palette.primary.background;
+    good_fg = palette.normal.green;
+    warning_bg = palette.primary.background;
+    warning_fg = palette.normal.yellow;
+    critical_bg = palette.primary.background;
+    critical_fg = palette.normal.red;
+    separator = "";
+    separator_bg = palette.primary.background;
+    separator_fg = palette.normal.white;
+    alternating_tint_bg = "#00000000";
+    alternating_tint_fg = "#00000000";
+  };
 
   mkI3StatusTheme = palette: ''
     idle_bg = "${palette.primary.background}"

@@ -203,6 +203,60 @@
     ];
   };
   librewolfWebCompatTest = librewolfWebCompatTestHome.config;
+  styleExtensionSystem = mkHost ../hosts/andromeda [
+    {
+      home-manager.users.pallon.my.hm.features.style.adapters = {
+        alacritty.overrides = {
+          light.colors.primary.background = "#fefefe";
+          shared.colors.cursor.text = "#111111";
+        };
+        i3.extra = {
+          shared = "# style-test-i3-shared";
+          light = "# style-test-i3-light";
+          dark = "# style-test-i3-dark";
+        };
+        i3status.overrides.dark.idle_bg = "#101010";
+        hyprland.extra = {
+          shared = "# style-test-hyprland-shared";
+          light = "# style-test-hyprland-light";
+          dark = "# style-test-hyprland-dark";
+        };
+        dunst.extra = {
+          shared = "# style-test-dunst-shared";
+          light = "# style-test-dunst-light";
+          dark = "# style-test-dunst-dark";
+        };
+        waybar.extra = {
+          shared = "/* style-test-waybar-shared */";
+          light = "/* style-test-waybar-light */";
+          dark = "/* style-test-waybar-dark */";
+        };
+        kitty.extra = {
+          shared = "# style-test-kitty-shared";
+          light = "# style-test-kitty-light";
+          dark = "# style-test-kitty-dark";
+        };
+        rofi.extra = {
+          shared = "/* style-test-rofi-shared */";
+          light = "/* style-test-rofi-light */";
+          dark = "/* style-test-rofi-dark */";
+        };
+        yazi.overrides.light.mgr.hovered.fg = "#222222";
+        nvf.enfocadoStyle = "neon";
+      };
+    }
+  ];
+  styleExtensionHome = styleExtensionSystem.config.home-manager.users.pallon;
+  styleExtensionFiles = styleExtensionHome.xdg.configFile or {};
+  styleExtensionFileText = path: let
+    file = styleExtensionFiles.${path};
+  in
+    if file ? text
+    then file.text
+    else builtins.readFile file.source;
+  styleExtensionAlacrittyLight = builtins.fromTOML (styleExtensionFileText "my/theme/alacritty/enfocado_light.toml");
+  styleExtensionI3StatusDark = builtins.fromTOML (styleExtensionFileText "my/theme/i3status-rust/enfocado_dark.toml");
+  styleExtensionYaziLight = builtins.fromTOML (builtins.readFile "${styleExtensionHome.programs.yazi.flavors.enfocado-light}/flavor.toml");
 
   lwAndromedaNixpkgsCfg = andromeda.nixpkgs.config;
   lwAllowInsecurePred = lwAndromedaNixpkgsCfg.allowInsecurePredicate or (_: false);
@@ -1314,6 +1368,10 @@ in {
       message = "andromeda: nvf must apply the Enfocado colorscheme in Lua";
     }
     {
+      condition = lib.hasInfix ''vim.g.enfocado_style = "nature"'' pallonNvfLua;
+      message = "andromeda: nvf must use the style adapter Enfocado style default";
+    }
+    {
       condition = lib.hasInfix "my-theme/mode" pallonNvfLua && lib.hasInfix "SIGUSR1" pallonNvfLua;
       message = "andromeda: nvf must follow the shared theme state via SIGUSR1";
     }
@@ -1429,11 +1487,25 @@ in {
       message = "rofi config must use the dynamic current theme";
     }
     {
+      condition = lib.hasInfix "run {\ndisplay-name: \"run: \";" pallonRofiConfigText;
+      message = "rofi config must expose mode display-name labels";
+    }
+    {
       condition =
         lib.hasInfix "#ffffff" pallonFiles."my/theme/rofi/light.rasi".text
         && lib.hasInfix "#181818" pallonFiles."my/theme/rofi/dark.rasi".text
         && lib.hasInfix "#0064e4" pallonFiles."my/theme/rofi/light.rasi".text;
       message = "rofi light/dark themes must be generated from Enfocado";
+    }
+    {
+      condition =
+        lib.hasInfix "element selected" pallonFiles."my/theme/rofi/light.rasi".text
+        && lib.hasInfix "background-color: @accent;" pallonFiles."my/theme/rofi/light.rasi".text
+        && lib.hasInfix "text-color: @background;" pallonFiles."my/theme/rofi/light.rasi".text
+        && lib.hasInfix "margin: 0;" pallonFiles."my/theme/rofi/light.rasi".text
+        && lib.hasInfix "padding: 0;" pallonFiles."my/theme/rofi/light.rasi".text
+        && lib.hasInfix "border: 0;" pallonFiles."my/theme/rofi/light.rasi".text;
+      message = "rofi selected row must be a filled selection without a selection frame";
     }
     {
       condition = pallonHome.services.darkman.enable == true && jeliasHome.services.darkman.enable == true;
@@ -1623,6 +1695,29 @@ in {
         earthFiles ? "my/theme/i3status-rust/enfocado_light.toml"
         && (builtins.fromTOML earthFiles."my/theme/i3status-rust/enfocado_light.toml".text).idle_bg == "#ffffff";
       message = "earth i3status-rust light theme must use Enfocado light";
+    }
+    {
+      condition =
+        lib.hasInfix "# style-test-i3-shared" (styleExtensionFileText "my/theme/i3/light.conf")
+        && lib.hasInfix "# style-test-i3-light" (styleExtensionFileText "my/theme/i3/light.conf")
+        && lib.hasInfix "# style-test-i3-dark" (styleExtensionFileText "my/theme/i3/dark.conf")
+        && lib.hasInfix "# style-test-hyprland-shared" (styleExtensionFileText "my/theme/hyprland/light.conf")
+        && lib.hasInfix "# style-test-hyprland-dark" (styleExtensionFileText "my/theme/hyprland/dark.conf")
+        && lib.hasInfix "# style-test-dunst-light" (styleExtensionFileText "my/theme/dunst/light.conf")
+        && lib.hasInfix "/* style-test-waybar-dark */" (styleExtensionFileText "my/theme/waybar/dark.css")
+        && lib.hasInfix "# style-test-kitty-light" (styleExtensionFileText "kitty/light-theme.auto.conf")
+        && lib.hasInfix "/* style-test-rofi-shared */" (styleExtensionFileText "my/theme/rofi/dark.rasi");
+      message = "style raw adapter extensions must be appended to generated light/dark artifacts";
+    }
+    {
+      condition =
+        styleExtensionAlacrittyLight.colors.primary.background
+        == "#fefefe"
+        && styleExtensionAlacrittyLight.colors.cursor.text == "#111111"
+        && styleExtensionI3StatusDark.idle_bg == "#101010"
+        && styleExtensionYaziLight.mgr.hovered.fg == "#222222"
+        && lib.hasInfix ''vim.g.enfocado_style = "neon"'' (styleExtensionHome.programs.nvf.settings.vim.luaConfigRC.custom-functions.data or "");
+      message = "style TOML/nvf adapter overrides must be reflected in generated artifacts";
     }
   ];
 

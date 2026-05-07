@@ -7,12 +7,60 @@
 }: let
   cfg = config.my.hm.features.style;
   style = import ../../../lib/style {inherit lib;};
+  tomlFormat = pkgs.formats.toml {};
   palettes = style.palettes.${cfg.palette};
   fontCfg = osConfig.my.nixos.features.fonts;
 
   enabled = path: lib.attrByPath path false config;
   defaultPalette = palettes.${cfg.defaultMode};
   i3statusThemePath = "${config.xdg.configHome}/my/theme/current/i3status-rust.toml";
+  rawThemeExtensionType = lib.types.submodule {
+    options = {
+      shared = lib.mkOption {
+        type = lib.types.lines;
+        default = "";
+        description = "Fragment appended to both generated light and dark theme files.";
+      };
+      light = lib.mkOption {
+        type = lib.types.lines;
+        default = "";
+        description = "Fragment appended only to the generated light theme file.";
+      };
+      dark = lib.mkOption {
+        type = lib.types.lines;
+        default = "";
+        description = "Fragment appended only to the generated dark theme file.";
+      };
+    };
+  };
+  tomlOverrideType = lib.types.submodule {
+    options = {
+      shared = lib.mkOption {
+        type = tomlFormat.type;
+        default = {};
+        description = "TOML attributes merged into both generated light and dark theme files.";
+      };
+      light = lib.mkOption {
+        type = tomlFormat.type;
+        default = {};
+        description = "TOML attributes merged only into the generated light theme file.";
+      };
+      dark = lib.mkOption {
+        type = tomlFormat.type;
+        default = {};
+        description = "TOML attributes merged only into the generated dark theme file.";
+      };
+    };
+  };
+  appendModeText = base: ext: mode:
+    lib.concatStringsSep "\n" (lib.filter (s: s != "") [
+      base
+      ext.shared
+      ext.${mode}
+    ]);
+  mergeModeAttrs = base: ext: mode:
+    lib.recursiveUpdate base (lib.recursiveUpdate ext.shared ext.${mode});
+  toToml = attrs: builtins.readFile (tomlFormat.generate "theme.toml" attrs);
 
   styleSwitch = pkgs.writeShellApplication {
     name = "my-style-switch";
@@ -109,45 +157,115 @@ in {
     };
 
     adapters = {
-      alacritty.enable = lib.mkOption {
-        type = lib.types.bool;
-        default = enabled ["my" "hm" "features" "alacritty" "enable"];
+      alacritty = {
+        enable = lib.mkOption {
+          type = lib.types.bool;
+          default = enabled ["my" "hm" "features" "alacritty" "enable"];
+        };
+        overrides = lib.mkOption {
+          type = tomlOverrideType;
+          default = {};
+          description = "TOML overrides merged into generated Alacritty theme files.";
+        };
       };
-      i3.enable = lib.mkOption {
-        type = lib.types.bool;
-        default = enabled ["my" "hm" "features" "i3" "enable"];
+      i3 = {
+        enable = lib.mkOption {
+          type = lib.types.bool;
+          default = enabled ["my" "hm" "features" "i3" "enable"];
+        };
+        extra = lib.mkOption {
+          type = rawThemeExtensionType;
+          default = {};
+          description = "Raw i3 config fragments appended to generated theme files.";
+        };
       };
-      i3status.enable = lib.mkOption {
-        type = lib.types.bool;
-        default = enabled ["my" "hm" "features" "i3" "enable"];
+      i3status = {
+        enable = lib.mkOption {
+          type = lib.types.bool;
+          default = enabled ["my" "hm" "features" "i3" "enable"];
+        };
+        overrides = lib.mkOption {
+          type = tomlOverrideType;
+          default = {};
+          description = "TOML overrides merged into generated i3status-rust theme files.";
+        };
       };
-      hyprland.enable = lib.mkOption {
-        type = lib.types.bool;
-        default = enabled ["my" "hm" "features" "hyprland" "enable"];
+      hyprland = {
+        enable = lib.mkOption {
+          type = lib.types.bool;
+          default = enabled ["my" "hm" "features" "hyprland" "enable"];
+        };
+        extra = lib.mkOption {
+          type = rawThemeExtensionType;
+          default = {};
+          description = "Raw Hyprland config fragments appended to generated theme files.";
+        };
       };
-      dunst.enable = lib.mkOption {
-        type = lib.types.bool;
-        default = enabled ["my" "hm" "features" "dunst" "enable"];
+      dunst = {
+        enable = lib.mkOption {
+          type = lib.types.bool;
+          default = enabled ["my" "hm" "features" "dunst" "enable"];
+        };
+        extra = lib.mkOption {
+          type = rawThemeExtensionType;
+          default = {};
+          description = "Raw Dunst config fragments appended to generated theme files.";
+        };
       };
-      waybar.enable = lib.mkOption {
-        type = lib.types.bool;
-        default = enabled ["my" "hm" "features" "waybar" "enable"];
+      waybar = {
+        enable = lib.mkOption {
+          type = lib.types.bool;
+          default = enabled ["my" "hm" "features" "waybar" "enable"];
+        };
+        extra = lib.mkOption {
+          type = rawThemeExtensionType;
+          default = {};
+          description = "Raw Waybar CSS fragments appended to generated theme files.";
+        };
       };
-      nvf.enable = lib.mkOption {
-        type = lib.types.bool;
-        default = enabled ["my" "hm" "features" "nvf" "enable"];
+      nvf = {
+        enable = lib.mkOption {
+          type = lib.types.bool;
+          default = enabled ["my" "hm" "features" "nvf" "enable"];
+        };
+        enfocadoStyle = lib.mkOption {
+          type = lib.types.str;
+          default = "nature";
+          description = "Value assigned to vim.g.enfocado_style in the nvf Lua theme hook.";
+        };
       };
-      kitty.enable = lib.mkOption {
-        type = lib.types.bool;
-        default = enabled ["my" "hm" "features" "kitty" "enable"];
+      kitty = {
+        enable = lib.mkOption {
+          type = lib.types.bool;
+          default = enabled ["my" "hm" "features" "kitty" "enable"];
+        };
+        extra = lib.mkOption {
+          type = rawThemeExtensionType;
+          default = {};
+          description = "Raw Kitty theme fragments appended to generated auto-theme files.";
+        };
       };
-      rofi.enable = lib.mkOption {
-        type = lib.types.bool;
-        default = enabled ["my" "hm" "features" "rofi" "enable"];
+      rofi = {
+        enable = lib.mkOption {
+          type = lib.types.bool;
+          default = enabled ["my" "hm" "features" "rofi" "enable"];
+        };
+        extra = lib.mkOption {
+          type = rawThemeExtensionType;
+          default = {};
+          description = "Raw RASI fragments appended to generated rofi theme files.";
+        };
       };
-      yazi.enable = lib.mkOption {
-        type = lib.types.bool;
-        default = enabled ["my" "hm" "features" "yazi" "enable"];
+      yazi = {
+        enable = lib.mkOption {
+          type = lib.types.bool;
+          default = enabled ["my" "hm" "features" "yazi" "enable"];
+        };
+        overrides = lib.mkOption {
+          type = tomlOverrideType;
+          default = {};
+          description = "TOML overrides merged into generated Yazi flavor files.";
+        };
       };
       ghostty.enable = lib.mkOption {
         type = lib.types.bool;
@@ -249,41 +367,56 @@ in {
     }
 
     (lib.mkIf cfg.adapters.alacritty.enable {
-      xdg.configFile."my/theme/alacritty/enfocado_light.toml".text = style.mkAlacrittyTheme palettes.light;
-      xdg.configFile."my/theme/alacritty/enfocado_dark.toml".text = style.mkAlacrittyTheme palettes.dark;
+      xdg.configFile."my/theme/alacritty/enfocado_light.toml".text =
+        toToml (mergeModeAttrs (style.mkAlacrittyThemeAttrs palettes.light) cfg.adapters.alacritty.overrides "light");
+      xdg.configFile."my/theme/alacritty/enfocado_dark.toml".text =
+        toToml (mergeModeAttrs (style.mkAlacrittyThemeAttrs palettes.dark) cfg.adapters.alacritty.overrides "dark");
     })
 
     (lib.mkIf cfg.adapters.i3status.enable {
       my.hm.features.i3.statusBar.theme = lib.mkDefault i3statusThemePath;
 
-      xdg.configFile."my/theme/i3status-rust/enfocado_light.toml".text = style.mkI3StatusTheme palettes.light;
-      xdg.configFile."my/theme/i3status-rust/enfocado_dark.toml".text = style.mkI3StatusTheme palettes.dark;
+      xdg.configFile."my/theme/i3status-rust/enfocado_light.toml".text =
+        toToml (mergeModeAttrs (style.mkI3StatusThemeAttrs palettes.light) cfg.adapters.i3status.overrides "light");
+      xdg.configFile."my/theme/i3status-rust/enfocado_dark.toml".text =
+        toToml (mergeModeAttrs (style.mkI3StatusThemeAttrs palettes.dark) cfg.adapters.i3status.overrides "dark");
     })
 
     (lib.mkIf cfg.adapters.hyprland.enable {
-      xdg.configFile."my/theme/hyprland/light.conf".text = style.mkHyprlandTheme palettes.light;
-      xdg.configFile."my/theme/hyprland/dark.conf".text = style.mkHyprlandTheme palettes.dark;
+      xdg.configFile."my/theme/hyprland/light.conf".text =
+        appendModeText (style.mkHyprlandTheme palettes.light) cfg.adapters.hyprland.extra "light";
+      xdg.configFile."my/theme/hyprland/dark.conf".text =
+        appendModeText (style.mkHyprlandTheme palettes.dark) cfg.adapters.hyprland.extra "dark";
     })
 
     (lib.mkIf cfg.adapters.waybar.enable {
-      xdg.configFile."my/theme/waybar/light.css".text = style.mkWaybarCss palettes.light fontCfg.families.monospace.name;
-      xdg.configFile."my/theme/waybar/dark.css".text = style.mkWaybarCss palettes.dark fontCfg.families.monospace.name;
+      xdg.configFile."my/theme/waybar/light.css".text =
+        appendModeText (style.mkWaybarCss palettes.light fontCfg.families.monospace.name) cfg.adapters.waybar.extra "light";
+      xdg.configFile."my/theme/waybar/dark.css".text =
+        appendModeText (style.mkWaybarCss palettes.dark fontCfg.families.monospace.name) cfg.adapters.waybar.extra "dark";
     })
 
     (lib.mkIf cfg.adapters.dunst.enable {
-      xdg.configFile."my/theme/dunst/light.conf".text = style.mkDunstConfig palettes.light fontCfg;
-      xdg.configFile."my/theme/dunst/dark.conf".text = style.mkDunstConfig palettes.dark fontCfg;
+      xdg.configFile."my/theme/dunst/light.conf".text =
+        appendModeText (style.mkDunstConfig palettes.light fontCfg) cfg.adapters.dunst.extra "light";
+      xdg.configFile."my/theme/dunst/dark.conf".text =
+        appendModeText (style.mkDunstConfig palettes.dark fontCfg) cfg.adapters.dunst.extra "dark";
     })
 
     (lib.mkIf cfg.adapters.kitty.enable {
-      xdg.configFile."kitty/light-theme.auto.conf".text = style.mkKittyTheme palettes.light;
-      xdg.configFile."kitty/dark-theme.auto.conf".text = style.mkKittyTheme palettes.dark;
-      xdg.configFile."kitty/no-preference-theme.auto.conf".text = style.mkKittyTheme defaultPalette;
+      xdg.configFile."kitty/light-theme.auto.conf".text =
+        appendModeText (style.mkKittyTheme palettes.light) cfg.adapters.kitty.extra "light";
+      xdg.configFile."kitty/dark-theme.auto.conf".text =
+        appendModeText (style.mkKittyTheme palettes.dark) cfg.adapters.kitty.extra "dark";
+      xdg.configFile."kitty/no-preference-theme.auto.conf".text =
+        appendModeText (style.mkKittyTheme defaultPalette) cfg.adapters.kitty.extra cfg.defaultMode;
     })
 
     (lib.mkIf cfg.adapters.rofi.enable {
-      xdg.configFile."my/theme/rofi/light.rasi".text = style.mkRofiTheme palettes.light;
-      xdg.configFile."my/theme/rofi/dark.rasi".text = style.mkRofiTheme palettes.dark;
+      xdg.configFile."my/theme/rofi/light.rasi".text =
+        appendModeText (style.mkRofiTheme palettes.light) cfg.adapters.rofi.extra "light";
+      xdg.configFile."my/theme/rofi/dark.rasi".text =
+        appendModeText (style.mkRofiTheme palettes.dark) cfg.adapters.rofi.extra "dark";
     })
 
     (lib.mkIf cfg.adapters.yazi.enable {
@@ -293,8 +426,12 @@ in {
       };
 
       programs.yazi.flavors = {
-        enfocado-light = pkgs.writeTextDir "flavor.toml" (style.mkYaziFlavor palettes.light);
-        enfocado-dark = pkgs.writeTextDir "flavor.toml" (style.mkYaziFlavor palettes.dark);
+        enfocado-light = pkgs.writeTextDir "flavor.toml" (
+          toToml (mergeModeAttrs (style.mkYaziFlavorAttrs palettes.light) cfg.adapters.yazi.overrides "light")
+        );
+        enfocado-dark = pkgs.writeTextDir "flavor.toml" (
+          toToml (mergeModeAttrs (style.mkYaziFlavorAttrs palettes.dark) cfg.adapters.yazi.overrides "dark")
+        );
       };
     })
   ]);

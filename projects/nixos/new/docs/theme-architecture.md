@@ -57,6 +57,8 @@ Examples:
 
 Runtime scripts may update those links and the state file, then signal or reload consumers. They must not rewrite Nix-owned source configuration.
 
+Adapter customizations do not change this runtime path. Home Manager still renders the light and dark source artifacts ahead of time, and `my-style-switch` still only flips the current links. Raw adapter extensions are appended to the generated rofi, waybar, hyprland, dunst, i3, and kitty artifacts. TOML-shaped adapter overrides are merged into the generated Alacritty, i3status-rust, and Yazi artifacts before rendering.
+
 ## Portal Validation
 
 The XDG Settings portal is served by `darkman` for the appearance setting. Validate it from the same graphical user session that runs `darkman`:
@@ -112,6 +114,23 @@ Dunst is started only by the i3 and Hyprland session startup paths with `dunst -
 Waybar imports CSS from `../my/theme/current/waybar.css`. The dispatcher updates the current link and sends `SIGUSR2` to Waybar.
 
 Rofi reads `~/.config/my/theme/current/rofi.rasi` on each invocation. The dispatcher switches the current rofi theme link; no signal is needed.
+
+Rofi behavior config and rofi theme fragments are separate customization points. Prompt labels live in Home Manager config:
+
+```nix
+my.hm.features.rofi.modeDisplayNames.run = "run: ";
+```
+
+Theme-only changes live under the rofi style adapter. For example, selected-row fill belongs in RASI, not in `programs.rofi.extraConfig`:
+
+```nix
+my.hm.features.style.adapters.rofi.extra.shared = ''
+  element selected {
+    background-color: @accent;
+    text-color: @background;
+  }
+'';
+```
 
 Kitty uses native auto-theme files:
 

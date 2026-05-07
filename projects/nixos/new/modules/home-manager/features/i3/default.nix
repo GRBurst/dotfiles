@@ -480,11 +480,19 @@ in {
     }
 
     (lib.mkIf dynamicStyleEnabled {
-      xdg.configFile."my/theme/i3/light.conf".text =
-        style.mkI3Theme palettes.light + "\n" + renderBar palettes.light;
+      xdg.configFile."my/theme/i3/light.conf".text = lib.concatStringsSep "\n" (lib.filter (s: s != "") [
+        (style.mkI3Theme palettes.light)
+        (renderBar palettes.light)
+        styleCfg.adapters.i3.extra.shared
+        styleCfg.adapters.i3.extra.light
+      ]);
 
-      xdg.configFile."my/theme/i3/dark.conf".text =
-        style.mkI3Theme palettes.dark + "\n" + renderBar palettes.dark;
+      xdg.configFile."my/theme/i3/dark.conf".text = lib.concatStringsSep "\n" (lib.filter (s: s != "") [
+        (style.mkI3Theme palettes.dark)
+        (renderBar palettes.dark)
+        styleCfg.adapters.i3.extra.shared
+        styleCfg.adapters.i3.extra.dark
+      ]);
     })
   ]);
 }
