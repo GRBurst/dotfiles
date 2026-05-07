@@ -45,9 +45,9 @@ in {
 
     # Insecure Packages
     nixpkgs.config = {
-      permittedInsecurePackages = [
-        "openssl-1.1.1w"
-      ];
+      # permittedInsecurePackages = [
+      #   "openssl-1.1.1w"
+      # ];
       allowInsecurePredicate = pkg:
         builtins.elem (lib.getName pkg) [
           "librewolf-bin"

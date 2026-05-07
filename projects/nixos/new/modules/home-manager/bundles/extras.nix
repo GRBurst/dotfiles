@@ -204,10 +204,10 @@ in {
         # --- Communication ---
         signal-desktop
         telegram-desktop
-        wasistlos
+        # wasistlos # not available anymore
         ausweisapp
-        discord-ptb
-        discord
+        # discord-ptb # still uses openssl-1.1.1w
+        # discord
         zoom-us
         teams-for-linux
         irssi
