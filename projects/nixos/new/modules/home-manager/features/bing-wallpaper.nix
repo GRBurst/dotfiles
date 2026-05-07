@@ -5,6 +5,7 @@
   ...
 }: let
   cfg = config.my.hm.features.bingWallpaper;
+  displayCfg = config.my.hm.features.displayProfiles;
   types = lib.types;
   primaryMonitor =
     if cfg.primaryMonitor != null
@@ -378,6 +379,28 @@ in {
           fi
 
           preferred_monitor=${lib.escapeShellArg primaryMonitor}
+          display_profiles_json=${lib.escapeShellArg (builtins.toJSON displayCfg.profiles)}
+
+          select_display_profile() {
+            connected="$1"
+            jq -cn \
+              --argjson profiles "$display_profiles_json" \
+              --argjson connected "$connected" '
+                def same_set($a; $b): (($a | sort) == ($b | sort));
+                def subset($a; $b): all($a[]; . as $name | any($b[]; . == $name));
+                first(
+                  ($profiles[] | select(same_set([.outputs[].name]; $connected))),
+                  ($profiles[] | select(subset([.outputs[] | select(.enable == true) | .name]; $connected)))
+                )
+              '
+          }
+
+          profile_primary_monitor() {
+            connected="$1"
+            profile="$(select_display_profile "$connected")"
+            [ "$profile" != "null" ] || return 1
+            jq -r '[.outputs[] | select(.enable == true and .primary == true) | .name][0] // empty' <<< "$profile"
+          }
 
           set_hyprpaper_wallpaper() {
             monitor="$1"
@@ -404,32 +427,16 @@ in {
             swaymsg -- output "$monitor" bg "$path" fill >/dev/null
           }
 
-          if command -v hyprctl >/dev/null 2>&1 && monitors_json="$(hyprctl monitors -j 2>/dev/null)"; then
-            primary="$(
-              printf '%s' "$monitors_json" |
-                jq -r --arg preferred "$preferred_monitor" '
-                  if $preferred != "" and any(.[]; .name == $preferred)
-                  then $preferred
-                  else .[0].name // empty
-                  end
-                '
+          if [ "''${XDG_CURRENT_DESKTOP:-}" = "sway" ] || [ -n "''${SWAYSOCK:-}" ]; then
+            outputs_json="$(swaymsg -t get_outputs 2>/dev/null)" || exit 1
+            connected="$(
+              printf '%s' "$outputs_json" |
+                jq -c '[.[].name]'
             )"
-
-            [ -n "$primary" ] || exit 1
-            set_hyprpaper_wallpaper "$primary" "$1" || exit 1
-
-            if [ "$#" -ge 2 ]; then
-              printf '%s' "$monitors_json" |
-                jq -r --arg primary "$primary" '.[] | select(.name != $primary) | .name' |
-                while IFS= read -r monitor; do
-                  [ -n "$monitor" ] || continue
-                  set_hyprpaper_wallpaper "$monitor" "$2" || exit 1
-                done
-            fi
-          elif command -v swaymsg >/dev/null 2>&1 && outputs_json="$(swaymsg -t get_outputs 2>/dev/null)"; then
+            role_primary="$(profile_primary_monitor "$connected" || true)"
             primary="$(
               printf '%s' "$outputs_json" |
-                jq -r --arg preferred "$preferred_monitor" '
+                jq -r --arg preferred "''${role_primary:-$preferred_monitor}" '
                   map(select(.active == true)) as $outputs |
                   if $preferred != "" and any($outputs[]; .name == $preferred)
                   then $preferred
@@ -447,6 +454,34 @@ in {
                 while IFS= read -r monitor; do
                   [ -n "$monitor" ] || continue
                   set_sway_wallpaper "$monitor" "$2" || exit 1
+                done
+            fi
+          elif [ "''${XDG_CURRENT_DESKTOP:-}" = "Hyprland" ] || [ -n "''${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
+            monitors_json="$(hyprctl monitors -j 2>/dev/null)" || exit 1
+            connected="$(
+              printf '%s' "$monitors_json" |
+                jq -c '[.[].name]'
+            )"
+            role_primary="$(profile_primary_monitor "$connected" || true)"
+            primary="$(
+              printf '%s' "$monitors_json" |
+                jq -r --arg preferred "''${role_primary:-$preferred_monitor}" '
+                  if $preferred != "" and any(.[]; .name == $preferred)
+                  then $preferred
+                  else .[0].name // empty
+                  end
+                '
+            )"
+
+            [ -n "$primary" ] || exit 1
+            set_hyprpaper_wallpaper "$primary" "$1" || exit 1
+
+            if [ "$#" -ge 2 ]; then
+              printf '%s' "$monitors_json" |
+                jq -r --arg primary "$primary" '.[] | select(.name != $primary) | .name' |
+                while IFS= read -r monitor; do
+                  [ -n "$monitor" ] || continue
+                  set_hyprpaper_wallpaper "$monitor" "$2" || exit 1
                 done
             fi
           elif [ -n "''${DISPLAY:-}" ]; then

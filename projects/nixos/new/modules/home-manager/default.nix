@@ -9,6 +9,7 @@
     ./features/alacritty.nix
     ./features/bing-wallpaper.nix
     ./features/dictate.nix
+    ./features/display-profiles.nix
     ./features/dunst.nix
     ./features/env.nix
     ./features/git.nix

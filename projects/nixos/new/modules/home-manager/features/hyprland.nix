@@ -5,6 +5,7 @@
   ...
 }: let
   cfg = config.my.hm.features.hyprland;
+  displayCfg = config.my.hm.features.displayProfiles;
 
   monitorSubmodule = lib.types.submodule {
     options = {
@@ -64,9 +65,12 @@ in {
       settings = {
         # --- Monitors ---
         monitor =
-          (map (m: "${m.name}, ${m.resolution}, ${m.position}, ${toString m.scale}")
-            cfg.monitors)
-          ++ lib.optional (cfg.monitors == []) ", preferred, auto, 1";
+          if displayCfg.enable
+          then [", preferred, auto, 1"]
+          else
+            (map (m: "${m.name}, ${m.resolution}, ${m.position}, ${toString m.scale}")
+              cfg.monitors)
+            ++ lib.optional (cfg.monitors == []) ", preferred, auto, 1";
 
         # --- Input (NEO keyboard layout) ---
         input = {
@@ -138,6 +142,7 @@ in {
             "gnome-keyring-daemon --start --components=pkcs11,secrets,ssh"
             "hypridle"
           ]
+          ++ lib.optional displayCfg.enable "${displayCfg.package}/bin/my-display-profile watch hyprland"
           ++ cfg.extraExecOnce;
 
         # --- Keybindings (NEO layout: n/r/g/t = focus, i/a/e/l = move) ---
@@ -287,7 +292,7 @@ in {
         ];
 
         # Workspace → monitor binding (multi-monitor)
-        workspace = lib.optionals (lib.length cfg.monitors > 1) (let
+        workspace = lib.optionals (!displayCfg.enable && lib.length cfg.monitors > 1) (let
           m1 = (lib.head cfg.monitors).name;
           m2 = (lib.elemAt cfg.monitors 1).name;
         in

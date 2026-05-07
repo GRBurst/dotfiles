@@ -32,14 +32,6 @@
       hyprland = {
         enable = true;
         nvidia = false;
-        monitors = [
-          {
-            name = "eDP-1";
-            resolution = "3840x2160";
-            position = "0x0";
-            scale = 2.0;
-          }
-        ];
       };
       git = {
         enable = true;
@@ -77,14 +69,6 @@
             dwt = true;
           };
         };
-        outputs = [
-          {
-            name = "eDP-1";
-            resolution = "3840x2160";
-            position = "0 0";
-            scale = 2.0;
-          }
-        ];
       };
       gnome.enable = true;
       misc.enable = true;

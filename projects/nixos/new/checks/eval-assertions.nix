@@ -40,9 +40,11 @@
 
   pallonHome = andromeda.home-manager.users.pallon;
   jeliasHome = earth.home-manager.users.jelias;
+  pallonDisplayProfiles = pallonHome.my.hm.features.displayProfiles;
   pallonFiles = pallonHome.xdg.configFile or {};
   jeliasFiles = jeliasHome.xdg.configFile or {};
   pallonSwayConfigText = pallonFiles."sway/config".text or "";
+  pallonHyprlandSettings = pallonHome.wayland.windowManager.hyprland.settings;
   pallonDarkmanScript = pallonHome.services.darkman.scripts."theme-dispatch" or "";
   styleSwitchText = pallonHome.my.hm.features.style.dispatcher.package.text or "";
   pallonDarkmanDataScript =
@@ -143,6 +145,14 @@
     n = builtins.length (builtins.attrNames (enabledOutputs profile));
   in
     n >= 1 && n <= 2;
+
+  displayEnabledOutputs = profile: builtins.filter (o: o.enable) profile.outputs;
+  displayPrimaryOutputs = profile: builtins.filter (o: o.enable && o.primary) profile.outputs;
+  displayPrimaryNames = lib.unique (map (profile: (lib.head (displayPrimaryOutputs profile)).name) pallonDisplayProfiles.profiles);
+  displaySecondaryNames =
+    lib.unique
+    ((lib.concatMap (profile: map (o: o.name) (builtins.filter (o: o.enable && !o.primary) profile.outputs)) pallonDisplayProfiles.profiles)
+      ++ displayPrimaryNames);
 
   mkAssertionCheck = name: assertions:
     pkgs.runCommand name {} ''
@@ -259,6 +269,7 @@
   styleExtensionYaziLight = builtins.fromTOML (builtins.readFile "${styleExtensionHome.programs.yazi.flavors.enfocado-light}/flavor.toml");
 
   lwAndromedaNixpkgsCfg = andromeda.nixpkgs.config;
+  lwPermittedInsecurePackages = lwAndromedaNixpkgsCfg.permittedInsecurePackages or [];
   lwAllowInsecurePred = lwAndromedaNixpkgsCfg.allowInsecurePredicate or (_: false);
   lwFakeBin = {
     pname = "librewolf-bin";
@@ -810,6 +821,29 @@ in {
     }
   ];
 
+  bing-wallpaper-setter-session-explicit = pkgs.runCommand "bing-wallpaper-setter-session-explicit" {} ''
+    mkdir -p "$PWD/bin"
+    export PATH="$PWD/bin:${lib.makeBinPath [pkgs.coreutils pkgs.diffutils pkgs.gnugrep pkgs.jq]}"
+    cat > "$PWD/bin/hyprctl" <<'EOF'
+    #!${pkgs.runtimeShell}
+    printf '%s\n' "$*" >> "$PWD/hyprctl.out"
+    exit 1
+    EOF
+    cat > "$PWD/bin/feh" <<'EOF'
+    #!${pkgs.runtimeShell}
+    printf '%s\n' "$*" > "$PWD/feh.out"
+    EOF
+    chmod +x "$PWD/bin/hyprctl" "$PWD/bin/feh"
+
+    export DISPLAY=:1
+    ${bingWallpaperDefaultSetter} /cache/bing.jpg /cache/nasa.jpg
+
+    test ! -e "$PWD/hyprctl.out"
+    printf '%s\n' "--bg-fill /cache/bing.jpg /cache/nasa.jpg" > expected
+    cmp expected "$PWD/feh.out"
+    touch "$out"
+  '';
+
   andromeda-bing-wallpaper-user-service =
     mkCheck "andromeda-bing-wallpaper-user-service"
     (
@@ -972,6 +1006,7 @@ in {
     EOF
     chmod +x "$PWD/bin/hyprctl"
 
+    export XDG_CURRENT_DESKTOP=Hyprland
     ${bingWallpaperDefaultSetter} /cache/bing.jpg /cache/nasa.jpg
 
     printf '%s\n%s\n' \
@@ -998,6 +1033,7 @@ in {
     EOF
     chmod +x "$PWD/bin/hyprctl"
 
+    export XDG_CURRENT_DESKTOP=Hyprland
     ${bingWallpaperDefaultSetter} /cache/bing.jpg /cache/nasa.jpg
 
     printf '%s\n%s\n' \
@@ -1024,6 +1060,7 @@ in {
     EOF
     chmod +x "$PWD/bin/hyprctl"
 
+    export XDG_CURRENT_DESKTOP=Hyprland
     ${bingWallpaperDefaultSetter} /cache/bing.jpg /cache/nasa.jpg
 
     printf '%s\n' "eDP-1, /cache/bing.jpg, cover" > expected
@@ -1048,6 +1085,7 @@ in {
     EOF
     chmod +x "$PWD/bin/hyprctl"
 
+    export XDG_CURRENT_DESKTOP=Hyprland
     ${bingWallpaperDefaultSetter} /cache/bing.jpg
 
     printf '%s\n' "eDP-1, /cache/bing.jpg, cover" > expected
@@ -1078,6 +1116,7 @@ in {
     EOF
     chmod +x "$PWD/bin/hyprctl"
 
+    export XDG_CURRENT_DESKTOP=Hyprland
     ${bingWallpaperDefaultSetter} /cache/bing.jpg
 
     test "$(cat "$PWD/wallpaper-count")" = 2
@@ -1103,6 +1142,7 @@ in {
     EOF
     chmod +x "$PWD/bin/swaymsg"
 
+    export XDG_CURRENT_DESKTOP=sway
     ${bingWallpaperDefaultSetter} /cache/bing.jpg /cache/nasa.jpg
 
     printf '%s\n%s\n' \
@@ -1129,6 +1169,7 @@ in {
     EOF
     chmod +x "$PWD/bin/swaymsg"
 
+    export XDG_CURRENT_DESKTOP=sway
     ${bingWallpaperDefaultSetter} /cache/bing.jpg /cache/nasa.jpg
 
     printf '%s\n%s\n' \
@@ -1155,6 +1196,7 @@ in {
     EOF
     chmod +x "$PWD/bin/swaymsg"
 
+    export XDG_CURRENT_DESKTOP=sway
     ${bingWallpaperDefaultSetter} /cache/bing.jpg /cache/nasa.jpg
 
     printf '%s\n' "DP-2 bg /cache/bing.jpg fill" > expected
@@ -1179,6 +1221,7 @@ in {
     EOF
     chmod +x "$PWD/bin/swaymsg"
 
+    export XDG_CURRENT_DESKTOP=sway
     ${bingWallpaperDefaultSetter} /cache/bing.jpg /cache/nasa.jpg
 
     printf '%s\n%s\n' \
@@ -2223,6 +2266,153 @@ in {
     }
   ];
 
+  display-profiles-andromeda-enabled =
+    mkCheck "display-profiles-andromeda-enabled"
+    pallonDisplayProfiles.enable
+    "andromeda pallon: shared display profiles must be enabled";
+
+  display-profiles-andromeda-profile-names =
+    mkCheck "display-profiles-andromeda-profile-names"
+    ((map (p: p.name) pallonDisplayProfiles.profiles)
+      == ["docked" "docked-alternative" "docked-single" "docked2" "florian" "laptop" "pallon-office"])
+    "andromeda pallon: shared display profile names must match the known autorandr profiles";
+
+  display-profiles-each-profile-one-primary =
+    mkCheck "display-profiles-each-profile-one-primary"
+    (builtins.all (profile: builtins.length (displayEnabledOutputs profile) >= 1 && builtins.length (displayPrimaryOutputs profile) == 1) pallonDisplayProfiles.profiles)
+    "andromeda pallon: every display profile must have at least one enabled output and exactly one enabled primary";
+
+  display-profiles-generates-autorandr =
+    mkCheck "display-profiles-generates-autorandr"
+    (lib.sort builtins.lessThan (builtins.attrNames autorandrProfiles)
+      == lib.sort builtins.lessThan (map (p: p.name) pallonDisplayProfiles.profiles))
+    "andromeda pallon: display profiles must generate autorandr profiles";
+
+  display-profiles-autorandr-hooks-apply-cache =
+    mkCheck "display-profiles-autorandr-hooks-apply-cache"
+    (builtins.all (profile: lib.hasInfix "my-bing-wallpaper apply-cache" profile.hooks.postswitch) (builtins.attrValues autorandrProfiles))
+    "andromeda pallon: autorandr postswitch hooks must reapply cached wallpaper";
+
+  bing-wallpaper-i3-startup-applies-cache =
+    mkCheck "bing-wallpaper-i3-startup-applies-cache"
+    (lib.hasInfix "my-bing-wallpaper apply-cache" i3ConfigText)
+    "andromeda pallon: i3 startup must apply cached wallpaper without relying only on graphical-session.target";
+
+  sway-no-primary-nonprimary-output-tokens =
+    mkCheck "sway-no-primary-nonprimary-output-tokens"
+    (!(lib.hasInfix " output primary" pallonSwayConfigText) && !(lib.hasInfix "nonprimary" pallonSwayConfigText))
+    "andromeda pallon: sway workspace output rules must not use i3 primary/nonprimary aliases";
+
+  sway-workspace-outputs-derived-from-display-profiles = let
+    primaryLine = ''workspace "1: mail" output ${lib.concatStringsSep " " displayPrimaryNames}'';
+    secondaryLine = ''workspace "11: terminal" output ${lib.concatStringsSep " " displaySecondaryNames}'';
+  in
+    mkAssertionCheck "check-sway-workspace-outputs-derived-from-display-profiles" [
+      {
+        condition = lib.hasInfix primaryLine pallonSwayConfigText;
+        message = "andromeda pallon: sway primary workspace outputs must come from display profile primary roles";
+      }
+      {
+        condition = lib.hasInfix secondaryLine pallonSwayConfigText;
+        message = "andromeda pallon: sway secondary workspace outputs must come from display profile secondary roles";
+      }
+      {
+        condition = lib.hasInfix "my-display-profile watch sway" pallonSwayConfigText;
+        message = "andromeda pallon: sway must start the display profile watcher";
+      }
+    ];
+
+  hyprland-workspace-outputs-derived-from-display-profiles = mkAssertionCheck "check-hyprland-workspace-outputs-derived-from-display-profiles" [
+    {
+      condition = builtins.elem "${pallonDisplayProfiles.package}/bin/my-display-profile watch hyprland" (pallonHyprlandSettings.exec-once or []);
+      message = "andromeda pallon: hyprland must start the display profile watcher";
+    }
+    {
+      condition = pallonHyprlandSettings.workspace == [];
+      message = "andromeda pallon: hyprland static workspace monitor rules must defer to the display profile helper";
+    }
+    {
+      condition = lib.hasInfix "moveworkspacetomonitor" pallonDisplayProfiles.scriptText;
+      message = "display profile helper must dynamically move Hyprland workspaces to profile monitors";
+    }
+  ];
+
+  wayland-display-profile-helper-present = mkAssertionCheck "check-wayland-display-profile-helper-present" [
+    {
+      condition = lib.hasInfix "swaymsg -t get_outputs" pallonDisplayProfiles.scriptText;
+      message = "display profile helper must support sway output detection";
+    }
+    {
+      condition = lib.hasInfix "hyprctl monitors all -j" pallonDisplayProfiles.scriptText;
+      message = "display profile helper must support hyprland monitor detection";
+    }
+    {
+      condition = lib.hasInfix "my-bing-wallpaper apply-cache" pallonDisplayProfiles.scriptText;
+      message = "display profile helper must reapply cached wallpaper after layout changes";
+    }
+  ];
+
+  wayland-display-profile-helper-sway-apply = pkgs.runCommand "wayland-display-profile-helper-sway-apply" {} ''
+    mkdir -p "$PWD/bin"
+    export PATH="$PWD/bin:${lib.makeBinPath [pkgs.coreutils pkgs.diffutils pkgs.jq]}"
+    cat > "$PWD/bin/swaymsg" <<'EOF'
+    #!${pkgs.runtimeShell}
+    if [ "$1" = -t ] && [ "$2" = get_outputs ]; then
+      printf '[{"name":"eDP-1","active":true}]\n'
+      exit 0
+    fi
+    printf '%s\n' "$*" >> "$PWD/swaymsg.out"
+    EOF
+    cat > "$PWD/bin/my-bing-wallpaper" <<'EOF'
+    #!${pkgs.runtimeShell}
+    exit 0
+    EOF
+    chmod +x "$PWD/bin/swaymsg" "$PWD/bin/my-bing-wallpaper"
+
+    ${pkgs.writeShellScript "my-display-profile-sway-test" pallonDisplayProfiles.scriptText} apply sway
+
+    printf '%s\n' "-- output eDP-1 enable mode 3840x2160 position 0 0 scale 2.0" > expected
+    cmp expected "$PWD/swaymsg.out"
+    touch "$out"
+  '';
+
+  wayland-display-profile-helper-hyprland-apply = pkgs.runCommand "wayland-display-profile-helper-hyprland-apply" {} ''
+    mkdir -p "$PWD/bin"
+    export PATH="$PWD/bin:${lib.makeBinPath [pkgs.coreutils pkgs.diffutils pkgs.gnugrep pkgs.jq]}"
+    cat > "$PWD/bin/hyprctl" <<'EOF'
+    #!${pkgs.runtimeShell}
+    if [ "$1" = monitors ] && [ "$2" = all ] && [ "$3" = -j ]; then
+      printf '[{"name":"DP-3"},{"name":"DP-4"},{"name":"eDP-1"}]\n'
+      exit 0
+    fi
+    if [ "$1" = keyword ] && [ "$2" = monitor ]; then
+      printf '%s\n' "$3" >> "$PWD/monitor.out"
+      exit 0
+    fi
+    if [ "$1" = dispatch ] && [ "$2" = moveworkspacetomonitor ]; then
+      printf '%s\n' "$3" >> "$PWD/workspace.out"
+      exit 0
+    fi
+    exit 1
+    EOF
+    cat > "$PWD/bin/my-bing-wallpaper" <<'EOF'
+    #!${pkgs.runtimeShell}
+    exit 0
+    EOF
+    chmod +x "$PWD/bin/hyprctl" "$PWD/bin/my-bing-wallpaper"
+
+    ${pkgs.writeShellScript "my-display-profile-hyprland-test" pallonDisplayProfiles.scriptText} apply hyprland
+
+    printf '%s\n' \
+      "DP-3, 3840x2160@60.00, 3840x0, 1.0" \
+      "DP-4, 3840x2160@60.00, 0x0, 1.0" \
+      "eDP-1, disable" > expected-monitors
+    cmp expected-monitors "$PWD/monitor.out"
+    grep -F "1 DP-4" "$PWD/workspace.out"
+    grep -F "11 DP-3" "$PWD/workspace.out"
+    touch "$out"
+  '';
+
   i3-syntax = pkgs.runCommand "i3-syntax" {} ''
     export XDG_RUNTIME_DIR="$TMPDIR"
     configFile=${pkgs.writeText "andromeda-i3-config" i3ConfigText}
@@ -2717,15 +2907,15 @@ in {
 
   lw-system-insecure = mkAssertionCheck "lw-system-insecure" [
     {
-      condition = builtins.elem "openssl-1.1.1w" lwAndromedaNixpkgsCfg.permittedInsecurePackages;
+      condition = builtins.elem "openssl-1.1.1w" lwPermittedInsecurePackages;
       message = "andromeda: openssl-1.1.1w must remain in permittedInsecurePackages";
     }
     {
-      condition = !(builtins.elem "librewolf-bin-149.0.2-2" lwAndromedaNixpkgsCfg.permittedInsecurePackages);
+      condition = !(builtins.elem "librewolf-bin-149.0.2-2" lwPermittedInsecurePackages);
       message = "andromeda: pinned librewolf-bin-149.0.2-2 must not be in permittedInsecurePackages (use predicate instead)";
     }
     {
-      condition = !(builtins.elem "librewolf-bin-unwrapped-149.0.2-2" lwAndromedaNixpkgsCfg.permittedInsecurePackages);
+      condition = !(builtins.elem "librewolf-bin-unwrapped-149.0.2-2" lwPermittedInsecurePackages);
       message = "andromeda: pinned librewolf-bin-unwrapped-149.0.2-2 must not be in permittedInsecurePackages (use predicate instead)";
     }
     {

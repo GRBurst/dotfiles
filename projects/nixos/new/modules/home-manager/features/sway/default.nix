@@ -6,6 +6,7 @@
 }: let
   cfg = config.my.hm.features.sway;
   i3cfg = config.my.hm.features.i3;
+  displayCfg = config.my.hm.features.displayProfiles;
   types = lib.types;
   shared = import ../i3/_shared.nix {inherit lib;};
 
@@ -57,6 +58,28 @@
     (ws: ''workspace "${shared.mkWorkspaceNumberArg ws}" output ${outputExpr}'')
     (lib.filter (ws: ws.assignOutput) workspaces);
 
+  enabledOutputs = profile: builtins.filter (o: o.enable) profile.outputs;
+  primaryOutput = profile: lib.findFirst (o: o.enable && o.primary) null profile.outputs;
+  secondaryOutputs = profile: builtins.filter (o: o.enable && !o.primary) profile.outputs;
+
+  workspacePrimaryOutputs = lib.unique (lib.filter (name: name != null) (map (profile: let
+    primary = primaryOutput profile;
+  in
+    if primary == null
+    then null
+    else primary.name)
+  displayCfg.profiles));
+
+  workspaceSecondaryOutputs = lib.unique (
+    (lib.concatMap (profile: map (o: o.name) (secondaryOutputs profile)) displayCfg.profiles)
+    ++ workspacePrimaryOutputs
+  );
+
+  renderProfileWorkspaceOutputs = workspaces: outputNames:
+    lib.concatMapStringsSep "\n"
+    (ws: ''workspace "${shared.mkWorkspaceNumberArg ws}" output ${lib.concatStringsSep " " outputNames}'')
+    (lib.filter (ws: ws.assignOutput) workspaces);
+
   renderOutputs =
     lib.concatMapStringsSep "\n" (o: ''
       output ${o.name} {
@@ -78,6 +101,7 @@
     (cmd: "exec ${cmd}")
     (cfg.commonStartupCommands
       ++ cfg.localStartupCommands
+      ++ lib.optional displayCfg.enable "${displayCfg.package}/bin/my-display-profile watch sway"
       ++ lib.optional cfg.startWaybar
       "waybar -c ${config.xdg.configHome}/waybar/config-sway");
 
@@ -91,10 +115,18 @@
 
   displayConfig = ''
     # Workspace output assignments
-    ${renderWorkspaceOutputs cfg.workspaces.primary "primary"}
+    ${
+      if displayCfg.enable
+      then renderProfileWorkspaceOutputs cfg.workspaces.primary workspacePrimaryOutputs
+      else renderWorkspaceOutputs cfg.workspaces.primary "primary"
+    }
 
     ${lib.optionalString cfg.enableSecondaryWorkspaces ''
-      ${renderWorkspaceOutputs cfg.workspaces.secondary "nonprimary primary"}
+      ${
+        if displayCfg.enable
+        then renderProfileWorkspaceOutputs cfg.workspaces.secondary workspaceSecondaryOutputs
+        else renderWorkspaceOutputs cfg.workspaces.secondary "nonprimary primary"
+      }
     ''}
   '';
 
@@ -141,7 +173,7 @@
     ''}
 
     # Output configuration
-    ${renderOutputs}
+    ${lib.optionalString (!displayCfg.enable) renderOutputs}
 
     ${startupExecs}
 

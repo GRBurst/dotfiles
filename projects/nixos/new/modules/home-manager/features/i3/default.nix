@@ -5,6 +5,7 @@
   ...
 }: let
   cfg = config.my.hm.features.i3;
+  bingCfg = config.my.hm.features.bingWallpaper;
   types = lib.types;
   shared = import ./_shared.nix {inherit lib;};
   primaryOutput = cfg.display.primaryOutput;
@@ -26,7 +27,9 @@
   startupExecs =
     lib.concatMapStringsSep "\n"
     (cmd: "exec --no-startup-id ${cmd}")
-    (cfg.commonStartupCommands ++ cfg.localStartupCommands);
+    (cfg.commonStartupCommands
+      ++ cfg.localStartupCommands
+      ++ lib.optional bingCfg.enable "${bingCfg.package}/bin/my-bing-wallpaper apply-cache");
 
   mkWorkspaceName = ws:
     if ws.name == null

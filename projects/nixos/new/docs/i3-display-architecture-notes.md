@@ -3,8 +3,9 @@
 ## Context
 
 The i3 migration separates most i3 behavior into
-`modules/home-manager/features/i3/default.nix` and keeps physical display
-knowledge in host-side `programs.autorandr` profiles, especially
+`modules/home-manager/features/i3/default.nix`. Physical display knowledge now
+lives in the shared Home Manager option
+`my.hm.features.displayProfiles`, with Andromeda's profiles declared from
 `hosts/andromeda/default.nix`.
 
 The old reference setup used autorandr `postswitch` scripts to mutate the main
@@ -45,12 +46,21 @@ Relevant upstream docs:
 
 The current implementation has no runtime i3 config generation.
 
-Autorandr remains the source of truth for physical display profiles. Each
-Andromeda autorandr profile enables one or two outputs and marks exactly one
-enabled output as primary. After applying a profile, autorandr only reloads i3:
+`my.hm.features.displayProfiles` is the source of truth for physical display
+profiles and output roles. The module generates:
+
+- autorandr profiles for X11/i3;
+- the `my-display-profile` Wayland apply/watch helper for Sway and Hyprland;
+- profile role data used by Sway workspace output fallbacks;
+- Hyprland dynamic workspace moves through the helper.
+
+Each Andromeda display profile enables one or two outputs and marks exactly one
+enabled output as primary. The generated autorandr postswitch hook reloads i3
+and reapplies the cached wallpaper:
 
 ```sh
 i3-msg reload
+my-bing-wallpaper apply-cache || true
 ```
 
 The Home Manager i3 module renders static logical workspace output rules
@@ -89,6 +99,15 @@ Primary workspaces target i3's `primary` alias. Secondary workspaces target
 display and a single-output profile falls back to the primary display. The bar
 uses `output primary` and `output nonprimary`, matching the same logical model.
 
+Sway does not use i3's `primary` or `nonprimary` aliases. Its generated
+workspace rules use fallback output lists derived from display profile roles,
+for example primary workspace outputs from all profile primaries and secondary
+workspace outputs from all profile secondaries followed by primary fallbacks.
+Hyprland starts `my-display-profile watch hyprland`; the helper applies the
+matching profile and dispatches workspaces 1-10 to the active primary output and
+11-19 to the active secondary output, falling back to primary on single-monitor
+profiles.
+
 The parent config must not reference variables defined by the included theme
 file. i3 expands variables before processing includes, so included-file
 variables cannot be consumed by the parent. Generated dynamic theme files use
@@ -105,7 +124,8 @@ Andromeda display profiles are intentionally constrained:
 - every profile has at least one enabled output;
 - every profile has at most two enabled outputs;
 - every profile has exactly one enabled primary output;
-- every autorandr `postswitch` hook reloads i3;
+- every generated autorandr profile output has a fingerprint;
+- every autorandr `postswitch` hook reloads i3 and reapplies cached wallpaper;
 - no autorandr hook calls `write-display-config.sh`.
 
 These constraints keep the static i3 rules meaningful. `primary` always maps to
@@ -122,8 +142,15 @@ The flake checks cover the architecture directly:
   does not deploy `write-display-config.sh`, and contains no stale `$OUT` /
   `$OUT2` text. It also asserts the generated dynamic theme owns the bar block
   and uses literal visible workspace colors.
+- `display-profiles-*` asserts the shared profile model, autorandr generation,
+  and generated postswitch wallpaper cache reapply.
+- `sway-*` asserts Sway uses physical output names derived from display profile
+  roles and contains no i3-only `primary` or `nonprimary` tokens.
+- `hyprland-workspace-outputs-derived-from-display-profiles` and
+  `wayland-display-profile-helper-*` assert the helper is present and applies
+  fake Sway/Hyprland layouts.
 - `i3-autorandr` asserts the autorandr profile invariants and verifies hooks
-  only reload i3.
+  still reload i3.
 - `i3-syntax` runs `i3 -C` against the generated Andromeda i3 config.
 - `i3-statusbar-path` keeps `i3status-rust` available in the user environment.
 
@@ -132,6 +159,9 @@ Useful targeted validation:
 ```sh
 nix build .#checks.x86_64-linux.i3-config
 nix build .#checks.x86_64-linux.i3-autorandr
+nix build .#checks.x86_64-linux.display-profiles-generates-autorandr
+nix build .#checks.x86_64-linux.sway-workspace-outputs-derived-from-display-profiles
+nix build .#checks.x86_64-linux.hyprland-workspace-outputs-derived-from-display-profiles
 nix build .#checks.x86_64-linux.i3-statusbar-path
 nix build .#checks.x86_64-linux.i3-syntax
 ```

@@ -4,9 +4,10 @@
 
 The optional Bing Image of the Day wallpaper feature is implemented for
 Andromeda/pallon and supports i3/X11, Hyprland, and Sway sessions.
-Andromeda now uses Bing on the configured primary monitor and NASA APOD
-on secondary monitors, falling back across the latest seven APOD days when
-today's APOD is a video. Hyprland wallpaper assignment is retry-hardened so the
+Andromeda now uses Bing on the active display profile's primary output and NASA
+APOD on enabled non-primary outputs, falling back across the latest seven APOD
+days when today's APOD is a video. Hyprland wallpaper assignment is
+retry-hardened so the
 user service can tolerate `hyprpaper` IPC not being ready immediately. For
 Hyprland, `hyprctl hyprpaper wallpaper '[mon], [path], [fit_mode]'` is the
 correct way to set a wallpaper nowadays and using `reload` is not working
@@ -15,17 +16,20 @@ anymore.
 Implemented files:
 
 - `modules/home-manager/features/bing-wallpaper.nix`
+- `modules/home-manager/features/display-profiles.nix`
 - `modules/nixos/features/desktop/bing-wallpaper.nix`
 - `hosts/andromeda/default.nix`
 - `checks/eval-assertions.nix`
 
-The public Nix API remains under the same feature roots, with APOD and Hyprland
-monitor options added under `bingWallpaper`. `primaryMonitor` is the generic
-preferred monitor option; `hyprlandPrimaryMonitor` remains as a compatibility
-alias:
+The public wallpaper API remains under the same feature roots, with APOD and
+Hyprland monitor options added under `bingWallpaper`. `primaryMonitor` remains
+the generic preferred monitor fallback and `hyprlandPrimaryMonitor` remains as a
+compatibility alias. On hosts with `my.hm.features.displayProfiles.enable =
+true`, active profile roles take precedence over that static fallback:
 
 - `my.nixos.features.desktop.bingWallpaper`
 - `my.hm.features.bingWallpaper`
+- `my.hm.features.displayProfiles`
 
 ## Runtime Behavior
 
@@ -64,19 +68,25 @@ from `latest-paths` or `latest.jpg` exist. A fresh login therefore does not wait
 on Bing or NASA. A stale login still shows the cached wallpaper first; if the
 network refresh fails and cache was applied, the login service succeeds.
 
-The default setter is session-aware:
+The default setter is session-aware and only chooses Wayland backends from
+explicit session signals. Merely having `hyprctl` or `swaymsg` installed does
+not make the setter choose that backend:
 
-1. If `hyprctl` is available and `hyprctl monitors -j` succeeds, it sets the
-   first image path on the configured primary monitor, or Hyprland's first
-   monitor when no configured monitor is present.
-2. If a second image path is available, it sets that image on every other
+1. If `XDG_CURRENT_DESKTOP=sway` or `SWAYSOCK` is set, it reads
+   `swaymsg -t get_outputs`, selects the active display profile from connected
+   outputs when available, and sets the first image path on the profile primary
+   output when active. Otherwise it falls back to `primaryMonitor`, then Sway's
+   first active output.
+2. If a second image path is available, it sets that image on every other active
+   Sway output. Inactive Sway outputs are ignored.
+3. Otherwise, if `XDG_CURRENT_DESKTOP=Hyprland` or
+   `HYPRLAND_INSTANCE_SIGNATURE` is set, it reads `hyprctl monitors -j`,
+   selects the active display profile from connected monitors when available,
+   and sets the first image path on the profile primary output. Otherwise it
+   falls back to `primaryMonitor`, then Hyprland's first monitor.
+4. If a second image path is available, it sets that image on every other
    Hyprland monitor. Each Hyprland wallpaper assignment is tried up to five
    times before the setter fails.
-3. Otherwise, if `swaymsg` is available and `swaymsg -t get_outputs` succeeds,
-   it sets the first image path on the configured primary monitor when active,
-   or Sway's first active output when no configured monitor is present.
-4. If a second image path is available, it sets that image on every other active
-   Sway output. Inactive Sway outputs are ignored.
 5. Otherwise, if `DISPLAY` is set, it falls back to X11 with
    `feh --bg-fill "$@"`.
 6. If no supported session is found, it exits non-zero.
@@ -99,15 +109,22 @@ service:
 2. Valid `latest.jpg`.
 3. Exit non-zero with `No Bing wallpapers downloaded and no cache available`.
 
-The Andromeda default remains:
+The Andromeda wallpaper defaults remain:
 
 - `market = "de-DE"`
 - `interval = "6h"`
 - `count = 2`
 - `preferUhd = true`
-- `primaryMonitor = "eDP-1"`
+- `primaryMonitor = "eDP-1"` as fallback for sessions without a matching
+  display profile
 - `nasaApod.enable = true`
-- setter: session-aware Hyprland/hyprpaper first, Sway second, X11/feh fallback
+- setter: explicit-session Sway, Hyprland/hyprpaper, then X11/feh fallback
+
+`my-display-profile apply|watch sway|hyprland` calls
+`my-bing-wallpaper apply-cache || true` after applying a layout. i3 also applies
+the wallpaper cache during startup, and generated autorandr postswitch hooks run
+the same cache apply after reloading i3. This avoids relying only on
+`graphical-session.target`, which can be missed by the i3 login path.
 
 The user timer installs into `timers.target` and runs `bing-wallpaper.service`
 every six hours after successful activation. That service runs
@@ -140,6 +157,9 @@ nix build .#checks.x86_64-linux.andromeda-bing-wallpaper-package
 nix build .#checks.x86_64-linux.andromeda-bing-wallpaper-primary-monitor
 nix build .#checks.x86_64-linux.andromeda-bing-wallpaper-nasa-apod
 nix build .#checks.x86_64-linux.andromeda-bing-wallpaper-session-aware-setter
+nix build .#checks.x86_64-linux.bing-wallpaper-setter-session-explicit
+nix build .#checks.x86_64-linux.bing-wallpaper-i3-startup-applies-cache
+nix build .#checks.x86_64-linux.display-profiles-autorandr-hooks-apply-cache
 nix build .#checks.x86_64-linux.andromeda-bing-wallpaper-script-structure
 nix build .#checks.x86_64-linux.bing-wallpaper-nasa-image-second-path
 nix build .#checks.x86_64-linux.bing-wallpaper-nasa-video-range-selects-newest-image

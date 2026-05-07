@@ -1,5 +1,6 @@
 {
   pkgs,
+  lib,
   inputs,
   ...
 }: {
@@ -131,13 +132,35 @@
       imports = [../../homes/pallon];
       my.hm.features.env.enable = true;
 
-      programs.autorandr = let
-        mkHook = ''
-          ${pkgs.i3}/bin/i3-msg reload
-        '';
-      in {
-        enable = true;
-        profiles = {
+      my.hm.features.displayProfiles = let
+        mkPosition = position: let
+          parts = lib.splitString "x" position;
+        in {
+          x = lib.toInt (builtins.elemAt parts 0);
+          y = lib.toInt (builtins.elemAt parts 1);
+        };
+        mkOutput = profile: name: output: {
+          inherit name;
+          fingerprint = profile.fingerprint.${name} or null;
+          enable = output.enable or false;
+          primary = output.primary or false;
+          mode = output.mode or null;
+          rate = output.rate or null;
+          position = mkPosition (output.position or "0x0");
+          scale =
+            output.scale
+            or (
+              if name == "eDP-1"
+              then 2.0
+              else 1.0
+            );
+          gamma = output.gamma or null;
+        };
+        mkProfile = name: profile: {
+          inherit name;
+          outputs = lib.mapAttrsToList (mkOutput profile) profile.config;
+        };
+        autorandrProfiles = {
           laptop = {
             fingerprint = {
               "eDP-1" = "00ffffffffffff0030ae6b4100000000001e0104b51f1178e2d89eaf4f45b1270f52540000000101010101010101010101010101010140ce00a0f07028803020350035ae1000001840ce00a0f07028803020350035ae100000180000000f00ff093cff093c320a020e6f0714000000fe004d4e453030314541312d350a20011802031d00e3058000e60605016a6a246d1a00000203283c00046a246a2400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007c";
@@ -152,7 +175,6 @@
                 gamma = "1.0:0.667:0.455";
               };
             };
-            hooks.postswitch = mkHook;
           };
 
           docked = {
@@ -179,7 +201,6 @@
               };
               "eDP-1".enable = false;
             };
-            hooks.postswitch = mkHook;
           };
 
           docked2 = {
@@ -206,7 +227,6 @@
               };
               "eDP-1".enable = false;
             };
-            hooks.postswitch = mkHook;
           };
 
           docked-alternative = {
@@ -233,7 +253,6 @@
               };
               "eDP-1".enable = false;
             };
-            hooks.postswitch = mkHook;
           };
 
           docked-single = {
@@ -258,7 +277,6 @@
                 gamma = "1.0:0.833:0.769";
               };
             };
-            hooks.postswitch = mkHook;
           };
 
           pallon-office = {
@@ -281,7 +299,6 @@
                 rate = "60.00";
               };
             };
-            hooks.postswitch = mkHook;
           };
 
           florian = {
@@ -306,9 +323,11 @@
                 gamma = "1.0:0.833:0.769";
               };
             };
-            hooks.postswitch = mkHook;
           };
         };
+      in {
+        enable = true;
+        profiles = lib.mapAttrsToList mkProfile autorandrProfiles;
       };
     };
     extraSpecialArgs = {inherit inputs;};
