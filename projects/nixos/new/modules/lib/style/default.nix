@@ -160,6 +160,11 @@ in {
       text-color: @background;
     }
 
+    element-text, element-icon {
+      background-color: transparent;
+      text-color: inherit;
+    }
+
     element urgent {
       background-color: @urgent;
       text-color: @background;
@@ -172,6 +177,33 @@ in {
     button selected {
       background-color: @accent;
       text-color: @background;
+    }
+  '';
+
+  mkWofiCss = palette: ''
+    window, #outer-box, #inner-box, #scroll {
+      background-color: ${palette.primary.background};
+      color: ${palette.primary.foreground};
+    }
+
+    #input {
+      background-color: ${palette.primary.background};
+      color: ${palette.primary.foreground};
+      border: 2px solid ${palette.normal.blue};
+    }
+
+    #entry {
+      background-color: ${palette.primary.background};
+      color: ${palette.primary.foreground};
+    }
+
+    #entry:selected {
+      background-color: ${palette.normal.blue};
+    }
+
+    #text:selected {
+      background-color: transparent;
+      color: ${palette.primary.background};
     }
   '';
 

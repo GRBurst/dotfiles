@@ -251,6 +251,11 @@
           light = "/* style-test-rofi-light */";
           dark = "/* style-test-rofi-dark */";
         };
+        wofi.extra = {
+          shared = "/* style-test-wofi-shared */";
+          light = "/* style-test-wofi-light */";
+          dark = "/* style-test-wofi-dark */";
+        };
         yazi.overrides.light.mgr.hovered.fg = "#222222";
         nvf.enfocadoStyle = "neon";
       };
@@ -1518,6 +1523,12 @@ in {
     }
     {
       condition =
+        pallonHome.my.hm.features.style.adapters.wofi.enable
+        && jeliasHome.my.hm.features.style.adapters.wofi.enable;
+      message = "style must enable wofi adapter when extras bundle installs wofi";
+    }
+    {
+      condition =
         pallonHome.programs.yazi.theme.flavor.dark
         == "enfocado-dark"
         && pallonHome.programs.yazi.theme.flavor.light == "enfocado-light"
@@ -1530,8 +1541,14 @@ in {
       message = "rofi config must use the dynamic current theme";
     }
     {
-      condition = lib.hasInfix "run {\ndisplay-name: \"run: \";" pallonRofiConfigText;
-      message = "rofi config must expose mode display-name labels";
+      condition =
+        lib.hasInfix "run {\ndisplay-name: \"run\";" pallonRofiConfigText
+        && lib.hasInfix "drun {\ndisplay-name: \"drun\";" pallonRofiConfigText
+        && lib.hasInfix "ssh {\ndisplay-name: \"ssh\";" pallonRofiConfigText
+        && lib.hasInfix "window {\ndisplay-name: \"window\";" pallonRofiConfigText
+        && lib.hasInfix "combi {\ndisplay-name: \"combi\";" pallonRofiConfigText
+        && !(lib.hasInfix "display-name: \"run: \";" pallonRofiConfigText);
+      message = "rofi config must expose plain mode display-name labels";
     }
     {
       condition =
@@ -1547,8 +1564,24 @@ in {
         && lib.hasInfix "text-color: @background;" pallonFiles."my/theme/rofi/light.rasi".text
         && lib.hasInfix "margin: 0;" pallonFiles."my/theme/rofi/light.rasi".text
         && lib.hasInfix "padding: 0;" pallonFiles."my/theme/rofi/light.rasi".text
-        && lib.hasInfix "border: 0;" pallonFiles."my/theme/rofi/light.rasi".text;
+        && lib.hasInfix "border: 0;" pallonFiles."my/theme/rofi/light.rasi".text
+        && lib.hasInfix "element-text, element-icon" pallonFiles."my/theme/rofi/light.rasi".text
+        && lib.hasInfix "background-color: transparent;" pallonFiles."my/theme/rofi/light.rasi".text
+        && lib.hasInfix "text-color: inherit;" pallonFiles."my/theme/rofi/light.rasi".text
+        && lib.hasInfix "element-text, element-icon" pallonFiles."my/theme/rofi/dark.rasi".text;
       message = "rofi selected row must be a filled selection without a selection frame";
+    }
+    {
+      condition =
+        pallonFiles ? "my/theme/wofi/light.css"
+        && pallonFiles ? "my/theme/wofi/dark.css"
+        && jeliasFiles ? "my/theme/wofi/light.css"
+        && jeliasFiles ? "my/theme/wofi/dark.css"
+        && lib.hasInfix "#entry:selected" pallonFiles."my/theme/wofi/light.css".text
+        && lib.hasInfix "background-color: #0064e4;" pallonFiles."my/theme/wofi/light.css".text
+        && lib.hasInfix "#entry:selected" pallonFiles."my/theme/wofi/dark.css".text
+        && lib.hasInfix "background-color: #368aeb;" pallonFiles."my/theme/wofi/dark.css".text;
+      message = "wofi light/dark CSS must be generated with Enfocado selected-entry highlight for both users";
     }
     {
       condition = pallonHome.services.darkman.enable == true && jeliasHome.services.darkman.enable == true;
@@ -1704,8 +1737,9 @@ in {
         lib.hasInfix "enfocado_" data
         && lib.hasInfix "current/dunst.conf" data
         && lib.hasInfix "current/waybar.css" data
+        && lib.hasInfix "wofi/style.css" data
         && lib.hasInfix "my-theme/mode" data;
-      message = "styleCurrentLinks activation must wire alacritty, dunst, waybar symlinks and read persisted mode";
+      message = "styleCurrentLinks activation must wire app symlinks and read persisted mode";
     }
     {
       condition =
@@ -1714,7 +1748,8 @@ in {
         && !(pallonFiles ? "my/theme/current/waybar.css")
         && !(pallonFiles ? "my/theme/current/hyprland.conf")
         && !(pallonFiles ? "my/theme/current/rofi.rasi")
-        && !(pallonFiles ? "my/theme/current/i3status-rust.toml");
+        && !(pallonFiles ? "my/theme/current/i3status-rust.toml")
+        && !(pallonFiles ? "wofi/style.css");
       message = "current/ theme files must be managed by home.activation, not xdg.configFile";
     }
     {
@@ -1724,6 +1759,10 @@ in {
     {
       condition = lib.hasInfix ''pkill -u "$USER" -SIGUSR2 i3status-rs || true'' styleSwitchText;
       message = "style dispatcher must restart i3status-rust after switching its theme symlink";
+    }
+    {
+      condition = lib.hasInfix "wofi/style.css" styleSwitchText;
+      message = "style dispatcher must switch the default wofi stylesheet symlink";
     }
     {
       condition =
@@ -1749,7 +1788,9 @@ in {
         && lib.hasInfix "# style-test-dunst-light" (styleExtensionFileText "my/theme/dunst/light.conf")
         && lib.hasInfix "/* style-test-waybar-dark */" (styleExtensionFileText "my/theme/waybar/dark.css")
         && lib.hasInfix "# style-test-kitty-light" (styleExtensionFileText "kitty/light-theme.auto.conf")
-        && lib.hasInfix "/* style-test-rofi-shared */" (styleExtensionFileText "my/theme/rofi/dark.rasi");
+        && lib.hasInfix "/* style-test-rofi-shared */" (styleExtensionFileText "my/theme/rofi/dark.rasi")
+        && lib.hasInfix "/* style-test-wofi-shared */" (styleExtensionFileText "my/theme/wofi/light.css")
+        && lib.hasInfix "/* style-test-wofi-dark */" (styleExtensionFileText "my/theme/wofi/dark.css");
       message = "style raw adapter extensions must be appended to generated light/dark artifacts";
     }
     {
@@ -1777,6 +1818,7 @@ in {
       "$XDG_CONFIG_HOME/my/theme/hyprland" \
       "$XDG_CONFIG_HOME/my/theme/dunst" \
       "$XDG_CONFIG_HOME/my/theme/rofi" \
+      "$XDG_CONFIG_HOME/my/theme/wofi" \
       "$XDG_CONFIG_HOME/my/theme/waybar"
 
     touch "$XDG_CONFIG_HOME/my/theme/alacritty/enfocado_light.toml"
@@ -1791,6 +1833,8 @@ in {
     touch "$XDG_CONFIG_HOME/my/theme/dunst/dark.conf"
     touch "$XDG_CONFIG_HOME/my/theme/rofi/light.rasi"
     touch "$XDG_CONFIG_HOME/my/theme/rofi/dark.rasi"
+    touch "$XDG_CONFIG_HOME/my/theme/wofi/light.css"
+    touch "$XDG_CONFIG_HOME/my/theme/wofi/dark.css"
     touch "$XDG_CONFIG_HOME/my/theme/waybar/light.css"
     touch "$XDG_CONFIG_HOME/my/theme/waybar/dark.css"
 
@@ -1798,11 +1842,13 @@ in {
     test "$(cat "$XDG_STATE_HOME/my-theme/mode")" = light
     test "$(readlink "$XDG_CONFIG_HOME/my/theme/current/alacritty.toml")" = "$XDG_CONFIG_HOME/my/theme/alacritty/enfocado_light.toml"
     test "$(readlink "$XDG_CONFIG_HOME/my/theme/current/dunst.conf")" = "$XDG_CONFIG_HOME/my/theme/dunst/light.conf"
+    test "$(readlink "$XDG_CONFIG_HOME/wofi/style.css")" = "$XDG_CONFIG_HOME/my/theme/wofi/light.css"
 
     ${pallonHome.my.hm.features.style.dispatcher.package}/bin/my-style-switch dark
     test "$(cat "$XDG_STATE_HOME/my-theme/mode")" = dark
     test "$(readlink "$XDG_CONFIG_HOME/my/theme/current/dunst.conf")" = "$XDG_CONFIG_HOME/my/theme/dunst/dark.conf"
     test "$(readlink "$XDG_CONFIG_HOME/my/theme/current/rofi.rasi")" = "$XDG_CONFIG_HOME/my/theme/rofi/dark.rasi"
+    test "$(readlink "$XDG_CONFIG_HOME/wofi/style.css")" = "$XDG_CONFIG_HOME/my/theme/wofi/dark.css"
     test "$(readlink "$XDG_CONFIG_HOME/my/theme/current/waybar.css")" = "$XDG_CONFIG_HOME/my/theme/waybar/dark.css"
 
     if ${pallonHome.my.hm.features.style.dispatcher.package}/bin/my-style-switch invalid; then

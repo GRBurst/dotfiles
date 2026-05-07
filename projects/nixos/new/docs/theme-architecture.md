@@ -53,11 +53,12 @@ Examples:
 ~/.config/my/theme/current/dunst.conf
 ~/.config/my/theme/current/rofi.rasi
 ~/.config/my/theme/current/waybar.css
+~/.config/wofi/style.css
 ```
 
 Runtime scripts may update those links and the state file, then signal or reload consumers. They must not rewrite Nix-owned source configuration.
 
-Adapter customizations do not change this runtime path. Home Manager still renders the light and dark source artifacts ahead of time, and `my-style-switch` still only flips the current links. Raw adapter extensions are appended to the generated rofi, waybar, hyprland, dunst, i3, and kitty artifacts. TOML-shaped adapter overrides are merged into the generated Alacritty, i3status-rust, and Yazi artifacts before rendering.
+Adapter customizations do not change this runtime path. Home Manager still renders the light and dark source artifacts ahead of time, and `my-style-switch` still only flips the current links. Raw adapter extensions are appended to the generated rofi, wofi, waybar, hyprland, dunst, i3, and kitty artifacts. TOML-shaped adapter overrides are merged into the generated Alacritty, i3status-rust, and Yazi artifacts before rendering.
 
 ## Portal Validation
 
@@ -118,7 +119,7 @@ Rofi reads `~/.config/my/theme/current/rofi.rasi` on each invocation. The dispat
 Rofi behavior config and rofi theme fragments are separate customization points. Prompt labels live in Home Manager config:
 
 ```nix
-my.hm.features.rofi.modeDisplayNames.run = "run: ";
+my.hm.features.rofi.modeDisplayNames.run = "run";
 ```
 
 Theme-only changes live under the rofi style adapter. For example, selected-row fill belongs in RASI, not in `programs.rofi.extraConfig`:
@@ -131,6 +132,8 @@ my.hm.features.style.adapters.rofi.extra.shared = ''
   }
 '';
 ```
+
+Wofi reads the default stylesheet path `~/.config/wofi/style.css` on each invocation. The dispatcher switches that link directly to the generated light or dark wofi CSS; no signal is needed.
 
 Kitty uses native auto-theme files:
 
@@ -172,6 +175,8 @@ cat ~/.local/state/my-theme/mode
 readlink ~/.config/my/theme/current/alacritty.toml
 readlink ~/.config/my/theme/current/dunst.conf
 readlink ~/.config/my/theme/current/rofi.rasi
+readlink ~/.config/wofi/style.css
+grep -n '#entry:selected' ~/.config/wofi/style.css
 
 gdbus call --session \
   --dest org.freedesktop.portal.Desktop \
@@ -185,6 +190,8 @@ cat ~/.local/state/my-theme/mode
 readlink ~/.config/my/theme/current/alacritty.toml
 readlink ~/.config/my/theme/current/dunst.conf
 readlink ~/.config/my/theme/current/rofi.rasi
+readlink ~/.config/wofi/style.css
+grep -n '#entry:selected' ~/.config/wofi/style.css
 
 gdbus call --session \
   --dest org.freedesktop.portal.Desktop \
@@ -201,12 +208,14 @@ Expected results:
 - The Alacritty current link points at `enfocado_light.toml`.
 - The Dunst current link points at `light.conf`.
 - The Rofi current link points at `light.rasi`.
+- The Wofi stylesheet link points at `wofi/light.css` and contains `#0064e4`.
 - `darkman get` returns `dark` after `darkman set dark`.
 - `~/.local/state/my-theme/mode` contains `dark`.
 - The portal `org.freedesktop.appearance color-scheme` value is `1`.
 - The Alacritty current link points at `enfocado_dark.toml`.
 - The Dunst current link points at `dark.conf`.
 - The Rofi current link points at `dark.rasi`.
+- The Wofi stylesheet link points at `wofi/dark.css` and contains `#368aeb`.
 
 Also check the visible consumers in the same session:
 
@@ -221,6 +230,7 @@ Also check the visible consumers in the same session:
 - GNOME `color-scheme` follows the selected mode.
 - GNOME does not autostart dunst; before sending a notification, `pgrep -u "$USER" dunst` is empty in a GNOME session.
 - Yazi uses the light or dark flavor in a new or refreshed instance.
-- Rofi opens in light mode after `darkman set light` and in dark mode after `darkman set dark`.
+- Rofi opens in light mode after `darkman set light` and in dark mode after `darkman set dark`; the prompt label is plain `run`, `drun`, `ssh`, `window`, or `combi`, and the selected row has a blue fill.
+- Wofi opens in light mode after `darkman set light` and in dark mode after `darkman set dark`; the selected row has a blue fill.
 
 `jelias@earth` should be validated with the same checks when a live session is available.

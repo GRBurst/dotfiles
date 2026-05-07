@@ -91,7 +91,7 @@
       current_dir="$theme_dir/current"
       state_dir="$state_home/my-theme"
 
-      mkdir -p "$current_dir" "$state_dir"
+      mkdir -p "$current_dir" "$state_dir" "$config_home/wofi"
 
       switch_link() {
         target="$1"
@@ -108,6 +108,7 @@
       switch_link "$theme_dir/hyprland/$mode.conf" "$current_dir/hyprland.conf"
       switch_link "$theme_dir/dunst/$mode.conf" "$current_dir/dunst.conf"
       switch_link "$theme_dir/rofi/$mode.rasi" "$current_dir/rofi.rasi"
+      switch_link "$theme_dir/wofi/$mode.css" "$config_home/wofi/style.css"
       switch_link "$theme_dir/waybar/$mode.css" "$current_dir/waybar.css"
 
       printf '%s\n' "$mode" > "$state_dir/mode"
@@ -256,6 +257,17 @@ in {
           description = "Raw RASI fragments appended to generated rofi theme files.";
         };
       };
+      wofi = {
+        enable = lib.mkOption {
+          type = lib.types.bool;
+          default = enabled ["my" "hm" "bundles" "extras" "enable"];
+        };
+        extra = lib.mkOption {
+          type = rawThemeExtensionType;
+          default = {};
+          description = "Raw CSS fragments appended to generated wofi style files.";
+        };
+      };
       yazi = {
         enable = lib.mkOption {
           type = lib.types.bool;
@@ -360,6 +372,10 @@ in {
         ${lib.optionalString cfg.adapters.rofi.enable ''
           switch_link "$cur/rofi/$mode.rasi" "$cur/current/rofi.rasi"
         ''}
+        ${lib.optionalString cfg.adapters.wofi.enable ''
+          mkdir -p "${config.xdg.configHome}/wofi"
+          switch_link "$cur/wofi/$mode.css" "${config.xdg.configHome}/wofi/style.css"
+        ''}
         ${lib.optionalString cfg.adapters.i3.enable ''
           switch_link "$cur/i3/$mode.conf" "$cur/current/i3.conf"
         ''}
@@ -417,6 +433,13 @@ in {
         appendModeText (style.mkRofiTheme palettes.light) cfg.adapters.rofi.extra "light";
       xdg.configFile."my/theme/rofi/dark.rasi".text =
         appendModeText (style.mkRofiTheme palettes.dark) cfg.adapters.rofi.extra "dark";
+    })
+
+    (lib.mkIf cfg.adapters.wofi.enable {
+      xdg.configFile."my/theme/wofi/light.css".text =
+        appendModeText (style.mkWofiCss palettes.light) cfg.adapters.wofi.extra "light";
+      xdg.configFile."my/theme/wofi/dark.css".text =
+        appendModeText (style.mkWofiCss palettes.dark) cfg.adapters.wofi.extra "dark";
     })
 
     (lib.mkIf cfg.adapters.yazi.enable {

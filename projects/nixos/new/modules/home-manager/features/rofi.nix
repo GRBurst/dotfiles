@@ -29,11 +29,11 @@ in {
     modeDisplayNames = lib.mkOption {
       type = lib.types.attrsOf lib.types.str;
       default = {
-        run = "run: ";
-        drun = "drun: ";
-        ssh = "ssh: ";
-        window = "window: ";
-        combi = "combi: ";
+        run = "run";
+        drun = "drun";
+        ssh = "ssh";
+        window = "window";
+        combi = "combi";
       };
       description = "Display labels rendered by rofi for each enabled mode.";
     };
