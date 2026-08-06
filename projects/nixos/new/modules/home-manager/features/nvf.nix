@@ -99,7 +99,10 @@ in {
             rust.enable = true;
             css.enable = true;
             html.enable = true;
-            markdown.enable = true;
+            markdown = {
+              enable = true;
+              format.type = ["prettier"];
+            };
             lua.enable = true;
           };
 
