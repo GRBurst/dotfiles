@@ -24,7 +24,7 @@ in {
       enable = true;
       package = cfg.ollamaPackage;
     };
-    services.qdrant.enable = true;
+    # services.qdrant.enable = true;
     # open-webui pulls in the python torch / faster-whisper / piper-tts chain, which is
     # not covered by public caches. Re-enable once a personal cache warms them.
     # services.open-webui = {

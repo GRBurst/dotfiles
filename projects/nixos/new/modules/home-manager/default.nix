@@ -6,6 +6,7 @@
     ./bundles/general.nix
     ./bundles/laptop.nix
     ./bundles/media.nix
+    ./features/ai.nix
     ./features/alacritty.nix
     ./features/bing-wallpaper.nix
     ./features/dictate.nix
