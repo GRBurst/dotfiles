@@ -326,14 +326,7 @@ in {
         lxqt.lxqt-config
         lxappearance
 
-        # --- Misc ---
-        lmstudio
-        claude-code
-        claude-monitor
-        codex
-        opencode
-        antigravity
-        gemini-cli-bin
+        # AI tooling lives in my.hm.features.ai
 
         # --- Ported from ref/nixos/home.nix (parity with single-system config) ---
         # binutils         # conflicts with clang (both ship bin/ld.gold) in home-manager-path buildEnv

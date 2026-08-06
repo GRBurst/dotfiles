@@ -40,8 +40,6 @@ in {
       zoom-us
       teams-for-linux
 
-      # AI Tools
-      # aider-chat  # broken dependency since 2026-04-28
       yek
       # lutris  # broken since 2026-04-28
       umu-launcher
