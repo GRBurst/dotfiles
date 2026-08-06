@@ -5,11 +5,54 @@
   ...
 }: let
   cfg = config.my.hm.features.ai;
+  homeDir = config.home.homeDirectory;
 
-  # "claude" -> "nono run --profile nolabs-ai/claude --allow-cwd -- claude"
+  # nvim runs as NVIM_APPNAME=nvf (set by the mnw wrapper), so all of its XDG
+  # dirs are ~/.../nvf -- a rule naming "nvim" is a silent no-op. Lazy-loaded
+  # plugins spread writes across state (shada, undo, blink-cmp frecency) and
+  # cache (fzf-lua, fidget, snacks), so grant those two dirs rather than
+  # chasing individual files. Both are read back, so --write (write-only)
+  # would trade loud errors for silent data loss.
+  # `or false`: checks/eval-assertions.nix imports this module standalone.
+  editorEnabled = cfg.sandbox.enable && (config.my.hm.features.nvf.enable or false);
+
+  # The real $XDG_RUNTIME_DIR holds gnome-keyring's secrets+ssh sockets and the
+  # D-Bus session bus (desktop/i3.nix, hyprland.nix start the daemon with
+  # --components=pkcs11,secrets,ssh), so granting it would undo the profile's
+  # own deny_credentials. Redirect instead: nvim's server socket and fzf-lua's
+  # serverstart() only need *a* writable dir.
+  #
+  # It lives under nvim's own state dir, which the grant below already covers,
+  # so the redirect costs no extra capability. Do NOT move it under
+  # ~/.local/state/nono: nono refuses to grant any path overlapping its own
+  # protected state root and the sandbox then fails to initialise.
+  sandboxRuntimeDir = "${homeDir}/.local/state/nvf/run";
+
+  editorArgs = lib.optionals editorEnabled [
+    "--allow"
+    "${homeDir}/.local/state/nvf"
+    "--allow"
+    "${homeDir}/.cache/nvf"
+    # darkman mode; read-only, single file. Silently falls back to light today.
+    "--read-file"
+    "${homeDir}/.local/state/my-theme/mode"
+  ];
+  # ~/.local/share/nvf is deliberately absent: mnw is declarative and nothing
+  # writes there. Add it only if a real failure names it.
+
+  # nono has no general --env flag; it inherits the parent environment. This
+  # must stay alias-scoped -- home.sessionVariables would break the real
+  # desktop session, where $XDG_RUNTIME_DIR must stay /run/user/$UID.
+  envPrefix = lib.optional editorEnabled "XDG_RUNTIME_DIR=${sandboxRuntimeDir}";
+
+  # "claude" -> "XDG_RUNTIME_DIR=~/.local/state/nono/run nono run \
+  #              --profile nolabs-ai/claude --allow-cwd <editor grants> -- claude"
   mkSandboxAlias = command: profile:
     lib.concatStringsSep " "
-    (["nono" "run" "--profile" profile] ++ cfg.sandbox.args ++ ["--" command]);
+    (envPrefix
+      ++ ["nono" "run" "--profile" profile]
+      ++ cfg.sandbox.args
+      ++ ["--" command]);
 
   sandboxAliases = lib.mapAttrs mkSandboxAlias cfg.sandbox.profiles;
 in {
@@ -61,11 +104,17 @@ in {
 
       args = lib.mkOption {
         type = with lib.types; listOf str;
-        default = ["--allow-cwd"];
+        default = ["--allow-cwd"] ++ editorArgs;
         description = ''
           Extra `nono run` flags applied to every generated sandbox alias.
           `--allow-cwd` grants the working directory at the level the profile
           declares; without it nono prompts for it on every run.
+
+          When `my.hm.features.nvf` is enabled this also grants nvim's own state
+          and cache dirs (NVIM_APPNAME=nvf), without which an editor opened
+          inside an agent errors on every keystroke and every write. `/run/user/*`
+          and the X11 socket are deliberately never granted -- see the comments
+          on sandboxRuntimeDir and editorArgs.
         '';
       };
 
@@ -103,6 +152,13 @@ in {
     home.sessionVariables =
       lib.optionalAttrs (cfg.sandbox.enable && cfg.sandbox.autoInstallPacks)
       {NONO_AUTO_MIGRATE = "1";};
+
+    # nvim will not mkdir $XDG_RUNTIME_DIR, and nothing else creates this path.
+    home.activation = lib.optionalAttrs editorEnabled {
+      nonoSandboxRuntimeDir =
+        lib.hm.dag.entryAfter ["writeBoundary"]
+        ''run mkdir -p -m 0700 "${sandboxRuntimeDir}"'';
+    };
 
     xdg.configFile =
       {
