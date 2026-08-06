@@ -44,6 +44,7 @@
   pallonFiles = pallonHome.xdg.configFile or {};
   jeliasFiles = jeliasHome.xdg.configFile or {};
   pallonSwayConfigText = pallonFiles."sway/config".text or "";
+  jeliasSwayConfigText = jeliasFiles."sway/config".text or "";
   pallonHyprlandSettings = pallonHome.wayland.windowManager.hyprland.settings;
   pallonDarkmanScript = pallonHome.services.darkman.scripts."theme-dispatch" or "";
   styleSwitchText = pallonHome.my.hm.features.style.dispatcher.package.text or "";
@@ -177,6 +178,75 @@
         message = msg;
       }
     ];
+
+  aiNoSandbox = inputs.home-manager.lib.homeManagerConfiguration {
+    inherit pkgs;
+    extraSpecialArgs = {inherit inputs;};
+    modules = [
+      ../modules/home-manager/features/ai.nix
+      {
+        home.username = "ai-test";
+        home.homeDirectory = "/tmp/ai-test";
+        home.stateVersion = "25.11";
+        my.hm.features.ai.sandbox.enable = false;
+      }
+    ];
+  };
+
+  # ai.nix imported standalone: the nvf module is absent, so the editor grants
+  # must not appear. Also guards the `or false` fallback in ai.nix -- a bare
+  # config.my.hm.features.nvf.enable reference would fail to evaluate here.
+  aiNoNvf = inputs.home-manager.lib.homeManagerConfiguration {
+    inherit pkgs;
+    extraSpecialArgs = {inherit inputs;};
+    modules = [
+      ../modules/home-manager/features/ai.nix
+      {
+        home.username = "ai-test";
+        home.homeDirectory = "/tmp/ai-test";
+        home.stateVersion = "25.11";
+      }
+    ];
+  };
+
+  # nvim runs as NVIM_APPNAME=nvf (mnw wrapper), so its XDG dirs are ~/.../nvf.
+  # Rules naming "nvim" are a no-op -- see modules/home-manager/features/ai.nix.
+  # Under nvim's own state dir, so it needs no grant of its own. It must stay
+  # out of ~/.local/state/nono: nono refuses grants overlapping its state root.
+  aiRuntimeDir = h: "${h.home.homeDirectory}/.local/state/nvf/run";
+
+  aiExpectedArgs = h: [
+    "--allow-cwd"
+    "--allow"
+    "${h.home.homeDirectory}/.local/state/nvf"
+    "--allow"
+    "${h.home.homeDirectory}/.cache/nvf"
+    "--read-file"
+    "${h.home.homeDirectory}/.local/state/my-theme/mode"
+  ];
+
+  aiExpectedAlias = h: command: profile:
+    lib.concatStringsSep " "
+    (["XDG_RUNTIME_DIR=${aiRuntimeDir h}" "nono" "run" "--profile" profile]
+      ++ aiExpectedArgs h
+      ++ ["--" command]);
+
+  # least privilege: paths that must never appear in a generated sandbox alias
+  aiForbiddenInfixes = [
+    "/run/user/" # gnome-keyring secrets+ssh sockets, D-Bus session bus
+    "/tmp/.X11-unix" # X11 has no client isolation
+    "/.local/share/nvf" # mnw is declarative; nothing writes there
+    "--allow /tmp " # would expose other processes' temp files
+    # nono refuses to start if a grant overlaps its own protected state root
+    "/.local/state/nono"
+    "/.config/nono"
+  ];
+
+  aiAliasesOf = h:
+    lib.attrValues
+    (lib.filterAttrs
+      (n: _: lib.elem n (lib.attrNames h.my.hm.features.ai.sandbox.profiles))
+      h.home.shellAliases);
 
   librewolfTestHome = inputs.home-manager.lib.homeManagerConfiguration {
     inherit pkgs;
@@ -731,6 +801,26 @@ in {
     mkCheck "sway-exit-uses-uwsm"
     (lib.hasInfix "uwsm stop" pallonSwayConfigText)
     "Sway logout binding must stop the UWSM session";
+
+  pallon-darkman-no-graphical-session-bindsto =
+    mkCheck "pallon-darkman-no-graphical-session-bindsto"
+    (!(builtins.elem "graphical-session.target" (pallonHome.systemd.user.services.darkman.Unit.BindsTo or [])))
+    "pallon darkman must not BindsTo graphical-session.target";
+
+  jelias-darkman-no-graphical-session-bindsto =
+    mkCheck "jelias-darkman-no-graphical-session-bindsto"
+    (!(builtins.elem "graphical-session.target" (jeliasHome.systemd.user.services.darkman.Unit.BindsTo or [])))
+    "jelias darkman must not BindsTo graphical-session.target";
+
+  andromeda-sway-finalizes-uwsm =
+    mkCheck "andromeda-sway-finalizes-uwsm"
+    (lib.hasInfix "exec uwsm finalize" pallonSwayConfigText)
+    "andromeda pallon: sway config must finalize UWSM readiness";
+
+  earth-sway-finalizes-uwsm =
+    mkCheck "earth-sway-finalizes-uwsm"
+    (lib.hasInfix "exec uwsm finalize" jeliasSwayConfigText)
+    "earth jelias: sway config must finalize UWSM readiness";
 
   hyprland-bind-screen-submap =
     mkCheck "hyprland-bind-screen-submap"
@@ -2573,6 +2663,135 @@ in {
     {
       condition = andromedaNoMaster.pkgs.claude-code.drvPath == basePkgs.claude-code.drvPath;
       message = "opt-out fixture: claude-code must fall back to base nixpkgs when disabled";
+    }
+  ];
+
+  ai-tooling = mkAssertionCheck "ai-tooling" [
+    {
+      condition = pallonHome.my.hm.features.ai.enable && jeliasHome.my.hm.features.ai.enable;
+      message = "ai feature must be enabled by default for all users";
+    }
+    {
+      condition =
+        pallonHome.home.shellAliases.claude
+        == aiExpectedAlias pallonHome "claude" "nolabs-ai/claude";
+      message = "pallon: claude must alias to its nono sandbox profile";
+    }
+    {
+      condition =
+        jeliasHome.home.shellAliases.opencode
+        == aiExpectedAlias jeliasHome "opencode" "opencode-claude";
+      message = "jelias: opencode must alias to its nono sandbox profile";
+    }
+    {
+      # NVIM_APPNAME=nvf: shada, undo, view, backup, lsp.log, nvim.log, blink-cmp
+      condition =
+        lib.all
+        (a: lib.hasInfix "--allow ${pallonHome.home.homeDirectory}/.local/state/nvf " a)
+        (aiAliasesOf pallonHome);
+      message = "every sandbox alias must grant nvim's state dir (rw)";
+    }
+    {
+      # fzf-lua cache, fidget log, snacks
+      condition =
+        lib.all
+        (a: lib.hasInfix "--allow ${pallonHome.home.homeDirectory}/.cache/nvf " a)
+        (aiAliasesOf pallonHome);
+      message = "every sandbox alias must grant nvim's cache dir (rw)";
+    }
+    {
+      # fzf-lua serverstart() hard-errors without a writable XDG_RUNTIME_DIR
+      condition =
+        lib.all
+        (a: lib.hasPrefix "XDG_RUNTIME_DIR=${aiRuntimeDir pallonHome} " a)
+        (aiAliasesOf pallonHome);
+      message = "every sandbox alias must redirect XDG_RUNTIME_DIR away from /run/user";
+    }
+    {
+      # nvim will not mkdir $XDG_RUNTIME_DIR; nothing else creates it
+      condition = let
+        script = pallonHome.home.activation.nonoSandboxRuntimeDir.data or "";
+      in
+        lib.hasInfix (aiRuntimeDir pallonHome) script && lib.hasInfix "0700" script;
+      message = "the redirected runtime dir must be created at mode 0700";
+    }
+    {
+      # granting /run/user/1000 would hand over gnome-keyring's secrets+ssh
+      # sockets and the D-Bus session bus, undoing deny_credentials.
+      condition =
+        lib.all
+        (a: lib.all (bad: !(lib.hasInfix bad a)) aiForbiddenInfixes)
+        (aiAliasesOf pallonHome ++ aiAliasesOf jeliasHome);
+      message = "sandbox aliases must not grant runtime/X11/data paths (least privilege)";
+    }
+    {
+      # no grant may be $HOME itself or a bare XDG root -- those would pull in
+      # every other application's state alongside nvim's.
+      condition = let
+        h = pallonHome.home.homeDirectory;
+        broad = [
+          h
+          "${h}/.cache"
+          "${h}/.config"
+          "${h}/.local"
+          "${h}/.local/state"
+          "${h}/.local/share"
+        ];
+        paths =
+          lib.filter (lib.hasPrefix h)
+          pallonHome.my.hm.features.ai.sandbox.args;
+      in
+        paths != [] && lib.all (p: !(lib.elem p broad)) paths;
+      message = "granted paths must not be a bare $HOME or XDG root (least privilege)";
+    }
+    {
+      # must stay alias-scoped -- a session variable would break the real desktop
+      condition = !(pallonHome.home.sessionVariables ? XDG_RUNTIME_DIR);
+      message = "XDG_RUNTIME_DIR must be alias-scoped, never a session variable";
+    }
+    {
+      # ai.nix standalone (no nvf module): editor grants and prefix must vanish
+      condition =
+        aiNoNvf.config.home.shellAliases.claude
+        == "nono run --profile nolabs-ai/claude --allow-cwd -- claude";
+      message = "no-nvf fixture: editor grants and the env prefix must disappear";
+    }
+    {
+      condition = !(aiNoNvf.config.home.activation ? nonoSandboxRuntimeDir);
+      message = "no-nvf fixture: the runtime dir must not be created";
+    }
+    {
+      # the alias is worthless if the profile it names is never written
+      condition = pallonHome.xdg.configFile ? "nono/profiles/opencode-claude.json";
+      message = "pallon: the opencode-claude nono profile must be written";
+    }
+    {
+      condition = pallonHome.xdg.configFile ? "opencode/plugin/claude-auth.js";
+      message = "pallon: the opencode-claude-auth plugin shim must be written";
+    }
+    {
+      condition =
+        builtins.any
+        (p: (p.pname or p.name or "") == "nono")
+        pallonHome.home.packages;
+      message = "pallon: nono must be installed by the ai feature";
+    }
+    {
+      # extras.nix listed opencode twice before the ai feature took ownership
+      condition =
+        builtins.length
+        (builtins.filter (p: (p.pname or p.name or "") == "opencode") pallonHome.home.packages)
+        == 1;
+      message = "pallon: opencode must be installed exactly once";
+    }
+    {
+      condition = pallonHome.home.sessionVariables.NONO_AUTO_MIGRATE == "1";
+      message = "pallon: NONO_AUTO_MIGRATE must be set for non-interactive nono pack install";
+    }
+    {
+      # the sandbox toggle must remove the aliases, not just the nono package
+      condition = !(aiNoSandbox.config.home.shellAliases ? claude);
+      message = "no-sandbox fixture: disabling sandbox must drop the generated aliases";
     }
   ];
 
