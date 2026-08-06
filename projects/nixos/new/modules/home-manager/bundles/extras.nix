@@ -102,7 +102,7 @@ in {
         caddy
 
         # --- Terminal ---
-        termite
+        # termite # unmaintained, no developmen
         alacritty
         alacritty-theme
         nix-zsh-completions
@@ -120,7 +120,8 @@ in {
         fzf
         fasd
         file
-        silver-searcher
+        # silver-searcher # no development sinec 2020
+        silver-searcher-ng
         television
         autossh
         sshfs-fuse
@@ -157,7 +158,7 @@ in {
         cifs-utils
         gcolor3
         gedit
-        jmtpfs
+        # jmtpfs # unmaintained, removed
         qrencode
         syncthingtray
         simple-scan
@@ -166,6 +167,7 @@ in {
         # birdtray         # disabled: companion of thunderbird
         poppler-utils
         xournalpp
+        jocalsend
 
         # --- Browser Overrides ---
         # librewolf + chromium are currently uncached on nixpkgs-unstable; overrides would
@@ -198,7 +200,7 @@ in {
         # ffmpeg-full  # broken since 2026-04-28
         seafile-client
         seafile-shared
-        # openai-whisper  # disabled: drags torch + piper-tts + faster-whisper (all uncached)
+        handy
         megasync
 
         # --- Communication ---
@@ -245,7 +247,6 @@ in {
         jq
         yq-go
         devbox
-        opencode
         docker-compose # cmakeCurses
         oxker
         cruise
@@ -254,12 +255,11 @@ in {
         graphviz
         gthumb
         filezilla
-        jetbrains.idea-oss
+        # jetbrains.idea-oss # insecure, flagged
         nodejs
         nix-prefetch-git
         nox
         patchelf
-        aichat
         steam-run
 
         # --- Laptop / Hardware ---
@@ -325,6 +325,7 @@ in {
         dconf-editor
         lxqt.lxqt-config
         lxappearance
+        emoji-picker
 
         # AI tooling lives in my.hm.features.ai
 
@@ -334,7 +335,7 @@ in {
         ghc
         guvcview
         haskellPackages.yeganesh
-        jitsi
+        # jitsi # removed, depends on outdated gtk2
         kdePackages.breeze-gtk
         kdePackages.qtstyleplugin-kvantum
         ngrok
