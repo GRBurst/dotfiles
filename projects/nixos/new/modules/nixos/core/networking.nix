@@ -47,6 +47,7 @@ in {
         allowedUDPPorts = [50624 50625] ++ cfg.extraUdpPorts;
         trustedInterfaces = [
           "docker0"
+          "tailscale0"
         ];
       };
       nameservers = cfg.nameservers;

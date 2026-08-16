@@ -29,8 +29,21 @@
     initrd = {
       availableKernelModules = ["r8169"];
       systemd.enable = true;
+      network = {
+        enable = true;
+        ssh = {
+          enable = true;
+          port = 2222;
+          authorizedKeys = [
+            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM5mKi8jY1gDrq5J3+a1sNUveg5klSYkABIjdKoDXayF earth-initrd-unlock"
+          ];
+          hostKeys = [
+            "/etc/secrets/initrd/ssh_host_ed25519_key"
+          ];
+        };
+      };
     };
-    kernelParams = ["console=tty1"];
+    kernelParams = ["console=tty1" "ip=dhcp"];
   };
 
   hardware = {
@@ -164,6 +177,7 @@
         enable = true;
         extraSettings = {
           X11Forwarding = true;
+          PermitRootLogin = "no";
           PasswordAuthentication = false;
         };
       };
