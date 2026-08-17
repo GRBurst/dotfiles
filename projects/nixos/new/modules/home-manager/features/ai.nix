@@ -69,10 +69,12 @@ in {
         claude-code
         claude-monitor
         codex
+        docker-sbx
         gemini-cli-bin
         lmstudio
         opencode
         opencode-claude-auth
+        pi-coding-agent
         # openai-whisper  # disabled: drags torch + piper-tts + faster-whisper (all uncached)
       ];
       description = "AI tool packages installed into the user profile.";
@@ -94,6 +96,7 @@ in {
         default = {
           claude = "nolabs-ai/claude";
           opencode = "opencode-claude"; # local profile written below
+          pi = "pi-claude"; # local profile written below
         };
         description = ''
           Command name mapped to its nono profile. Each entry generates the alias
@@ -153,6 +156,16 @@ in {
       lib.optionalAttrs (cfg.sandbox.enable && cfg.sandbox.autoInstallPacks)
       {NONO_AUTO_MIGRATE = "1";};
 
+    # pi reads ~/.pi, not XDG. Unlike opencode-claude-auth there is no store
+    # path to point at: pi-claude-auth is npm-only, fetched into
+    # ~/.pi/agent/npm on first run. The unscoped `pi-claude-auth` on npm is
+    # deprecated in favour of the scoped name.
+    # ponytail: runtime npm fetch, unpinned. Package it with buildNpmPackage and
+    # switch to `extensions = ["<store path>"]` if reproducibility bites.
+    home.file.".pi/agent/settings.json".text = builtins.toJSON {
+      packages = ["npm:@pankajudhas81/pi-claude-auth"];
+    };
+
     # nvim will not mkdir $XDG_RUNTIME_DIR, and nothing else creates this path.
     home.activation = lib.optionalAttrs editorEnabled {
       nonoSandboxRuntimeDir =
@@ -187,6 +200,37 @@ in {
             allow_origins = [
               "https://auth.openai.com"
               "https://github.com"
+              "https://claude.ai"
+              "https://claude.com"
+              "https://api.anthropic.com"
+              "https://platform.claude.com"
+            ];
+            allow_localhost = true;
+          };
+        };
+
+        "nono/profiles/pi-claude.json".text = builtins.toJSON {
+          "$schema" = "https://nono.sh/schemas/nono-profile.schema.json";
+          # Same reasoning as opencode-claude above: pi-claude-auth reads Claude
+          # Code's OAuth credentials from ~/.claude/.credentials.json, so pi
+          # needs the claude pack's ~/.claude rw, ~/.cache/claude and
+          # /tmp/claude-$UID grants.
+          extends = ["nolabs-ai/pi" "nolabs-ai/claude"];
+          meta = {
+            name = "pi-claude";
+            description = "pi with Claude Code credential access for pi-claude-auth";
+          };
+          # pi installs npm packages into ~/.pi/agent/npm at runtime and keeps
+          # settings, trust.json and sessions under ~/.pi. Stated explicitly
+          # rather than assumed from the pi pack; filesystem.allow appends
+          # across bases, unlike open_urls.
+          filesystem.allow = ["$HOME/.pi"];
+          # Replace-on-override, so the claude pack (last base) would otherwise
+          # drop whatever origins the pi pack declares. npm registry access does
+          # not belong here -- the packs leave network.block false and open_urls
+          # governs browser opening, not sockets.
+          open_urls = {
+            allow_origins = [
               "https://claude.ai"
               "https://claude.com"
               "https://api.anthropic.com"
