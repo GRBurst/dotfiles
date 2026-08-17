@@ -20,6 +20,7 @@ in {
       nodejs
       docker-compose
       direnv
+      devenv
     ];
   };
 }
