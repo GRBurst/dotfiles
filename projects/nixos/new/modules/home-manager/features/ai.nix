@@ -70,7 +70,6 @@ in {
         claude-monitor
         codex
         docker-sbx
-        gemini-cli-bin
         lmstudio
         opencode
         opencode-claude-auth
